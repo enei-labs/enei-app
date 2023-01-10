@@ -1,8 +1,8 @@
-// import { ApolloProvider } from '@apollo/client'
+import { ApolloProvider } from "@apollo/client";
 // import Snackbar from '@components/Snackbar'
 import theme from "@config/theme";
 // import { AuthProvider } from '@core/context/auth'
-// import client from '@core/graphql'
+import client from "@core/graphql";
 import { ThemeProvider } from "@mui/material";
 import "@styles/globals.css";
 import { NextPage } from "next";
@@ -22,12 +22,9 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const component = getLayout(<Component {...pageProps} />);
 
   return (
-    // <ApolloProvider client={client}>
-    //   <AuthProvider>
-    <ThemeProvider theme={theme}>{component}</ThemeProvider>
-    //     <Snackbar />
-    //   </AuthProvider>
-    // </ApolloProvider>
+    <ApolloProvider client={client}>
+      <ThemeProvider theme={theme}>{component}</ThemeProvider>
+    </ApolloProvider>
   );
 }
 

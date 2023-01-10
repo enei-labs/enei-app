@@ -1,4 +1,3 @@
-import * as React from "react";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -21,35 +20,10 @@ import TaskOutlinedIcon from "@mui/icons-material/TaskOutlined";
 import IconBreadcrumbs from "../components/BreadCrumbs";
 import { Card, Grid } from "@mui/material";
 import OverviewCard, { OverviewCardProps } from "../components/OverviewCard";
+import Sidebar from "../components/Layout/Sidebar";
+import AnnualPrice from "../components/AnnualPrice";
 
 const drawerWidth = 240;
-
-const configs = [
-  {
-    name: "戰情總版",
-    icon: <FlagIcon />,
-  },
-  {
-    name: "發電業管理",
-    icon: <BoltIcon />,
-  },
-  {
-    name: "用戶管理",
-    icon: <UserIcon />,
-  },
-  {
-    name: "轉供申請進度",
-    icon: <ChartIcon />,
-  },
-  {
-    name: "轉供資料管理",
-    icon: <TaskOutlinedIcon />,
-  },
-  {
-    name: "電費單匯出",
-    icon: <MailIcon />,
-  },
-];
 
 const industryOverview: OverviewCardProps = {
   topic: "發電業資訊",
@@ -133,25 +107,29 @@ export default function PermanentDrawerLeft() {
         <Box>Logo</Box>
         <Toolbar />
         <Divider />
-        <List>
-          {configs.map((config, index) => (
-            <ListItem key={config.name} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>{config.icon ?? <InboxIcon />}</ListItemIcon>
-                <ListItemText primary={config.name} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
+        <Sidebar />
       </Drawer>
       <Box
         component="main"
         sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
       >
         <Toolbar />
-        <IconBreadcrumbs config={[{ name: "戰情總版 " }]} />
-        <Grid container spacing={4}>
-          <Grid item sm={7}>
+        <IconBreadcrumbs
+          items={[
+            {
+              name: "戰情總版",
+              icon: FlagIcon,
+              href: "/",
+            },
+            {
+              name: "發電業管理",
+              icon: BoltIcon,
+              href: "/industry",
+            },
+          ]}
+        />
+        <Grid container spacing={4} marginTop="4px">
+          <Grid item sm={7} height="100%">
             <Grid container spacing={4}>
               <Grid item sm={12}>
                 <OverviewCard {...industryOverview} />
@@ -162,7 +140,9 @@ export default function PermanentDrawerLeft() {
             </Grid>
           </Grid>
           <Grid item sm={5}>
-            <Card sx={{ p: { sm: "4rem" } }}>test3</Card>
+            <Card sx={{ p: { sm: "4rem" } }}>
+              <AnnualPrice annualBuyPrice="5022" annualSellPrice="4022" />
+            </Card>
           </Grid>
           <Grid item sm={6}>
             <Card sx={{ p: { sm: "4rem" } }}>test4</Card>

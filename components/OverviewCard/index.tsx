@@ -11,11 +11,11 @@ export default function OverviewCard(props: OverviewCardProps) {
   return (
     <Card sx={{ p: "36px" }}>
       <Grid container spacing={1}>
-        <Grid item sm={12} sx={{ p: { sm: "4rem" } }}>
+        <Grid item sm={12}>
           <Typography variant="h4">{topic}</Typography>
         </Grid>
         {basicInfos.map((info) => (
-          <Grid key={info.name} item sm={4} sx={{ p: { sm: "4rem" } }}>
+          <Grid key={info.name} item sm={4}>
             <BasicInfo {...info} />
           </Grid>
         ))}

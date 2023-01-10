@@ -1,52 +1,56 @@
-import Typography from "@mui/material/Typography";
+import Link from "next/link";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
-import Link from "@mui/material/Link";
-import HomeIcon from "@mui/icons-material/Home";
-import WhatshotIcon from "@mui/icons-material/Whatshot";
-import GrainIcon from "@mui/icons-material/Grain";
-import FlagIcon from "@mui/icons-material/Flag";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import { SvgIconComponent } from "@mui/icons-material";
+import { Box } from "@mui/material";
 
 function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
   event.preventDefault();
-  console.info("You clicked a breadcrumb.");
 }
 
-export interface ConfigProps {
-  config: {
-    name: string;
-  }[];
-}
+type Item = {
+  href: string;
+  icon: SvgIconComponent;
+  name: string;
+};
 
-export default function IconBreadcrumbs(props: ConfigProps) {
-  const { config } = props;
+type BreadcrumbProps = {
+  items: Item[];
+};
+
+const styles = {
+  link: {
+    display: "flex",
+    justifyContent: "flex-start",
+    alignItems: "center",
+  },
+} as const;
+
+export default function IconBreadcrumbs(props: BreadcrumbProps) {
+  const { items = [] } = props;
+
+  const [prevItems, lastItem] = [
+    items.slice(0, items.length - 1),
+    items[items.length - 1],
+  ];
+
   return (
     <div role="presentation" onClick={handleClick}>
-      <Breadcrumbs aria-label="breadcrumb">
-        <Link
-          underline="hover"
-          sx={{ display: "flex", alignItems: "center" }}
-          color="inherit"
-          href="/"
-        >
-          <FlagIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-          {config[0].name}
-        </Link>
-        <Link
-          underline="hover"
-          sx={{ display: "flex", alignItems: "center" }}
-          color="inherit"
-          href="/material-ui/getting-started/installation/"
-        >
-          <WhatshotIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-          Core
-        </Link>
-        <Typography
-          sx={{ display: "flex", alignItems: "center" }}
-          color="text.primary"
-        >
-          <GrainIcon sx={{ mr: 0.5 }} fontSize="inherit" />
-          Breadcrumb
-        </Typography>
+      <Breadcrumbs
+        aria-label="breadcrumb"
+        separator={<NavigateNextIcon fontSize="small" />}
+      >
+        {prevItems.map(({ icon: Icon, href, name }) => (
+          <Box sx={styles.link} key={href}>
+            <Icon />
+            <Link href={href}>{name}</Link>
+          </Box>
+        ))}
+        {lastItem && (
+          <Link href={lastItem.href} aria-current="page">
+            {lastItem.name}
+          </Link>
+        )}
       </Breadcrumbs>
     </div>
   );

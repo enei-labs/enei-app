@@ -12,6 +12,9 @@ const typographyTheme = createTheme({
         fontSize: '24px',
       },
     },
+    h3: {
+      wordBreak: 'break-all',
+    },
     title: {
       color: 'black',
       fontSize: '32px',
@@ -37,15 +40,18 @@ const typographyTheme = createTheme({
       wordBreak: 'break-all',
     },
     body2: {
+      color: 'text.secondary',
       fontSize: '16px',
       fontWeight: 400,
       wordBreak: 'break-all',
     },
     body3: {
+      color: 'text.secondary',
       fontSize: '14px',
       fontWeight: 400,
     },
     body4: {
+      color: 'text.secondary',
       fontSize: '12px',
       fontWeight: 400,
     },
