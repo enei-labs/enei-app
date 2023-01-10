@@ -13,7 +13,7 @@ import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import BoltIcon from "@mui/icons-material/BoltOutlined";
-import FlagIcon from "@mui/icons-material/Flag";
+import OutlinedFlagIcon from "@mui/icons-material/OutlinedFlag";
 import UserIcon from "@mui/icons-material/PersonAddAlt";
 import ChartIcon from "@mui/icons-material/InsertChartOutlinedSharp";
 import TaskOutlinedIcon from "@mui/icons-material/TaskOutlined";
@@ -118,7 +118,7 @@ export default function PermanentDrawerLeft() {
           items={[
             {
               name: "戰情總版",
-              icon: FlagIcon,
+              icon: OutlinedFlagIcon,
               href: "/",
             },
             {

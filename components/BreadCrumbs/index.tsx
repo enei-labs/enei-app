@@ -23,16 +23,19 @@ const styles = {
     display: "flex",
     justifyContent: "flex-start",
     alignItems: "center",
+    columnGap: "8px",
+    "& .name": {
+      fontSize: "16px",
+      fontWeight: 500,
+    },
+    "& .name:hover": {
+      color: "text.primary",
+    },
   },
 } as const;
 
 export default function IconBreadcrumbs(props: BreadcrumbProps) {
   const { items = [] } = props;
-
-  const [prevItems, lastItem] = [
-    items.slice(0, items.length - 1),
-    items[items.length - 1],
-  ];
 
   return (
     <div role="presentation" onClick={handleClick}>
@@ -40,17 +43,14 @@ export default function IconBreadcrumbs(props: BreadcrumbProps) {
         aria-label="breadcrumb"
         separator={<NavigateNextIcon fontSize="small" />}
       >
-        {prevItems.map(({ icon: Icon, href, name }) => (
+        {items.map(({ icon: Icon, href, name }) => (
           <Box sx={styles.link} key={href}>
             <Icon />
-            <Link href={href}>{name}</Link>
+            <Link className="name" href={href}>
+              {name}
+            </Link>
           </Box>
         ))}
-        {lastItem && (
-          <Link href={lastItem.href} aria-current="page">
-            {lastItem.name}
-          </Link>
-        )}
       </Breadcrumbs>
     </div>
   );
