@@ -5,15 +5,29 @@ const breakpoints = createTheme().breakpoints
 const typographyTheme = createTheme({
   typography: {
     h1: {
-      color: 'black',
-      fontSize: '32px',
-      fontWeight: 'bold',
-      [breakpoints.down('md')]: {
-        fontSize: '24px',
-      },
+      fontSize: '64px',
+      fontWeight: 500,
+    },
+    h2: {
+      fontSize: '48px',
+      fontWeight: 900,
     },
     h3: {
+      fontSize: '36px',
+      fontWeight: 700,
       wordBreak: 'break-all',
+    },
+    h4: {
+      fontSize: '24px',
+      fontWeight: 700,
+    },
+    h5: {
+      fontSize: '20px',
+      fontWeight: 700,
+    },
+    h6: {
+      fontSize: '16px',
+      fontWeight: 700,
     },
     title: {
       color: 'black',
