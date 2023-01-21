@@ -12,12 +12,12 @@ import { AuthLayout } from "@components/Layout";
 import { ReactElement } from "react";
 import Head from "next/head";
 
-function MainPage() {
+function IndustryPage() {
   return (
     <>
       <Head>
-        <title>戰情總版</title>
-        <meta name="description" content="戰情總版" />
+        <title>發電業管理</title>
+        <meta name="description" content="發電業管理" />
       </Head>
       <Box sx={{ display: "flex" }}>
         <Box
@@ -40,8 +40,8 @@ function MainPage() {
   );
 }
 
-MainPage.getLayout = (page: ReactElement) => {
+IndustryPage.getLayout = (page: ReactElement) => {
   return <AuthLayout>{page}</AuthLayout>;
 };
 
-export default MainPage;
+export default IndustryPage;
