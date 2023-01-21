@@ -15,6 +15,7 @@ import PeopleOutlineOutlinedIcon from "@mui/icons-material/PeopleOutlineOutlined
 import ChartIcon from "@mui/icons-material/InsertChartOutlinedSharp";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import Head from "next/head";
+import { BasicTable } from "../../components/Table";
 
 const DemoChart = dynamic(() => import("@components/LineChart"), {
   ssr: false,
@@ -76,10 +77,7 @@ function MainPage() {
         <meta name="description" content="戰情總版" />
       </Head>
       <Box sx={{ display: "flex" }}>
-        <Box
-          component="main"
-          sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
-        >
+        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <Toolbar />
           <IconBreadcrumbs
             items={[
@@ -98,6 +96,7 @@ function MainPage() {
                   flexDirection: "column",
                   height: "100%",
                   justifyContent: "space-between",
+                  gap: "20px",
                 }}
               >
                 <OverviewCard {...industryOverview} />
@@ -124,6 +123,14 @@ function MainPage() {
           <Card sx={{ p: "36px" }}>
             <DemoChart name="未來一年容量平衡" />
           </Card>
+          <Grid container spacing={4} marginTop="4px">
+            <Grid item sm={6}>
+              <BasicTable title="容量不足用戶名單" />
+            </Grid>
+            <Grid item sm={6}>
+              <BasicTable title="容量剩餘發電業名單" />
+            </Grid>
+          </Grid>
         </Box>
       </Box>
     </>
