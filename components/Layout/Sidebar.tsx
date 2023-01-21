@@ -4,14 +4,13 @@ import type { Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/router";
 import { sideBarConfigs } from "@config/menu/side-bar-configs";
-import { ListItemIcon } from "@mui/material";
 
 const style = {
   container: [
     (theme: Theme) => ({
       display: "flex",
       flexDirection: "column",
-      gap: "30px",
+      padding: "8px",
       [theme.breakpoints.down("md")]: {
         display: "none",
       },
@@ -20,8 +19,9 @@ const style = {
   wrapper: [
     (theme: Theme) => ({
       display: "flex",
-      justifyContent: "flex-start",
-      gap: "10px",
+      justifyContent: "center",
+      columnGap: "10px",
+      padding: "12px 18px",
       "& .MuiTypography-root": {
         width: "100%",
         color: theme.palette.text.primary,
@@ -44,12 +44,11 @@ const Sidebar = () => {
       {sideBarConfigs.map((item, index) => {
         const { name, path = "", icon: Icon } = item;
         const isActive = router.pathname === path;
+
         return (
           <Link key={index} href={path}>
             <Box sx={style.wrapper} className={isActive ? "active" : undefined}>
-              <ListItemIcon>
-                <Icon />
-              </ListItemIcon>
+              <Icon />
               <Typography variant="menuItem">{name}</Typography>
             </Box>
           </Link>

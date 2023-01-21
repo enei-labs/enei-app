@@ -1,0 +1,106 @@
+import { FieldsController } from "@components/Controller";
+import FormBox from "@components/FormBox";
+import { Layout } from "@components/Layout";
+import { LogInForgotPwdBtn, LogInSetNewPwdDialog } from "@components/LogIn";
+import { useAuth } from "@core/context/auth";
+import { FieldConfig } from "@core/types";
+import { passwordValidated, textValidated } from "@core/types/fieldConfig";
+import { LoadingButton } from "@mui/lab";
+import { Box, Stack, Typography } from "@mui/material";
+import { useSignInAdmin, useValidatedForm } from "@utils/hooks";
+import Head from "next/head";
+import { ReactElement, useState } from "react";
+import { toast } from "react-toastify";
+
+type FormData = {
+  email: string;
+  password: string;
+};
+
+const configs: FieldConfig[] = [
+  {
+    type: "TEXT",
+    name: "email",
+    label: "User Account (Email)",
+    required: true,
+    validated: textValidated.email(),
+  },
+  {
+    type: "PASSWORD",
+    name: "password",
+    label: "Password",
+    required: true,
+    validated: passwordValidated,
+  },
+];
+
+const LogIn = () => {
+  const { logIn } = useAuth();
+
+  const [open, setOpen] = useState(false);
+
+  const [signInAdmin, { loading }] = useSignInAdmin();
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useValidatedForm<FormData>(configs);
+
+  const onSubmit = async (formData: FormData) => {
+    const { data } = await signInAdmin({
+      variables: {
+        email: formData.email,
+        password: formData.password,
+      },
+    });
+
+    if (data?.signInAdmin.__typename !== "Admin") {
+      toast.error("Incorrect user account or password.");
+      return;
+    }
+
+    if (data.signInAdmin.hasSetPassword === false) {
+      setOpen(true);
+      return;
+    }
+
+    await logIn();
+  };
+
+  return (
+    <>
+      <Head>
+        <title>Log In</title>
+        <meta name="description" content="Log In" />
+      </Head>
+
+      <Box component="form" onSubmit={handleSubmit(onSubmit)}>
+        <FormBox>
+          <Stack gap="10px">
+            <Typography variant="h1">Log In</Typography>
+            <Typography variant="subtitle1" color="text.primary">
+              Enter details to log in.
+            </Typography>
+          </Stack>
+
+          <FieldsController configs={configs} form={{ control, errors }} />
+
+          <LogInForgotPwdBtn />
+
+          <LoadingButton type="submit" variant="contained" loading={loading}>
+            Log In
+          </LoadingButton>
+        </FormBox>
+      </Box>
+
+      <LogInSetNewPwdDialog open={open} onClose={() => setOpen(false)} />
+    </>
+  );
+};
+
+LogIn.getLayout = (page: ReactElement) => {
+  return <Layout>{page}</Layout>;
+};
+
+export default LogIn;

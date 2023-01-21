@@ -41,6 +41,16 @@ const componentsTheme = createTheme({
         },
       },
     },
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          height: '64px',
+          backgroundColor: '#FFF',
+          boxShadow: 'none',
+          borderBottom: '1px solid rgba(0, 0, 0, 0.12)'
+        }
+      }
+    },
     MuiButtonBase: {
       styleOverrides: {
         root: {
@@ -54,6 +64,7 @@ const componentsTheme = createTheme({
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
+          height: '40px',
           '.Mui-disabled': {
             cursor: 'not-allowed',
           },

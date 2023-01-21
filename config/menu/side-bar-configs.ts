@@ -9,7 +9,7 @@ export const sideBarConfigs = [
   {
     name: "戰情總版",
     icon: FlagIcon,
-    path: '/'
+    path: '/main'
   },
   {
     name: "發電業管理",

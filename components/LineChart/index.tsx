@@ -1,0 +1,134 @@
+import { Box, TextField, Typography } from "@mui/material";
+import ReactApexChart from "react-apexcharts";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { useState } from "react";
+
+const options = {
+  plotOptions: {
+    bar: {
+      borderRadius: 10,
+      dataLabels: {
+        position: "top", // top, center, bottom
+      },
+    },
+  },
+  dataLabels: {
+    enabled: true,
+    formatter: function (val: any) {
+      return val + "%";
+    },
+    offsetY: -20,
+    style: {
+      fontSize: "12px",
+      colors: ["#304758"],
+    },
+  },
+  xaxis: {
+    categories: [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ],
+    // position: "top",
+    axisBorder: {
+      show: true,
+    },
+    axisTicks: {
+      show: false,
+    },
+    crosshairs: {
+      fill: {
+        type: "gradient",
+        gradient: {
+          colorFrom: "#D8E3F0",
+          colorTo: "#BED1E6",
+          stops: [0, 100],
+          opacityFrom: 0.4,
+          opacityTo: 0.5,
+        },
+      },
+    },
+    tooltip: {
+      enabled: true,
+    },
+  },
+  yaxis: {
+    axisBorder: {
+      show: true,
+    },
+    axisTicks: {
+      show: false,
+    },
+    labels: {
+      show: true,
+      formatter: function (val: any) {
+        return val + "%";
+      },
+    },
+  },
+  // title: {
+  //   text: "Monthly Inflation in Argentina, 2002",
+  //   floating: true,
+  //   offsetY: 330,
+  //   align: "center",
+  //   style: {
+  //     color: "#444",
+  //   },
+  // },
+};
+
+const styles = {
+  container: {},
+  flex: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
+} as const;
+
+interface DemoChartProps {
+  name: string;
+}
+
+export default function DemoChart(props: DemoChartProps) {
+  const [value, setValue] = useState();
+  const { name } = props;
+
+  return (
+    <Box sx={styles.container}>
+      <Box sx={styles.flex}>
+        <Typography variant="h5">{name}</Typography>
+        <DatePicker
+          views={["year"]}
+          label="Year only"
+          value={value}
+          onChange={(newValue: any) => {
+            setValue(newValue);
+          }}
+          renderInput={(params: any) => (
+            <TextField {...params} helperText={null} />
+          )}
+        />
+      </Box>
+      <ReactApexChart
+        series={[
+          {
+            name: "Inflation",
+            data: [2.3, 3.1, 4.0, 10.1, 4.0, 3.6, 3.2, 2.3, 1.4, 0.8, 0.5, 0.2],
+          },
+        ]}
+        options={options}
+        type="bar"
+        height={400}
+      />
+    </Box>
+  );
+}

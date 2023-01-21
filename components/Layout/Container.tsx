@@ -2,9 +2,6 @@ import { Chip } from "@mui/material";
 import Box from "@mui/material/Box";
 import type { Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import AegisCustodySvg from "@public/images/aegis-custody.svg";
-import AegisDiligenceSvg from "@public/images/aegis-diligence.svg";
-import React from "react";
 
 interface ContainerProps {
   children?: React.ReactNode;
@@ -47,7 +44,7 @@ const Container: React.FC<ContainerProps> = ({ children }) => {
   return (
     <Box px="20px">
       <Box sx={style.logo}>
-        <AegisDiligenceSvg />
+        logo
         <Chip variant="outlined" color="secondary" label="ADMIN" />
       </Box>
 
@@ -57,7 +54,7 @@ const Container: React.FC<ContainerProps> = ({ children }) => {
 
       <Box component="footer" sx={style.footer}>
         <Typography color="primary">Powered by</Typography>
-        <AegisCustodySvg />
+        Enei
       </Box>
     </Box>
   );

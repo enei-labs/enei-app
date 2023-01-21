@@ -1,21 +1,21 @@
-import { useAuth } from '@core/context/auth'
-import { useRouter } from 'next/router'
-import React, { ReactNode, useEffect } from 'react'
-import Container from './Container'
+import { useAuth } from "@core/context/auth";
+import { useRouter } from "next/router";
+import React, { ReactNode, useEffect } from "react";
+import Container from "./Container";
 
 interface LayoutProps {
-  children: ReactNode
+  children: ReactNode;
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-  const router = useRouter()
-  const { status } = useAuth()
+  const router = useRouter();
+  const { status } = useAuth();
 
   useEffect(() => {
-    if (status === 'authenticated') router.push('/')
-  }, [router, status])
+    if (status === "authenticated") router.push("/main");
+  }, [router, status]);
 
-  return <Container>{children}</Container>
-}
+  return <Container>{children}</Container>;
+};
 
-export default Layout
+export default Layout;
