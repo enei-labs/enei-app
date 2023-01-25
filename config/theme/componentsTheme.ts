@@ -17,20 +17,28 @@ const componentsTheme = createTheme({
       },
     },
     MuiButton: {
+      variants: [
+        {
+          props: { size: 'medium' },
+          style: {
+            padding: '8px 12px',
+          },
+        },
+      ],
       styleOverrides: {
         root: {
           minHeight: '40px',
           boxShadow: 'none',
-          '&:hover': {
-            boxShadow: 'none',
-          },
+          border: `1px solid ${palette.secondary.main}`,
+          color: '#FFF',
           '&.MuiButton-text': {
             width: 'fit-content',
             minHeight: 'fit-content',
-            padding: 0,
+            backgroundColor: palette.primary.dark,
+            color: '#FFF',
           },
           '&.MuiButton-text:hover': {
-            backgroundColor: 'transparent',
+            backgroundColor: '#004D40',
           },
           '&.MuiButton-containedPrimary': {
             color: 'white',
@@ -67,6 +75,9 @@ const componentsTheme = createTheme({
           height: '40px',
           '.Mui-disabled': {
             cursor: 'not-allowed',
+          },
+          "& input::placeholder": {
+            fontSize: '16px',
           },
         },
       },

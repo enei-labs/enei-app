@@ -11,6 +11,7 @@ export type Scalars = {
   Int: number;
   Float: number;
   DateTime: any;
+  UUID: any;
 };
 
 export type Account = {
@@ -42,8 +43,28 @@ export type AccountNotFoundError = Error & {
 
 export enum Action {
   CreateAdmin = 'CREATE_ADMIN',
+  CreateCompany = 'CREATE_COMPANY',
+  CreateCompanyContract = 'CREATE_COMPANY_CONTRACT',
+  CreatePowerStationList = 'CREATE_POWER_STATION_LIST',
+  CreateUser = 'CREATE_USER',
+  CreateUserContract = 'CREATE_USER_CONTRACT',
   RemoveAdmin = 'REMOVE_ADMIN',
-  ViewAdminList = 'VIEW_ADMIN_LIST'
+  RemoveCompany = 'REMOVE_COMPANY',
+  RemoveCompanyContract = 'REMOVE_COMPANY_CONTRACT',
+  RemovePowerStationList = 'REMOVE_POWER_STATION_LIST',
+  RemoveUser = 'REMOVE_USER',
+  RemoveUserContract = 'REMOVE_USER_CONTRACT',
+  UpdateCompany = 'UPDATE_COMPANY',
+  UpdateCompanyContract = 'UPDATE_COMPANY_CONTRACT',
+  UpdatePowerStationList = 'UPDATE_POWER_STATION_LIST',
+  UpdateUser = 'UPDATE_USER',
+  UpdateUserContract = 'UPDATE_USER_CONTRACT',
+  ViewAdminList = 'VIEW_ADMIN_LIST',
+  ViewCompanyContractList = 'VIEW_COMPANY_CONTRACT_LIST',
+  ViewCompanyList = 'VIEW_COMPANY_LIST',
+  ViewPowerStationList = 'VIEW_POWER_STATION_LIST',
+  ViewUserContractList = 'VIEW_USER_CONTRACT_LIST',
+  ViewUserList = 'VIEW_USER_LIST'
 }
 
 export type Admin = Account & {
@@ -76,6 +97,43 @@ export enum AdminRole {
 
 export type ChangePasswordResponse = Admin | InvalidCurrentPasswordError;
 
+export type Company = {
+  __typename?: 'Company';
+  contactEmail: Scalars['String'];
+  contactName: Scalars['String'];
+  contactPhone: Scalars['String'];
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  taxId: Scalars['String'];
+};
+
+export type CompanyContract = {
+  __typename?: 'CompanyContract';
+  contactEmail: Scalars['String'];
+  contactName: Scalars['String'];
+  contactPhone: Scalars['String'];
+  endedAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  industryDoc: Scalars['String'];
+  name: Scalars['String'];
+  powerPurchaseContractDoc: Scalars['String'];
+  price: Scalars['String'];
+  startedAt: Scalars['DateTime'];
+  wheelingDoc: Scalars['String'];
+};
+
+export type CompanyContractPage = {
+  __typename?: 'CompanyContractPage';
+  list: Array<CompanyContract>;
+  total: Scalars['Int'];
+};
+
+export type CompanyPage = {
+  __typename?: 'CompanyPage';
+  list: Array<Company>;
+  total: Scalars['Int'];
+};
+
 export type CreateAdminInput = {
   email: Scalars['String'];
   firstName: Scalars['String'];
@@ -86,6 +144,29 @@ export type CreateAdminInput = {
 };
 
 export type CreateAdminResponse = AccountAlreadyExistsError | Admin;
+
+export type CreateCompanyContractInput = {
+  companyId: Scalars['ID'];
+  contactEmail: Scalars['String'];
+  contactName: Scalars['String'];
+  contactPhone: Scalars['String'];
+  endedAt: Scalars['DateTime'];
+  industryDoc: Scalars['String'];
+  name: Scalars['String'];
+  powerPurchaseContractDoc: Scalars['String'];
+  price: Scalars['String'];
+  startedAt: Scalars['DateTime'];
+  wheelingAt: Scalars['DateTime'];
+  wheelingDoc: Scalars['String'];
+};
+
+export type CreateCompanyInput = {
+  contactEmail: Scalars['String'];
+  contactName: Scalars['String'];
+  contactPhone: Scalars['String'];
+  name: Scalars['String'];
+  taxId: Scalars['String'];
+};
 
 export type Error = {
   id: Scalars['ID'];
@@ -108,6 +189,8 @@ export type Mutation = {
   __typename?: 'Mutation';
   changePassword: ChangePasswordResponse;
   createAdmin: CreateAdminResponse;
+  createCompany: Company;
+  createCompanyContract: CompanyContract;
   removeAdmin: Admin;
   resetPassword: ResetPasswordResponse;
   sendResetPasswordEmail: SendResetPasswordEmailResponse;
@@ -125,6 +208,16 @@ export type MutationChangePasswordArgs = {
 
 export type MutationCreateAdminArgs = {
   input: CreateAdminInput;
+};
+
+
+export type MutationCreateCompanyArgs = {
+  input: CreateCompanyInput;
+};
+
+
+export type MutationCreateCompanyContractArgs = {
+  input: CreateCompanyContractInput;
 };
 
 
@@ -164,6 +257,10 @@ export type Query = {
   __typename?: 'Query';
   adminPermissions: Array<RoleInfo>;
   admins: AdminPage;
+  companies: CompanyPage;
+  company: Company;
+  companyContract: CompanyContract;
+  companyContracts: CompanyContractPage;
   me?: Maybe<Account>;
 };
 
@@ -172,6 +269,28 @@ export type QueryAdminsArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   role?: InputMaybe<AdminRole>;
+};
+
+
+export type QueryCompaniesArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryCompanyArgs = {
+  id: Scalars['UUID'];
+};
+
+
+export type QueryCompanyContractArgs = {
+  id: Scalars['UUID'];
+};
+
+
+export type QueryCompanyContractsArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 };
 
 export type RemoveAccountRecord = {
@@ -191,6 +310,7 @@ export type ResetPasswordResponse = PasswordResetExpiredError | Success;
 
 export enum Role {
   Admin = 'ADMIN',
+  Company = 'COMPANY',
   SuperAdmin = 'SUPER_ADMIN',
   User = 'USER'
 }

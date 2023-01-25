@@ -76,62 +76,64 @@ function MainPage() {
         <title>戰情總版</title>
         <meta name="description" content="戰情總版" />
       </Head>
-      <Box sx={{ display: "flex" }}>
-        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-          <Toolbar />
-          <IconBreadcrumbs
-            items={[
-              {
-                name: "戰情總版",
-                icon: OutlinedFlagIcon,
-                href: "/main",
-              },
-            ]}
-          />
-          <Grid container spacing={4} marginTop="4px">
-            <Grid item sm={7}>
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  height: "100%",
-                  justifyContent: "space-between",
-                  gap: "20px",
-                }}
-              >
-                <OverviewCard {...industryOverview} />
-                <OverviewCard {...userOverview} />
-              </Box>
-            </Grid>
-            <Grid item sm={5}>
-              <Card sx={{ p: "36px" }}>
-                <AnnualPrice annualBuyPrice="5022" annualSellPrice="4022" />
-              </Card>
-            </Grid>
-            <Grid item sm={6}>
-              <Card sx={{ p: "36px" }}>
-                <DemoChart name="營業額" />
-              </Card>
-            </Grid>
-            <Grid item sm={6}>
-              <Card sx={{ p: "36px" }}>
-                <DemoChart name="轉供度數" />
-              </Card>
-            </Grid>
+      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+        <Toolbar />
+        <IconBreadcrumbs
+          items={[
+            {
+              name: "戰情總版",
+              icon: OutlinedFlagIcon,
+              href: "/main",
+            },
+          ]}
+        />
+        <Grid container spacing={4} marginTop="4px">
+          <Grid item sm={7}>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                height: "100%",
+                justifyContent: "space-between",
+                gap: "20px",
+              }}
+            >
+              <OverviewCard {...industryOverview} />
+              <OverviewCard {...userOverview} />
+            </Box>
           </Grid>
-          <Divider sx={{ margin: "24px 0" }} />
-          <Card sx={{ p: "36px" }}>
-            <DemoChart name="未來一年容量平衡" />
-          </Card>
-          <Grid container spacing={4} marginTop="4px">
-            <Grid item sm={6}>
+          <Grid item sm={5}>
+            <Card sx={{ p: "36px" }}>
+              <AnnualPrice annualBuyPrice="5022" annualSellPrice="4022" />
+            </Card>
+          </Grid>
+          <Grid item sm={6}>
+            <Card sx={{ p: "36px" }}>
+              <DemoChart name="營業額" />
+            </Card>
+          </Grid>
+          <Grid item sm={6}>
+            <Card sx={{ p: "36px" }}>
+              <DemoChart name="轉供度數" />
+            </Card>
+          </Grid>
+        </Grid>
+        <Divider sx={{ margin: "24px 0" }} />
+        <Card sx={{ p: "36px" }}>
+          <DemoChart name="未來一年容量平衡" />
+        </Card>
+        <Grid container spacing={4} marginTop="4px">
+          <Grid item sm={6}>
+            <Card sx={{ p: "36px" }}>
               <BasicTable title="容量不足用戶名單" />
-            </Grid>
-            <Grid item sm={6}>
-              <BasicTable title="容量剩餘發電業名單" />
-            </Grid>
+            </Card>
           </Grid>
-        </Box>
+          <Grid item sm={6}>
+            <Card sx={{ p: "36px" }}>
+              <BasicTable title="容量剩餘發電業名單" />
+            </Card>
+          </Grid>
+        </Grid>
       </Box>
     </>
   );

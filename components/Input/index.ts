@@ -6,6 +6,7 @@ import InputSelect from './InputSelect'
 import InputText from './InputText'
 import InputTextarea from './InputTextarea'
 import InputUpload from './InputUpload'
+import InputSearch from './InputSearch';
 
 export {
   InputAutocomplete,
@@ -16,4 +17,5 @@ export {
   InputText,
   InputTextarea,
   InputUpload,
+  InputSearch,
 }

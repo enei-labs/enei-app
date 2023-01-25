@@ -1,40 +1,93 @@
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
-import Divider from "@mui/material/Divider";
-import MailIcon from "@mui/icons-material/Mail";
 import BoltIcon from "@mui/icons-material/BoltOutlined";
-import OutlinedFlagIcon from "@mui/icons-material/OutlinedFlag";
 import IconBreadcrumbs from "@components/BreadCrumbs";
-import OverviewCard, { OverviewCardProps } from "@components/OverviewCard";
-import { Card, Grid } from "@mui/material";
-import dynamic from "next/dynamic";
+import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
+import { Button, Card, Divider, Grid, Typography } from "@mui/material";
 import { AuthLayout } from "@components/Layout";
-import { ReactElement } from "react";
+import { ReactElement, useState } from "react";
 import Head from "next/head";
+import { BasicTable } from "@components/Table";
+import { InputSearch, InputText } from "@components/Input";
+import ContractBox from "@components/ContractBox";
+import { BasicSelect } from "@components/Select";
+import AddCompanyBtn from "@components/Company/AddCompanyBtn";
 
 function IndustryPage() {
+  const [state, setState] = useState("");
   return (
     <>
       <Head>
         <title>發電業管理</title>
         <meta name="description" content="發電業管理" />
       </Head>
-      <Box sx={{ display: "flex" }}>
-        <Box
-          component="main"
-          sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
-        >
-          <Toolbar />
-          <IconBreadcrumbs
-            items={[
-              {
-                name: "發電業管理",
-                icon: BoltIcon,
-                href: "/industry",
-              },
-            ]}
-          />
-        </Box>
+      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+        <Toolbar />
+        <IconBreadcrumbs
+          items={[
+            {
+              name: "發電業管理",
+              icon: BoltIcon,
+              href: "/industry",
+            },
+          ]}
+        />
+        <Card sx={{ p: "36px", marginTop: "12px" }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              mb: "16px",
+            }}
+          >
+            <InputSearch />
+            <AddCompanyBtn />
+          </Box>
+          <BasicTable title="" />
+        </Card>
+        <Divider sx={{ my: "24px" }} />
+        <Card sx={{ p: "36px" }}>
+          <Typography variant="h4">再生能源股份有限公司2</Typography>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              mt: "24px",
+            }}
+          >
+            <Box>
+              <InputSearch />
+              <BasicSelect state={state} setState={setState} items={[]} />
+            </Box>
+            <Button startIcon={<AddIcon />}>新增合約</Button>
+          </Box>
+          <Grid container spacing={2} sx={{ mt: "24px" }}>
+            <Grid item sm={4}>
+              <ContractBox
+                title="XXX-XXXX-XX（合約名稱）"
+                subtitle="3,000MWh"
+              />
+            </Grid>
+            <Grid item sm={4}>
+              <ContractBox
+                title="XXX-XXXX-XX（合約名稱）"
+                subtitle="3,000MWh"
+              />
+            </Grid>
+            <Grid item sm={4}>
+              <ContractBox
+                title="XXX-XXXX-XX（合約名稱）"
+                subtitle="3,000MWh"
+              />
+            </Grid>
+            <Grid item sm={4}>
+              <ContractBox
+                title="XXX-XXXX-XX（合約名稱）"
+                subtitle="3,000MWh"
+              />
+            </Grid>
+          </Grid>
+        </Card>
       </Box>
     </>
   );

@@ -30,8 +30,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     },
   });
 
-  console.log({ data });
-
   const [signOut] = useSignOut();
 
   const logIn = async () => {
