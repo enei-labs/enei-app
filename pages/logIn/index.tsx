@@ -21,14 +21,14 @@ const configs: FieldConfig[] = [
   {
     type: "TEXT",
     name: "email",
-    label: "User Account (Email)",
+    label: "信箱",
     required: true,
     validated: textValidated.email(),
   },
   {
     type: "PASSWORD",
     name: "password",
-    label: "Password",
+    label: "密碼",
     required: true,
     validated: passwordValidated,
   },
@@ -71,8 +71,8 @@ const LogIn = () => {
   return (
     <>
       <Head>
-        <title>Log In</title>
-        <meta name="description" content="Log In" />
+        <title>登入</title>
+        <meta name="description" content="登入" />
       </Head>
 
       <Box component="form" onSubmit={handleSubmit(onSubmit)}>
@@ -89,7 +89,7 @@ const LogIn = () => {
           <LogInForgotPwdBtn />
 
           <LoadingButton type="submit" variant="contained" loading={loading}>
-            Log In
+            登入
           </LoadingButton>
         </FormBox>
       </Box>

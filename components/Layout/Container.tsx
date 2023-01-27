@@ -43,10 +43,7 @@ const style = {
 const Container: React.FC<ContainerProps> = ({ children }) => {
   return (
     <Box px="20px">
-      <Box sx={style.logo}>
-        logo
-        <Chip variant="outlined" color="secondary" label="ADMIN" />
-      </Box>
+      <Box sx={style.logo}>logo</Box>
 
       <Box component="main" sx={style.main}>
         {children}
@@ -54,7 +51,7 @@ const Container: React.FC<ContainerProps> = ({ children }) => {
 
       <Box component="footer" sx={style.footer}>
         <Typography color="primary">Powered by</Typography>
-        Enei
+        Annual Energy
       </Box>
     </Box>
   );
