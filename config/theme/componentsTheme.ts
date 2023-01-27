@@ -1,49 +1,50 @@
-import { createTheme } from '@mui/material/styles'
-import paletteTheme from './paletteTheme'
+import { createTheme } from "@mui/material/styles";
+import paletteTheme from "./paletteTheme";
 
-const { palette } = paletteTheme as any
+const { palette } = paletteTheme as any;
 
-const breakpoints = createTheme().breakpoints
+const breakpoints = createTheme().breakpoints;
 
 const componentsTheme = createTheme({
   components: {
     MuiCard: {
       styleOverrides: {
         root: {
-          border: 'none',
-          boxShadow: '1px 1px 5px rgba(0, 0, 0, 0.15)',
-          borderRadius: '16px',
+          border: "none",
+          boxShadow: "1px 1px 5px rgba(0, 0, 0, 0.15)",
+          borderRadius: "16px",
+          backgroundColor: "#FFFFFF",
         },
       },
     },
     MuiButton: {
       variants: [
         {
-          props: { size: 'medium' },
+          props: { size: "medium" },
           style: {
-            padding: '8px 12px',
+            padding: "8px 12px",
           },
         },
       ],
       styleOverrides: {
         root: {
-          minHeight: '40px',
-          boxShadow: 'none',
+          minHeight: "40px",
+          boxShadow: "none",
           border: `1px solid ${palette.secondary.main}`,
-          color: '#FFF',
-          '&.MuiButton-text': {
-            width: 'fit-content',
-            minHeight: 'fit-content',
+          color: "#FFF",
+          "&.MuiButton-text": {
+            width: "fit-content",
+            minHeight: "fit-content",
             backgroundColor: palette.primary.dark,
-            color: '#FFF',
+            color: "#FFF",
           },
-          '&.MuiButton-text:hover': {
-            backgroundColor: '#004D40',
+          "&.MuiButton-text:hover": {
+            backgroundColor: "#004D40",
           },
-          '&.MuiButton-containedPrimary': {
-            color: 'white',
+          "&.MuiButton-containedPrimary": {
+            color: "white",
           },
-          '&.MuiButton-outlinedSecondary': {
+          "&.MuiButton-outlinedSecondary": {
             border: `1px solid ${palette.secondary.main}`,
           },
         },
@@ -52,19 +53,19 @@ const componentsTheme = createTheme({
     MuiAppBar: {
       styleOverrides: {
         root: {
-          height: '64px',
-          backgroundColor: '#FFF',
-          boxShadow: 'none',
-          borderBottom: '1px solid rgba(0, 0, 0, 0.12)'
-        }
-      }
+          height: "64px",
+          backgroundColor: "#FFF",
+          boxShadow: "none",
+          borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
+        },
+      },
     },
     MuiButtonBase: {
       styleOverrides: {
         root: {
-          '&.Mui-disabled': {
-            cursor: 'not-allowed',
-            pointerEvents: 'auto',
+          "&.Mui-disabled": {
+            cursor: "not-allowed",
+            pointerEvents: "auto",
           },
         },
       },
@@ -72,13 +73,13 @@ const componentsTheme = createTheme({
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          fontSize: '16px',
-          height: '40px',
-          '.Mui-disabled': {
-            cursor: 'not-allowed',
+          fontSize: "16px",
+          height: "40px",
+          ".Mui-disabled": {
+            cursor: "not-allowed",
           },
           "& input::placeholder": {
-            fontSize: '16px',
+            fontSize: "16px",
           },
         },
       },
@@ -86,10 +87,10 @@ const componentsTheme = createTheme({
     MuiDialogContent: {
       styleOverrides: {
         root: {
-          padding: '60px',
-          textAlign: 'center',
-          [breakpoints.down('md')]: {
-            padding: '30px',
+          padding: "60px",
+          textAlign: "center",
+          [breakpoints.down("md")]: {
+            padding: "30px",
           },
         },
       },
@@ -97,11 +98,22 @@ const componentsTheme = createTheme({
     MuiTablePagination: {
       styleOverrides: {
         root: {
-          '& .MuiTablePagination-selectLabel': {
-            fontSize: '14px',
+          "& .MuiTablePagination-selectLabel": {
+            fontSize: "14px",
           },
-          '& .MuiTablePagination-displayedRows': {
-            fontSize: '14px',
+          "& .MuiTablePagination-displayedRows": {
+            fontSize: "14px",
+          },
+        },
+      },
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        root: {
+          "&.Mui-disabled": {
+            fieldset: {
+              background: "#F5F5F5",
+            },
           },
         },
       },
@@ -110,10 +122,10 @@ const componentsTheme = createTheme({
       styleOverrides: {
         root: {
           color: palette.text.secondary,
-        }
-      }
-    }
+        },
+      },
+    },
   },
-})
+});
 
-export default componentsTheme
+export default componentsTheme;
