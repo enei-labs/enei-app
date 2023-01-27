@@ -11,11 +11,21 @@ const style = {
       display: "flex",
       flexDirection: "column",
       padding: "8px",
+      height: "100%",
+      justifyContent: "space-between",
       [theme.breakpoints.down("md")]: {
         display: "none",
       },
     }),
   ],
+  top: {
+    display: "flex",
+    flexDirection: "column",
+  },
+  down: {
+    display: "flex",
+    flexDirection: "column",
+  },
   wrapper: [
     (theme: Theme) => ({
       display: "flex",
@@ -39,21 +49,28 @@ const style = {
 const Sidebar = () => {
   const router = useRouter();
 
+  const getLink = (item: any, index: any) => {
+    const { name, path = "", icon: Icon } = item;
+    const isActive = router.pathname === path;
+
+    return (
+      <Link key={index} href={path}>
+        <Box sx={style.wrapper} className={isActive ? "active" : undefined}>
+          <Icon />
+          <Typography variant="menuItem">{name}</Typography>
+        </Box>
+      </Link>
+    );
+  };
+
   return (
     <Box sx={style.container}>
-      {sideBarConfigs.map((item, index) => {
-        const { name, path = "", icon: Icon } = item;
-        const isActive = router.pathname === path;
-
-        return (
-          <Link key={index} href={path}>
-            <Box sx={style.wrapper} className={isActive ? "active" : undefined}>
-              <Icon />
-              <Typography variant="menuItem">{name}</Typography>
-            </Box>
-          </Link>
-        );
-      })}
+      <Box sx={style.top}>
+        {sideBarConfigs.top.map((item, index) => getLink(item, index))}
+      </Box>
+      <Box sx={style.down}>
+        {sideBarConfigs.down.map((item, index) => getLink(item, index))}
+      </Box>
     </Box>
   );
 };

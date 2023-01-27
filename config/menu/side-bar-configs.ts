@@ -1,40 +1,68 @@
-import MailIcon from "@mui/icons-material/Mail";
+import MailIcon from '@mui/icons-material/MailOutlineOutlined';
 import BoltIcon from "@mui/icons-material/BoltOutlined";
-import FlagIcon from "@mui/icons-material/Flag";
+import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
 import UserIcon from "@mui/icons-material/PersonAddAlt";
 import ChartIcon from "@mui/icons-material/InsertChartOutlinedSharp";
 import TaskOutlinedIcon from "@mui/icons-material/TaskOutlined";
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import VpnKeyOutlinedIcon from '@mui/icons-material/VpnKeyOutlined';
+import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
+import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 
-export const sideBarConfigs = [
-  {
-    name: "戰情總版",
-    icon: FlagIcon,
-    path: '/main'
-  },
-  {
-    name: "發電業管理",
-    icon: BoltIcon,
-    path: '/industry'
-  },
-  {
-    name: "用戶管理",
-    icon: UserIcon,
-    path: '/user'
-  },
-  {
-    name: "轉供申請進度",
-    icon: ChartIcon,
-    path: '/application'
-  },
-  {
-    name: "轉供資料管理",
-    icon: TaskOutlinedIcon,
-    path: '/transform'
+export const sideBarConfigs = {
+  top: [
+    {
+      name: "戰情總版",
+      icon: FlagOutlinedIcon,
+      path: '/main'
+    },
+    {
+      name: "發電業管理",
+      icon: BoltIcon,
+      path: '/industry'
+    },
+    {
+      name: "用戶管理",
+      icon: UserIcon,
+      path: '/user'
+    },
+    {
+      name: "轉供申請進度",
+      icon: ChartIcon,
+      path: '/application'
+    },
+    {
+      name: "轉供資料管理",
+      icon: TaskOutlinedIcon,
+      path: '/transform'
 
-  },
-  {
-    name: "電費單匯出",
-    icon: MailIcon,
-    path: '/export'
-  },
-];
+    },
+    {
+      name: "電費單匯出",
+      icon: MailIcon,
+      path: '/export'
+    },
+  ],
+  down: [
+    {
+      name: "帳戶設定",
+      icon: AccountCircleOutlinedIcon,
+      path: '/settings'
+    },
+    {
+      name: "修改密碼",
+      icon: VpnKeyOutlinedIcon,
+      path: '/reset-password'
+    },
+    {
+      name: "權限管理",
+      icon: LockOpenOutlinedIcon,
+      path: '/permissions'
+    },
+    {
+      name: "登出",
+      icon: LogoutOutlinedIcon,
+      path: '/logout'
+    }
+  ]
+};

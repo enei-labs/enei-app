@@ -1,5 +1,7 @@
 import { createTheme } from '@mui/material/styles'
+import paletteTheme from './paletteTheme'
 
+const { palette } = paletteTheme as any
 const breakpoints = createTheme().breakpoints
 
 const typographyTheme = createTheme({
@@ -54,18 +56,18 @@ const typographyTheme = createTheme({
       wordBreak: 'break-all',
     },
     body2: {
-      color: 'text.secondary',
+      color: palette.text.secondary,
       fontSize: '16px',
       fontWeight: 400,
       wordBreak: 'break-all',
     },
     body3: {
-      color: 'text.secondary',
+      color: palette.text.secondary,
       fontSize: '14px',
       fontWeight: 400,
     },
     body4: {
-      color: 'text.secondary',
+      color: palette.text.secondary,
       fontSize: '12px',
       fontWeight: 400,
     },

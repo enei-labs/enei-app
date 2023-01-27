@@ -101,7 +101,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
           variant="permanent"
           anchor="left"
         >
-          <Box>Enei-Dashboard</Box>
+          <Box>Annual-Energy Dashboard</Box>
           <Toolbar />
           <Divider />
           <Sidebar />
