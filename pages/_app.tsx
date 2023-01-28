@@ -10,6 +10,7 @@ import type { AppProps } from "next/app";
 import { ReactElement, ReactNode } from "react";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import Snackbar from "@components/Snackbar";
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -28,6 +29,7 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
       <ApolloProvider client={client}>
         <AuthProvider>
           <ThemeProvider theme={theme}>{component}</ThemeProvider>
+          <Snackbar />
         </AuthProvider>
       </ApolloProvider>
     </LocalizationProvider>

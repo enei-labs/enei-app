@@ -1,4 +1,4 @@
-import { Card, Grid } from "@mui/material";
+import { Grid } from "@mui/material";
 import { PriceBox } from "./PriceBox";
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
 

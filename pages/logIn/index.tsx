@@ -56,7 +56,7 @@ const LogIn = () => {
     });
 
     if (data?.signInAdmin.__typename !== "Admin") {
-      toast.error("Incorrect user account or password.");
+      toast.error("帳號或密碼不正確");
       return;
     }
 

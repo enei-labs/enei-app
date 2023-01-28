@@ -4,6 +4,8 @@ import type { Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/router";
 import { sideBarConfigs } from "@config/menu/side-bar-configs";
+import { useAuth } from "@core/context/auth";
+import { SvgIconComponent } from "@mui/icons-material";
 
 const style = {
   container: [
@@ -47,11 +49,32 @@ const style = {
 };
 
 const Sidebar = () => {
+  const { logOut } = useAuth();
   const router = useRouter();
 
-  const getLink = (item: any, index: any) => {
+  const getLink = (
+    item: {
+      name: string;
+      icon: SvgIconComponent;
+      path: string;
+    },
+    index: number
+  ) => {
     const { name, path = "", icon: Icon } = item;
     const isActive = router.pathname === path;
+
+    if (item.path === "/logout") {
+      return (
+        <Box
+          key={index}
+          sx={[...style.wrapper, { cursor: "pointer" }]}
+          onClick={logOut}
+        >
+          <Icon />
+          <Typography variant="menuItem">{name}</Typography>
+        </Box>
+      );
+    }
 
     return (
       <Link key={index} href={path}>
