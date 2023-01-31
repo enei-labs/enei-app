@@ -1,7 +1,7 @@
-import { Chip } from "@mui/material";
 import Box from "@mui/material/Box";
 import type { Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import Logo from "public/logo-with-name.svg";
 
 interface ContainerProps {
   children?: React.ReactNode;
@@ -43,15 +43,14 @@ const style = {
 const Container: React.FC<ContainerProps> = ({ children }) => {
   return (
     <Box px="20px">
-      <Box sx={style.logo}>logo</Box>
-
+      <Box sx={style.logo}></Box>
       <Box component="main" sx={style.main}>
         {children}
       </Box>
 
       <Box component="footer" sx={style.footer}>
         <Typography color="primary">Powered by</Typography>
-        Annual Energy
+        <Logo height="40" />
       </Box>
     </Box>
   );

@@ -3,6 +3,7 @@ import { Divider, Drawer, Toolbar } from "@mui/material";
 import Box from "@mui/material/Box";
 import type { Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import Logo from "public/logo-with-name.svg";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import Navbar from "./Navbar";
@@ -101,8 +102,17 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
           variant="permanent"
           anchor="left"
         >
-          <Box>Annual-Energy Dashboard</Box>
-          <Toolbar />
+          <Box
+            sx={{
+              height: 100,
+              display: "flex",
+              justifyContent: "flex-start",
+              alignItems: "center",
+              paddingX: "25px",
+            }}
+          >
+            <Logo height="40" />
+          </Box>
           <Divider />
           <Sidebar />
         </Drawer>
@@ -118,8 +128,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
 
         <Box sx={style.logo}>
           <Typography color="primary">Powered by</Typography>
-          Enei
-          {/* <AegisCustodySvg /> */}
+          <Logo height="40" />
         </Box>
       </Box>
     </>
