@@ -72,6 +72,7 @@ const componentsTheme = createTheme({
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
+          fontSize: '16px',
           height: '40px',
           '.Mui-disabled': {
             cursor: 'not-allowed',
@@ -105,6 +106,13 @@ const componentsTheme = createTheme({
         },
       },
     },
+    MuiSvgIcon: {
+      styleOverrides: {
+        root: {
+          color: palette.text.secondary,
+        }
+      }
+    }
   },
 })
 

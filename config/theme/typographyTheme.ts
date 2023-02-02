@@ -49,6 +49,7 @@ const typographyTheme = createTheme({
     subtitle2: {
       fontSize: '14px',
       fontWeight: 700,
+      color: palette.text.secondary,
     },
     body1: {
       fontSize: '20px',
