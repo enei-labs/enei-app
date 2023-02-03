@@ -14,11 +14,10 @@ const useMutation = <
   TData = any,
   TVariables = OperationVariables,
   TContext = DefaultContext,
-  TCache extends ApolloCache<any> = ApolloCache<any>,
 >(
   mutation: DocumentNode | TypedDocumentNode<TData, TVariables>,
   options?: MutationHookOptions<TData, TVariables, TContext>,
-): MutationTuple<TData, TVariables, TContext, TCache> => {
+): MutationTuple<TData, TVariables, TContext, ApolloCache<any>> => {
   return apolloMutation(mutation, {
     awaitRefetchQueries: true,
     onError: error => toast.error(error.message),
