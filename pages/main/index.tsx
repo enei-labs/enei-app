@@ -76,7 +76,7 @@ function MainPage() {
         <title>戰情總版</title>
         <meta name="description" content="戰情總版" />
       </Head>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <>
         <Toolbar />
         <IconBreadcrumbs
           items={[
@@ -134,7 +134,7 @@ function MainPage() {
             </Card>
           </Grid>
         </Grid>
-      </Box>
+      </>
     </>
   );
 }

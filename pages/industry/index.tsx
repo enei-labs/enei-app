@@ -12,6 +12,8 @@ import { InputSearch, InputText } from "@components/Input";
 import ContractBox from "@components/ContractBox";
 import { BasicSelect } from "@components/Select";
 import AddCompanyBtn from "@components/Company/AddCompanyBtn";
+import { AuthGuard } from "../../components/AuthGuard";
+import { Role } from "../../core/graphql/types";
 
 function IndustryPage() {
   const [state, setState] = useState("");
@@ -21,31 +23,33 @@ function IndustryPage() {
         <title>發電業管理</title>
         <meta name="description" content="發電業管理" />
       </Head>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <Toolbar />
-        <IconBreadcrumbs
-          items={[
-            {
-              name: "發電業管理",
-              icon: BoltIcon,
-              href: "/industry",
-            },
-          ]}
-        />
-        <Card sx={{ p: "36px", marginTop: "12px" }}>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              mb: "16px",
-            }}
-          >
-            <InputSearch />
-            <AddCompanyBtn />
-          </Box>
-          <BasicTable title="" />
-        </Card>
-        <Divider sx={{ my: "24px" }} />
+      <Toolbar />
+      <IconBreadcrumbs
+        items={[
+          {
+            name: "發電業管理",
+            icon: BoltIcon,
+            href: "/industry",
+          },
+        ]}
+      />
+      <Box sx={{ "& :first-child": { marginTop: "12px" } }}>
+        <AuthGuard roles={[Role.Admin, Role.SuperAdmin]}>
+          <Card sx={{ p: "36px" }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                mb: "16px",
+              }}
+            >
+              <InputSearch />
+              <AddCompanyBtn />
+            </Box>
+            <BasicTable title="" />
+          </Card>
+          <Divider sx={{ my: "24px" }} />
+        </AuthGuard>
         <Card sx={{ p: "36px" }}>
           <Typography variant="h4">再生能源股份有限公司2</Typography>
           <Box

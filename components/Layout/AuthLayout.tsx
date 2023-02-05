@@ -18,7 +18,6 @@ const style = {
     (theme: Theme) => ({
       display: "grid",
       gridTemplateColumns: "auto 1fr",
-      m: "30px",
       [theme.breakpoints.down("md")]: {
         gridTemplateColumns: "auto",
       },
@@ -28,9 +27,9 @@ const style = {
     (theme: Theme) => ({
       display: "flex",
       flexDirection: "column",
-      gap: "30px",
       minHeight: "calc(100vh - 194px)",
       overflow: "scroll",
+      padding: "36px",
       [theme.breakpoints.down("md")]: {
         minHeight: "calc(100vh - 174px)",
       },
@@ -113,7 +112,6 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
           >
             <Logo height="40" />
           </Box>
-          <Divider />
           <Sidebar />
         </Drawer>
         <Box component="main" sx={style.main}>
