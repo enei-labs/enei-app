@@ -130,6 +130,13 @@ const componentsTheme = createTheme({
         },
       },
     },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          boxShadow: 'none',
+        },
+      },
+    },
   },
 });
 
