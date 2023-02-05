@@ -33,7 +33,7 @@ function IndustryPage() {
           },
         ]}
       />
-      <Box sx={{ "& :first-child": { marginTop: "12px" } }}>
+      <Box sx={{ paddingTop: "12px" }}>
         <AuthGuard roles={[Role.Admin, Role.SuperAdmin]}>
           <Card sx={{ p: "36px" }}>
             <Box

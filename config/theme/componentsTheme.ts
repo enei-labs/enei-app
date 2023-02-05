@@ -27,6 +27,11 @@ const componentsTheme = createTheme({
         },
       ],
       styleOverrides: {
+        startIcon: {
+          "& svg": {
+            color: '#FFF'
+          }
+        },
         root: {
           minHeight: "40px",
           boxShadow: "none",
