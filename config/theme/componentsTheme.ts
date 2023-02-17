@@ -75,6 +75,13 @@ const componentsTheme = createTheme({
         },
       },
     },
+    MuiFormLabel: {
+      styleOverrides: {
+        root: {
+          fontSize: "16px",
+        }
+      }
+    },
     MuiOutlinedInput: {
       styleOverrides: {
         root: {

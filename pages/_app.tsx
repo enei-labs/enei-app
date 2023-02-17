@@ -1,9 +1,8 @@
 import { ApolloProvider } from "@apollo/client";
-// import Snackbar from '@components/Snackbar'
 import theme from "@config/theme";
 import { AuthProvider } from "@core/context/auth";
 import client from "@core/graphql";
-import { CssBaseline, ThemeProvider } from "@mui/material";
+import { ThemeProvider } from "@mui/material";
 import "@styles/globals.css";
 import { NextPage } from "next";
 import type { AppProps } from "next/app";
