@@ -12,10 +12,13 @@ import { InputSearch, InputText } from "@components/Input";
 import ContractBox from "@components/ContractBox";
 import { BasicSelect } from "@components/Select";
 import AddCompanyBtn from "@components/Company/AddCompanyBtn";
-import { AuthGuard } from "../../components/AuthGuard";
-import { Role } from "../../core/graphql/types";
+import { AuthGuard } from "@components/AuthGuard";
+import { Role } from "@core/graphql/types";
+import { useCompanies } from "@utils/hooks/queries/useCompanies";
+import CompanyPanel from "../../components/Company/CompanyPanel";
 
 function IndustryPage() {
+  const { data, loading } = useCompanies();
   const [state, setState] = useState("");
   return (
     <>
@@ -46,7 +49,7 @@ function IndustryPage() {
               <InputSearch />
               <AddCompanyBtn />
             </Box>
-            <BasicTable title="" />
+            <CompanyPanel />
           </Card>
           <Divider sx={{ my: "24px" }} />
         </AuthGuard>

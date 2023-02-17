@@ -7,7 +7,7 @@ export const COMPANIES = gql`
     $limit: Int = 10
     $offset: Int = 0
   ) {
-    clients(
+    companies(
       limit: $limit
       offset: $offset
     ) {

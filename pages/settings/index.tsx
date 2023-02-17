@@ -6,11 +6,11 @@ import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import { AuthLayout } from "@components/Layout";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 import {
+  Box,
   Button,
   Card,
   Container,
   Grid,
-  IconButton,
   Toolbar,
   Typography,
 } from "@mui/material";
@@ -108,46 +108,47 @@ const Settings = () => {
           },
         ]}
       />
+      <Box sx={{ paddingTop: "12px" }}>
+        <Card>
+          <Container sx={{ marginTop: "44px" }}>
+            <Grid container justifyContent={"space-between"}>
+              <Typography variant="h4">個人資料</Typography>
+              <IconBtn
+                icon={<BorderColorOutlinedIcon />}
+                onClick={() => {
+                  setIsOpenDialog(true);
+                }}
+              />
+            </Grid>
+          </Container>
 
-      <Card>
-        <Container sx={{ marginTop: "44px" }}>
-          <Grid container justifyContent={"space-between"}>
-            <Typography variant="h4">個人資料</Typography>
-            <IconBtn
-              icon={<BorderColorOutlinedIcon />}
-              onClick={() => {
-                setIsOpenDialog(true);
-              }}
-            />
-          </Grid>
-        </Container>
-
-        <Container sx={{ margin: "32px 0" }}>
-          <Grid
-            container
-            direction={"column"}
-            spacing={2}
-            justifyContent={"center"}
-            sx={{ padding: "0 10px" }}
-          >
-            <ProfileWithIcons
-              Icon={PersonOutlineOutlinedIcon}
-              type={ProfileInfoType.USER_NAME}
-              text={"麥綠電"}
-            ></ProfileWithIcons>
-            <ProfileWithIcons
-              Icon={HomeOutlinedIcon}
-              type={ProfileInfoType.ACCOMPANY_NAME}
-              text={"綠電用戶"}
-            ></ProfileWithIcons>
-            <ProfileWithIcons
-              Icon={EmailOutlinedIcon}
-              type={ProfileInfoType.USER_EMAIL}
-              text={"abc123@gmail.com"}
-            ></ProfileWithIcons>
-          </Grid>
-        </Container>
-      </Card>
+          <Container sx={{ margin: "32px 0" }}>
+            <Grid
+              container
+              direction={"column"}
+              spacing={2}
+              justifyContent={"center"}
+              sx={{ padding: "0 10px" }}
+            >
+              <ProfileWithIcons
+                Icon={PersonOutlineOutlinedIcon}
+                type={ProfileInfoType.USER_NAME}
+                text={"麥綠電"}
+              ></ProfileWithIcons>
+              <ProfileWithIcons
+                Icon={HomeOutlinedIcon}
+                type={ProfileInfoType.ACCOMPANY_NAME}
+                text={"綠電用戶"}
+              ></ProfileWithIcons>
+              <ProfileWithIcons
+                Icon={EmailOutlinedIcon}
+                type={ProfileInfoType.USER_EMAIL}
+                text={"abc123@gmail.com"}
+              ></ProfileWithIcons>
+            </Grid>
+          </Container>
+        </Card>
+      </Box>
 
       <Dialog open={isOpenDialog} onClose={() => setIsOpenDialog(false)}>
         <Grid container justifyContent={"space-between"} alignItems={"center"}>
