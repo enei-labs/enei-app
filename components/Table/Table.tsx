@@ -47,8 +47,6 @@ const style = {
   headCell: (theme: any) => ({
     fontSize: "14px",
     fontWeight: "bold",
-    color: theme.palette.secondary.main,
-    backgroundColor: theme.palette.bg.main,
     whiteSpace: "nowrap",
   }),
   bodyCell: {
