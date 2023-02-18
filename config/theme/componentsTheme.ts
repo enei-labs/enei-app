@@ -22,7 +22,7 @@ const componentsTheme = createTheme({
         {
           props: { size: "medium" },
           style: {
-            padding: "8px 12px",
+            padding: "0 12px",
           },
         },
       ],
@@ -64,6 +64,13 @@ const componentsTheme = createTheme({
           borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
         },
       },
+    },
+    MuiMenuItem: {
+      styleOverrides: {
+        root: {
+          fontSize: "14px",
+        }
+      }
     },
     MuiButtonBase: {
       styleOverrides: {

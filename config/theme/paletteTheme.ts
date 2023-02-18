@@ -41,6 +41,7 @@ const paletteTheme = createTheme({
     bg: {
       main: '#FAFCFE',
     },
+    placeholder: 'rgba(0, 0, 0, 0.13)',
   },
 })
 
@@ -51,6 +52,7 @@ declare module '@mui/material/styles' {
     reject?: PaletteOptions['primary']
     menu?: PaletteOptions['primary']
     bg?: PaletteOptions['primary']
+    placeholder?: string
   }
 }
 
