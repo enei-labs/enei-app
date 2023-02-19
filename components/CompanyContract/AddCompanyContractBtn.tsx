@@ -6,7 +6,7 @@ import { textValidated } from "@core/types/fieldConfig";
 import { LoadingButton } from "@mui/lab";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import { useValidatedForm } from "@utils/hooks";
-import { useReducer, useState } from "react";
+import { useReducer } from "react";
 import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { useCreateCompany } from "@utils/hooks/mutations/useCreateCompany";
 import { COMPANIES } from "@core/graphql/queries/companies";
@@ -31,13 +31,6 @@ const configs: FieldConfig[] = [
   },
   {
     type: "TEXT",
-    name: "taxId",
-    label: "統一編號",
-    required: true,
-    validated: textValidated,
-  },
-  {
-    type: "TEXT",
     name: "contactName",
     label: "聯絡人姓名",
     required: true,
@@ -57,6 +50,13 @@ const configs: FieldConfig[] = [
     required: true,
     validated: textValidated.email(),
   },
+  {
+    type: "TEXT",
+    name: "contactEmail",
+    label: "合約價格",
+    required: true,
+    validated: textValidated.email(),
+  },
 ];
 
 type DialogState = {
@@ -64,7 +64,7 @@ type DialogState = {
   next?: boolean;
 };
 
-const AddCompanyBtn = () => {
+const AddCompanyContractBtn = () => {
   const { me } = useAuth();
   const [state, dispatch] = useReducer(
     (prev: DialogState, next: DialogState) => {
@@ -107,7 +107,7 @@ const AddCompanyBtn = () => {
   return (
     <>
       <Button startIcon={<AddIcon />} onClick={() => dispatch({ form: true })}>
-        新增發電業
+        新增合約
       </Button>
 
       <Dialog
@@ -117,7 +117,7 @@ const AddCompanyBtn = () => {
       >
         <Grid container justifyContent={"space-between"} alignItems={"center"}>
           <Typography variant="h4" textAlign={"left"}>
-            公司資訊
+            發電業資訊
           </Typography>
           <IconBtn
             icon={<HighlightOffIcon />}
@@ -175,4 +175,4 @@ const AddCompanyBtn = () => {
   );
 };
 
-export default AddCompanyBtn;
+export default AddCompanyContractBtn;

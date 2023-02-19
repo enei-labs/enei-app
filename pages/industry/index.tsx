@@ -7,18 +7,16 @@ import { Button, Card, Divider, Grid, Typography } from "@mui/material";
 import { AuthLayout } from "@components/Layout";
 import { ReactElement, useState } from "react";
 import Head from "next/head";
-import { BasicTable } from "@components/Table";
 import { InputSearch, InputText } from "@components/Input";
 import ContractBox from "@components/ContractBox";
 import { BasicSelect } from "@components/Select";
 import AddCompanyBtn from "@components/Company/AddCompanyBtn";
 import { AuthGuard } from "@components/AuthGuard";
 import { Role } from "@core/graphql/types";
-import { useCompanies } from "@utils/hooks/queries/useCompanies";
-import CompanyPanel from "../../components/Company/CompanyPanel";
+import CompanyPanel from "@components/Company/CompanyPanel";
+import AddCompanyContractBtn from "@components/CompanyContract/AddCompanyContractBtn";
 
 function IndustryPage() {
-  const { data, loading } = useCompanies();
   const [state, setState] = useState("");
   return (
     <>
@@ -62,11 +60,11 @@ function IndustryPage() {
               mt: "24px",
             }}
           >
-            <Box>
+            <Box sx={{ display: "flex", columnGap: "0.75em" }}>
               <InputSearch />
               <BasicSelect state={state} setState={setState} items={[]} />
             </Box>
-            <Button startIcon={<AddIcon />}>新增合約</Button>
+            <AddCompanyContractBtn />
           </Box>
           <Grid container spacing={2} sx={{ mt: "24px" }}>
             <Grid item sm={4}>
