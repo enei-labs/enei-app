@@ -74,7 +74,7 @@ const Settings = () => {
   const [isOpenDialog, setIsOpenDialog] = useState<boolean>(false);
   const [isModifySuccess, setIsModifySuccess] = useState<boolean>(false);
 
-  const { me } = useAuth();
+  const { me, logIn } = useAuth();
 
   const settingsFieldConfigs: FieldConfig[] = [
     {
@@ -119,6 +119,8 @@ const Settings = () => {
       },
     });
 
+    // refetch 用戶資料
+    logIn();
     setIsOpenDialog(false);
     setIsModifySuccess(true);
   };
