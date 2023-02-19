@@ -34,9 +34,12 @@ import { ACCOUNTS } from "@core/graphql/queries/accounts";
 
 type FormData = {
   name: string;
-  company_id: string;
+  companyId: string;
   email: string;
-  role: Role;
+  role: {
+    label: string;
+    value: Role;
+  };
 };
 
 const Permissions = () => {
@@ -76,16 +79,28 @@ const Permissions = () => {
       })),
     },
     {
-      type: "COMPONENT",
-      name: "company_id",
-      component: InputAutocomplete,
+      type: "SINGLE_SELECT",
+      name: "companyId",
       placeholder: "請填入 (Auto Complete)",
       label: "公司名稱",
-      options: data?.companies.list.map((o) => ({
-        label: o.name,
-        value: o.id,
-      })),
+      options:
+        data?.companies.list.map((o) => ({
+          label: o.name,
+          value: o.id,
+        })) ?? [],
     },
+    // {
+    //   type: "COMPONENT",
+    //   name: "company_id",
+    //   component: InputAutocomplete,
+    //   placeholder: "請填入 (Auto Complete)",
+    //   label: "公司名稱",
+    // options:
+    //   data?.companies.list.map((o) => ({
+    //     label: o.name,
+    //     value: o.id,
+    //   })) ?? [],
+    // },
   ];
 
   const {
@@ -104,8 +119,8 @@ const Permissions = () => {
         input: {
           name: formData.name,
           email: formData.email,
-          companyId: formData.company_id,
-          role: formData.role,
+          companyId: formData.companyId,
+          role: formData.role.value,
         },
       },
       refetchQueries: [ACCOUNTS],
