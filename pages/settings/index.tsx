@@ -6,11 +6,13 @@ import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import { AuthLayout } from "@components/Layout";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 import {
+  Alert,
   Box,
   Button,
   Card,
   Container,
   Grid,
+  Snackbar,
   Toolbar,
   Typography,
 } from "@mui/material";
@@ -24,12 +26,20 @@ import Dialog from "@components/Dialog";
 import { ActionBtn, IconBtn } from "@components/Button";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { CancelOutlined } from "@mui/icons-material";
+import { useAuth } from "@core/context/auth";
+import { useModifyProfile } from "@utils/hooks/mutations/useModifyProfile";
 
 enum ProfileInfoType {
   USER_NAME = "用戶名稱",
   ACCOMPANY_NAME = "公司名稱",
   USER_EMAIL = "用戶信箱",
 }
+
+type FormData = {
+  name: string;
+  company_name: string;
+  email: string;
+};
 
 const ProfileWithIcons = (props: {
   Icon: React.ElementType;
@@ -60,37 +70,60 @@ const ProfileWithIcons = (props: {
   );
 };
 
-const settingsFieldConfigs: FieldConfig[] = [
-  {
-    type: "TEXT",
-    name: "name",
-    label: "用戶名稱",
-    validated: textValidated,
-  },
-  {
-    type: "TEXT",
-    name: "company_name",
-    label: "公司名稱",
-    disabled: true,
-    validated: textValidated,
-  },
-  {
-    type: "TEXT",
-    name: "email",
-    label: "用戶信箱",
-    validated: textValidated,
-  },
-];
-
 const Settings = () => {
   const [isOpenDialog, setIsOpenDialog] = useState<boolean>(false);
+  const [isModifySuccess, setIsModifySuccess] = useState<boolean>(false);
+
+  const { me, logIn } = useAuth();
+
+  const settingsFieldConfigs: FieldConfig[] = [
+    {
+      type: "TEXT",
+      name: "name",
+      label: "用戶名稱",
+      validated: textValidated,
+    },
+    {
+      type: "TEXT",
+      name: "company_name",
+      label: "公司名稱",
+      disabled: true,
+    },
+    {
+      type: "TEXT",
+      name: "email",
+      label: "用戶信箱",
+      validated: textValidated,
+    },
+  ];
 
   const {
-    reset,
     control,
     handleSubmit,
     formState: { errors },
-  } = useValidatedForm<FormData>(settingsFieldConfigs);
+  } = useValidatedForm<FormData>(settingsFieldConfigs, {
+    defaultValues: {
+      name: me?.name,
+      company_name: me?.companyName,
+      email: me?.email,
+    },
+  });
+
+  const [modifyProfile] = useModifyProfile();
+
+  const onSubmit = async (formData: FormData) => {
+    await modifyProfile({
+      variables: {
+        name: formData.name,
+        email: formData.email,
+      },
+    });
+
+    // refetch 用戶資料
+    logIn();
+    setIsOpenDialog(false);
+    setIsModifySuccess(true);
+  };
 
   return (
     <>
@@ -110,8 +143,14 @@ const Settings = () => {
       />
       <Box sx={{ paddingTop: "12px" }}>
         <Card>
-          <Container sx={{ marginTop: "44px" }}>
-            <Grid container justifyContent={"space-between"}>
+          <Box
+            sx={{ marginTop: "44px", marginLeft: "32px", marginRight: "32px" }}
+          >
+            <Grid
+              container
+              justifyContent={"space-between"}
+              // sx={{ width: "100%" }}
+            >
               <Typography variant="h4">個人資料</Typography>
               <IconBtn
                 icon={<BorderColorOutlinedIcon />}
@@ -120,7 +159,7 @@ const Settings = () => {
                 }}
               />
             </Grid>
-          </Container>
+          </Box>
 
           <Container sx={{ margin: "32px 0" }}>
             <Grid
@@ -133,23 +172,24 @@ const Settings = () => {
               <ProfileWithIcons
                 Icon={PersonOutlineOutlinedIcon}
                 type={ProfileInfoType.USER_NAME}
-                text={"麥綠電"}
+                text={me?.name || ""}
               ></ProfileWithIcons>
               <ProfileWithIcons
                 Icon={HomeOutlinedIcon}
                 type={ProfileInfoType.ACCOMPANY_NAME}
-                text={"綠電用戶"}
+                text={me?.companyName || ""}
               ></ProfileWithIcons>
               <ProfileWithIcons
                 Icon={EmailOutlinedIcon}
                 type={ProfileInfoType.USER_EMAIL}
-                text={"abc123@gmail.com"}
+                text={me?.email || ""}
               ></ProfileWithIcons>
             </Grid>
           </Container>
         </Card>
       </Box>
 
+      {/* 修改個人資料彈窗 */}
       <Dialog open={isOpenDialog} onClose={() => setIsOpenDialog(false)}>
         <Grid container justifyContent={"space-between"} alignItems={"center"}>
           <Typography variant="h4" textAlign={"left"}>
@@ -175,20 +215,54 @@ const Settings = () => {
           alignItems={"center"}
           gap={"10px"}
         >
-          <Button startIcon={<SaveOutlinedIcon />}>儲存</Button>
+          <Button
+            startIcon={<SaveOutlinedIcon />}
+            onClick={handleSubmit(onSubmit)}
+          >
+            儲存
+          </Button>
           <Button
             startIcon={<CancelOutlined />}
             sx={{
               "&.MuiButton-text": {
                 backgroundColor: "transparent",
-                color: "text.primary",
+                background: "primary.dark",
+                color: "primary.dark",
               },
+              ".MuiButton-startIcon": {
+                svg: {
+                  color: "primary.dark",
+                },
+              },
+            }}
+            onClick={() => {
+              setIsOpenDialog(false);
             }}
           >
             取消
           </Button>
         </Grid>
       </Dialog>
+
+      {/* 修改成功 Toast */}
+      <Snackbar
+        open={isModifySuccess}
+        autoHideDuration={6000}
+        onClose={() => {
+          setIsModifySuccess(false);
+        }}
+        anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
+      >
+        <Alert
+          onClose={() => {
+            setIsModifySuccess(false);
+          }}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          修改成功！
+        </Alert>
+      </Snackbar>
     </>
   );
 };

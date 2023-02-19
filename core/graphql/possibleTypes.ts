@@ -7,7 +7,8 @@
       const result: PossibleTypesResultData = {
   "possibleTypes": {
     "Account": [
-      "Admin"
+      "Admin",
+      "Guest"
     ],
     "ChangePasswordResponse": [
       "Admin",
@@ -16,6 +17,10 @@
     "CreateAdminResponse": [
       "AccountAlreadyExistsError",
       "Admin"
+    ],
+    "CreateUserResponse": [
+      "AccountAlreadyExistsError",
+      "User"
     ],
     "Error": [
       "AccountAlreadyExistsError",
@@ -35,6 +40,10 @@
     "SignInAdminResponse": [
       "Admin",
       "InvalidSignInInputError"
+    ],
+    "SignInUserResponse": [
+      "InvalidSignInInputError",
+      "User"
     ]
   }
 };

@@ -1,3 +1,4 @@
-export * from './setPassword';
-export * from './signInAdmin';
-export * from './signOut';
+export * from "./setPassword";
+export * from "./signInAdmin";
+export * from "./signOut";
+export * from "./modifyProfile";
