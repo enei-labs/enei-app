@@ -149,6 +149,14 @@ export type CompanyPage = {
   total: Scalars['Int'];
 };
 
+export type CreateAccountInput = {
+  companyId?: InputMaybe<Scalars['String']>;
+  email: Scalars['String'];
+  name: Scalars['String'];
+  role: Role;
+  userId?: InputMaybe<Scalars['String']>;
+};
+
 export type CreateAdminInput = {
   email: Scalars['String'];
   name: Scalars['String'];
@@ -236,6 +244,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   UpdateCompany: Company;
   changePassword: ChangePasswordResponse;
+  createAccount: Account;
   createAdmin: CreateAdminResponse;
   createCompany: Company;
   createCompanyContract: CompanyContract;
@@ -262,6 +271,11 @@ export type MutationUpdateCompanyArgs = {
 export type MutationChangePasswordArgs = {
   currentPassword: Scalars['String'];
   newPassword: Scalars['String'];
+};
+
+
+export type MutationCreateAccountArgs = {
+  input: CreateAccountInput;
 };
 
 
