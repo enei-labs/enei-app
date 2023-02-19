@@ -16,15 +16,13 @@ export type Scalars = {
 
 export type Account = {
   actions: Array<Action>;
+  companyName?: Maybe<Scalars['String']>;
   createdAt: Scalars['DateTime'];
   creator?: Maybe<Admin>;
   email: Scalars['String'];
-  firstName: Scalars['String'];
   hasSetPassword: Scalars['Boolean'];
   id: Scalars['ID'];
-  lastName: Scalars['String'];
-  mobile: Scalars['String'];
-  position?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
   removeRecord?: Maybe<RemoveAccountRecord>;
   role: Role;
 };
@@ -41,27 +39,40 @@ export type AccountNotFoundError = Error & {
   message: Scalars['String'];
 };
 
+export type AccountPage = {
+  __typename?: 'AccountPage';
+  list: Array<Account>;
+  total: Scalars['Int'];
+};
+
 export enum Action {
+  CreateAccount = 'CREATE_ACCOUNT',
   CreateAdmin = 'CREATE_ADMIN',
   CreateCompany = 'CREATE_COMPANY',
   CreateCompanyContract = 'CREATE_COMPANY_CONTRACT',
+  CreateGuest = 'CREATE_GUEST',
   CreatePowerStationList = 'CREATE_POWER_STATION_LIST',
   CreateUser = 'CREATE_USER',
   CreateUserContract = 'CREATE_USER_CONTRACT',
+  RemoveAccount = 'REMOVE_ACCOUNT',
   RemoveAdmin = 'REMOVE_ADMIN',
   RemoveCompany = 'REMOVE_COMPANY',
   RemoveCompanyContract = 'REMOVE_COMPANY_CONTRACT',
+  RemoveGuest = 'REMOVE_GUEST',
   RemovePowerStationList = 'REMOVE_POWER_STATION_LIST',
   RemoveUser = 'REMOVE_USER',
   RemoveUserContract = 'REMOVE_USER_CONTRACT',
+  UpdateAccount = 'UPDATE_ACCOUNT',
   UpdateCompany = 'UPDATE_COMPANY',
   UpdateCompanyContract = 'UPDATE_COMPANY_CONTRACT',
   UpdatePowerStationList = 'UPDATE_POWER_STATION_LIST',
   UpdateUser = 'UPDATE_USER',
   UpdateUserContract = 'UPDATE_USER_CONTRACT',
+  ViewAccountList = 'VIEW_ACCOUNT_LIST',
   ViewAdminList = 'VIEW_ADMIN_LIST',
   ViewCompanyContractList = 'VIEW_COMPANY_CONTRACT_LIST',
   ViewCompanyList = 'VIEW_COMPANY_LIST',
+  ViewGuestList = 'VIEW_GUEST_LIST',
   ViewPowerStationList = 'VIEW_POWER_STATION_LIST',
   ViewUserContractList = 'VIEW_USER_CONTRACT_LIST',
   ViewUserList = 'VIEW_USER_LIST'
@@ -70,16 +81,13 @@ export enum Action {
 export type Admin = Account & {
   __typename?: 'Admin';
   actions: Array<Action>;
+  companyName: Scalars['String'];
   createdAt: Scalars['DateTime'];
   creator?: Maybe<Admin>;
   email: Scalars['String'];
-  firstName: Scalars['String'];
   hasSetPassword: Scalars['Boolean'];
   id: Scalars['ID'];
-  lastName: Scalars['String'];
-  mobile: Scalars['String'];
-  notes?: Maybe<Scalars['String']>;
-  position?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
   removeRecord?: Maybe<RemoveAccountRecord>;
   role: Role;
 };
@@ -112,14 +120,21 @@ export type CompanyContract = {
   contactEmail: Scalars['String'];
   contactName: Scalars['String'];
   contactPhone: Scalars['String'];
+  /** 轉供條件 */
+  daysToPay: Scalars['Float'];
+  /** 合約年限 */
+  duration: Scalars['String'];
   endedAt: Scalars['DateTime'];
   id: Scalars['ID'];
   industryDoc: Scalars['String'];
   name: Scalars['String'];
-  powerPurchaseContractDoc: Scalars['String'];
+  /** 合約價格 */
   price: Scalars['String'];
+  purchaseContractDoc: Scalars['String'];
   startedAt: Scalars['DateTime'];
-  wheelingDoc: Scalars['String'];
+  transferDoc: Scalars['String'];
+  /** 轉供率要求（%） */
+  transferRate: Scalars['Float'];
 };
 
 export type CompanyContractPage = {
@@ -136,28 +151,28 @@ export type CompanyPage = {
 
 export type CreateAdminInput = {
   email: Scalars['String'];
-  firstName: Scalars['String'];
-  lastName: Scalars['String'];
-  notes?: InputMaybe<Scalars['String']>;
-  position: Scalars['String'];
+  name: Scalars['String'];
   role: AdminRole;
 };
 
 export type CreateAdminResponse = AccountAlreadyExistsError | Admin;
 
 export type CreateCompanyContractInput = {
-  companyId: Scalars['ID'];
-  contactEmail: Scalars['String'];
-  contactName: Scalars['String'];
-  contactPhone: Scalars['String'];
-  endedAt: Scalars['DateTime'];
-  industryDoc: Scalars['String'];
-  name: Scalars['String'];
-  powerPurchaseContractDoc: Scalars['String'];
-  price: Scalars['String'];
-  startedAt: Scalars['DateTime'];
-  wheelingAt: Scalars['DateTime'];
-  wheelingDoc: Scalars['String'];
+  companyContractId: Scalars['ID'];
+  contactEmail?: InputMaybe<Scalars['String']>;
+  contactName?: InputMaybe<Scalars['String']>;
+  contactPhone?: InputMaybe<Scalars['String']>;
+  daysToPay?: InputMaybe<Scalars['String']>;
+  duration?: InputMaybe<Scalars['String']>;
+  endedAt?: InputMaybe<Scalars['DateTime']>;
+  industryDoc?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  price?: InputMaybe<Scalars['String']>;
+  purchaseContractDoc?: InputMaybe<Scalars['String']>;
+  startedAt?: InputMaybe<Scalars['DateTime']>;
+  transferAt?: InputMaybe<Scalars['DateTime']>;
+  transferDoc?: InputMaybe<Scalars['String']>;
+  transferRate?: InputMaybe<Scalars['Int']>;
 };
 
 export type CreateCompanyInput = {
@@ -168,9 +183,41 @@ export type CreateCompanyInput = {
   taxId: Scalars['String'];
 };
 
+export type CreateUserInput = {
+  companyAddress: Scalars['String'];
+  contactEmail: Scalars['String'];
+  contactName: Scalars['String'];
+  contactPhone: Scalars['String'];
+  name: Scalars['String'];
+  notes?: InputMaybe<Scalars['String']>;
+};
+
+export type CreateUserResponse = AccountAlreadyExistsError | User;
+
 export type Error = {
   id: Scalars['ID'];
   message: Scalars['String'];
+};
+
+export type Guest = Account & {
+  __typename?: 'Guest';
+  actions: Array<Action>;
+  company: Company;
+  companyName: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  creator?: Maybe<Admin>;
+  email: Scalars['String'];
+  hasSetPassword: Scalars['Boolean'];
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  removeRecord?: Maybe<RemoveAccountRecord>;
+  role: Role;
+};
+
+export type GuestPage = {
+  __typename?: 'GuestPage';
+  list: Array<Guest>;
+  total: Scalars['Int'];
 };
 
 export type InvalidCurrentPasswordError = Error & {
@@ -187,16 +234,28 @@ export type InvalidSignInInputError = Error & {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  UpdateCompany: Company;
   changePassword: ChangePasswordResponse;
   createAdmin: CreateAdminResponse;
   createCompany: Company;
   createCompanyContract: CompanyContract;
+  createUser: CreateUserResponse;
+  modifyAccount: Account;
+  modifyProfile: Account;
   removeAdmin: Admin;
+  removeGuest: Guest;
+  removeUser: User;
   resetPassword: ResetPasswordResponse;
   sendResetPasswordEmail: SendResetPasswordEmailResponse;
   setPassword: Account;
   signInAdmin: SignInAdminResponse;
+  signInGuest: SignInUserResponse;
   signOut: Success;
+};
+
+
+export type MutationUpdateCompanyArgs = {
+  input: UpdateCompanyInput;
 };
 
 
@@ -221,8 +280,37 @@ export type MutationCreateCompanyContractArgs = {
 };
 
 
+export type MutationCreateUserArgs = {
+  input: CreateUserInput;
+};
+
+
+export type MutationModifyAccountArgs = {
+  companyId?: InputMaybe<Scalars['ID']>;
+  email?: InputMaybe<Scalars['String']>;
+  id: Scalars['ID'];
+  name?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationModifyProfileArgs = {
+  email?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationRemoveAdminArgs = {
   input: RemoveAdminInput;
+};
+
+
+export type MutationRemoveGuestArgs = {
+  input: RemoveGuestInput;
+};
+
+
+export type MutationRemoveUserArgs = {
+  input: RemoveUserInput;
 };
 
 
@@ -233,7 +321,7 @@ export type MutationResetPasswordArgs = {
 
 
 export type MutationSendResetPasswordEmailArgs = {
-  email: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 
@@ -247,6 +335,12 @@ export type MutationSignInAdminArgs = {
   password: Scalars['String'];
 };
 
+
+export type MutationSignInGuestArgs = {
+  email: Scalars['String'];
+  password: Scalars['String'];
+};
+
 export type PasswordResetExpiredError = Error & {
   __typename?: 'PasswordResetExpiredError';
   id: Scalars['ID'];
@@ -255,13 +349,24 @@ export type PasswordResetExpiredError = Error & {
 
 export type Query = {
   __typename?: 'Query';
+  accounts: AccountPage;
   adminPermissions: Array<RoleInfo>;
   admins: AdminPage;
   companies: CompanyPage;
   company: Company;
   companyContract: CompanyContract;
   companyContracts: CompanyContractPage;
+  guest: Guest;
+  guests: GuestPage;
   me?: Maybe<Account>;
+  user: User;
+  users: UserPage;
+};
+
+
+export type QueryAccountsArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -289,8 +394,33 @@ export type QueryCompanyContractArgs = {
 
 
 export type QueryCompanyContractsArgs = {
+  companyId: Scalars['ID'];
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryGuestArgs = {
+  id: Scalars['UUID'];
+};
+
+
+export type QueryGuestsArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  roles?: Array<Role>;
+};
+
+
+export type QueryUserArgs = {
+  id: Scalars['UUID'];
+};
+
+
+export type QueryUsersArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  roles?: Array<Role>;
 };
 
 export type RemoveAccountRecord = {
@@ -304,6 +434,15 @@ export type RemoveAccountRecord = {
 export type RemoveAdminInput = {
   adminId: Scalars['ID'];
   reason: Scalars['String'];
+};
+
+export type RemoveGuestInput = {
+  guestId: Scalars['UUID'];
+  reason: Scalars['String'];
+};
+
+export type RemoveUserInput = {
+  userId: Scalars['UUID'];
 };
 
 export type ResetPasswordResponse = PasswordResetExpiredError | Success;
@@ -326,8 +465,36 @@ export type SendResetPasswordEmailResponse = AccountNotFoundError | Success;
 
 export type SignInAdminResponse = Admin | InvalidSignInInputError;
 
+export type SignInUserResponse = InvalidSignInInputError | User;
+
 export type Success = {
   __typename?: 'Success';
   id: Scalars['ID'];
   message: Scalars['String'];
+};
+
+export type UpdateCompanyInput = {
+  companyId: Scalars['ID'];
+  contactEmail?: InputMaybe<Scalars['String']>;
+  contactName?: InputMaybe<Scalars['String']>;
+  contactPhone?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  taxId?: InputMaybe<Scalars['String']>;
+};
+
+export type User = {
+  __typename?: 'User';
+  companyAddress: Scalars['String'];
+  contactEmail: Scalars['String'];
+  contactName: Scalars['String'];
+  contactPhone: Scalars['String'];
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  notes?: Maybe<Scalars['String']>;
+};
+
+export type UserPage = {
+  __typename?: 'UserPage';
+  list: Array<User>;
+  total: Scalars['Int'];
 };
