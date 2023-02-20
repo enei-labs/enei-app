@@ -8,18 +8,14 @@ import IconBreadcrumbs from "@components/BreadCrumbs";
 import OverviewCard, { OverviewCardProps } from "@components/OverviewCard";
 import AnnualPrice from "@components/AnnualPrice";
 import { Card, Grid } from "@mui/material";
-import dynamic from "next/dynamic";
 import { AuthLayout } from "@components/Layout";
 import { ReactElement } from "react";
 import PeopleOutlineOutlinedIcon from "@mui/icons-material/PeopleOutlineOutlined";
 import ChartIcon from "@mui/icons-material/InsertChartOutlinedSharp";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import Head from "next/head";
-import { BasicTable } from "../../components/Table";
-
-const DemoChart = dynamic(() => import("@components/LineChart"), {
-  ssr: false,
-});
+import { BasicTable } from "@components/Table";
+import DemoChart from "@components/LineChart";
 
 const industryOverview: OverviewCardProps = {
   topic: "發電業資訊",
