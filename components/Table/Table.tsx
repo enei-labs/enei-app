@@ -24,13 +24,13 @@ interface Page {
   index: number;
 }
 
-interface Config {
+interface Config<T = any> {
   header: string;
   tooltip?: string;
   accessor?: string;
   alignment?: Alignment;
   format?: (data: any) => string | undefined;
-  render?: React.ComponentType<any>;
+  render?: React.ComponentType<T>;
 }
 
 interface TableProps {

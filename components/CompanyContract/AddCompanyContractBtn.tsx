@@ -1,6 +1,5 @@
 import { FieldsController } from "@components/Controller";
 import Dialog from "@components/Dialog";
-import { useAuth } from "@core/context/auth";
 import { FieldConfig, Option } from "@core/types";
 import { textValidated } from "@core/types/fieldConfig";
 import { LoadingButton } from "@mui/lab";
@@ -8,18 +7,27 @@ import { Box, Button, Grid, Typography } from "@mui/material";
 import { useValidatedForm } from "@utils/hooks";
 import { useReducer } from "react";
 import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-import { useCreateCompany } from "@utils/hooks/mutations/useCreateCompany";
-import { COMPANIES } from "@core/graphql/queries/companies";
 import { IconBtn } from "../Button";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import UploadDocBox from "../UploadDocBox";
+import { useCreateCompanyContract } from "@utils/hooks/mutations/useCreateCompanyContract";
+import { Company } from "@core/graphql/types";
+import { COMPANY_CONTRACTS } from "@core/graphql/queries/companyContracts";
 
 type FormData = {
   name: string;
-  taxId: string;
   contactName: string;
   contactEmail: string;
   contactPhone: string;
+  price: string;
+  duration: string;
+  startedAt: Date;
+  endedAt: string;
+  transferRate: string;
+  daysToPay: string;
+  description: string;
+  contractDoc: string;
+  transferDoc: string;
+  industryDoc: string;
 };
 
 const configs: FieldConfig[] = [
@@ -125,8 +133,12 @@ type DialogState = {
   next?: boolean;
 };
 
-const AddCompanyContractBtn = () => {
-  const { me } = useAuth();
+interface CompanyContractProps {
+  company: Company;
+}
+
+const AddCompanyContractBtn = (props: CompanyContractProps) => {
+  const { company } = props;
   const [state, dispatch] = useReducer(
     (prev: DialogState, next: DialogState) => {
       return { ...prev, ...next };
@@ -134,7 +146,7 @@ const AddCompanyContractBtn = () => {
     { form: false, next: false }
   );
 
-  const [createCompany, { loading }] = useCreateCompany();
+  const [createCompanyContract, { loading }] = useCreateCompanyContract();
 
   const {
     reset,
@@ -144,20 +156,30 @@ const AddCompanyContractBtn = () => {
   } = useValidatedForm<FormData>(configs);
 
   const onSubmit = async (formData: FormData) => {
-    const { data } = await createCompany({
+    const { data } = await createCompanyContract({
       variables: {
         input: {
+          companyId: company.id,
           name: formData.name,
-          taxId: formData.taxId,
           contactName: formData.contactName,
           contactEmail: formData.contactEmail,
           contactPhone: formData.contactPhone,
+          price: formData.price,
+          duration: formData.duration,
+          startedAt: formData.startedAt,
+          endedAt: formData.endedAt,
+          transferRate: Number(formData.transferRate),
+          daysToPay: Number(formData.daysToPay),
+          description: formData.description,
+          contractDoc: formData.contractDoc,
+          transferDoc: formData.transferDoc,
+          industryDoc: formData.industryDoc,
         },
       },
-      refetchQueries: [COMPANIES],
+      refetchQueries: [COMPANY_CONTRACTS],
     });
 
-    if (data?.createCompany.__typename === "Company") {
+    if (data?.createCompanyContract.__typename === "CompanyContract") {
       reset();
       dispatch({ form: false, next: true });
     }

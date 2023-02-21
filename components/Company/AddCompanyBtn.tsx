@@ -102,8 +102,6 @@ const AddCompanyBtn = () => {
     }
   };
 
-  console.log({ state });
-
   return (
     <>
       <Button startIcon={<AddIcon />} onClick={() => dispatch({ form: true })}>
