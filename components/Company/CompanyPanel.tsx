@@ -1,6 +1,6 @@
 import { Table } from "@components/Table";
 import { Box, Typography } from "@mui/material";
-import { useCompanies } from "@utils/hooks/queries/useCompanies";
+import { useCompanies } from "@utils/hooks/queries";
 import { Company } from "../../core/graphql/types";
 import { Config } from "../Table/Table";
 

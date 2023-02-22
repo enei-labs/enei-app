@@ -1,5 +1,5 @@
 import { Box, Card, Grid, Typography } from "@mui/material";
-import { useCompanyContracts } from "@utils/hooks/queries/useCompanyContracts";
+import { useCompanyContracts } from "@utils/hooks/queries";
 import { Company } from "@core/graphql/types";
 import ContractBox from "../ContractBox";
 import { InputSearch } from "../Input";
