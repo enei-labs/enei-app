@@ -25,6 +25,12 @@ const componentsTheme = createTheme({
             padding: "0 12px",
           },
         },
+        {
+          props: { variant: "outlined" },
+          style: {
+            color: palette.text.primary,
+          }
+        }
       ],
       styleOverrides: {
         startIcon: {

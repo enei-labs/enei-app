@@ -123,7 +123,7 @@ const Table: React.FC<TableProps> = ({
                   align="center"
                   sx={style.bodyCell}
                 >
-                  No Data.
+                  沒有資料
                 </TableCell>
               </TableRow>
             ) : (
