@@ -11,7 +11,11 @@ import AddCompanyBtn from "@components/Company/AddCompanyBtn";
 import { AuthGuard } from "@components/AuthGuard";
 import { Company, Role } from "@core/graphql/types";
 import CompanyPanel from "@components/Company/CompanyPanel";
-import { CompanyContractPanel } from "@components/CompanyContract/CompanyContractPanel";
+import dynamic from "next/dynamic";
+
+const CompanyContractPanel = dynamic(
+  () => import("@components/CompanyContract/CompanyContractPanel")
+);
 
 function IndustryPage() {
   const [company, setCompany] = useState<Company | null>(null);

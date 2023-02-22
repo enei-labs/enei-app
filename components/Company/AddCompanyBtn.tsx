@@ -11,7 +11,7 @@ import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { useCreateCompany } from "@utils/hooks/mutations/useCreateCompany";
 import { COMPANIES } from "@core/graphql/queries/companies";
 import { IconBtn } from "../Button";
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import CloseIcon from "@mui/icons-material/HighlightOff";
 
 type FormData = {
   name: string;
@@ -118,7 +118,7 @@ const AddCompanyBtn = () => {
             公司資訊
           </Typography>
           <IconBtn
-            icon={<HighlightOffIcon />}
+            icon={<CloseIcon />}
             onClick={() => dispatch({ form: false })}
           />
         </Grid>
@@ -161,8 +161,8 @@ const AddCompanyBtn = () => {
             新增
           </Button>
           <Button
-            startIcon={<AddIcon />}
-            variant="contained"
+            startIcon={<CloseIcon />}
+            variant="outlined"
             onClick={() => dispatch({ next: false })}
           >
             取消

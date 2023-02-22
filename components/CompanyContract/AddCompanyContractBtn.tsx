@@ -8,10 +8,15 @@ import { useValidatedForm } from "@utils/hooks";
 import { useReducer } from "react";
 import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { IconBtn } from "../Button";
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import CloseIcon from "@mui/icons-material/HighlightOff";
 import { useCreateCompanyContract } from "@utils/hooks/mutations/useCreateCompanyContract";
 import { Company } from "@core/graphql/types";
 import { COMPANY_CONTRACTS } from "@core/graphql/queries/companyContracts";
+import dynamic from "next/dynamic";
+
+const EditConfirmDialog = dynamic(
+  () => import("@components/EditConfirmDialog")
+);
 
 type FormData = {
   name: string;
@@ -129,8 +134,9 @@ const configs: FieldConfig[] = [
 ];
 
 type DialogState = {
-  form?: boolean;
-  next?: boolean;
+  showFormDialog?: boolean;
+  showNextDialog?: boolean;
+  showEditConfirmDialog?: boolean;
 };
 
 interface CompanyContractProps {
@@ -143,7 +149,11 @@ const AddCompanyContractBtn = (props: CompanyContractProps) => {
     (prev: DialogState, next: DialogState) => {
       return { ...prev, ...next };
     },
-    { form: false, next: false }
+    {
+      showFormDialog: false,
+      showNextDialog: false,
+      showEditConfirmDialog: false,
+    }
   );
 
   const [createCompanyContract, { loading }] = useCreateCompanyContract();
@@ -181,28 +191,31 @@ const AddCompanyContractBtn = (props: CompanyContractProps) => {
 
     if (data?.createCompanyContract.__typename === "CompanyContract") {
       reset();
-      dispatch({ form: false, next: true });
+      dispatch({ showFormDialog: false, showEditConfirmDialog: true });
     }
   };
 
   return (
     <>
-      <Button startIcon={<AddIcon />} onClick={() => dispatch({ form: true })}>
+      <Button
+        startIcon={<AddIcon />}
+        onClick={() => dispatch({ showFormDialog: true })}
+      >
         新增合約
       </Button>
 
       <Dialog
         key="form"
-        open={!!state.form}
-        onClose={() => dispatch({ form: false })}
+        open={!!state.showFormDialog}
+        onClose={() => dispatch({ showEditConfirmDialog: true })}
       >
         <Grid container justifyContent={"space-between"} alignItems={"center"}>
           <Typography variant="h4" textAlign={"left"}>
             發電業資訊
           </Typography>
           <IconBtn
-            icon={<HighlightOffIcon />}
-            onClick={() => dispatch({ form: false })}
+            icon={<CloseIcon />}
+            onClick={() => dispatch({ showEditConfirmDialog: true })}
           />
         </Grid>
         <FieldsController
@@ -240,8 +253,8 @@ const AddCompanyContractBtn = (props: CompanyContractProps) => {
 
       <Dialog
         key="next"
-        open={!!state.next}
-        onClose={() => dispatch({ next: false })}
+        open={!!state.showNextDialog}
+        onClose={() => dispatch({ showNextDialog: false })}
       >
         <Typography variant="h5">新增合約完成</Typography>
 
@@ -256,14 +269,29 @@ const AddCompanyContractBtn = (props: CompanyContractProps) => {
             新增
           </Button>
           <Button
-            startIcon={<AddIcon />}
-            variant="contained"
-            onClick={() => dispatch({ next: false })}
+            startIcon={<CloseIcon />}
+            variant="outlined"
+            onClick={() => dispatch({ showNextDialog: false })}
           >
             取消
           </Button>
         </Box>
       </Dialog>
+
+      {state.showEditConfirmDialog ? (
+        <EditConfirmDialog
+          onCloseAllDialog={() =>
+            dispatch({
+              showEditConfirmDialog: false,
+              showFormDialog: false,
+              showNextDialog: false,
+            })
+          }
+          open={state.showEditConfirmDialog}
+          onClose={() => dispatch({ showEditConfirmDialog: false })}
+          variant="add"
+        />
+      ) : null}
     </>
   );
 };

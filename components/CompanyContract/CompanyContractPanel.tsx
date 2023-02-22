@@ -4,17 +4,20 @@ import { Company } from "@core/graphql/types";
 import ContractBox from "../ContractBox";
 import { InputSearch } from "../Input";
 import AddCompanyContractBtn from "./AddCompanyContractBtn";
+import { BasicSelect } from "../Select";
+import { useState } from "react";
 
 interface CompanyControlPanelProps {
   company: Company;
 }
 
-export function CompanyContractPanel(props: CompanyControlPanelProps) {
+function CompanyContractPanel(props: CompanyControlPanelProps) {
   const { company } = props;
+  const [state, setState] = useState("");
   const { data, loading } = useCompanyContracts({ companyId: company.id });
   return (
     <Card sx={{ p: "36px" }}>
-      <Typography variant="h4">再生能源股份有限公司2</Typography>
+      <Typography variant="h4">{company.name}</Typography>
       <Box
         sx={{
           display: "flex",
@@ -24,7 +27,7 @@ export function CompanyContractPanel(props: CompanyControlPanelProps) {
       >
         <Box sx={{ display: "flex", columnGap: "0.75em" }}>
           <InputSearch />
-          {/* <BasicSelect state={state} setState={setState} items={[]} /> */}
+          <BasicSelect state={state} setState={setState} items={[]} />
         </Box>
         <AddCompanyContractBtn company={company} />
       </Box>
@@ -34,7 +37,7 @@ export function CompanyContractPanel(props: CompanyControlPanelProps) {
         ) : data && data.companyContracts.list.length !== 0 ? (
           data.companyContracts.list.map((contract) => (
             <Grid item sm={4} key={contract.id}>
-              <ContractBox title={contract.name} subtitle="3,000MWh" />
+              <ContractBox contract={contract} />
             </Grid>
           ))
         ) : (
@@ -44,3 +47,5 @@ export function CompanyContractPanel(props: CompanyControlPanelProps) {
     </Card>
   );
 }
+
+export default CompanyContractPanel;
