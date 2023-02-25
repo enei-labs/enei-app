@@ -26,12 +26,7 @@ const configs: FieldConfig[] = [
     label: "新密碼",
     required: true,
     validated: passwordValidated,
-    hint: (
-      <>
-        At least 8 characters with a mixture of uppercase, lowercase letters and
-        numbers.
-      </>
-    ),
+    hint: <>至少 8 個字符，包括大寫字母、小寫字母和數字。</>,
   },
   {
     type: "PASSWORD",
@@ -41,7 +36,7 @@ const configs: FieldConfig[] = [
     validated: yup
       .string()
       .required("This is required")
-      .oneOf([yup.ref("newPassword"), null], "Password doesn't match."),
+      .oneOf([yup.ref("newPassword"), null], "密碼不正確"),
   },
 ];
 
