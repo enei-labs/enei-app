@@ -1,22 +1,21 @@
 import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { AuthLayout } from "@components/Layout";
 import {
+  Alert,
   Box,
   Button,
   Card,
-  Container,
   Divider,
   Grid,
+  Snackbar,
   Toolbar,
   Typography,
 } from "@mui/material";
-import { InputAutocomplete } from "@components/Input";
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useCallback, useEffect, useMemo, useState } from "react";
 import Head from "next/head";
-import Dialog from "@components/Dialog";
 import IconBreadcrumbs from "@components/BreadCrumbs";
 import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
-import { ActionBtn, IconBtn } from "@components/Button";
+import { IconBtn } from "@components/Button";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 import { CancelOutlined } from "@mui/icons-material";
@@ -24,113 +23,228 @@ import { InputSearch } from "@components/Input";
 import PermissionsPanel from "@components/Permissions/PermissionsPanel";
 import { useAccounts } from "@utils/hooks/queries/useAccounts";
 import { AuthGuard } from "@components/AuthGuard";
-import { CreateAccountInput, Role } from "@core/graphql/types";
+import { Account, AccountPage, Role } from "@core/graphql/types";
 import { FieldsController } from "@components/Controller";
 import { FieldConfig } from "@core/types";
 import { textValidated } from "@core/types/fieldConfig";
-import { useCreateAccount, useValidatedForm } from "@utils/hooks";
+import {
+  useCreateAccount,
+  useModifyAccount,
+  useRemoveAccount,
+  useValidatedForm,
+} from "@utils/hooks";
 import { useCompanies } from "@utils/hooks/queries/useCompanies";
 import { ACCOUNTS } from "@core/graphql/queries/accounts";
+import { useSendResetPasswordEmail } from "@utils/hooks/mutations/useSendResetPasswordEmail";
+import dynamic from "next/dynamic";
 
-type FormData = {
+export type FormData = {
   name: string;
-  companyId: string;
   email: string;
-  role: {
+  role?: {
     label: string;
     value: Role;
   };
+  companyId?: {
+    label: string;
+    value: string;
+  };
 };
+
+const Dialog = dynamic(() => import("@components/Dialog"));
+
+const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
 const Permissions = () => {
   const { data } = useCompanies();
 
   const [isOpenDialog, setIsOpenDialog] = useState<boolean>(false);
 
-  const [defaultValues, setDefaultValues] = useState<FormData | undefined>(
-    undefined
-  );
+  const [isOpenDeleteDialog, setIsOpenDeleteDialog] = useState<boolean>(false);
 
-  const [createAccount, { loading }] = useCreateAccount();
+  const [alertType, setAlertType] = useState<
+    "delete" | "sendEmail" | undefined
+  >(undefined);
 
-  const settingsFieldConfigs: FieldConfig[] = [
-    {
-      type: "TEXT",
-      name: "email",
-      label: "信箱",
-      placeholder: "請填入",
-      validated: textValidated,
-    },
-    {
-      type: "TEXT",
-      name: "name",
-      label: "名稱",
-      placeholder: "請填入",
-      validated: textValidated,
-    },
-    {
-      type: "SINGLE_SELECT",
-      name: "role",
-      placeholder: "請選擇",
-      label: "權限",
-      options: Object.values(Role).map((o) => ({
-        label: o,
-        value: o,
-      })),
-    },
-    {
-      type: "SINGLE_SELECT",
-      name: "companyId",
-      placeholder: "請填入 (Auto Complete)",
-      label: "公司名稱",
-      options:
-        data?.companies.list.map((o) => ({
-          label: o.name,
-          value: o.id,
-        })) ?? [],
-    },
-    // {
-    //   type: "COMPONENT",
-    //   name: "company_id",
-    //   component: InputAutocomplete,
-    //   placeholder: "請填入 (Auto Complete)",
-    //   label: "公司名稱",
-    // options:
-    //   data?.companies.list.map((o) => ({
-    //     label: o.name,
-    //     value: o.id,
-    //   })) ?? [],
-    // },
-  ];
+  const [currentModifyAccount, setCurrentModifyAccount] = useState<
+    Account | undefined
+  >();
+
+  const { data: accountsData } = useAccounts();
+
+  const [createAccount] = useCreateAccount();
+
+  const [modifyAccount] = useModifyAccount();
+
+  const [removeAccount] = useRemoveAccount();
+
+  const [sendResetPasswordEmail] = useSendResetPasswordEmail();
+
+  const [filterData, setFilterData] = useState<AccountPage | undefined>();
+
+  const settingsFieldConfigs: FieldConfig[] = useMemo(() => {
+    const config: FieldConfig[] = [
+      {
+        type: "TEXT",
+        name: "email",
+        label: "信箱",
+        placeholder: "請填入",
+        validated: textValidated,
+      },
+      {
+        type: "TEXT",
+        name: "name",
+        label: "名稱",
+        placeholder: "請填入",
+        validated: textValidated,
+      },
+      {
+        type: "SINGLE_SELECT",
+        name: "role",
+        placeholder: "請選擇",
+        label: "權限",
+        options: Object.values(Role).map((o) => ({
+          label: o,
+          value: o,
+        })),
+      },
+      {
+        type: "SINGLE_SELECT",
+        name: "companyId",
+        placeholder: "請填入 (Auto Complete)",
+        label: "公司名稱",
+        options:
+          data?.companies.list.map((o) => ({
+            label: o.name,
+            value: o.id,
+          })) ?? [],
+      },
+    ];
+
+    return currentModifyAccount &&
+      [Role.Admin, Role.SuperAdmin].includes(currentModifyAccount.role)
+      ? config.slice(0, 2)
+      : config;
+  }, [currentModifyAccount, data]);
 
   const {
     control,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useValidatedForm<FormData>(settingsFieldConfigs, {
-    defaultValues: defaultValues,
-  });
+    setValue,
+  } = useValidatedForm<FormData>(settingsFieldConfigs);
 
+  const resetDialog = useCallback(() => {
+    setIsOpenDialog(false);
+    setIsOpenDeleteDialog(false);
+    setCurrentModifyAccount(undefined);
+    reset({
+      name: "",
+      email: "",
+      role: undefined,
+      companyId: undefined,
+    });
+  }, [reset]);
+
+  /** 新增帳號 query */
   const onCreateAccount = async (formData: FormData) => {
-    console.log(formData);
     const { data } = await createAccount({
       variables: {
         input: {
           name: formData.name,
           email: formData.email,
-          companyId: formData.companyId,
+          companyId: formData.companyId.value,
           role: formData.role.value,
         },
       },
       refetchQueries: [ACCOUNTS],
     });
 
-    if (data?.createAccount.name) {
+    if (data) {
       reset();
       setIsOpenDialog(false);
     }
   };
+
+  /** 修改帳號 query */
+  const onModifyAccount = async (formData: FormData) => {
+    const { name, email, companyId } = formData;
+    const { data } = await modifyAccount({
+      variables: {
+        name: name,
+        email: email,
+        companyId: companyId?.value || undefined,
+        id: currentModifyAccount?.id,
+      },
+      refetchQueries: [ACCOUNTS],
+    });
+
+    if (data) {
+      resetDialog();
+    }
+  };
+
+  /** 編輯帳號點擊行為 */
+  const onModifyClick = (rowData: Account) => {
+    if (!data) return;
+
+    const { name, email, companyName, role } = rowData;
+    setValue("name", name);
+    setValue("email", email);
+    setValue("role", { label: role, value: role });
+
+    setCurrentModifyAccount(rowData);
+    setIsOpenDialog(true);
+  };
+
+  /** 刪除帳號點擊行為 */
+  const onDeleteClick = (rowData: Account) => {
+    setIsOpenDeleteDialog(true);
+    setCurrentModifyAccount(rowData);
+  };
+
+  /** 寄送信件點擊行為 */
+  const onSendPasswordClick = async (rowData: Account) => {
+    const { data } = await sendResetPasswordEmail({
+      variables: { id: rowData.id },
+    });
+
+    if (data) {
+      setAlertType("sendEmail");
+    }
+  };
+
+  const onDeleteAccount = async (id: string) => {
+    const { data } = await removeAccount({ variables: { id: id } });
+
+    if (data) {
+      setAlertType("delete");
+    }
+  };
+
+  /** 搜尋行為 */
+  const onSearch = (value: string) => {
+    if (!accountsData) return;
+
+    if (!value) setFilterData(accountsData.accounts);
+
+    const _filterList = accountsData.accounts.list.filter((o) =>
+      o.name.includes(value)
+    );
+
+    const _filterData: AccountPage = {
+      list: _filterList,
+      total: _filterList.length,
+      __typename: accountsData.accounts.__typename,
+    };
+
+    setFilterData(_filterData);
+  };
+
+  useEffect(() => {
+    if (accountsData) setFilterData(accountsData.accounts);
+  }, [accountsData, data?.companies.list]);
 
   return (
     <>
@@ -158,7 +272,10 @@ const Permissions = () => {
                 mb: "16px",
               }}
             >
-              <InputSearch />
+              {/* 搜尋 */}
+              <InputSearch onChange={onSearch} />
+
+              {/* 新增帳號 */}
               <Button
                 startIcon={<AddIcon />}
                 onClick={() => {
@@ -168,24 +285,26 @@ const Permissions = () => {
                 新增帳號
               </Button>
             </Box>
-            <PermissionsPanel />
+
+            {/* 帳號表格 */}
+            <PermissionsPanel
+              accounts={filterData}
+              onModifyClick={onModifyClick}
+              onDeleteClick={onDeleteClick}
+              onSendPasswordClick={onSendPasswordClick}
+            />
           </Card>
           <Divider sx={{ my: "24px" }} />
         </AuthGuard>
       </Box>
 
       {/* 新增帳號彈窗 */}
-      <Dialog open={isOpenDialog} onClose={() => setIsOpenDialog(false)}>
+      <Dialog open={isOpenDialog} onClose={resetDialog}>
         <Grid container justifyContent={"space-between"} alignItems={"center"}>
           <Typography variant="h4" textAlign={"left"}>
-            {!defaultValues ? "新增帳號" : "修改帳號"}
+            {!currentModifyAccount ? "新增帳號" : "修改帳號"}
           </Typography>
-          <IconBtn
-            icon={<HighlightOffIcon />}
-            onClick={() => {
-              setIsOpenDialog(false);
-            }}
-          />
+          <IconBtn icon={<HighlightOffIcon />} onClick={resetDialog} />
         </Grid>
         <Typography variant="h5" textAlign={"left"}>
           帳號資訊
@@ -200,7 +319,7 @@ const Permissions = () => {
           alignItems={"center"}
           gap={"10px"}
         >
-          {!defaultValues ? (
+          {!currentModifyAccount ? (
             <Button
               startIcon={<AddIcon />}
               onClick={handleSubmit(onCreateAccount)}
@@ -211,7 +330,7 @@ const Permissions = () => {
             <>
               <Button
                 startIcon={<SaveOutlinedIcon />}
-                onClick={handleSubmit(onSubmit)}
+                onClick={handleSubmit(onModifyAccount)}
               >
                 儲存
               </Button>
@@ -229,9 +348,7 @@ const Permissions = () => {
                     },
                   },
                 }}
-                onClick={() => {
-                  setIsOpenDialog(false);
-                }}
+                onClick={resetDialog}
               >
                 取消
               </Button>
@@ -239,6 +356,38 @@ const Permissions = () => {
           )}
         </Grid>
       </Dialog>
+
+      {/* 刪除帳號彈窗 */}
+      <DialogAlert
+        open={isOpenDeleteDialog}
+        title={"刪除用戶"}
+        content={"是否確認要刪除用戶？"}
+        onConfirm={() => {
+          if (!currentModifyAccount) return;
+          onDeleteAccount(currentModifyAccount.id);
+        }}
+        onClose={resetDialog}
+      />
+
+      {/* 修改成功 Toast */}
+      <Snackbar
+        open={alertType !== undefined}
+        autoHideDuration={6000}
+        onClose={() => {
+          setAlertType(undefined);
+        }}
+        anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
+      >
+        <Alert
+          onClose={() => {
+            setAlertType(undefined);
+          }}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          {alertType === "delete" ? "刪除成功！" : "寄送成功！"}
+        </Alert>
+      </Snackbar>
     </>
   );
 };

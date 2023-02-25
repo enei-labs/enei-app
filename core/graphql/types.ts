@@ -133,7 +133,6 @@ export type CompanyContract = {
   /** 合約價格 */
   price: Scalars['String'];
   startedAt: Scalars['DateTime'];
-  transferAt?: Maybe<Scalars['String']>;
   transferDoc: Scalars['String'];
   /** 轉供率要求（%） */
   transferRate: Scalars['Float'];

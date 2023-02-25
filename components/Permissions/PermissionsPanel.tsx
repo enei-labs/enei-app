@@ -1,15 +1,27 @@
 import { Table } from "@components/Table";
-import { useCompanies } from "@utils/hooks/queries/useCompanies";
-import { useAccounts } from "@utils/hooks/queries/useAccounts";
 import BorderColorOutlined from "@mui/icons-material/BorderColorOutlined";
 import DeleteOutlined from "@mui/icons-material/DeleteOutlined";
 import NearMeOutlinedIcon from "@mui/icons-material/NearMeOutlined";
 import { IconBtn } from "@components/Button";
+import { Config } from "@components/Table/Table";
+import { Account, AccountPage } from "@core/graphql/types";
 
-const PermissionsPanel = () => {
-  const { data, loading, refetch } = useAccounts();
+const PermissionsPanel = (props: {
+  accounts?: AccountPage;
+  loading?: boolean;
+  onModifyClick?: (rowData: Account) => void;
+  onDeleteClick?: (rowData: Account) => void;
+  onSendPasswordClick?: (rowData: Account) => void;
+}) => {
+  const {
+    accounts,
+    loading = false,
+    onModifyClick,
+    onDeleteClick,
+    onSendPasswordClick,
+  } = props;
 
-  const configs = [
+  const configs: Config<Account>[] = [
     {
       header: "信箱",
       accessor: "email",
@@ -28,18 +40,21 @@ const PermissionsPanel = () => {
     },
     {
       header: "修改 / 刪除",
-      render: () => (
+      render: (data) => (
         <>
+          {/* 修改 */}
           <IconBtn
             icon={<BorderColorOutlined />}
             onClick={() => {
-              // setIsOpenDialog(true);
+              onModifyClick?.(data);
             }}
           />
+
+          {/* 刪除 */}
           <IconBtn
             icon={<DeleteOutlined />}
             onClick={() => {
-              // setIsOpenDialog(true);
+              onDeleteClick?.(data);
             }}
           />
         </>
@@ -47,11 +62,11 @@ const PermissionsPanel = () => {
     },
     {
       header: "發送密碼設定信件",
-      render: () => (
+      render: (data) => (
         <IconBtn
           icon={<NearMeOutlinedIcon />}
           onClick={() => {
-            // setIsOpenDialog(true);
+            onSendPasswordClick?.(data);
           }}
         ></IconBtn>
       ),
@@ -61,15 +76,15 @@ const PermissionsPanel = () => {
   return (
     <Table
       configs={configs}
-      list={data?.accounts.list}
-      total={data?.accounts.total}
+      list={accounts?.list}
+      total={accounts?.total}
       loading={loading}
-      onPageChange={(page) =>
-        refetch({
-          limit: page.rows,
-          offset: page.rows * page.index,
-        })
-      }
+      // onPageChange={(page) =>
+      //   refetch({
+      //     limit: page.rows,
+      //     offset: page.rows * page.index,
+      //   })
+      // }
     />
   );
 };

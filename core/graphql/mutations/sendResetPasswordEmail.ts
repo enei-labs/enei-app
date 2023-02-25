@@ -1,7 +1,7 @@
-import { gql } from '@apollo/client'
+import { gql } from "@apollo/client";
 
 export const SEND_RESET_PASSWORD_EMAIL = gql`
-  mutation SendResetPasswordEmail($id: String!) {
+  mutation SendResetPasswordEmail($id: ID!) {
     sendResetPasswordEmail(id: $id) {
       __typename
       ... on Success {
@@ -14,4 +14,4 @@ export const SEND_RESET_PASSWORD_EMAIL = gql`
       }
     }
   }
-`
+`;
