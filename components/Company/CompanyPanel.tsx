@@ -1,13 +1,26 @@
 import { Table } from "@components/Table";
-import { useCompanies } from "@utils/hooks/queries/useCompanies";
+import { Box, Typography } from "@mui/material";
+import { useCompanies } from "@utils/hooks/queries";
+import { Company } from "../../core/graphql/types";
+import { Config } from "../Table/Table";
 
-const CompanyPanel = () => {
+interface CompanyPanelProps {
+  setCompanyFn: (company: Company) => void;
+}
+
+const CompanyPanel = (props: CompanyPanelProps) => {
+  const { setCompanyFn } = props;
   const { data, loading, refetch } = useCompanies();
 
-  const configs = [
+  const configs: Config<Company>[] = [
     {
       header: "公司名稱",
       accessor: "name",
+      render: (rowData) => (
+        <Box sx={{ cursor: "pointer" }} onClick={() => setCompanyFn(rowData)}>
+          {rowData.name}
+        </Box>
+      ),
     },
     {
       header: "統一編號",

@@ -120,8 +120,10 @@ export type CompanyContract = {
   contactEmail: Scalars['String'];
   contactName: Scalars['String'];
   contactPhone: Scalars['String'];
+  contractDoc: Scalars['String'];
   /** 轉供條件 */
   daysToPay: Scalars['Float'];
+  description?: Maybe<Scalars['String']>;
   /** 合約年限 */
   duration: Scalars['String'];
   endedAt: Scalars['DateTime'];
@@ -130,7 +132,6 @@ export type CompanyContract = {
   name: Scalars['String'];
   /** 合約價格 */
   price: Scalars['String'];
-  purchaseContractDoc: Scalars['String'];
   startedAt: Scalars['DateTime'];
   transferDoc: Scalars['String'];
   /** 轉供率要求（%） */
@@ -166,21 +167,21 @@ export type CreateAdminInput = {
 export type CreateAdminResponse = AccountAlreadyExistsError | Admin;
 
 export type CreateCompanyContractInput = {
-  companyContractId: Scalars['ID'];
-  contactEmail?: InputMaybe<Scalars['String']>;
-  contactName?: InputMaybe<Scalars['String']>;
-  contactPhone?: InputMaybe<Scalars['String']>;
-  daysToPay?: InputMaybe<Scalars['String']>;
-  duration?: InputMaybe<Scalars['String']>;
-  endedAt?: InputMaybe<Scalars['DateTime']>;
-  industryDoc?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  price?: InputMaybe<Scalars['String']>;
-  purchaseContractDoc?: InputMaybe<Scalars['String']>;
-  startedAt?: InputMaybe<Scalars['DateTime']>;
-  transferAt?: InputMaybe<Scalars['DateTime']>;
-  transferDoc?: InputMaybe<Scalars['String']>;
-  transferRate?: InputMaybe<Scalars['Int']>;
+  companyId: Scalars['ID'];
+  contactEmail: Scalars['String'];
+  contactName: Scalars['String'];
+  contactPhone: Scalars['String'];
+  contractDoc: Scalars['String'];
+  daysToPay: Scalars['Int'];
+  description?: InputMaybe<Scalars['String']>;
+  duration: Scalars['String'];
+  endedAt: Scalars['DateTime'];
+  industryDoc: Scalars['String'];
+  name: Scalars['String'];
+  price: Scalars['String'];
+  startedAt: Scalars['DateTime'];
+  transferDoc: Scalars['String'];
+  transferRate: Scalars['Int'];
 };
 
 export type CreateCompanyInput = {
@@ -260,6 +261,7 @@ export type Mutation = {
   signInAdmin: SignInAdminResponse;
   signInGuest: SignInUserResponse;
   signOut: Success;
+  updateCompanyContract: CompanyContract;
 };
 
 
@@ -353,6 +355,11 @@ export type MutationSignInAdminArgs = {
 export type MutationSignInGuestArgs = {
   email: Scalars['String'];
   password: Scalars['String'];
+};
+
+
+export type MutationUpdateCompanyContractArgs = {
+  input: UpdateCompanyContractInput;
 };
 
 export type PasswordResetExpiredError = Error & {
@@ -485,6 +492,25 @@ export type Success = {
   __typename?: 'Success';
   id: Scalars['ID'];
   message: Scalars['String'];
+};
+
+export type UpdateCompanyContractInput = {
+  companyContractId: Scalars['ID'];
+  contactEmail?: InputMaybe<Scalars['String']>;
+  contactName?: InputMaybe<Scalars['String']>;
+  contactPhone?: InputMaybe<Scalars['String']>;
+  contractDoc?: InputMaybe<Scalars['String']>;
+  daysToPay?: InputMaybe<Scalars['String']>;
+  description?: InputMaybe<Scalars['String']>;
+  duration?: InputMaybe<Scalars['String']>;
+  endedAt?: InputMaybe<Scalars['DateTime']>;
+  industryDoc?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  price?: InputMaybe<Scalars['String']>;
+  startedAt?: InputMaybe<Scalars['DateTime']>;
+  transferAt?: InputMaybe<Scalars['DateTime']>;
+  transferDoc?: InputMaybe<Scalars['String']>;
+  transferRate?: InputMaybe<Scalars['Int']>;
 };
 
 export type UpdateCompanyInput = {

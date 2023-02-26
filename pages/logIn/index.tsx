@@ -6,11 +6,13 @@ import { useAuth } from "@core/context/auth";
 import { FieldConfig } from "@core/types";
 import { passwordValidated, textValidated } from "@core/types/fieldConfig";
 import { LoadingButton } from "@mui/lab";
-import { Box, Stack, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { useSignInAdmin, useValidatedForm } from "@utils/hooks";
 import Head from "next/head";
 import { ReactElement, useState } from "react";
 import { toast } from "react-toastify";
+import Logo from "public/logo-with-name.svg";
+import LoginIcon from "@mui/icons-material/Login";
 
 type FormData = {
   email: string;
@@ -76,21 +78,20 @@ const LogIn = () => {
       </Head>
 
       <Box component="form" onSubmit={handleSubmit(onSubmit)}>
+        <Logo height="40" />
         <FormBox>
-          <Stack gap="10px">
-            <Typography variant="h1">Log In</Typography>
-            <Typography variant="subtitle1" color="text.primary">
-              Enter details to log in.
-            </Typography>
-          </Stack>
-
           <FieldsController configs={configs} form={{ control, errors }} />
 
-          <LogInForgotPwdBtn />
-
-          <LoadingButton type="submit" variant="contained" loading={loading}>
+          <LoadingButton
+            startIcon={<LoginIcon />}
+            sx={{ width: "80px", marginTop: "24px" }}
+            type="submit"
+            variant="contained"
+            loading={loading}
+          >
             登入
           </LoadingButton>
+          <LogInForgotPwdBtn />
         </FormBox>
       </Box>
 

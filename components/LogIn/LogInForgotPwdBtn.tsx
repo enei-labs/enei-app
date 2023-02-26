@@ -8,6 +8,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useValidatedForm } from "@utils/hooks";
 import { useState } from "react";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 
 type FormData = {
   email: string;
@@ -30,6 +31,24 @@ const configs: FieldConfig[] = [
   },
 ];
 
+const styles = {
+  box: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  btn: [
+    (theme: any) => ({
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      columnGap: "8px",
+      color: theme.palette.primary.main,
+      border: "none",
+    }),
+  ],
+};
+
 const LogInForgotPwdBtn = () => {
   const [open, setOpen] = useState(false);
 
@@ -44,23 +63,27 @@ const LogInForgotPwdBtn = () => {
   };
 
   return (
-    <Box textAlign="right">
-      <Button disableRipple onClick={() => setOpen(true)}>
-        忘記密碼?
+    <Box sx={styles.box}>
+      <Button
+        disableRipple
+        variant="outlined"
+        onClick={() => setOpen(true)}
+        sx={styles.btn}
+      >
+        <HelpOutlineIcon />
+        <span>忘記密碼?</span>
       </Button>
 
       <Dialog open={open} onClose={() => setOpen(false)}>
         <Stack gap="10px">
           <Typography variant="h1">忘記密碼?</Typography>
-          <Typography variant="subtitle1">
-            Enter user account to receive temporary password.
-          </Typography>
+          <Typography variant="subtitle1">請輸入信箱</Typography>
         </Stack>
 
         <FieldsController configs={configs} form={{ control, errors }} />
 
         <Button variant="contained" onClick={handleSubmit(onSubmit)}>
-          Confirm
+          確定
         </Button>
       </Dialog>
     </Box>

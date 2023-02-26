@@ -1,7 +1,11 @@
 import { Box, TextField, Typography } from "@mui/material";
-import ReactApexChart from "react-apexcharts";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useState } from "react";
+import dynamic from "next/dynamic";
+
+const Chart = dynamic(() => import("react-apexcharts"), {
+  ssr: false,
+});
 
 const options = {
   plotOptions: {
@@ -118,7 +122,7 @@ export default function DemoChart(props: DemoChartProps) {
           )}
         />
       </Box>
-      <ReactApexChart
+      <Chart
         series={[
           {
             name: "Inflation",
@@ -127,7 +131,8 @@ export default function DemoChart(props: DemoChartProps) {
         ]}
         options={options}
         type="bar"
-        height={400}
+        height="400px"
+        width="100%"
       />
     </Box>
   );

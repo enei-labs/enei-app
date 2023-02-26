@@ -25,6 +25,15 @@ const componentsTheme = createTheme({
             padding: "0 12px",
           },
         },
+        {
+          props: { variant: "outlined" },
+          style: {
+            color: palette.text.primary,
+            "& svg": {
+              color: palette.primary.main
+            }
+          }
+        }
       ],
       styleOverrides: {
         startIcon: {
@@ -103,10 +112,19 @@ const componentsTheme = createTheme({
         },
       },
     },
+    MuiDialog: {
+      styleOverrides: {
+        root: {
+          '& .MuiDialog-paper': {
+            borderRadius: "16px",
+          }
+        },
+      }
+    },
     MuiDialogContent: {
       styleOverrides: {
         root: {
-          padding: "60px",
+          padding: "36px",
           textAlign: "center",
           [breakpoints.down("md")]: {
             padding: "30px",

@@ -9,7 +9,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import TableRowExpansion from "./TableRowExpansion";
 
 enum Alignment {
@@ -24,13 +24,13 @@ interface Page {
   index: number;
 }
 
-interface Config {
+interface Config<T = any> {
   header: string;
   tooltip?: string;
   accessor?: string;
   alignment?: Alignment;
   format?: (data: any) => string | undefined;
-  render?: React.ComponentType<any>;
+  render?: (data: T) => JSX.Element;
 }
 
 interface TableProps {
@@ -123,7 +123,7 @@ const Table: React.FC<TableProps> = ({
                   align="center"
                   sx={style.bodyCell}
                 >
-                  No Data.
+                  沒有資料
                 </TableCell>
               </TableRow>
             ) : (
