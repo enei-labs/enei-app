@@ -7,7 +7,7 @@ interface EditConfirmDialogProps {
   onCloseAllDialog: VoidFunction;
   open: boolean;
   onClose: VoidFunction;
-  variant: "edit" | "add";
+  variant: "edit" | "create";
 }
 
 const getContent = (variant: EditConfirmDialogProps["variant"]) => {
@@ -19,7 +19,7 @@ const getContent = (variant: EditConfirmDialogProps["variant"]) => {
     content = `您的資料尚未更新，關閉後資料將不會儲存，是否確認關閉修改頁面？`;
   }
 
-  if (variant === "add") {
+  if (variant === "create") {
     title = "關閉新增頁面";
     content = `您的資料尚未新增，關閉後資料將不會儲存，是否確認關閉新增頁面？`;
   }

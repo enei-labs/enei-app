@@ -133,6 +133,7 @@ export type CompanyContract = {
   /** 合約價格 */
   price: Scalars['String'];
   startedAt: Scalars['DateTime'];
+  transferAt?: Maybe<Scalars['String']>;
   transferDoc: Scalars['String'];
   /** 轉供率要求（%） */
   transferRate: Scalars['Float'];
@@ -252,6 +253,7 @@ export type Mutation = {
   createUser: CreateUserResponse;
   modifyAccount: Account;
   modifyProfile: Account;
+  removeAccount: Account;
   removeAdmin: Admin;
   removeGuest: Guest;
   removeUser: User;
@@ -312,6 +314,11 @@ export type MutationModifyAccountArgs = {
 export type MutationModifyProfileArgs = {
   email?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationRemoveAccountArgs = {
+  input: RemoveAccountInput;
 };
 
 
@@ -442,6 +449,11 @@ export type QueryUsersArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   roles?: Array<Role>;
+};
+
+export type RemoveAccountInput = {
+  accountId: Scalars['ID'];
+  reason?: InputMaybe<Scalars['String']>;
 };
 
 export type RemoveAccountRecord = {

@@ -1,12 +1,11 @@
 import { FieldsController } from "@components/Controller";
 import Dialog from "@components/Dialog";
-import { useAuth } from "@core/context/auth";
 import { FieldConfig, Option } from "@core/types";
 import { textValidated } from "@core/types/fieldConfig";
 import { LoadingButton } from "@mui/lab";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import { useValidatedForm } from "@utils/hooks";
-import { useReducer, useState } from "react";
+import { useReducer } from "react";
 import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { useCreateCompany } from "@utils/hooks/mutations/useCreateCompany";
 import { COMPANIES } from "@core/graphql/queries/companies";
@@ -65,7 +64,6 @@ type DialogState = {
 };
 
 const AddCompanyBtn = () => {
-  const { me } = useAuth();
   const [state, dispatch] = useReducer(
     (prev: DialogState, next: DialogState) => {
       return { ...prev, ...next };
