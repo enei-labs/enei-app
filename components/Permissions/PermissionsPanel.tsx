@@ -4,7 +4,8 @@ import DeleteOutlined from "@mui/icons-material/DeleteOutlined";
 import NearMeOutlinedIcon from "@mui/icons-material/NearMeOutlined";
 import { IconBtn } from "@components/Button";
 import { Config } from "@components/Table/Table";
-import { Account, AccountPage } from "@core/graphql/types";
+import { Account, AccountPage, Role } from "@core/graphql/types";
+import { useAuth } from "../../core/context/auth";
 
 const PermissionsPanel = (props: {
   accounts?: AccountPage;
@@ -20,6 +21,7 @@ const PermissionsPanel = (props: {
     onDeleteClick,
     onSendPasswordClick,
   } = props;
+  const { me } = useAuth();
 
   const configs: Config<Account>[] = [
     {
@@ -52,6 +54,7 @@ const PermissionsPanel = (props: {
 
           {/* 刪除 */}
           <IconBtn
+            disabled={me?.role !== Role.SuperAdmin}
             icon={<DeleteOutlined />}
             onClick={() => {
               onDeleteClick?.(data);

@@ -5,6 +5,7 @@ import React from "react";
 interface IconBtnProps {
   icon: React.ReactNode;
   onClick?: React.MouseEventHandler<HTMLButtonElement> | undefined;
+  disabled?: boolean;
 }
 
 const style = {
@@ -18,9 +19,9 @@ const style = {
   ],
 };
 
-const IconBtn: React.FC<IconBtnProps> = ({ icon, onClick }) => {
+const IconBtn: React.FC<IconBtnProps> = ({ icon, onClick, disabled }) => {
   return (
-    <IconButton sx={style.wrapper} onClick={onClick}>
+    <IconButton sx={style.wrapper} onClick={onClick} disabled={disabled}>
       {icon}
     </IconButton>
   );

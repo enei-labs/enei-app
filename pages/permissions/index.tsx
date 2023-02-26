@@ -1,16 +1,14 @@
 import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { AuthLayout } from "@components/Layout";
 import {
-  Alert,
   Box,
   Button,
   Card,
   CircularProgress,
   Divider,
-  Snackbar,
   Toolbar,
 } from "@mui/material";
-import { ReactElement, useCallback, useReducer, useState } from "react";
+import { ReactElement, useReducer } from "react";
 import Head from "next/head";
 import IconBreadcrumbs from "@components/BreadCrumbs";
 import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
@@ -18,11 +16,12 @@ import { InputSearch } from "@components/Input";
 import PermissionsPanel from "@components/Permissions/PermissionsPanel";
 import { useAccounts } from "@utils/hooks/queries/useAccounts";
 import { AuthGuard } from "@components/AuthGuard";
-import { Account, AccountPage, Role } from "@core/graphql/types";
+import { Account, Role } from "@core/graphql/types";
 import { useRemoveAccount } from "@utils/hooks";
 import { useSendResetPasswordEmail } from "@utils/hooks/mutations/useSendResetPasswordEmail";
 import dynamic from "next/dynamic";
-import { reducer } from "../../core/context/account-dialog/reducer";
+import { reducer } from "@core/context/account-dialog/reducer";
+import { toast } from "react-toastify";
 
 const AccountDialog = dynamic(
   () => import("@components/Permissions/AccountDialog/AccountDialog"),
@@ -32,15 +31,8 @@ const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
 const Permissions = () => {
   const [state, dispatch] = useReducer(reducer, { status: "closed" });
-
-  const [alertType, setAlertType] = useState<
-    "delete" | "sendEmail" | undefined
-  >(undefined);
-
   const { data: accountsData } = useAccounts();
-
   const [removeAccount] = useRemoveAccount();
-
   const [sendResetPasswordEmail] = useSendResetPasswordEmail();
 
   /** 刪除帳號點擊行為 */
@@ -55,15 +47,17 @@ const Permissions = () => {
     });
 
     if (data) {
-      setAlertType("sendEmail");
+      toast.success("寄送成功！");
     }
   };
 
   const onDeleteAccount = async (id: string) => {
-    const { data } = await removeAccount({ variables: { id: id } });
+    const { data } = await removeAccount({
+      variables: { input: { accountId: id } },
+    });
 
     if (data) {
-      setAlertType("delete");
+      toast.success("刪除成功");
     }
   };
 
@@ -168,26 +162,6 @@ const Permissions = () => {
           onClose={() => dispatch({ type: "closed" })}
         />
       ) : null}
-
-      {/* 修改成功 Toast */}
-      <Snackbar
-        open={alertType !== undefined}
-        autoHideDuration={6000}
-        onClose={() => {
-          setAlertType(undefined);
-        }}
-        anchorOrigin={{ horizontal: "center", vertical: "bottom" }}
-      >
-        <Alert
-          onClose={() => {
-            setAlertType(undefined);
-          }}
-          severity="success"
-          sx={{ width: "100%" }}
-        >
-          {alertType === "delete" ? "刪除成功！" : "寄送成功！"}
-        </Alert>
-      </Snackbar>
     </>
   );
 };
