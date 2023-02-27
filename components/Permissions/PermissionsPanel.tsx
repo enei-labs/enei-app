@@ -5,7 +5,7 @@ import NearMeOutlinedIcon from "@mui/icons-material/NearMeOutlined";
 import { IconBtn } from "@components/Button";
 import { Config } from "@components/Table/Table";
 import { Account, AccountPage, Role } from "@core/graphql/types";
-import { useAuth } from "../../core/context/auth";
+import { useAuth } from "@core/context/auth";
 
 const PermissionsPanel = (props: {
   accounts?: AccountPage;

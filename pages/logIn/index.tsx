@@ -1,7 +1,7 @@
 import { FieldsController } from "@components/Controller";
 import FormBox from "@components/FormBox";
 import { Layout } from "@components/Layout";
-import { LogInForgotPwdBtn, LogInSetNewPwdDialog } from "@components/LogIn";
+import { LogInForgotPwdBtn } from "@components/LogIn";
 import { useAuth } from "@core/context/auth";
 import { FieldConfig } from "@core/types";
 import { passwordValidated, textValidated } from "@core/types/fieldConfig";
@@ -13,6 +13,11 @@ import { ReactElement, useState } from "react";
 import { toast } from "react-toastify";
 import Logo from "public/logo-with-name.svg";
 import LoginIcon from "@mui/icons-material/Login";
+import dynamic from "next/dynamic";
+
+const LogInSetNewPwdDialog = dynamic(
+  () => import("@components/LogIn/LogInSetNewPwdDialog")
+);
 
 type FormData = {
   email: string;
@@ -95,7 +100,9 @@ const LogIn = () => {
         </FormBox>
       </Box>
 
-      <LogInSetNewPwdDialog open={open} onClose={() => setOpen(false)} />
+      {open ? (
+        <LogInSetNewPwdDialog open={open} onClose={() => setOpen(false)} />
+      ) : null}
     </>
   );
 };
