@@ -289,7 +289,7 @@ const AddCompanyContractBtn = (props: CompanyContractProps) => {
           }
           open={state.showEditConfirmDialog}
           onClose={() => dispatch({ showEditConfirmDialog: false })}
-          variant="add"
+          variant="create"
         />
       ) : null}
     </>

@@ -7,8 +7,12 @@ interface Variables {
   limit?: number;
 }
 
-export const useCompanies = (variables?: Variables) => {
+export const useCompanies = ({ skip = false, variables }: {
+  skip?: boolean;
+  variables?: Variables;
+} = {} ) => {
   return useQuery<{ companies: CompanyPage }>(COMPANIES, {
     variables: variables,
+    skip,
   })
 }

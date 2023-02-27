@@ -1,12 +1,12 @@
 import client from "@core/graphql";
 import { ME } from "@core/graphql/queries";
-import { Admin } from "@core/graphql/types";
+import { Account } from "@core/graphql/types";
 import { useQuery, useSignOut } from "@utils/hooks";
 import React, { createContext, useContext, useEffect, useReducer } from "react";
 import { reducer } from "./reducer";
 
 interface AuthState {
-  me?: Admin;
+  me?: Account;
   logIn: () => Promise<void>;
   logOut: () => Promise<void>;
   status: "loading" | "authenticated" | "unauthenticated";
@@ -23,7 +23,7 @@ export const useAuth = (): AuthState => useContext(AuthContext);
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, { status: "loading" });
 
-  const { data, refetch } = useQuery<{ me: Admin }>(ME, {
+  const { data, refetch } = useQuery<{ me: Account }>(ME, {
     pollInterval: 3600000,
     onError: () => {
       dispatch({ type: "unauthenticated" });
@@ -55,9 +55,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       return;
     }
 
-    me.__typename === "Admin"
-      ? dispatch({ type: "authenticated", payload: me })
-      : dispatch({ type: "unauthenticated" });
+    dispatch({ type: "authenticated", payload: me });
   }, [data]);
 
   return (

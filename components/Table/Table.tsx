@@ -30,7 +30,7 @@ interface Config<T = any> {
   accessor?: string;
   alignment?: Alignment;
   format?: (data: any) => string | undefined;
-  render?: React.ComponentType<T>;
+  render?: (data: T) => JSX.Element;
 }
 
 interface TableProps {

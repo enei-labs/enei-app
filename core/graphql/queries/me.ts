@@ -1,11 +1,12 @@
 import { gql } from '@apollo/client'
-import { ADMIN_FIELDS } from '../fragment'
+import { ACCOUNT_FIELDS } from '../fragment'
 
 export const ME = gql`
-  ${ADMIN_FIELDS}
+  ${ACCOUNT_FIELDS}
   query me {
     me {
-      ...adminFields
+      ...accountFields
+      __typename
     }
   }
 `

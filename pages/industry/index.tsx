@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import BoltIcon from "@mui/icons-material/BoltOutlined";
 import IconBreadcrumbs from "@components/BreadCrumbs";
-import { Card, Divider } from "@mui/material";
+import { Card, CircularProgress, Divider } from "@mui/material";
 import { AuthLayout } from "@components/Layout";
 import { ReactElement, useState } from "react";
 import Head from "next/head";
@@ -14,7 +14,10 @@ import CompanyPanel from "@components/Company/CompanyPanel";
 import dynamic from "next/dynamic";
 
 const CompanyContractPanel = dynamic(
-  () => import("@components/CompanyContract/CompanyContractPanel")
+  () => import("@components/CompanyContract/CompanyContractPanel"),
+  {
+    loading: () => <CircularProgress size="24px" />,
+  }
 );
 
 function IndustryPage() {
