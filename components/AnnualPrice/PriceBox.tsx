@@ -23,7 +23,7 @@ export function PriceBox(props: PriceBoxProps) {
   const { icon: Icon, name, price, unit } = props;
   return (
     <Box>
-      <Box sx={{ display: "flex", marginBottom: "4px" }}>
+      <Box sx={{ display: "flex", marginBottom: "10px" }}>
         <Icon />
         <Typography variant="body2">{name}</Typography>
       </Box>

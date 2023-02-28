@@ -10,7 +10,7 @@ export default function OverviewCard(props: OverviewCardProps) {
   const { topic, basicInfos } = props;
   return (
     <Card sx={{ p: "36px" }}>
-      <Grid container spacing={1}>
+      <Grid container spacing={1} rowGap="12px">
         <Grid item sm={12}>
           <Typography variant="h4">{topic}</Typography>
         </Grid>
