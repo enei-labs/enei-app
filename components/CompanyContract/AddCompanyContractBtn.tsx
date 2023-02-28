@@ -19,7 +19,9 @@ const EditConfirmDialog = dynamic(
 );
 
 type FormData = {
+  companyName: string;
   name: string;
+  number: string;
   contactName: string;
   contactEmail: string;
   contactPhone: string;
@@ -30,18 +32,17 @@ type FormData = {
   transferRate: string;
   daysToPay: string;
   description: string;
-  contractDoc: string;
-  transferDoc: string;
-  industryDoc: string;
+  contractDoc: { id: string; file: File };
+  transferDoc: { id: string; file: File };
+  industryDoc: { id: string; file: File };
 };
 
 const configs: FieldConfig[] = [
   {
     type: "TEXT",
-    name: "name",
+    name: "companyName",
     label: "公司名稱",
-    required: true,
-    validated: textValidated,
+    disabled: true,
   },
   {
     type: "TEXT",
@@ -63,6 +64,20 @@ const configs: FieldConfig[] = [
     label: "聯絡人信箱",
     required: true,
     validated: textValidated.email(),
+  },
+  {
+    type: "TEXT",
+    name: "name",
+    label: "合約名稱",
+    required: true,
+    validated: textValidated,
+  },
+  {
+    type: "TEXT",
+    name: "number",
+    label: "合約編號",
+    required: true,
+    validated: textValidated,
   },
   {
     type: "TEXT",
@@ -111,7 +126,6 @@ const configs: FieldConfig[] = [
     name: "description",
     label: "合約描述 / 特殊條件",
     required: false,
-    validated: textValidated,
   },
   {
     type: "FILE",
@@ -163,14 +177,18 @@ const AddCompanyContractBtn = (props: CompanyContractProps) => {
     control,
     handleSubmit,
     formState: { errors },
-  } = useValidatedForm<FormData>(configs);
+  } = useValidatedForm<FormData>(configs, {
+    defaultValues: { companyName: company.name },
+  });
 
   const onSubmit = async (formData: FormData) => {
+    console.log({ formData });
     const { data } = await createCompanyContract({
       variables: {
         input: {
           companyId: company.id,
           name: formData.name,
+          number: formData.number,
           contactName: formData.contactName,
           contactEmail: formData.contactEmail,
           contactPhone: formData.contactPhone,
@@ -181,9 +199,9 @@ const AddCompanyContractBtn = (props: CompanyContractProps) => {
           transferRate: Number(formData.transferRate),
           daysToPay: Number(formData.daysToPay),
           description: formData.description,
-          contractDoc: formData.contractDoc,
-          transferDoc: formData.transferDoc,
-          industryDoc: formData.industryDoc,
+          contractDoc: formData.contractDoc.id,
+          transferDoc: formData.transferDoc.id,
+          industryDoc: formData.industryDoc.id,
         },
       },
       refetchQueries: [COMPANY_CONTRACTS],
@@ -191,7 +209,7 @@ const AddCompanyContractBtn = (props: CompanyContractProps) => {
 
     if (data?.createCompanyContract.__typename === "CompanyContract") {
       reset();
-      dispatch({ showFormDialog: false, showEditConfirmDialog: true });
+      dispatch({ showFormDialog: false, showEditConfirmDialog: false });
     }
   };
 
@@ -211,33 +229,42 @@ const AddCompanyContractBtn = (props: CompanyContractProps) => {
       >
         <Grid container justifyContent={"space-between"} alignItems={"center"}>
           <Typography variant="h4" textAlign={"left"}>
-            發電業資訊
+            新增合約
           </Typography>
           <IconBtn
             icon={<CloseIcon />}
             onClick={() => dispatch({ showEditConfirmDialog: true })}
           />
         </Grid>
+        <Typography textAlign="left" variant="h5">
+          發電業資訊
+        </Typography>
         <FieldsController
           configs={configs.slice(0, 1)}
           form={{ control, errors }}
         />
 
-        <Typography variant="h5">聯絡人資訊</Typography>
+        <Typography textAlign="left" variant="h5">
+          聯絡人資訊
+        </Typography>
         <FieldsController
           configs={configs.slice(1, 4)}
           form={{ control, errors }}
         />
 
-        <Typography variant="h5">合約資訊</Typography>
+        <Typography textAlign="left" variant="h5">
+          合約資訊
+        </Typography>
         <FieldsController
-          configs={configs.slice(4, 11)}
+          configs={configs.slice(4, 13)}
           form={{ control, errors }}
         />
 
-        <Typography variant="h5">相關文件</Typography>
+        <Typography textAlign="left" variant="h5">
+          相關文件
+        </Typography>
         <FieldsController
-          configs={configs.slice(11)}
+          configs={configs.slice(13)}
           form={{ control, errors }}
         />
 

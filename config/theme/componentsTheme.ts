@@ -104,6 +104,8 @@ const componentsTheme = createTheme({
           fontSize: "16px",
           height: "40px",
           ".Mui-disabled": {
+            /** 讓 fieldSet 的背景色不會蓋住字 */
+            zIndex: 10,
             cursor: "not-allowed",
           },
           "& input::placeholder": {

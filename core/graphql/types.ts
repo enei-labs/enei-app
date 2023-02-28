@@ -130,6 +130,8 @@ export type CompanyContract = {
   id: Scalars['ID'];
   industryDoc: Scalars['String'];
   name: Scalars['String'];
+  /** 合約編號 */
+  number: Scalars['String'];
   /** 合約價格 */
   price: Scalars['String'];
   startedAt: Scalars['DateTime'];
@@ -179,6 +181,7 @@ export type CreateCompanyContractInput = {
   endedAt: Scalars['DateTime'];
   industryDoc: Scalars['String'];
   name: Scalars['String'];
+  number: Scalars['String'];
   price: Scalars['String'];
   startedAt: Scalars['DateTime'];
   transferDoc: Scalars['String'];
@@ -518,6 +521,7 @@ export type UpdateCompanyContractInput = {
   endedAt?: InputMaybe<Scalars['DateTime']>;
   industryDoc?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
+  number?: InputMaybe<Scalars['String']>;
   price?: InputMaybe<Scalars['String']>;
   startedAt?: InputMaybe<Scalars['DateTime']>;
   transferAt?: InputMaybe<Scalars['DateTime']>;

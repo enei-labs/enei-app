@@ -23,7 +23,7 @@ function ContractBox(props: ContractBoxProps) {
 
   return (
     <Box sx={styles.box}>
-      <Typography variant="h5">{contract.name}</Typography>
+      <Typography variant="h5">{`${contract.number}(${contract.name})`}</Typography>
       <Typography variant="subtitle2">3,000MWh</Typography>
       <Grid container>
         <Grid item sm={6}>
