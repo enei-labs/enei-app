@@ -1,5 +1,5 @@
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { FieldsController } from "@components/Controller";
 import FieldConfig, { textValidated } from "@core/types/fieldConfig";
 import { useValidatedForm } from "@utils/hooks";
@@ -10,6 +10,7 @@ import CancelOutlined from "@mui/icons-material/CancelOutlined";
 import { useAuth } from "@core/context/auth";
 import { useModifyProfile } from "@utils/hooks/mutations/useModifyProfile";
 import { toast } from "react-toastify";
+import { LoadingButton } from "@mui/lab";
 
 type FormData = {
   name: string;
@@ -42,7 +43,7 @@ function SettingDialog(props: SettingDialogProps) {
       type: "TEXT",
       name: "email",
       label: "用戶信箱",
-      validated: textValidated.email,
+      validated: textValidated.email(),
     },
   ];
 
@@ -58,7 +59,7 @@ function SettingDialog(props: SettingDialogProps) {
     },
   });
 
-  const [modifyProfile] = useModifyProfile();
+  const [modifyProfile, { loading }] = useModifyProfile();
 
   const onSubmit = async (formData: FormData) => {
     const data = await modifyProfile({
@@ -68,7 +69,7 @@ function SettingDialog(props: SettingDialogProps) {
       },
     });
 
-    if (data.data?.modifyProfile.__typename === "Success") {
+    if (data) {
       // refetch 用戶資料
       logIn();
       toast.success("修改成功！");
@@ -77,12 +78,18 @@ function SettingDialog(props: SettingDialogProps) {
   };
   return (
     <Dialog open={isOpenDialog} onClose={onClose}>
-      <Grid container justifyContent={"space-between"} alignItems={"center"}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
         <Typography variant="h4" textAlign={"left"}>
           修改個人資料
         </Typography>
         <IconBtn icon={<HighlightOffIcon />} onClick={onClose} />
-      </Grid>
+      </Box>
       <Typography variant="h5" textAlign={"left"}>
         個人資料
       </Typography>
@@ -90,16 +97,26 @@ function SettingDialog(props: SettingDialogProps) {
         configs={settingsFieldConfigs}
         form={{ control, errors }}
       />
-      <Box justifyContent={"flex-start"} alignItems={"center"} gap={"10px"}>
-        <Button
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "flex-start",
+          alignItems: "center",
+          columnGap: "10px",
+        }}
+      >
+        <LoadingButton
+          sx={{ height: "40px" }}
+          loading={loading}
           startIcon={<SaveOutlinedIcon />}
           onClick={handleSubmit(onSubmit)}
         >
           儲存
-        </Button>
+        </LoadingButton>
         <Button
           startIcon={<CancelOutlined />}
           sx={{
+            height: "40px",
             "&.MuiButton-text": {
               backgroundColor: "transparent",
               background: "primary.dark",

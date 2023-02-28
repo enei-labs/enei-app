@@ -3,8 +3,7 @@ import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 import { CancelOutlined } from "@mui/icons-material";
 import { useModifyAccount } from "@utils/hooks";
 import { LoadingButton } from "@mui/lab";
-import { useForm, UseFormHandleSubmit } from "react-hook-form";
-import { useLoading } from "@utils/hooks/useLoading";
+import { UseFormHandleSubmit } from "react-hook-form";
 import { FormData } from "./FormData";
 import { ACCOUNTS } from "@core/graphql/queries";
 import { toast } from "react-toastify";
@@ -17,8 +16,7 @@ interface EditAccountBtnsProps {
 
 const EditAccountBtns = (props: EditAccountBtnsProps) => {
   const { id, closeDialog, handleSubmit } = props;
-  const { isLoading, loader } = useLoading();
-  const [modifyAccount] = useModifyAccount();
+  const [modifyAccount, { loading }] = useModifyAccount();
 
   const onModifyAccount = async (formData: FormData) => {
     const { name, email, companyId } = formData;
@@ -41,9 +39,9 @@ const EditAccountBtns = (props: EditAccountBtnsProps) => {
   return (
     <>
       <LoadingButton
-        loading={isLoading}
+        loading={loading}
         startIcon={<SaveOutlinedIcon />}
-        onClick={handleSubmit(loader(onModifyAccount))}
+        onClick={handleSubmit(onModifyAccount)}
       >
         儲存
       </LoadingButton>
