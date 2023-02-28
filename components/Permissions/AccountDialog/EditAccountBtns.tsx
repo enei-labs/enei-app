@@ -10,12 +10,12 @@ import { toast } from "react-toastify";
 
 interface EditAccountBtnsProps {
   id: string;
-  closeDialog: VoidFunction;
+  onClose: VoidFunction;
   handleSubmit: UseFormHandleSubmit<FormData>;
 }
 
 const EditAccountBtns = (props: EditAccountBtnsProps) => {
-  const { id, closeDialog, handleSubmit } = props;
+  const { id, onClose, handleSubmit } = props;
   const [modifyAccount, { loading }] = useModifyAccount();
 
   const onModifyAccount = async (formData: FormData) => {
@@ -32,7 +32,7 @@ const EditAccountBtns = (props: EditAccountBtnsProps) => {
 
     if (data && data.modifyAccount.__typename === "Success") {
       toast.success("Success");
-      closeDialog();
+      onClose();
     }
   };
 
@@ -59,7 +59,7 @@ const EditAccountBtns = (props: EditAccountBtnsProps) => {
             },
           },
         }}
-        onClick={closeDialog}
+        onClick={onClose}
       >
         取消
       </Button>

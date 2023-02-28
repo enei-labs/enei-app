@@ -20,7 +20,7 @@ interface AccountDialogProps {
   isOpenDialog: boolean;
   currentModifyAccount?: Account;
   variant: "edit" | "create";
-  closeDialog: VoidFunction;
+  onClose: VoidFunction;
 }
 
 const roleMap = {
@@ -61,7 +61,7 @@ const basicConfigs: FieldConfig[] = [
 ];
 
 function AccountDialog(props: AccountDialogProps) {
-  const { isOpenDialog, closeDialog, currentModifyAccount, variant } = props;
+  const { isOpenDialog, onClose, currentModifyAccount, variant } = props;
 
   const {
     control,
@@ -136,7 +136,7 @@ function AccountDialog(props: AccountDialogProps) {
   }, [companiesData, usersData, role]);
 
   return (
-    <Dialog open={isOpenDialog} onClose={closeDialog}>
+    <Dialog open={isOpenDialog} onClose={onClose}>
       {loading ? (
         <CircularProgress size="24px" />
       ) : (
@@ -149,7 +149,7 @@ function AccountDialog(props: AccountDialogProps) {
             <Typography variant="h4" textAlign={"left"}>
               {variant === "create" ? "新增帳號" : "修改帳號"}
             </Typography>
-            <IconBtn icon={<HighlightOffIcon />} onClick={closeDialog} />
+            <IconBtn icon={<HighlightOffIcon />} onClick={onClose} />
           </Grid>
           <Typography variant="h5" textAlign={"left"}>
             帳號資訊
@@ -165,15 +165,12 @@ function AccountDialog(props: AccountDialogProps) {
             gap={"10px"}
           >
             {!currentModifyAccount ? (
-              <CreateAccountBtn
-                handleSubmit={handleSubmit}
-                closeDialog={closeDialog}
-              />
+              <CreateAccountBtn handleSubmit={handleSubmit} onClose={onClose} />
             ) : (
               <EditAccountBtns
                 handleSubmit={handleSubmit}
                 id={currentModifyAccount.id}
-                closeDialog={closeDialog}
+                onClose={onClose}
               />
             )}
           </Grid>

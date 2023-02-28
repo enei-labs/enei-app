@@ -1,11 +1,11 @@
 import { Account } from "@core/graphql/types";
 
-type State = {
+export type State = {
   account?: Account
   status: 'edit' | 'create' | 'closed' | 'delete'
 }
 
-type Action =
+export type Action =
   | { type: 'create' }
   | { type: 'edit'; payload: Account }
   | { type: 'delete'; payload: Account  }

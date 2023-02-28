@@ -79,14 +79,14 @@ const configs: FieldConfig[] = [
     validated: textValidated,
   },
   {
-    type: "TEXT",
+    type: "DATE",
     name: "startedAt",
     label: "合約起始日期",
     required: true,
     validated: textValidated,
   },
   {
-    type: "TEXT",
+    type: "DATE",
     name: "endedAt",
     label: "合約結束日期",
     required: true,

@@ -1,6 +1,7 @@
 import {
   InputAutocomplete,
   InputAutocompleteList,
+  InputDate,
   InputText,
   InputTextarea,
 } from "@components/Input";
@@ -53,6 +54,12 @@ const FieldsController: React.FC<FieldsControllerProps> = ({
                         {...field}
                         helperText={helperText}
                       />
+                    );
+
+                  case "DATE":
+                  case "DATE_TEXTFILE":
+                    return (
+                      <InputDate {...item} {...field} helperText={helperText} />
                     );
 
                   case "SINGLE_SELECT":

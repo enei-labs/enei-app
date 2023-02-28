@@ -4,18 +4,16 @@ import { UseFormHandleSubmit } from "react-hook-form";
 import { FormData } from "./FormData";
 import { ACCOUNTS } from "@core/graphql/queries";
 import { useCreateAccount } from "@utils/hooks";
-import { useLoading } from "@utils/hooks/useLoading";
 
 interface CreateAccountBtnProps {
-  closeDialog: VoidFunction;
+  onClose: VoidFunction;
   handleSubmit: UseFormHandleSubmit<FormData>;
 }
 
 const CreateAccountBtn = (props: CreateAccountBtnProps) => {
-  const { closeDialog, handleSubmit } = props;
+  const { onClose, handleSubmit } = props;
 
-  const { isLoading, loader } = useLoading();
-  const [createAccount] = useCreateAccount();
+  const [createAccount, { loading }] = useCreateAccount();
 
   /** 新增帳號 mutation */
   const onCreateAccount = async (formData: FormData) => {
@@ -32,15 +30,15 @@ const CreateAccountBtn = (props: CreateAccountBtnProps) => {
     });
 
     if (data) {
-      closeDialog();
+      onClose();
     }
   };
 
   return (
     <LoadingButton
-      loading={isLoading}
+      loading={loading}
       startIcon={<AddIcon />}
-      onClick={handleSubmit(loader(onCreateAccount))}
+      onClick={handleSubmit(onCreateAccount)}
     >
       新增
     </LoadingButton>

@@ -1,13 +1,6 @@
 import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { AuthLayout } from "@components/Layout";
-import {
-  Box,
-  Button,
-  Card,
-  CircularProgress,
-  Divider,
-  Toolbar,
-} from "@mui/material";
+import { Box, Button, Card, Divider, Toolbar } from "@mui/material";
 import { ReactElement, useReducer } from "react";
 import Head from "next/head";
 import IconBreadcrumbs from "@components/BreadCrumbs";
@@ -16,54 +9,12 @@ import { InputSearch } from "@components/Input";
 import PermissionsPanel from "@components/Permissions/PermissionsPanel";
 import { useAccounts } from "@utils/hooks/queries/useAccounts";
 import { AuthGuard } from "@components/AuthGuard";
-import { Account, Role } from "@core/graphql/types";
-import { useRemoveAccount } from "@utils/hooks";
-import { useSendResetPasswordEmail } from "@utils/hooks/mutations/useSendResetPasswordEmail";
-import dynamic from "next/dynamic";
+import { Role } from "@core/graphql/types";
 import { reducer } from "@core/context/account-dialog/reducer";
-import { toast } from "react-toastify";
-
-const AccountDialog = dynamic(
-  () => import("@components/Permissions/AccountDialog/AccountDialog"),
-  { ssr: false, loading: () => <CircularProgress size="24px" /> }
-);
-const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
 const Permissions = () => {
+  const { data: accountsData, loading } = useAccounts();
   const [state, dispatch] = useReducer(reducer, { status: "closed" });
-  const { data: accountsData } = useAccounts();
-  const [removeAccount] = useRemoveAccount();
-  const [sendResetPasswordEmail] = useSendResetPasswordEmail();
-
-  /** 刪除帳號點擊行為 */
-  const onDeleteClick = (rowData: Account) => {
-    dispatch({ type: "delete", payload: rowData });
-  };
-
-  /** 寄送信件點擊行為 */
-  const onSendPasswordClick = async (rowData: Account) => {
-    const { data } = await sendResetPasswordEmail({
-      variables: { id: rowData.id },
-    });
-
-    if (data) {
-      toast.success("寄送成功！");
-    }
-  };
-
-  const onDeleteAccount = async (id: string) => {
-    const { data } = await removeAccount({
-      variables: { input: { accountId: id } },
-    });
-
-    if (data) {
-      toast.success("刪除成功");
-    }
-  };
-
-  const onModifyClick = (rowData: Account) => {
-    dispatch({ type: "edit", payload: rowData });
-  };
 
   // /** 搜尋行為 */
   // const onSearch = (value: string) => {
@@ -128,40 +79,15 @@ const Permissions = () => {
 
             {/* 帳號表格 */}
             <PermissionsPanel
+              state={state}
+              dispatch={dispatch}
+              loading={loading}
               accounts={accountsData?.accounts}
-              onModifyClick={onModifyClick}
-              onDeleteClick={onDeleteClick}
-              onSendPasswordClick={onSendPasswordClick}
             />
           </Card>
           <Divider sx={{ my: "24px" }} />
         </AuthGuard>
       </Box>
-
-      {state.status === "create" || state.status === "edit" ? (
-        <AccountDialog
-          isOpenDialog={
-            !!(state.status === "create" || state.status === "edit")
-          }
-          variant={state.status}
-          currentModifyAccount={state.account}
-          closeDialog={() => dispatch({ type: "closed" })}
-        />
-      ) : null}
-
-      {/* 刪除帳號彈窗 */}
-      {state.status === "delete" ? (
-        <DialogAlert
-          open={state.status === "delete"}
-          title={"刪除用戶"}
-          content={"是否確認要刪除用戶？"}
-          onConfirm={() => {
-            if (!state.account) return;
-            onDeleteAccount(state.account.id);
-          }}
-          onClose={() => dispatch({ type: "closed" })}
-        />
-      ) : null}
     </>
   );
 };
