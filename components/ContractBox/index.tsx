@@ -5,6 +5,7 @@ import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined";
 import CreditCardOutlinedIcon from "@mui/icons-material/CreditCardOutlined";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import { CompanyContract } from "@core/graphql/types";
+import { formatDateTime } from "@utils/format";
 
 interface ContractBoxProps {
   contract: CompanyContract;
@@ -44,7 +45,9 @@ function ContractBox(props: ContractBoxProps) {
             <Box sx={{ ml: "12px" }}>
               <Typography variant="body4">合約起始日期</Typography>
               <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                <Typography variant="h6">{contract.startedAt}</Typography>
+                <Typography variant="h6">
+                  {formatDateTime(contract.startedAt)}
+                </Typography>
               </Box>
             </Box>
           </Box>
@@ -67,7 +70,9 @@ function ContractBox(props: ContractBoxProps) {
             <Box sx={{ ml: "12px" }}>
               <Typography variant="body4">正式轉供日</Typography>
               <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                <Typography variant="h6">{contract.transferAt}</Typography>
+                <Typography variant="h6">
+                  {formatDateTime(contract.transferAt)}
+                </Typography>
               </Box>
             </Box>
           </Box>
@@ -90,7 +95,9 @@ function ContractBox(props: ContractBoxProps) {
             <Box sx={{ ml: "12px" }}>
               <Typography variant="body4">合約結束日期</Typography>
               <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                <Typography variant="h6">{contract.endedAt}</Typography>
+                <Typography variant="h6">
+                  {formatDateTime(contract.endedAt)}
+                </Typography>
               </Box>
             </Box>
           </Box>

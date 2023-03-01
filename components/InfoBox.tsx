@@ -4,7 +4,7 @@ import { Box, Typography } from "@mui/material";
 interface InfoBoxProps {
   icon: SvgIconComponent;
   label: string;
-  content: string;
+  content: string | number;
   unit?: string;
 }
 

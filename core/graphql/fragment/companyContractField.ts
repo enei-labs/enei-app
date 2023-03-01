@@ -4,6 +4,7 @@ export const COMPANY_CONTRACT_FIELDS = gql`
   fragment companyContractFields on CompanyContract {
     id
     name
+    number
     price
     duration
     transferAt

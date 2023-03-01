@@ -6,6 +6,7 @@ import EventOutlinedIcon from "@mui/icons-material/EventOutlined";
 import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined";
 import CreditCardOutlinedIcon from "@mui/icons-material/CreditCardOutlined";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
+import { formatDateTime } from "@utils/format";
 import InfoBox from "../InfoBox";
 
 interface CompanyContractCardProps {
@@ -37,7 +38,7 @@ function CompanyContractCard(props: CompanyContractCardProps) {
     {
       icon: EventOutlinedIcon,
       label: "合約起始日期",
-      content: companyContract.startedAt,
+      content: formatDateTime(companyContract.startedAt),
     },
     {
       icon: TrendingUpOutlinedIcon,
@@ -48,7 +49,7 @@ function CompanyContractCard(props: CompanyContractCardProps) {
     {
       icon: TrendingUpOutlinedIcon,
       label: "正式轉供日",
-      content: companyContract.transferAt,
+      content: formatDateTime(companyContract.transferAt),
     },
     {
       icon: CreditCardOutlinedIcon,
@@ -59,7 +60,7 @@ function CompanyContractCard(props: CompanyContractCardProps) {
     {
       icon: TrendingUpOutlinedIcon,
       label: "合約結束日期",
-      content: companyContract.endedAt,
+      content: formatDateTime(companyContract.endedAt),
     },
     {
       icon: AccessTimeOutlinedIcon,
