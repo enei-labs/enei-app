@@ -22,7 +22,22 @@ const componentsTheme = createTheme({
         {
           props: { size: "medium" },
           style: {
+            height: '48px',
             padding: "0 12px",
+          },
+        },
+        {
+          props: { size: "medium" },
+          style: {
+            height: '40px',
+            padding: "0 12px",
+          },
+        },
+        {
+          props: { size: "small" },
+          style: {
+            height: '28px',
+            padding: "0 8px",
           },
         },
         {
@@ -42,7 +57,6 @@ const componentsTheme = createTheme({
           }
         },
         root: {
-          minHeight: "40px",
           boxShadow: "none",
           border: `1px solid ${palette.secondary.main}`,
           color: "#FFF",
