@@ -19,7 +19,7 @@ enum Alignment {
   JUSTIFY = "justify",
 }
 
-interface Page {
+export interface Page {
   rows: number;
   index: number;
 }

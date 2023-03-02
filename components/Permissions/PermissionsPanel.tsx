@@ -4,7 +4,7 @@ import BorderColorOutlined from "@mui/icons-material/BorderColorOutlined";
 import DeleteOutlined from "@mui/icons-material/DeleteOutlined";
 import NearMeOutlinedIcon from "@mui/icons-material/NearMeOutlined";
 import { IconBtn } from "@components/Button";
-import { Config } from "@components/Table/Table";
+import { Config, Page } from "@components/Table/Table";
 import { Account, AccountPage, Role } from "@core/graphql/types";
 import { useAuth } from "@core/context/auth";
 import { useRemoveAccount } from "@utils/hooks";
@@ -13,6 +13,7 @@ import { toast } from "react-toastify";
 import dynamic from "next/dynamic";
 import { CircularProgress } from "@mui/material";
 import { Action, State } from "@core/context/account-dialog/reducer";
+import { useAccounts } from "@utils/hooks/queries";
 
 const AccountDialog = dynamic(
   () => import("@components/Permissions/AccountDialog/AccountDialog"),
@@ -25,8 +26,9 @@ const PermissionsPanel = (props: {
   dispatch: Dispatch<Action>;
   accounts?: AccountPage;
   loading?: boolean;
+  refetchFn: (page: Page) => void;
 }) => {
-  const { state, dispatch, accounts, loading = false } = props;
+  const { state, dispatch, accounts, loading = false, refetchFn } = props;
   const { me } = useAuth();
 
   const [removeAccount] = useRemoveAccount();
@@ -122,12 +124,7 @@ const PermissionsPanel = (props: {
         list={accounts?.list}
         total={accounts?.total}
         loading={loading}
-        // onPageChange={(page) =>
-        //   refetch({
-        //     limit: page.rows,
-        //     offset: page.rows * page.index,
-        //   })
-        // }
+        onPageChange={refetchFn}
       />
       {state.status === "create" || state.status === "edit" ? (
         <AccountDialog

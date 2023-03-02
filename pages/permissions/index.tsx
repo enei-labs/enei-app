@@ -13,7 +13,7 @@ import { Role } from "@core/graphql/types";
 import { reducer } from "@core/context/account-dialog/reducer";
 
 const Permissions = () => {
-  const { data: accountsData, loading } = useAccounts();
+  const { data: accountsData, loading, refetch } = useAccounts();
   const [state, dispatch] = useReducer(reducer, { status: "closed" });
 
   // /** 搜尋行為 */
@@ -83,6 +83,12 @@ const Permissions = () => {
               dispatch={dispatch}
               loading={loading}
               accounts={accountsData?.accounts}
+              refetchFn={(page) =>
+                refetch({
+                  limit: page.rows,
+                  offset: page.rows * page.index,
+                })
+              }
             />
           </Card>
           <Divider sx={{ my: "24px" }} />
