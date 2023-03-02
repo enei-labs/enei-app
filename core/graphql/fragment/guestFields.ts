@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
-export const ADMIN_FIELDS = gql`
-  fragment adminFields on Admin {
+export const GUEST_FIELDS = gql`
+  fragment guestFields on Guest {
     id
     role
     actions

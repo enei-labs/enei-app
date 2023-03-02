@@ -2,7 +2,6 @@ import { gql } from "@apollo/client";
 import { ADMIN_FIELDS } from "@core/graphql/fragment/adminFields";
 
 export const ACCOUNT_FIELDS = gql`
-  ${ADMIN_FIELDS}
   fragment accountFields on Account {
     id
     role
@@ -11,9 +10,5 @@ export const ACCOUNT_FIELDS = gql`
     name
     hasSetPassword
     companyName
-    createdAt
-    creator {
-      ...adminFields
-    }
   }
 `;

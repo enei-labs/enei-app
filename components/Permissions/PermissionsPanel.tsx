@@ -87,7 +87,7 @@ const PermissionsPanel = (props: {
           <IconBtn
             icon={<BorderColorOutlined />}
             onClick={() => {
-              onModifyClick?.(data);
+              onModifyClick(data);
             }}
           />
 
@@ -96,7 +96,7 @@ const PermissionsPanel = (props: {
             disabled={me?.role !== Role.SuperAdmin}
             icon={<DeleteOutlined />}
             onClick={() => {
-              onDeleteClick?.(data);
+              onDeleteClick(data);
             }}
           />
         </>
@@ -108,7 +108,7 @@ const PermissionsPanel = (props: {
         <IconBtn
           icon={<NearMeOutlinedIcon />}
           onClick={() => {
-            onSendPasswordClick?.(data);
+            onSendPasswordClick(data);
           }}
         ></IconBtn>
       ),

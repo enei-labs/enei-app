@@ -1,5 +1,5 @@
-import { CircularProgress, Grid, Typography } from "@mui/material";
-import { useEffect, useMemo } from "react";
+import { CircularProgress, Grid, Tooltip, Typography } from "@mui/material";
+import { useMemo } from "react";
 import { IconBtn } from "@components/Button";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { Account, Role } from "@core/graphql/types";
@@ -15,6 +15,7 @@ import Dialog from "@components/Dialog";
 const EditAccountBtns = dynamic(() => import("./EditAccountBtns"));
 const CreateAccountBtn = dynamic(() => import("./CreateAccountBtn"));
 import { FormData } from "./FormData";
+import HelperText from "@components/HelperText";
 
 interface AccountDialogProps {
   isOpenDialog: boolean;
@@ -42,7 +43,6 @@ const basicConfigs: FieldConfig[] = [
     label: "信箱",
     placeholder: "請填入",
     validated: textValidated,
-    value: "test",
   },
   {
     type: "TEXT",
@@ -131,6 +131,7 @@ function AccountDialog(props: AccountDialogProps) {
             label: o.name,
             value: o.id,
           })) ?? [],
+        helperText: "若查無此公司，需先至發電業頁面新增公司",
       },
     ];
   }, [companiesData, usersData, role]);
@@ -158,6 +159,9 @@ function AccountDialog(props: AccountDialogProps) {
             configs={displayFieldConfigs}
             form={{ control, errors }}
           />
+          <HelperText>
+            若查無此公司，請先前往『發電業管理』頁面新增公司
+          </HelperText>
           <Grid
             container
             justifyContent={"flex-start"}

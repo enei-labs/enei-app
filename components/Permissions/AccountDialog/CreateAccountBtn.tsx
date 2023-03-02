@@ -2,8 +2,8 @@ import { LoadingButton } from "@mui/lab";
 import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { UseFormHandleSubmit } from "react-hook-form";
 import { FormData } from "./FormData";
-import { ACCOUNTS } from "@core/graphql/queries";
 import { useCreateAccount } from "@utils/hooks";
+import { toast } from "react-toastify";
 
 interface CreateAccountBtnProps {
   onClose: VoidFunction;
@@ -17,7 +17,7 @@ const CreateAccountBtn = (props: CreateAccountBtnProps) => {
 
   /** 新增帳號 mutation */
   const onCreateAccount = async (formData: FormData) => {
-    const { data } = await createAccount({
+    await createAccount({
       variables: {
         input: {
           name: formData.name,
@@ -26,12 +26,21 @@ const CreateAccountBtn = (props: CreateAccountBtnProps) => {
           role: formData.role.value,
         },
       },
-      refetchQueries: [ACCOUNTS],
-    });
+      onCompleted: (data) => {
+        if (data.createAccount.__typename === "AccountAlreadyExistsError") {
+          toast.error("此帳號已被註冊過");
+          return;
+        }
 
-    if (data) {
-      onClose();
-    }
+        if (
+          data.createAccount.__typename === "Admin" ||
+          data.createAccount.__typename === "Guest"
+        ) {
+          onClose();
+        }
+      },
+      // refetchQueries: [ACCOUNTS],
+    });
   };
 
   return (

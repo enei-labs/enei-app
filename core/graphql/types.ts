@@ -62,6 +62,7 @@ export enum Action {
   RemovePowerStationList = 'REMOVE_POWER_STATION_LIST',
   RemoveUser = 'REMOVE_USER',
   RemoveUserContract = 'REMOVE_USER_CONTRACT',
+  SendResetPasswordEmail = 'SEND_RESET_PASSWORD_EMAIL',
   UpdateAccount = 'UPDATE_ACCOUNT',
   UpdateCompany = 'UPDATE_COMPANY',
   UpdateCompanyContract = 'UPDATE_COMPANY_CONTRACT',
@@ -161,6 +162,8 @@ export type CreateAccountInput = {
   userId?: InputMaybe<Scalars['String']>;
 };
 
+export type CreateAccountResponse = AccountAlreadyExistsError | Admin | Guest;
+
 export type CreateAdminInput = {
   email: Scalars['String'];
   name: Scalars['String'];
@@ -249,7 +252,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   UpdateCompany: Company;
   changePassword: ChangePasswordResponse;
-  createAccount: Account;
+  createAccount: CreateAccountResponse;
   createAdmin: CreateAdminResponse;
   createCompany: Company;
   createCompanyContract: CompanyContract;

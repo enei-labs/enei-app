@@ -9,6 +9,8 @@ interface Variables {
 
 export const useAccounts = (variables?: Variables) => {
   return useQuery<{ accounts: AccountPage }>(ACCOUNTS, {
+    notifyOnNetworkStatusChange: false,
+    fetchPolicy: 'cache-first',
     variables: variables,
   });
 };

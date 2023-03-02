@@ -14,6 +14,11 @@
       "Admin",
       "InvalidCurrentPasswordError"
     ],
+    "CreateAccountResponse": [
+      "AccountAlreadyExistsError",
+      "Admin",
+      "Guest"
+    ],
     "CreateAdminResponse": [
       "AccountAlreadyExistsError",
       "Admin"
