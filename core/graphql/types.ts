@@ -263,11 +263,11 @@ export type Mutation = {
   removeAdmin: Admin;
   removeGuest: Guest;
   removeUser: User;
+  requestResetPassword: RequestResetPasswordResponse;
   resetPassword: ResetPasswordResponse;
   sendResetPasswordEmail: SendResetPasswordEmailResponse;
   setPassword: Account;
-  signInAdmin: SignInAdminResponse;
-  signInGuest: SignInUserResponse;
+  signIn: SignInResponse;
   signOut: Success;
   updateCompanyContract: CompanyContract;
 };
@@ -343,9 +343,15 @@ export type MutationRemoveUserArgs = {
 };
 
 
+export type MutationRequestResetPasswordArgs = {
+  id: Scalars['ID'];
+  oldPassword: Scalars['String'];
+};
+
+
 export type MutationResetPasswordArgs = {
   newPassword: Scalars['String'];
-  token: Scalars['String'];
+  token: Scalars['ID'];
 };
 
 
@@ -359,13 +365,7 @@ export type MutationSetPasswordArgs = {
 };
 
 
-export type MutationSignInAdminArgs = {
-  email: Scalars['String'];
-  password: Scalars['String'];
-};
-
-
-export type MutationSignInGuestArgs = {
+export type MutationSignInArgs = {
   email: Scalars['String'];
   password: Scalars['String'];
 };
@@ -373,6 +373,11 @@ export type MutationSignInGuestArgs = {
 
 export type MutationUpdateCompanyContractArgs = {
   input: UpdateCompanyContractInput;
+};
+
+export type PasswordReset = {
+  __typename?: 'PasswordReset';
+  id: Scalars['ID'];
 };
 
 export type PasswordResetExpiredError = Error & {
@@ -484,6 +489,8 @@ export type RemoveUserInput = {
   userId: Scalars['UUID'];
 };
 
+export type RequestResetPasswordResponse = AccountNotFoundError | InvalidSignInInputError | PasswordReset;
+
 export type ResetPasswordResponse = PasswordResetExpiredError | Success;
 
 export enum Role {
@@ -502,9 +509,7 @@ export type RoleInfo = {
 
 export type SendResetPasswordEmailResponse = AccountNotFoundError | Success;
 
-export type SignInAdminResponse = Admin | InvalidSignInInputError;
-
-export type SignInUserResponse = InvalidSignInInputError | User;
+export type SignInResponse = Admin | Guest | InvalidSignInInputError;
 
 export type Success = {
   __typename?: 'Success';

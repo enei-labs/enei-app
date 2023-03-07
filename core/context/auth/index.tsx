@@ -3,6 +3,7 @@ import { ME } from "@core/graphql/queries";
 import { Account } from "@core/graphql/types";
 import { useQuery, useSignOut } from "@utils/hooks";
 import React, { createContext, useContext, useEffect, useReducer } from "react";
+import { toast } from "react-toastify";
 import { reducer } from "./reducer";
 
 interface AuthState {
@@ -39,7 +40,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const logOut = async () => {
     await signOut({
       update: () => client.clearStore(),
-      onCompleted: () => dispatch({ type: "unauthenticated" }),
+      onCompleted: () => {
+        dispatch({ type: "unauthenticated" });
+        toast.success("登出成功");
+      },
     });
   };
 

@@ -182,7 +182,6 @@ const AddCompanyContractBtn = (props: CompanyContractProps) => {
   });
 
   const onSubmit = async (formData: FormData) => {
-    console.log({ formData });
     const { data } = await createCompanyContract({
       variables: {
         input: {

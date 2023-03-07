@@ -34,6 +34,11 @@
       "InvalidSignInInputError",
       "PasswordResetExpiredError"
     ],
+    "RequestResetPasswordResponse": [
+      "AccountNotFoundError",
+      "InvalidSignInInputError",
+      "PasswordReset"
+    ],
     "ResetPasswordResponse": [
       "PasswordResetExpiredError",
       "Success"
@@ -42,13 +47,10 @@
       "AccountNotFoundError",
       "Success"
     ],
-    "SignInAdminResponse": [
+    "SignInResponse": [
       "Admin",
+      "Guest",
       "InvalidSignInInputError"
-    ],
-    "SignInUserResponse": [
-      "InvalidSignInInputError",
-      "User"
     ]
   }
 };

@@ -7,7 +7,7 @@ import { FieldConfig } from "@core/types";
 import { passwordValidated, textValidated } from "@core/types/fieldConfig";
 import { LoadingButton } from "@mui/lab";
 import { Box } from "@mui/material";
-import { useSignInAdmin, useValidatedForm } from "@utils/hooks";
+import { useSignIn, useValidatedForm } from "@utils/hooks";
 import Head from "next/head";
 import { ReactElement, useState } from "react";
 import { toast } from "react-toastify";
@@ -46,7 +46,7 @@ const LogIn = () => {
 
   const [open, setOpen] = useState(false);
 
-  const [signInAdmin, { loading }] = useSignInAdmin();
+  const [signIn, { loading }] = useSignIn();
 
   const {
     control,
@@ -55,24 +55,30 @@ const LogIn = () => {
   } = useValidatedForm<FormData>(configs);
 
   const onSubmit = async (formData: FormData) => {
-    const { data } = await signInAdmin({
+    await signIn({
       variables: {
         email: formData.email,
         password: formData.password,
       },
+      onCompleted: (data) => {
+        if (data.signIn.__typename === "InvalidSignInInputError") {
+          toast.error("帳號或密碼不正確");
+          return;
+        }
+
+        if (
+          (data.signIn.__typename === "Admin" ||
+            data.signIn.__typename === "Guest") &&
+          data.signIn.hasSetPassword === false
+        ) {
+          setOpen(true);
+          return;
+        } else {
+          toast.success("登入成功");
+          logIn();
+        }
+      },
     });
-
-    if (data?.signInAdmin.__typename !== "Admin") {
-      toast.error("帳號或密碼不正確");
-      return;
-    }
-
-    if (data.signInAdmin.hasSetPassword === false) {
-      setOpen(true);
-      return;
-    }
-
-    await logIn();
   };
 
   return (
