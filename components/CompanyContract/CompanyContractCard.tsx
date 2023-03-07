@@ -97,7 +97,7 @@ function CompanyContractCard(props: CompanyContractCardProps) {
           alignItems: "center",
         }}
       >
-        <Typography variant="h4">{`${companyContract.id}(${companyContract.name})`}</Typography>
+        <Typography variant="h4">{`${companyContract.number}(${companyContract.name})`}</Typography>
         <Box sx={{ display: "flex" }}>edit</Box>
       </Box>
       <Box>

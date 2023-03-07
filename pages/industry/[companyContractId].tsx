@@ -5,7 +5,10 @@ import { useRouter } from "next/router";
 import { useCompanyContract } from "@utils/hooks/queries/useCompanyContract";
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import CircularProgress from "@mui/material/CircularProgress";
-import { Box } from "@mui/material";
+import { Box, Toolbar } from "@mui/material";
+import { AuthLayout } from "@components/Layout";
+import { ReactElement } from "react";
+import CompanyContractCard from "@components/CompanyContract/CompanyContractCard";
 
 function CompanyContractPage() {
   const router = useRouter();
@@ -22,6 +25,7 @@ function CompanyContractPage() {
       </Head>
       {data ? (
         <>
+          <Toolbar />
           <IconBreadcrumbs
             items={[
               {
@@ -36,11 +40,17 @@ function CompanyContractPage() {
               },
             ]}
           />
-          <Box sx={{ paddingTop: "12px" }}>123</Box>
+          <Box sx={{ paddingTop: "12px" }}>
+            <CompanyContractCard companyContract={data.companyContract} />
+          </Box>
         </>
       ) : null}
     </>
   );
 }
+
+CompanyContractPage.getLayout = (page: ReactElement) => {
+  return <AuthLayout>{page}</AuthLayout>;
+};
 
 export default CompanyContractPage;

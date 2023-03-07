@@ -6,6 +6,7 @@ import CreditCardOutlinedIcon from "@mui/icons-material/CreditCardOutlined";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import { CompanyContract } from "@core/graphql/types";
 import { formatDateTime } from "@utils/format";
+import { useRouter } from "next/router";
 
 interface ContractBoxProps {
   contract: CompanyContract;
@@ -16,14 +17,23 @@ const styles = {
     border: "2px solid #B2DFDB",
     borderRadius: "16px",
     padding: "16px",
+    "&:hover": {
+      cursor: "pointer",
+      border: "2px solid #009688",
+      boxShadow: "1px 1px 5px rgba(0, 0, 0, 0.15)",
+    },
   },
 } as const;
 
 function ContractBox(props: ContractBoxProps) {
   const { contract } = props;
+  const router = useRouter();
 
   return (
-    <Box sx={styles.box}>
+    <Box
+      sx={styles.box}
+      onClick={() => router.push(`/industry/${contract.id}`)}
+    >
       <Typography variant="h5">{`${contract.number}(${contract.name})`}</Typography>
       <Typography variant="subtitle2">3,000MWh</Typography>
       <Grid container>
