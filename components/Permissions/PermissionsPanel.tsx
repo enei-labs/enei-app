@@ -1,4 +1,4 @@
-import { Dispatch, useReducer } from "react";
+import { Dispatch } from "react";
 import { Table } from "@components/Table";
 import BorderColorOutlined from "@mui/icons-material/BorderColorOutlined";
 import DeleteOutlined from "@mui/icons-material/DeleteOutlined";
@@ -13,7 +13,6 @@ import { toast } from "react-toastify";
 import dynamic from "next/dynamic";
 import { CircularProgress } from "@mui/material";
 import { Action, State } from "@core/context/account-dialog/reducer";
-import { useAccounts } from "@utils/hooks/queries";
 
 const AccountDialog = dynamic(
   () => import("@components/Permissions/AccountDialog/AccountDialog"),
@@ -41,23 +40,17 @@ const PermissionsPanel = (props: {
 
   /** 寄送信件點擊行為 */
   const onSendPasswordClick = async (rowData: Account) => {
-    const { data } = await sendResetPasswordEmail({
+    await sendResetPasswordEmail({
       variables: { id: rowData.id },
+      onCompleted: () => toast.success("寄送成功！"),
     });
-
-    if (data) {
-      toast.success("寄送成功！");
-    }
   };
 
   const onDeleteAccount = async (id: string) => {
     const { data } = await removeAccount({
       variables: { input: { accountId: id } },
+      onCompleted: () => toast.success("寄送成功！"),
     });
-
-    if (data) {
-      toast.success("刪除成功");
-    }
   };
 
   const onModifyClick = (rowData: Account) => {

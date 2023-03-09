@@ -28,7 +28,14 @@ export function PriceBox(props: PriceBoxProps) {
         <Typography variant="body2">{name}</Typography>
       </Box>
       <Box sx={styles.box}>
-        <Box sx={{ display: "flex", alignItems: "flex-end", margin: "40px" }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "flex-end",
+            margin: "40px",
+            columnGap: "4px",
+          }}
+        >
           <Typography variant="h3" sx={{ whiteSpace: "nowrap" }}>
             {price}
           </Typography>

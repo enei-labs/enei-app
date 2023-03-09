@@ -4,7 +4,7 @@ import { Box, Typography } from "@mui/material";
 interface InfoBoxProps {
   icon: SvgIconComponent;
   label: string;
-  content: string | number;
+  content?: string | number;
   unit?: string;
 }
 
@@ -14,10 +14,10 @@ function InfoBox(props: InfoBoxProps) {
     <Box sx={{ display: "flex", alignItems: "center" }}>
       <Icon />
       <Box sx={{ ml: "12px" }}>
-        <Typography variant="body4">label</Typography>
+        <Typography variant="body4">{label}</Typography>
         <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-          <Typography variant="h6">{content}</Typography>
-          {unit ? <Typography variant="body4">unit</Typography> : null}
+          <Typography variant="h6">{content ?? "N/A"}</Typography>
+          {unit ? <Typography variant="body4">{unit}</Typography> : null}
         </Box>
       </Box>
     </Box>

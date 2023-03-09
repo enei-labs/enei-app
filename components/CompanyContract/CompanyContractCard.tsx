@@ -6,8 +6,18 @@ import EventOutlinedIcon from "@mui/icons-material/EventOutlined";
 import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined";
 import CreditCardOutlinedIcon from "@mui/icons-material/CreditCardOutlined";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
+import MailIcon from "@mui/icons-material/MailOutlineOutlined";
+import PhoneIcon from "@mui/icons-material/PhoneOutlined";
+import PersonIcon from "@mui/icons-material/PersonOutlineOutlined";
+import BorderColorOutlined from "@mui/icons-material/BorderColorOutlined";
+import DeleteOutlined from "@mui/icons-material/DeleteOutlined";
+import FolderOutlinedIcon from "@mui/icons-material/FolderOutlined";
+import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
 import { formatDateTime } from "@utils/format";
 import InfoBox from "../InfoBox";
+import { IconBtn } from "@components/Button";
+import DownloadDocBox from "@components/DownloadDocBox";
+import DemoChart from "@components/LineChart";
 
 interface CompanyContractCardProps {
   companyContract: CompanyContract;
@@ -20,7 +30,8 @@ const styles = {
     justifyContent: "center",
     alignItems: "center",
     borderRadius: "10px",
-    height: 260,
+    height: "172px",
+    marginTop: "10px",
   },
 } as const;
 
@@ -49,7 +60,9 @@ function CompanyContractCard(props: CompanyContractCardProps) {
     {
       icon: TrendingUpOutlinedIcon,
       label: "正式轉供日",
-      content: formatDateTime(companyContract.transferAt),
+      content: companyContract.transferAt
+        ? formatDateTime(companyContract.transferAt)
+        : "N/A",
     },
     {
       icon: CreditCardOutlinedIcon,
@@ -72,17 +85,17 @@ function CompanyContractCard(props: CompanyContractCardProps) {
 
   const contactInfo = [
     {
-      icon: AccessTimeOutlinedIcon,
+      icon: PersonIcon,
       label: "聯絡人",
       content: companyContract.contactName,
     },
     {
-      icon: AccessTimeOutlinedIcon,
+      icon: PhoneIcon,
       label: "聯絡人電話",
       content: companyContract.contactPhone,
     },
     {
-      icon: AccessTimeOutlinedIcon,
+      icon: MailIcon,
       label: "聯絡人信箱",
       content: companyContract.contactEmail,
     },
@@ -98,33 +111,44 @@ function CompanyContractCard(props: CompanyContractCardProps) {
         }}
       >
         <Typography variant="h4">{`${companyContract.number}(${companyContract.name})`}</Typography>
-        <Box sx={{ display: "flex" }}>edit</Box>
+        <Box sx={{ display: "flex" }}>
+          <IconBtn icon={<BorderColorOutlined />} onClick={() => {}} />
+          <IconBtn icon={<DeleteOutlined />} onClick={() => {}} />
+        </Box>
       </Box>
-      <Box>
-        <Box sx={{ display: "flex", columnGap: "24px" }}>
-          <Box>
-            <Box sx={{ display: "flex", columnGap: "12px" }}>
-              <FlagIcon width="20px" />
-              <Typography variant="body2">一年內待銷售度數</Typography>
-            </Box>
-            <Box sx={styles.box}>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "flex-end",
-                  margin: "40px",
-                }}
-              >
-                <Typography variant="h3" sx={{ whiteSpace: "nowrap" }}>
-                  {degrees}
-                </Typography>
-                <Typography variant="body3" sx={{ whiteSpace: "nowrap" }}>
-                  MWh/年
-                </Typography>
-              </Box>
+      <Grid container sx={{ height: "264px" }}>
+        <Grid item sm={4} sx={{ padding: "36px 36px 36px 0" }}>
+          <Box sx={{ display: "flex", columnGap: "12px" }}>
+            <FlagIcon width="20px" />
+            <Typography variant="body2">一年內待銷售度數</Typography>
+          </Box>
+          <Box sx={styles.box}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "flex-end",
+                margin: "40px",
+                columnGap: "4px",
+              }}
+            >
+              <Typography variant="h3" sx={{ whiteSpace: "nowrap" }}>
+                {degrees}
+              </Typography>
+              <Typography variant="body3" sx={{ whiteSpace: "nowrap" }}>
+                MWh/年
+              </Typography>
             </Box>
           </Box>
-          <Divider orientation="vertical" />
+        </Grid>
+        <Grid
+          item
+          sm={4}
+          sx={{
+            padding: "36px",
+            borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+            borderRight: "1px solid rgba(0, 0, 0, 0.12)",
+          }}
+        >
           <Grid container>
             {companyContractInfo.map((c, index) => (
               <Grid item sm={6} key={`${c.label}-${index}`}>
@@ -137,7 +161,8 @@ function CompanyContractCard(props: CompanyContractCardProps) {
               </Grid>
             ))}
           </Grid>
-          <Divider orientation="vertical" />
+        </Grid>
+        <Grid item sm={4} sx={{ padding: "36px 0 36px 36px" }}>
           <Grid container>
             {contactInfo.map((c, index) => (
               <Grid item sm={12} key={`${c.label}-${index}`}>
@@ -145,8 +170,67 @@ function CompanyContractCard(props: CompanyContractCardProps) {
               </Grid>
             ))}
           </Grid>
+        </Grid>
+      </Grid>
+
+      <Divider sx={{ margin: "36px 0" }} />
+
+      <Box sx={{ display: "flex", height: "462px" }}>
+        <Box
+          sx={{
+            padding: "36px",
+            borderRight: "1px solid rgba(0, 0, 0, 0.12)",
+            display: "flex",
+            flexDirection: "column",
+            rowGap: "6px",
+            width: "500px",
+          }}
+        >
+          <Box sx={{ display: "flex", columnGap: "4px", marginBottom: "4px" }}>
+            <FolderOutlinedIcon />
+            <Typography variant="body2">相關文件</Typography>
+          </Box>
+          <DownloadDocBox
+            fileId={companyContract.contractDoc}
+            label="購電合約"
+          />
+          <DownloadDocBox
+            fileId={companyContract.industryDoc}
+            label="電業佐證資料"
+          />
+          <DownloadDocBox
+            fileId={companyContract.transferDoc}
+            label="轉供所需資料"
+          />
+        </Box>
+        <Box
+          sx={{
+            padding: "36px",
+            display: "flex",
+            flexDirection: "column",
+            rowGap: "6px",
+            width: "100%",
+          }}
+        >
+          <Box sx={{ display: "flex", columnGap: "4px", marginBottom: "4px" }}>
+            <ArticleOutlinedIcon />
+            <Typography variant="body2">合約描述 / 特殊條件</Typography>
+          </Box>
+          <Box
+            sx={{
+              backgroundColor: "primary.light",
+              borderRadius: "16px",
+              width: "100%",
+              height: "100%",
+            }}
+          >
+            {companyContract.description}
+          </Box>
         </Box>
       </Box>
+
+      <Divider sx={{ margin: "36px 0 " }} />
+      <DemoChart name="月轉供量" />
     </Card>
   );
 }
