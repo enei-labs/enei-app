@@ -9,3 +9,6 @@ export * from "./removeAccount";
 export * from "./sendResetPasswordEmail";
 export * from "./requestResetPassword";
 export * from "./resetPassword";
+export * from "./createCompanyContract";
+export * from "./updateCompanyContract";
+export * from './removeCompanyContract';

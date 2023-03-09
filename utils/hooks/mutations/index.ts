@@ -6,3 +6,6 @@ export * from "./useModifyAccount";
 export * from "./useRemoveAccount";
 export * from "./useRequestResetPassword";
 export * from "./useResetPassword";
+export * from "./useCreateCompanyContract";
+export * from "./useUpdateCompanyContract";
+export * from './useRemoveCompanyContract';

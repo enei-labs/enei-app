@@ -250,6 +250,7 @@ export type InvalidSignInInputError = Error & {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  RemoveCompanyContract: CompanyContract;
   UpdateCompany: Company;
   changePassword: ChangePasswordResponse;
   createAccount: CreateAccountResponse;
@@ -270,6 +271,11 @@ export type Mutation = {
   signIn: SignInResponse;
   signOut: Success;
   updateCompanyContract: CompanyContract;
+};
+
+
+export type MutationRemoveCompanyContractArgs = {
+  id: Scalars['UUID'];
 };
 
 
