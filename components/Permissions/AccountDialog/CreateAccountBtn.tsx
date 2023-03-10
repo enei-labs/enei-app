@@ -36,10 +36,10 @@ const CreateAccountBtn = (props: CreateAccountBtnProps) => {
           data.createAccount.__typename === "Admin" ||
           data.createAccount.__typename === "Guest"
         ) {
+          toast.success("新增成功");
           onClose();
         }
       },
-      // refetchQueries: [ACCOUNTS],
     });
   };
 

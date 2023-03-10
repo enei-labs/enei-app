@@ -18,7 +18,7 @@ export const useCreateAccount = () => {
 
                 return {
                   total: accountPage.total + 1,
-                  list: [...accountPage.list, newAccount],
+                  list: [newAccount, ...accountPage.list],
                 };
               }
             },

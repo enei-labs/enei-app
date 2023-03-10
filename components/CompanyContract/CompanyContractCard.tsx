@@ -22,6 +22,9 @@ import { useRemoveCompanyContract } from "@utils/hooks";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { InputSearch } from "@components/Input";
+import PowerPlantPanel from "@components/PowerPlant/PowerPlantPanel";
+import AddPowerPlantBtn from "@components/PowerPlant/AddPowerPlantBtn";
 
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
@@ -188,7 +191,7 @@ function CompanyContractCard(props: CompanyContractCardProps) {
         <Box sx={{ display: "flex", height: "462px" }}>
           <Box
             sx={{
-              padding: "36px",
+              paddingRight: "36px",
               borderRight: "1px solid rgba(0, 0, 0, 0.12)",
               display: "flex",
               flexDirection: "column",
@@ -217,7 +220,7 @@ function CompanyContractCard(props: CompanyContractCardProps) {
           </Box>
           <Box
             sx={{
-              padding: "36px",
+              paddingLeft: "36px",
               display: "flex",
               flexDirection: "column",
               rowGap: "6px",
@@ -245,21 +248,21 @@ function CompanyContractCard(props: CompanyContractCardProps) {
 
         <Divider sx={{ margin: "36px 0 " }} />
         <DemoChart name="月轉供量" />
-        {/* <Card sx={{ p: "36px" }}>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            mb: "16px",
-          }}
-        >
-          <InputSearch />
-          <AddCompanyBtn />
+        <Divider sx={{ margin: "36px 0 " }} />
+
+        <Box>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              mb: "16px",
+            }}
+          >
+            <InputSearch />
+            <AddPowerPlantBtn />
+          </Box>
+          <PowerPlantPanel />
         </Box>
-        <CompanyPanel
-          setCompanyFn={(company: Company) => setCompany(company)}
-        />
-      </Card> */}
       </Card>
       {openDeleteDialog ? (
         <DialogAlert

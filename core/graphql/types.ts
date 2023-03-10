@@ -51,7 +51,7 @@ export enum Action {
   CreateCompany = 'CREATE_COMPANY',
   CreateCompanyContract = 'CREATE_COMPANY_CONTRACT',
   CreateGuest = 'CREATE_GUEST',
-  CreatePowerStationList = 'CREATE_POWER_STATION_LIST',
+  CreatePowerPlant = 'CREATE_POWER_PLANT',
   CreateUser = 'CREATE_USER',
   CreateUserContract = 'CREATE_USER_CONTRACT',
   RemoveAccount = 'REMOVE_ACCOUNT',
@@ -59,14 +59,14 @@ export enum Action {
   RemoveCompany = 'REMOVE_COMPANY',
   RemoveCompanyContract = 'REMOVE_COMPANY_CONTRACT',
   RemoveGuest = 'REMOVE_GUEST',
-  RemovePowerStationList = 'REMOVE_POWER_STATION_LIST',
+  RemovePowerPlant = 'REMOVE_POWER_PLANT',
   RemoveUser = 'REMOVE_USER',
   RemoveUserContract = 'REMOVE_USER_CONTRACT',
   SendResetPasswordEmail = 'SEND_RESET_PASSWORD_EMAIL',
   UpdateAccount = 'UPDATE_ACCOUNT',
   UpdateCompany = 'UPDATE_COMPANY',
   UpdateCompanyContract = 'UPDATE_COMPANY_CONTRACT',
-  UpdatePowerStationList = 'UPDATE_POWER_STATION_LIST',
+  UpdatePowerPlant = 'UPDATE_POWER_PLANT',
   UpdateUser = 'UPDATE_USER',
   UpdateUserContract = 'UPDATE_USER_CONTRACT',
   ViewAccountList = 'VIEW_ACCOUNT_LIST',
@@ -74,7 +74,7 @@ export enum Action {
   ViewCompanyContractList = 'VIEW_COMPANY_CONTRACT_LIST',
   ViewCompanyList = 'VIEW_COMPANY_LIST',
   ViewGuestList = 'VIEW_GUEST_LIST',
-  ViewPowerStationList = 'VIEW_POWER_STATION_LIST',
+  ViewPowerPlantList = 'VIEW_POWER_PLANT_LIST',
   ViewUserContractList = 'VIEW_USER_CONTRACT_LIST',
   ViewUserList = 'VIEW_USER_LIST'
 }
@@ -199,6 +199,16 @@ export type CreateCompanyInput = {
   taxId: Scalars['String'];
 };
 
+export type CreatePowerPlantInput = {
+  address: Scalars['String'];
+  annualPowerGeneration: Scalars['String'];
+  capacity: Scalars['String'];
+  name: Scalars['String'];
+  number: Scalars['String'];
+  predictAnnualPowerGeneration: Scalars['String'];
+  transferRate: Scalars['String'];
+};
+
 export type CreateUserInput = {
   companyAddress: Scalars['String'];
   contactEmail: Scalars['String'];
@@ -257,6 +267,7 @@ export type Mutation = {
   createAdmin: CreateAdminResponse;
   createCompany: Company;
   createCompanyContract: CompanyContract;
+  createPowerPlant: PowerPlant;
   createUser: CreateUserResponse;
   modifyAccount: Account;
   modifyProfile: Account;
@@ -307,6 +318,11 @@ export type MutationCreateCompanyArgs = {
 
 export type MutationCreateCompanyContractArgs = {
   input: CreateCompanyContractInput;
+};
+
+
+export type MutationCreatePowerPlantArgs = {
+  input: CreatePowerPlantInput;
 };
 
 
@@ -392,6 +408,26 @@ export type PasswordResetExpiredError = Error & {
   message: Scalars['String'];
 };
 
+export type PowerPlant = {
+  __typename?: 'PowerPlant';
+  address: Scalars['String'];
+  annualPowerGeneration: Scalars['String'];
+  capacity: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  createdBy?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  number: Scalars['String'];
+  predictAnnualPowerGeneration: Scalars['String'];
+  transferRate: Scalars['String'];
+};
+
+export type PowerPlantPage = {
+  __typename?: 'PowerPlantPage';
+  list: Array<PowerPlant>;
+  total: Scalars['Int'];
+};
+
 export type Query = {
   __typename?: 'Query';
   accounts: AccountPage;
@@ -404,6 +440,8 @@ export type Query = {
   guest: Guest;
   guests: GuestPage;
   me?: Maybe<Account>;
+  powerPlant: PowerPlant;
+  powerPlants: PowerPlantPage;
   user: User;
   users: UserPage;
 };
@@ -454,6 +492,17 @@ export type QueryGuestsArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
   roles?: Array<Role>;
+};
+
+
+export type QueryPowerPlantArgs = {
+  id: Scalars['UUID'];
+};
+
+
+export type QueryPowerPlantsArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 };
 
 

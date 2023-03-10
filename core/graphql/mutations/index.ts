@@ -12,3 +12,4 @@ export * from "./resetPassword";
 export * from "./createCompanyContract";
 export * from "./updateCompanyContract";
 export * from './removeCompanyContract';
+export * from './createPowerPlant';
