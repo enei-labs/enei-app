@@ -9,3 +9,4 @@ export * from "./useResetPassword";
 export * from "./useCreateCompanyContract";
 export * from "./useUpdateCompanyContract";
 export * from './useRemoveCompanyContract';
+export * from './useUpdatePowerPlant';

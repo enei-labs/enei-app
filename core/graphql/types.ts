@@ -203,6 +203,7 @@ export type CreatePowerPlantInput = {
   address: Scalars['String'];
   annualPowerGeneration: Scalars['String'];
   capacity: Scalars['String'];
+  companyContractId: Scalars['ID'];
   name: Scalars['String'];
   number: Scalars['String'];
   predictAnnualPowerGeneration: Scalars['String'];
@@ -260,7 +261,6 @@ export type InvalidSignInInputError = Error & {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  RemoveCompanyContract: CompanyContract;
   UpdateCompany: Company;
   changePassword: ChangePasswordResponse;
   createAccount: CreateAccountResponse;
@@ -273,7 +273,9 @@ export type Mutation = {
   modifyProfile: Account;
   removeAccount: Account;
   removeAdmin: Admin;
+  removeCompanyContract: CompanyContract;
   removeGuest: Guest;
+  removePowerPlant: PowerPlant;
   removeUser: User;
   requestResetPassword: RequestResetPasswordResponse;
   resetPassword: ResetPasswordResponse;
@@ -282,11 +284,7 @@ export type Mutation = {
   signIn: SignInResponse;
   signOut: Success;
   updateCompanyContract: CompanyContract;
-};
-
-
-export type MutationRemoveCompanyContractArgs = {
-  id: Scalars['UUID'];
+  updatePowerPlant: PowerPlant;
 };
 
 
@@ -355,8 +353,18 @@ export type MutationRemoveAdminArgs = {
 };
 
 
+export type MutationRemoveCompanyContractArgs = {
+  id: Scalars['UUID'];
+};
+
+
 export type MutationRemoveGuestArgs = {
   input: RemoveGuestInput;
+};
+
+
+export type MutationRemovePowerPlantArgs = {
+  id: Scalars['UUID'];
 };
 
 
@@ -397,6 +405,11 @@ export type MutationUpdateCompanyContractArgs = {
   input: UpdateCompanyContractInput;
 };
 
+
+export type MutationUpdatePowerPlantArgs = {
+  input: UpdatePowerPlantInput;
+};
+
 export type PasswordReset = {
   __typename?: 'PasswordReset';
   id: Scalars['ID'];
@@ -415,6 +428,7 @@ export type PowerPlant = {
   capacity: Scalars['String'];
   createdAt: Scalars['DateTime'];
   createdBy?: Maybe<Scalars['String']>;
+  deletedAt?: Maybe<Scalars['DateTime']>;
   id: Scalars['ID'];
   name: Scalars['String'];
   number: Scalars['String'];
@@ -599,6 +613,17 @@ export type UpdateCompanyInput = {
   contactPhone?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   taxId?: InputMaybe<Scalars['String']>;
+};
+
+export type UpdatePowerPlantInput = {
+  address: Scalars['String'];
+  annualPowerGeneration: Scalars['String'];
+  capacity: Scalars['String'];
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  number: Scalars['String'];
+  predictAnnualPowerGeneration: Scalars['String'];
+  transferRate: Scalars['String'];
 };
 
 export type User = {

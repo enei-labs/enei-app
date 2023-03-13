@@ -47,7 +47,7 @@ const PermissionsPanel = (props: {
   };
 
   const onDeleteAccount = async (id: string) => {
-    const { data } = await removeAccount({
+    await removeAccount({
       variables: { input: { accountId: id } },
       onCompleted: () => toast.success("寄送成功！"),
     });

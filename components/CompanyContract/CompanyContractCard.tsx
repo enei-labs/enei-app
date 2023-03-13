@@ -25,6 +25,7 @@ import { toast } from "react-toastify";
 import { InputSearch } from "@components/Input";
 import PowerPlantPanel from "@components/PowerPlant/PowerPlantPanel";
 import AddPowerPlantBtn from "@components/PowerPlant/AddPowerPlantBtn";
+import { useRouter } from "next/router";
 
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
@@ -44,13 +45,7 @@ const styles = {
   },
 } as const;
 
-function CompanyContractCard(props: CompanyContractCardProps) {
-  const { companyContract } = props;
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const degrees = 20;
-
-  const [removeCompanyContract] = useRemoveCompanyContract();
-
+const companyContractCardInfo = (companyContract: CompanyContract) => {
   const companyContractInfo = [
     {
       icon: MonetizationOnOutlinedIcon,
@@ -113,6 +108,19 @@ function CompanyContractCard(props: CompanyContractCardProps) {
     },
   ];
 
+  return { companyContractInfo, contactInfo };
+};
+
+function CompanyContractCard(props: CompanyContractCardProps) {
+  const { companyContract } = props;
+  const router = useRouter();
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const degrees = 20;
+
+  const [removeCompanyContract] = useRemoveCompanyContract();
+  const { companyContractInfo, contactInfo } =
+    companyContractCardInfo(companyContract);
+
   return (
     <>
       <Card sx={{ p: "36px" }}>
@@ -126,7 +134,10 @@ function CompanyContractCard(props: CompanyContractCardProps) {
           <Typography variant="h4">{`${companyContract.number}(${companyContract.name})`}</Typography>
           <Box sx={{ display: "flex" }}>
             <IconBtn icon={<BorderColorOutlined />} onClick={() => {}} />
-            <IconBtn icon={<DeleteOutlined />} onClick={() => {}} />
+            <IconBtn
+              icon={<DeleteOutlined />}
+              onClick={() => setOpenDeleteDialog(true)}
+            />
           </Box>
         </Box>
         <Grid container sx={{ height: "264px" }}>
@@ -259,7 +270,7 @@ function CompanyContractCard(props: CompanyContractCardProps) {
             }}
           >
             <InputSearch />
-            <AddPowerPlantBtn />
+            <AddPowerPlantBtn companyContractId={companyContract.id} />
           </Box>
           <PowerPlantPanel />
         </Box>
@@ -275,6 +286,7 @@ function CompanyContractCard(props: CompanyContractCardProps) {
               onCompleted: () => {
                 toast.success("刪除成功");
                 setOpenDeleteDialog(false);
+                router.push("/industry");
               },
             });
           }}
