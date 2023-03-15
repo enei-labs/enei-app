@@ -18,6 +18,7 @@ interface FieldConfig {
     | 'SINGLE_SELECT_TEXTFILE'
     | 'MULTIPLE_SELECT'
     | 'MULTIPLE_SELECT_TEXTFILE'
+    | 'EMAIL'
     | 'MOBILE'
     | 'ADDRESS'
     | 'COMPONENT'

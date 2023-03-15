@@ -26,7 +26,7 @@ type FormData = {
 
 const configs: FieldConfig[] = [
   {
-    type: "TEXT",
+    type: "EMAIL",
     name: "email",
     label: "信箱",
     required: true,
