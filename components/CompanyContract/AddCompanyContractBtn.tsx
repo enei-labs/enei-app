@@ -10,12 +10,16 @@ import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { IconBtn } from "../Button";
 import CloseIcon from "@mui/icons-material/HighlightOff";
 import { useCreateCompanyContract } from "@utils/hooks/mutations/useCreateCompanyContract";
-import { Company } from "@core/graphql/types";
+import { Company, CompanyContract } from "@core/graphql/types";
 import { COMPANY_CONTRACTS } from "@core/graphql/queries/companyContracts";
 import dynamic from "next/dynamic";
 
 const EditConfirmDialog = dynamic(
   () => import("@components/EditConfirmDialog")
+);
+
+const PowerPlantDialog = dynamic(
+  () => import("@components/PowerPlant/PowerPlantDialog")
 );
 
 type FormData = {
@@ -151,6 +155,8 @@ type DialogState = {
   showFormDialog?: boolean;
   showNextDialog?: boolean;
   showEditConfirmDialog?: boolean;
+  showPowerPlantDialog?: boolean;
+  companyContract?: CompanyContract | null;
 };
 
 interface CompanyContractProps {
@@ -167,6 +173,8 @@ const AddCompanyContractBtn = (props: CompanyContractProps) => {
       showFormDialog: false,
       showNextDialog: false,
       showEditConfirmDialog: false,
+      showPowerPlantDialog: false,
+      companyContract: null,
     }
   );
 
@@ -316,6 +324,17 @@ const AddCompanyContractBtn = (props: CompanyContractProps) => {
           open={state.showEditConfirmDialog}
           onClose={() => dispatch({ showEditConfirmDialog: false })}
           variant="create"
+        />
+      ) : null}
+
+      {state.showPowerPlantDialog && state.companyContract ? (
+        <PowerPlantDialog
+          open={state.showPowerPlantDialog}
+          onClose={() => {
+            dispatch({ showPowerPlantDialog: false });
+          }}
+          variant="create"
+          companyContractId={state.companyContract.id}
         />
       ) : null}
     </>
