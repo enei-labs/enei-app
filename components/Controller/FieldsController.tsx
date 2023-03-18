@@ -41,6 +41,7 @@ const FieldsController: React.FC<FieldsControllerProps> = ({
               control={control}
               render={({ field }) => {
                 switch (type) {
+                  case "NUMBER":
                   case "EMAIL":
                   case "TEXT":
                   case "PASSWORD":

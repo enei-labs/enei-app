@@ -1,7 +1,7 @@
 import { FieldsController } from "@components/Controller";
 import Dialog from "@components/Dialog";
 import { FieldConfig, Option } from "@core/types";
-import { textValidated } from "@core/types/fieldConfig";
+import { numberValidated, textValidated } from "@core/types/fieldConfig";
 import { LoadingButton } from "@mui/lab";
 import { Grid, Typography } from "@mui/material";
 import { useUpdatePowerPlant, useValidatedForm } from "@utils/hooks";
@@ -15,10 +15,9 @@ import { PowerPlant } from "@core/graphql/types";
 type FormData = {
   name: string;
   number: string;
-  capacity: string;
-  annualPowerGeneration: string;
-  predictAnnualPowerGeneration: string;
-  transferRate: string;
+  capacity: number;
+  predictAnnualPowerGeneration: number;
+  transferRate: number;
   address: string;
 };
 
@@ -38,25 +37,25 @@ const configs: FieldConfig[] = [
     validated: textValidated,
   },
   {
-    type: "TEXT",
+    type: "NUMBER",
     name: "capacity",
     label: "裝置容量（kW）",
     required: true,
-    validated: textValidated,
+    validated: numberValidated,
   },
   {
-    type: "TEXT",
+    type: "NUMBER",
     name: "annualPowerGeneration",
     label: "年發電量（MWh",
     required: true,
-    validated: textValidated,
+    validated: numberValidated,
   },
   {
-    type: "TEXT",
+    type: "NUMBER",
     name: "predictAnnualPowerGeneration",
     label: "單位預估年發電量（度/kW）",
     required: true,
-    validated: textValidated,
+    validated: numberValidated,
   },
   {
     type: "TEXT",
@@ -79,7 +78,7 @@ interface PowerPlantDialogProps {
   variant: "edit" | "create";
   companyContractId?: string;
   onClose: VoidFunction;
-  defaultValues?: PowerPlant;
+  defaultValues?: Omit<PowerPlant, "annualPowerGeneration">;
 }
 
 const PowerPlantDialog = (props: PowerPlantDialogProps) => {
@@ -103,10 +102,11 @@ const PowerPlantDialog = (props: PowerPlantDialogProps) => {
           input: {
             name: formData.name,
             number: formData.number,
-            capacity: formData.capacity,
-            annualPowerGeneration: formData.annualPowerGeneration,
-            predictAnnualPowerGeneration: formData.predictAnnualPowerGeneration,
-            transferRate: formData.transferRate,
+            capacity: Number(formData.capacity),
+            predictAnnualPowerGeneration: Number(
+              formData.predictAnnualPowerGeneration
+            ),
+            transferRate: Number(formData.transferRate),
             address: formData.address,
             companyContractId,
           },
@@ -125,10 +125,11 @@ const PowerPlantDialog = (props: PowerPlantDialogProps) => {
             id: defaultValues.id,
             name: formData.name,
             number: formData.number,
-            capacity: formData.capacity,
-            annualPowerGeneration: formData.annualPowerGeneration,
-            predictAnnualPowerGeneration: formData.predictAnnualPowerGeneration,
-            transferRate: formData.transferRate,
+            capacity: Number(formData.capacity),
+            predictAnnualPowerGeneration: Number(
+              formData.predictAnnualPowerGeneration
+            ),
+            transferRate: Number(formData.transferRate),
             address: formData.address,
           },
         },

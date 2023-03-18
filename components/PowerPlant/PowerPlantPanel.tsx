@@ -34,10 +34,6 @@ const PowerPlantPanel = () => {
       // accessor: "contactName",
     },
     {
-      header: "年發電量",
-      accessor: "annualPowerGeneration",
-    },
-    {
       header: "裝置容量",
       accessor: "capacity",
     },

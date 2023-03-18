@@ -37,7 +37,9 @@ interface FieldConfig {
   component?: React.ComponentType<FieldController>
 }
 
-const requiredMessage = 'This is required'
+const requiredMessage = '此為必填欄位'
+
+const numberValidated = yup.number().required('請輸入數字')
 
 const textValidated = yup.string().required(requiredMessage)
 
@@ -50,14 +52,14 @@ const passwordValidated = yup
   .required(requiredMessage)
   .matches(
     /^(?=.*[A-Za-z])(?=.*\d)[\w!#$%&()*+,-./:;<=>?@[\]^_`{|}~]{8,}$/,
-    'Password must contain at least 8 characters with at least 1 number (0-9) and 1 alphabet.',
+    '密碼必須包含至少 8 個字符，其中至少包含 1 個數字 (0-9) 和 1 個字母',
   )
 
 const checkboxValidated = yup
   .boolean()
   .required(requiredMessage)
-  .oneOf([true], 'Please check this box to proceed.')
+  .oneOf([true], '請選中此框以繼續。')
 
-export { textValidated, arrayValidated, objectValidated, passwordValidated, checkboxValidated }
+export { numberValidated, textValidated, arrayValidated, objectValidated, passwordValidated, checkboxValidated }
 
 export default FieldConfig
