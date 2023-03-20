@@ -1,16 +1,20 @@
 import { FieldsController } from "@components/Controller";
 import Dialog from "@components/Dialog";
 import { FieldConfig, Option } from "@core/types";
-import { textValidated } from "@core/types/fieldConfig";
+import { numberValidated, textValidated } from "@core/types/fieldConfig";
 import { LoadingButton } from "@mui/lab";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import { useValidatedForm } from "@utils/hooks";
-import { useReducer } from "react";
+import { useMemo, useReducer } from "react";
 import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { IconBtn } from "../Button";
 import CloseIcon from "@mui/icons-material/HighlightOff";
 import { useCreateCompanyContract } from "@utils/hooks/mutations/useCreateCompanyContract";
-import { Company, CompanyContract } from "@core/graphql/types";
+import {
+  Company,
+  CompanyContract,
+  ContractTimeType,
+} from "@core/graphql/types";
 import { COMPANY_CONTRACTS } from "@core/graphql/queries/companyContracts";
 import dynamic from "next/dynamic";
 
@@ -22,6 +26,17 @@ const PowerPlantDialog = dynamic(
   () => import("@components/PowerPlant/PowerPlantDialog")
 );
 
+const contractTimeTypeMap = {
+  [ContractTimeType.ContractEndTime]: "固定日期(填入合約結束日期)",
+  [ContractTimeType.ContractStartTime]: "合約年限從合約起始日期起算",
+  [ContractTimeType.TransferStartTime]: "合約年限從轉供起始日期起算",
+};
+
+const contractTimeTypeOptions = Object.values(ContractTimeType).map((o) => ({
+  label: contractTimeTypeMap[o],
+  value: o,
+}));
+
 type FormData = {
   companyName: string;
   name: string;
@@ -30,9 +45,13 @@ type FormData = {
   contactEmail: string;
   contactPhone: string;
   price: string;
-  duration: string;
+  contractTimeType: {
+    label: string;
+    value: ContractTimeType;
+  };
+  duration?: string;
   startedAt: Date;
-  endedAt: string;
+  endedAt?: string;
   transferRate: string;
   daysToPay: string;
   description: string;
@@ -91,11 +110,18 @@ const configs: FieldConfig[] = [
     validated: textValidated,
   },
   {
-    type: "TEXT",
+    type: "SINGLE_SELECT",
+    name: "contractTimeType",
+    label: "合約時間計算方式",
+    required: true,
+    options: contractTimeTypeOptions,
+  },
+  {
+    type: "NUMBER",
     name: "duration",
     label: "合約年限（年）",
     required: true,
-    validated: textValidated,
+    validated: numberValidated,
   },
   {
     type: "DATE",
@@ -185,9 +211,11 @@ const AddCompanyContractBtn = (props: CompanyContractProps) => {
     control,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useValidatedForm<FormData>(configs, {
     defaultValues: { companyName: company.name },
   });
+  const contractTimeType = watch("contractTimeType");
 
   const onSubmit = async (formData: FormData) => {
     const { data } = await createCompanyContract({
@@ -200,6 +228,7 @@ const AddCompanyContractBtn = (props: CompanyContractProps) => {
           contactEmail: formData.contactEmail,
           contactPhone: formData.contactPhone,
           price: formData.price,
+          contractTimeType: formData.contractTimeType.value,
           duration: formData.duration,
           startedAt: formData.startedAt,
           endedAt: formData.endedAt,
@@ -219,6 +248,49 @@ const AddCompanyContractBtn = (props: CompanyContractProps) => {
       dispatch({ showFormDialog: false, showEditConfirmDialog: false });
     }
   };
+
+  const displayFieldConfigs = useMemo(() => {
+    const contractTimeTypeIndex = configs.findIndex(
+      (c) => c.name === "contractTimeType"
+    );
+    const baseConfigs = {
+      name: configs.slice(0, 1),
+      contacts: configs.slice(1, 4),
+      docs: configs.slice(14),
+      contract: [configs[contractTimeTypeIndex]],
+    };
+    const durationIndex = configs.findIndex((c) => c.name === "duration");
+    const endAtIndex = configs.findIndex((c) => c.name === "endedAt");
+    if (!contractTimeType) return baseConfigs;
+    switch (contractTimeType.value) {
+      case ContractTimeType.ContractEndTime:
+        return {
+          ...baseConfigs,
+          contract: [
+            ...configs.slice(4, durationIndex),
+            ...configs.slice(durationIndex, 13),
+          ],
+        };
+      case ContractTimeType.ContractStartTime:
+        return {
+          ...baseConfigs,
+          contract: [
+            ...configs.slice(4, endAtIndex),
+            ...configs.slice(endAtIndex, 13),
+          ],
+        };
+      case ContractTimeType.TransferStartTime:
+        return {
+          ...baseConfigs,
+          contract: [
+            ...configs.slice(4, endAtIndex),
+            ...configs.slice(endAtIndex, 13),
+          ],
+        };
+      default:
+        return baseConfigs;
+    }
+  }, [contractTimeType]);
 
   return (
     <>
@@ -247,7 +319,7 @@ const AddCompanyContractBtn = (props: CompanyContractProps) => {
           發電業資訊
         </Typography>
         <FieldsController
-          configs={configs.slice(0, 1)}
+          configs={displayFieldConfigs.name}
           form={{ control, errors }}
         />
 
@@ -255,7 +327,7 @@ const AddCompanyContractBtn = (props: CompanyContractProps) => {
           聯絡人資訊
         </Typography>
         <FieldsController
-          configs={configs.slice(1, 4)}
+          configs={displayFieldConfigs.contacts}
           form={{ control, errors }}
         />
 
@@ -263,7 +335,7 @@ const AddCompanyContractBtn = (props: CompanyContractProps) => {
           合約資訊
         </Typography>
         <FieldsController
-          configs={configs.slice(4, 13)}
+          configs={displayFieldConfigs.contract}
           form={{ control, errors }}
         />
 
@@ -271,7 +343,7 @@ const AddCompanyContractBtn = (props: CompanyContractProps) => {
           相關文件
         </Typography>
         <FieldsController
-          configs={configs.slice(13)}
+          configs={displayFieldConfigs.docs}
           form={{ control, errors }}
         />
 
@@ -298,7 +370,9 @@ const AddCompanyContractBtn = (props: CompanyContractProps) => {
           <Button
             startIcon={<AddIcon />}
             variant="contained"
-            onClick={() => console.log("click")}
+            onClick={() =>
+              dispatch({ showPowerPlantDialog: true, showNextDialog: false })
+            }
           >
             新增
           </Button>
