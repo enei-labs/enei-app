@@ -1,6 +1,8 @@
 export * from "./useSetPassword";
 export * from "./useSignIn";
 export * from "./useSignOut";
+export * from "./useCreateUser";
+export * from "./useModifyUser";
 export * from "./useCreateAccount";
 export * from "./useModifyAccount";
 export * from "./useRemoveAccount";
@@ -8,5 +10,5 @@ export * from "./useRequestResetPassword";
 export * from "./useResetPassword";
 export * from "./useCreateCompanyContract";
 export * from "./useUpdateCompanyContract";
-export * from './useRemoveCompanyContract';
-export * from './useUpdatePowerPlant';
+export * from "./useRemoveCompanyContract";
+export * from "./useUpdatePowerPlant";

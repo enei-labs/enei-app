@@ -52,6 +52,7 @@ export enum Action {
   CreateCompanyContract = 'CREATE_COMPANY_CONTRACT',
   CreateGuest = 'CREATE_GUEST',
   CreatePowerPlant = 'CREATE_POWER_PLANT',
+  CreateTransferDocument = 'CREATE_TRANSFER_DOCUMENT',
   CreateUser = 'CREATE_USER',
   CreateUserContract = 'CREATE_USER_CONTRACT',
   RemoveAccount = 'REMOVE_ACCOUNT',
@@ -60,6 +61,7 @@ export enum Action {
   RemoveCompanyContract = 'REMOVE_COMPANY_CONTRACT',
   RemoveGuest = 'REMOVE_GUEST',
   RemovePowerPlant = 'REMOVE_POWER_PLANT',
+  RemoveTransferDocument = 'REMOVE_TRANSFER_DOCUMENT',
   RemoveUser = 'REMOVE_USER',
   RemoveUserContract = 'REMOVE_USER_CONTRACT',
   SendResetPasswordEmail = 'SEND_RESET_PASSWORD_EMAIL',
@@ -67,6 +69,7 @@ export enum Action {
   UpdateCompany = 'UPDATE_COMPANY',
   UpdateCompanyContract = 'UPDATE_COMPANY_CONTRACT',
   UpdatePowerPlant = 'UPDATE_POWER_PLANT',
+  UpdateTransferDocument = 'UPDATE_TRANSFER_DOCUMENT',
   UpdateUser = 'UPDATE_USER',
   UpdateUserContract = 'UPDATE_USER_CONTRACT',
   ViewAccountList = 'VIEW_ACCOUNT_LIST',
@@ -75,6 +78,7 @@ export enum Action {
   ViewCompanyList = 'VIEW_COMPANY_LIST',
   ViewGuestList = 'VIEW_GUEST_LIST',
   ViewPowerPlantList = 'VIEW_POWER_PLANT_LIST',
+  ViewTransferDocumentList = 'VIEW_TRANSFER_DOCUMENT_LIST',
   ViewUserContractList = 'VIEW_USER_CONTRACT_LIST',
   ViewUserList = 'VIEW_USER_LIST'
 }
@@ -227,6 +231,30 @@ export type CreatePowerPlantInput = {
   transferRate: Scalars['Float'];
 };
 
+export type CreateTransferDocumentInput = {
+  expectedTime: Scalars['DateTime'];
+  formalDoc: Scalars['String'];
+  name: Scalars['String'];
+  powerPlants: Array<CreateTransferDocumentPowerPlantInput>;
+  printingDoc: Scalars['String'];
+  receptionAreas: Scalars['String'];
+  replyDoc: Scalars['String'];
+  users: Array<CreateTransferDocumentUserInput>;
+  wordDoc: Scalars['String'];
+};
+
+export type CreateTransferDocumentPowerPlantInput = {
+  estimateAnnualSupply: Scalars['Float'];
+  powerPlantId: Scalars['ID'];
+  transferRate: Scalars['Float'];
+};
+
+export type CreateTransferDocumentUserInput = {
+  monthlyTransferDegree: Scalars['Float'];
+  userId: Scalars['ID'];
+  yearlyTransferDegree: Scalars['Float'];
+};
+
 export type CreateUserContractInput = {
   contractDoc: Scalars['String'];
   electricNumberInfos: Array<ElectricNumberInfoInput>;
@@ -317,6 +345,19 @@ export type InvalidSignInInputError = Error & {
   message: Scalars['String'];
 };
 
+export type ModifyUserInput = {
+  bankAccounts: Array<BankAccountInput>;
+  companyAddress: Scalars['String'];
+  contactEmail: Scalars['String'];
+  contactName: Scalars['String'];
+  contactPhone: Scalars['String'];
+  name: Scalars['String'];
+  notes?: InputMaybe<Scalars['String']>;
+  warning?: InputMaybe<Scalars['String']>;
+};
+
+export type ModifyUserResponse = AccountAlreadyExistsError | User;
+
 export type Mutation = {
   __typename?: 'Mutation';
   UpdateCompany: Company;
@@ -326,10 +367,12 @@ export type Mutation = {
   createCompany: Company;
   createCompanyContract: CompanyContract;
   createPowerPlant: PowerPlant;
+  createTransferDocument: TransferDocumentDto;
   createUser: CreateUserResponse;
   createUserContract: UserContract;
   modifyAccount: Account;
   modifyProfile: Account;
+  modifyUser: ModifyUserResponse;
   removeAccount: Account;
   removeAdmin: Admin;
   removeCompanyContract: CompanyContract;
@@ -383,6 +426,11 @@ export type MutationCreatePowerPlantArgs = {
 };
 
 
+export type MutationCreateTransferDocumentArgs = {
+  input: CreateTransferDocumentInput;
+};
+
+
 export type MutationCreateUserArgs = {
   input: CreateUserInput;
 };
@@ -405,6 +453,12 @@ export type MutationModifyAccountArgs = {
 export type MutationModifyProfileArgs = {
   email?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationModifyUserArgs = {
+  id: Scalars['UUID'];
+  input: ModifyUserInput;
 };
 
 
@@ -521,6 +575,8 @@ export type Query = {
   me?: Maybe<Account>;
   powerPlant: PowerPlant;
   powerPlants: PowerPlantPage;
+  transferDocument: TransferDocumentDto;
+  transferDocuments: TransferDocumentPage;
   user: User;
   userContract: UserContract;
   userContracts: UserContractPage;
@@ -582,6 +638,17 @@ export type QueryPowerPlantArgs = {
 
 
 export type QueryPowerPlantsArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryTransferDocumentArgs = {
+  id: Scalars['UUID'];
+};
+
+
+export type QueryTransferDocumentsArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
 };
@@ -662,6 +729,24 @@ export type Success = {
   __typename?: 'Success';
   id: Scalars['ID'];
   message: Scalars['String'];
+};
+
+export type TransferDocumentDto = {
+  __typename?: 'TransferDocumentDto';
+  expectedTime: Scalars['DateTime'];
+  formalDoc: Scalars['String'];
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  printingDoc: Scalars['String'];
+  receptionAreas: Scalars['String'];
+  replyDoc: Scalars['String'];
+  wordDoc: Scalars['String'];
+};
+
+export type TransferDocumentPage = {
+  __typename?: 'TransferDocumentPage';
+  list: Array<TransferDocumentDto>;
+  total: Scalars['Int'];
 };
 
 export type UpdateCompanyContractInput = {

@@ -34,6 +34,10 @@
       "InvalidSignInInputError",
       "PasswordResetExpiredError"
     ],
+    "ModifyUserResponse": [
+      "AccountAlreadyExistsError",
+      "User"
+    ],
     "RequestResetPasswordResponse": [
       "AccountNotFoundError",
       "InvalidSignInInputError",
