@@ -280,8 +280,6 @@ export type CreateUserInput = {
   warning?: InputMaybe<Scalars['String']>;
 };
 
-export type CreateUserResponse = AccountAlreadyExistsError | User;
-
 export type ElectricNumberInfo = {
   __typename?: 'ElectricNumberInfo';
   address: Scalars['String'];
@@ -368,7 +366,7 @@ export type Mutation = {
   createCompanyContract: CompanyContract;
   createPowerPlant: PowerPlant;
   createTransferDocument: TransferDocumentDto;
-  createUser: CreateUserResponse;
+  createUser: User;
   createUserContract: UserContract;
   modifyAccount: Account;
   modifyProfile: Account;
@@ -740,6 +738,8 @@ export type TransferDocumentDto = {
   printingDoc: Scalars['String'];
   receptionAreas: Scalars['String'];
   replyDoc: Scalars['String'];
+  transferDocumentPowerPlants: Array<TransferDocumentPowerPlantDto>;
+  transferDocumentUsers: Array<TransferDocumentUserDto>;
   wordDoc: Scalars['String'];
 };
 
@@ -747,6 +747,20 @@ export type TransferDocumentPage = {
   __typename?: 'TransferDocumentPage';
   list: Array<TransferDocumentDto>;
   total: Scalars['Int'];
+};
+
+export type TransferDocumentPowerPlantDto = {
+  __typename?: 'TransferDocumentPowerPlantDto';
+  estimateAnnualSupply: Scalars['Float'];
+  powerPlant: PowerPlant;
+  transferRate: Scalars['Float'];
+};
+
+export type TransferDocumentUserDto = {
+  __typename?: 'TransferDocumentUserDto';
+  monthlyTransferDegree: Scalars['Float'];
+  user: User;
+  yearlyTransferDegree: Scalars['Float'];
 };
 
 export type UpdateCompanyContractInput = {

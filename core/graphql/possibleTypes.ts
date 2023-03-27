@@ -23,10 +23,6 @@
       "AccountAlreadyExistsError",
       "Admin"
     ],
-    "CreateUserResponse": [
-      "AccountAlreadyExistsError",
-      "User"
-    ],
     "Error": [
       "AccountAlreadyExistsError",
       "AccountNotFoundError",

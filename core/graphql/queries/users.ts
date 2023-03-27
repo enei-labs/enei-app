@@ -13,7 +13,7 @@ export const USERS = gql`
     ) {
       total
       list {
-        ...UserFields
+        ...userFields
       }
     }
   }

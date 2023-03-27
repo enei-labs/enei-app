@@ -7,10 +7,6 @@ export const CREATE_USER = gql`
     createUser(input: $input) {
       __typename
       ...userFields
-      ... on AccountAlreadyExistsError {
-        id
-        message
-      }
     }
   }
 `;

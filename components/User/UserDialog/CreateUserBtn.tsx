@@ -31,11 +31,6 @@ const CreateUserBtn = (props: CreateUserBtnProps) => {
         },
       },
       onCompleted: (data) => {
-        if (data.createUser.__typename === "AccountAlreadyExistsError") {
-          toast.error("此用戶已被註冊過");
-          return;
-        }
-
         if (data.createUser.__typename === "User") {
           toast.success("新增成功");
           onClose();

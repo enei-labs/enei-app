@@ -1,28 +1,17 @@
-import {
-  Button,
-  CircularProgress,
-  Grid,
-  Input,
-  Tooltip,
-  Typography,
-} from "@mui/material";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { ActionBtn, IconBtn } from "@components/Button";
+import { Button, Grid, Typography } from "@mui/material";
+import { useState } from "react";
+import { IconBtn } from "@components/Button";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
-import { Account, Role, User } from "@core/graphql/types";
+import { User } from "@core/graphql/types";
 import { FieldsController } from "@components/Controller";
 import { FieldConfig } from "@core/types";
 import { textValidated } from "@core/types/fieldConfig";
 import { useValidatedForm } from "@utils/hooks";
-import { useCompanies } from "@utils/hooks/queries/useCompanies";
 import dynamic from "next/dynamic";
-import { useUsers } from "@utils/hooks/queries";
 import Dialog from "@components/Dialog";
 import { FormData } from "./FormData";
-import HelperText from "@components/HelperText";
-import { useAuth } from "@core/context/auth";
 import { Controller, useFieldArray } from "react-hook-form";
 import { InputNumber, InputText } from "@components/Input";
 import CreateUserBtn from "@components/User/UserDialog/CreateUserBtn";

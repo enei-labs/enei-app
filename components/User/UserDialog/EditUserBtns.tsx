@@ -5,7 +5,7 @@ import { useModifyUser } from "@utils/hooks";
 import { LoadingButton } from "@mui/lab";
 import { UseFormHandleSubmit } from "react-hook-form";
 import { FormData } from "./FormData";
-import { Users } from "@core/graphql/queries";
+import { USERS } from "@core/graphql/queries";
 import { toast } from "react-toastify";
 
 interface EditUserBtnsProps {
@@ -32,7 +32,7 @@ const EditUserBtns = (props: EditUserBtnsProps) => {
           bankAccounts: formData.bankAccounts,
         },
       },
-      refetchQueries: [Users],
+      refetchQueries: [USERS],
     });
 
     if (data && data.modifyUser.__typename === "User") {

@@ -1,16 +1,10 @@
 import { Table } from "@components/Table";
-import { Box, Typography } from "@mui/material";
-import { useCompanies, useUsers } from "@utils/hooks/queries";
 import { Company, Role, User, UserPage } from "@core/graphql/types";
 import { Config, Page } from "../Table/Table";
 import BorderColorOutlined from "@mui/icons-material/BorderColorOutlined";
 import DeleteOutlined from "@mui/icons-material/DeleteOutlined";
 import { IconBtn } from "@components/Button";
 import { useAuth } from "@core/context/auth";
-
-interface CompanyPanelProps {
-  setCompanyFn: (company: Company) => void;
-}
 
 enum ActionTypeEnum {
   CREATE = "create",
