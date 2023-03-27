@@ -1,5 +1,5 @@
 import { Table } from "@components/Table";
-import { Company, Role, User, UserPage } from "@core/graphql/types";
+import { Role, User, UserPage } from "@core/graphql/types";
 import { Config, Page } from "../Table/Table";
 import BorderColorOutlined from "@mui/icons-material/BorderColorOutlined";
 import DeleteOutlined from "@mui/icons-material/DeleteOutlined";

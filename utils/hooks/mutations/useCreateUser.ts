@@ -1,10 +1,10 @@
-import { CreateUserInput, CreateUserResponse } from "@core/graphql/types";
+import { CreateUserInput, User } from "@core/graphql/types";
 import { CREATE_USER } from "@core/graphql/mutations";
 import useMutation from "../useMutation";
 
 export const useCreateUser = () => {
   return useMutation<
-    { createUser: CreateUserResponse },
+    { createUser: User },
     { input: CreateUserInput }
   >(CREATE_USER);
 };

@@ -17,7 +17,6 @@ const CreateUserBtn = (props: CreateUserBtnProps) => {
 
   /** 新增用戶 mutation */
   const onCreateUser = async (formData: FormData) => {
-    console.log("createUser", formData);
     await createUser({
       variables: {
         input: {

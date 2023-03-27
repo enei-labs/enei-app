@@ -1,15 +1,13 @@
 import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { AuthLayout } from "@components/Layout";
 import { Box, Button, Card, Divider, Toolbar } from "@mui/material";
-import { ReactElement, useReducer, useState } from "react";
+import { ReactElement, useState } from "react";
 import Head from "next/head";
 import IconBreadcrumbs from "@components/BreadCrumbs";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import { InputSearch } from "@components/Input";
-import { useAccounts } from "@utils/hooks/queries/useAccounts";
 import { AuthGuard } from "@components/AuthGuard";
 import { Role, User } from "@core/graphql/types";
-import { reducer } from "@core/context/account-dialog/reducer";
 import UserPanel from "@components/User/UserPanel";
 import { useUsers } from "@utils/hooks/queries";
 import dynamic from "next/dynamic";
@@ -27,7 +25,6 @@ enum ActionTypeEnum {
 
 const Users = () => {
   const { data: userData, loading, refetch } = useUsers();
-  const [state, dispatch] = useReducer(reducer, { status: "closed" });
   const [actionType, setActionType] = useState<ActionTypeEnum>(
     ActionTypeEnum.CLOSE
   );

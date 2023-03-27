@@ -48,7 +48,6 @@ const ResetPassword = () => {
   const router = useRouter();
   const _token = router.query.token as string;
   const [token, setToken] = useState<string>(_token);
-  console.log({ token });
   const [requestResetPassword, { loading }] = useRequestResetPassword();
   const [resetPassword, { loading: resetLoading }] = useResetPassword();
 
