@@ -5,3 +5,4 @@ export * from "./companies";
 export * from "./companyContract";
 export * from "./companyContracts";
 export * from "./powerPlants";
+export * from './transferDocuments';
