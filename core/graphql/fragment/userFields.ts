@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 export const USER_FIELDS = gql`
-  fragment UserFields on User {
+  fragment userFields on User {
     id
     name
     companyAddress
@@ -9,5 +9,9 @@ export const USER_FIELDS = gql`
     contactName
     contactPhone
     contactEmail
+    bankAccounts {
+      code
+      account
+    }
   }
 `

@@ -23,16 +23,16 @@
       "AccountAlreadyExistsError",
       "Admin"
     ],
-    "CreateUserResponse": [
-      "AccountAlreadyExistsError",
-      "User"
-    ],
     "Error": [
       "AccountAlreadyExistsError",
       "AccountNotFoundError",
       "InvalidCurrentPasswordError",
       "InvalidSignInInputError",
       "PasswordResetExpiredError"
+    ],
+    "ModifyUserResponse": [
+      "AccountAlreadyExistsError",
+      "User"
     ],
     "RequestResetPasswordResponse": [
       "AccountNotFoundError",
