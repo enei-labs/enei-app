@@ -365,7 +365,7 @@ export type Mutation = {
   createCompany: Company;
   createCompanyContract: CompanyContract;
   createPowerPlant: PowerPlant;
-  createTransferDocument: TransferDocumentDto;
+  createTransferDocument: TransferDocument;
   createUser: User;
   createUserContract: UserContract;
   modifyAccount: Account;
@@ -376,6 +376,7 @@ export type Mutation = {
   removeCompanyContract: CompanyContract;
   removeGuest: Guest;
   removePowerPlant: PowerPlant;
+  removeTransferDocument: TransferDocument;
   removeUser: User;
   requestResetPassword: RequestResetPasswordResponse;
   resetPassword: ResetPasswordResponse;
@@ -385,6 +386,7 @@ export type Mutation = {
   signOut: Success;
   updateCompanyContract: CompanyContract;
   updatePowerPlant: PowerPlant;
+  updateTransferDocument: TransferDocument;
 };
 
 
@@ -485,6 +487,11 @@ export type MutationRemovePowerPlantArgs = {
 };
 
 
+export type MutationRemoveTransferDocumentArgs = {
+  id: Scalars['UUID'];
+};
+
+
 export type MutationRemoveUserArgs = {
   input: RemoveUserInput;
 };
@@ -525,6 +532,12 @@ export type MutationUpdateCompanyContractArgs = {
 
 export type MutationUpdatePowerPlantArgs = {
   input: UpdatePowerPlantInput;
+};
+
+
+export type MutationUpdateTransferDocumentArgs = {
+  id: Scalars['UUID'];
+  input: UpdateTransferDocumentInput;
 };
 
 export type PasswordReset = {
@@ -573,7 +586,7 @@ export type Query = {
   me?: Maybe<Account>;
   powerPlant: PowerPlant;
   powerPlants: PowerPlantPage;
-  transferDocument: TransferDocumentDto;
+  transferDocument: TransferDocument;
   transferDocuments: TransferDocumentPage;
   user: User;
   userContract: UserContract;
@@ -729,8 +742,8 @@ export type Success = {
   message: Scalars['String'];
 };
 
-export type TransferDocumentDto = {
-  __typename?: 'TransferDocumentDto';
+export type TransferDocument = {
+  __typename?: 'TransferDocument';
   expectedTime: Scalars['DateTime'];
   formalDoc: Scalars['String'];
   id: Scalars['ID'];
@@ -745,7 +758,7 @@ export type TransferDocumentDto = {
 
 export type TransferDocumentPage = {
   __typename?: 'TransferDocumentPage';
-  list: Array<TransferDocumentDto>;
+  list: Array<TransferDocument>;
   total: Scalars['Int'];
 };
 
@@ -800,6 +813,18 @@ export type UpdatePowerPlantInput = {
   number: Scalars['String'];
   predictAnnualPowerGeneration: Scalars['Float'];
   transferRate: Scalars['Float'];
+};
+
+export type UpdateTransferDocumentInput = {
+  expectedTime: Scalars['DateTime'];
+  formalDoc: Scalars['String'];
+  name: Scalars['String'];
+  powerPlants: Array<CreateTransferDocumentPowerPlantInput>;
+  printingDoc: Scalars['String'];
+  receptionAreas: Scalars['String'];
+  replyDoc: Scalars['String'];
+  users: Array<CreateTransferDocumentUserInput>;
+  wordDoc: Scalars['String'];
 };
 
 export type User = {

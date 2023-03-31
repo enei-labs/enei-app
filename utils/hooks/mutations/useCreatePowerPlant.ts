@@ -1,7 +1,7 @@
 import { CreatePowerPlantInput, PowerPlant, PowerPlantPage } from '@core/graphql/types';
 import useMutation from '../useMutation';
 import { CREATE_POWER_PLANT } from '@core/graphql/mutations';
-import { POWER_PLANTS_FIELDS } from '@core/graphql/fragment';
+import { POWER_PLANT_FIELDS } from '@core/graphql/fragment';
 
 export const useCreatePowerPlant = () => {
   return useMutation<{ createPowerPlant: PowerPlant }, { input: CreatePowerPlantInput }>(
@@ -13,7 +13,7 @@ export const useCreatePowerPlant = () => {
               powerPlants(powerPlantPage: PowerPlantPage) {
                 const newPowerPlant = cache.writeFragment({
                   data: data.createPowerPlant,
-                  fragment: POWER_PLANTS_FIELDS
+                  fragment: POWER_PLANT_FIELDS
                 });
 
                 return {

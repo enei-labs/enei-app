@@ -17,3 +17,5 @@ export * from "./removeCompanyContract";
 export * from "./createPowerPlant";
 export * from "./updatePowerPlant";
 export * from "./createTransferDocument";
+export * from "./updateTransferDocument";
+export * from "./removeTransferDocument";

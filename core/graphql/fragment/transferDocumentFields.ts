@@ -1,9 +1,9 @@
 import { gql } from '@apollo/client'
-import { POWER_PLANTS_FIELDS } from '@core/graphql/fragment/powerPlants'
+import { POWER_PLANT_FIELDS } from '@core/graphql/fragment/powerPlants'
 import { USER_FIELDS } from '@core/graphql/fragment/userFields'
 
 export const TRANSFER_DOCUMENT_FIELDS = gql`
-  ${POWER_PLANTS_FIELDS}
+  ${POWER_PLANT_FIELDS}
   ${USER_FIELDS}
   fragment transferDocumentFields on TransferDocument {
     id

@@ -1,18 +1,19 @@
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
-import BoltIcon from "@mui/icons-material/BoltOutlined";
 import IconBreadcrumbs from "@components/BreadCrumbs";
-import { Card, CircularProgress, Divider } from "@mui/material";
+import { Button, Card, CircularProgress, Divider } from "@mui/material";
 import { AuthLayout } from "@components/Layout";
-import { ReactElement } from "react";
+import { ReactElement, useState } from "react";
 import Head from "next/head";
 import { InputSearch } from "@components/Input";
-import AddCompanyBtn from "@components/Company/AddCompanyBtn";
 import { AuthGuard } from "@components/AuthGuard";
-import { Company, Role } from "@core/graphql/types";
+import { Role } from "@core/graphql/types";
 import ChartIcon from "@mui/icons-material/InsertChartOutlinedSharp";
 
 import dynamic from "next/dynamic";
+const TransferDocumentDialog = dynamic(
+  () => import("@components/TransferDocument/TransferDocumentDialog")
+);
 
 const CompanyContractPanel = dynamic(
   () => import("@components/CompanyContract/CompanyContractPanel"),
@@ -22,6 +23,7 @@ const CompanyContractPanel = dynamic(
 );
 
 function TransferApplicationProgressPage() {
+  const [open, setOpen] = useState(false);
   return (
     <>
       <Head>
@@ -49,12 +51,19 @@ function TransferApplicationProgressPage() {
               }}
             >
               <InputSearch />
-              <AddCompanyBtn />
+              <Button onClick={() => setOpen(true)}>新增轉供合約</Button>
             </Box>
           </Card>
           <Divider sx={{ my: "24px" }} />
         </AuthGuard>
       </Box>
+      {open ? (
+        <TransferDocumentDialog
+          isOpenDialog={open}
+          onClose={() => setOpen(false)}
+          variant="create"
+        />
+      ) : null}
     </>
   );
 }

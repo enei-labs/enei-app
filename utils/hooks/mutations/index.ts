@@ -12,3 +12,6 @@ export * from "./useCreateCompanyContract";
 export * from "./useUpdateCompanyContract";
 export * from "./useRemoveCompanyContract";
 export * from "./useUpdatePowerPlant";
+export * from "./useCreateTransferDocument";
+export * from './useUpdateTransferDocument';
+export * from "./useRemoveTransferDocument";
