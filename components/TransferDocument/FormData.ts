@@ -1,5 +1,6 @@
 export type FormData = {
   name: string;
+  number: string;
   receptionAreas: string;
   expectedTime: Date;
   printingDoc: string;
@@ -20,6 +21,10 @@ export type FormData = {
       label: string;
       value: string;
     };
+    userContract: {
+      label: string;
+      value: string;
+    }
     yearlyTransferDegree: number;
   }[];
 };

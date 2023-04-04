@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client'
-import { COMPANY_CONTRACT_FIELDS } from '../fragment/companyContractField'
+import { COMPANY_CONTRACT_FIELDS } from '../fragment/companyContractFields'
 
 export const COMPANY_CONTRACTS = gql`
   ${COMPANY_CONTRACT_FIELDS}

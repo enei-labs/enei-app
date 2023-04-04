@@ -5,3 +5,5 @@ export * from "./userFields";
 export * from "./guestFields";
 export * from "./powerPlants";
 export * from './transferDocumentFields';
+export * from './userContractFields';
+export * from './companyContractFields';

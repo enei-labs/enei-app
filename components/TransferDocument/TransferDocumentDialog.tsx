@@ -1,20 +1,24 @@
 import { Box, Button, Grid, Typography } from "@mui/material";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { IconBtn } from "@components/Button";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-import { TransferDocument } from "@core/graphql/types";
+import { PowerPlant, TransferDocument } from "@core/graphql/types";
 import { FieldsController } from "@components/Controller";
 import { FieldConfig } from "@core/types";
 import { textValidated } from "@core/types/fieldConfig";
-import { useValidatedForm } from "@utils/hooks";
+import { useCreateTransferDocument, useValidatedForm } from "@utils/hooks";
 import dynamic from "next/dynamic";
 import Dialog from "@components/Dialog";
 import { FormData } from "./FormData";
 import { Controller, useFieldArray } from "react-hook-form";
 import { InputAutocomplete, InputNumber, InputText } from "@components/Input";
 import Chip from "@components/TransferDocument/Chip";
-import { usePowerPlants, useUsers } from "@utils/hooks/queries";
+import {
+  usePowerPlants,
+  useUserContracts,
+  useUsers,
+} from "@utils/hooks/queries";
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 const CreateTransferDocumentBtn = dynamic(
   () => import("@components/TransferDocument/CreateTransferDocumentBtn")
@@ -27,11 +31,18 @@ interface TransferDocumentDialogProps {
   onClose: VoidFunction;
 }
 
-const transferDocumentInformationConfig: FieldConfig[] = [
+const transferDocumentInformationConfigs: FieldConfig[] = [
   {
     type: "TEXT",
     name: "name",
     label: "轉供合約名稱",
+    placeholder: "請填入",
+    validated: textValidated,
+  },
+  {
+    type: "TEXT",
+    name: "number",
+    label: "轉供合約編號",
     placeholder: "請填入",
     validated: textValidated,
   },
@@ -50,10 +61,38 @@ const transferDocumentInformationConfig: FieldConfig[] = [
   },
 ];
 
+const docConfigs: FieldConfig[] = [
+  {
+    type: "FILE",
+    name: "printDoc",
+    required: true,
+    label: "轉供計畫書用印版",
+  },
+  {
+    type: "FILE",
+    name: "replyDoc",
+    required: true,
+    label: "轉供函覆文",
+  },
+  {
+    type: "FILE",
+    name: "wordDoc",
+    required: true,
+    label: "轉供契約Word版",
+  },
+  {
+    type: "FILE",
+    name: "formalDoc",
+    required: true,
+    label: "正式轉供契約",
+  },
+];
+
 function TransferDocumentDialog(props: TransferDocumentDialogProps) {
   const { isOpenDialog, onClose, currentModifyTransferDocument, variant } =
     props;
 
+  /** form-data */
   const {
     control,
     formState: { errors },
@@ -99,7 +138,6 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
     control,
     name: "transferDocumentPowerPlants",
   });
-
   const {
     fields: transferDocumentUsersFields,
     append: userAppend,
@@ -109,8 +147,7 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
     name: "transferDocumentUsers",
   });
 
-  console.log({ transferDocumentUsersFields });
-
+  /** component-state */
   const [addPowerPlantNumber, setAddPowerPlantNumber] = useState<number>(1);
   const [addUserNumber, setAddUserNumber] = useState<number>(1);
 
@@ -120,10 +157,56 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
   const [powerPlantIndex, setPowerPlantIndex] = useState<number>(-1);
   const [userIndex, setUserIndex] = useState<number>(-1);
 
-  console.log({ userIndex });
-
+  /** apis */
+  const [createTransferDocument, { loading }] = useCreateTransferDocument();
   const { data: usersData } = useUsers();
   const { data: powerPlantsData } = usePowerPlants();
+
+  /** selected user/power-plant info */
+  const selectedUser = useMemo(() => {
+    if (!usersData) return null;
+
+    const selectedUserId = transferDocumentUsersFields[userIndex]?.id;
+    if (!selectedUserId) return null;
+
+    return usersData.users.list.find((u) => u.id === selectedUserId);
+  }, [userIndex, usersData, transferDocumentUsersFields]);
+
+  const { data: userContractsData, refetch } = useUserContracts({
+    skip: !selectedUser,
+    variables: { userId: selectedUser?.id },
+  });
+
+  console.log({ userContractsData });
+
+  /** submit */
+  const onSubmit = async (formData: FormData) => {
+    await createTransferDocument({
+      variables: {
+        input: {
+          name: formData.name,
+          number: formData.number,
+          powerPlants: formData.transferDocumentPowerPlants.map((t) => ({
+            estimateAnnualSupply: t.estimateAnnualSupply,
+            powerPlantId: t.powerPlant.value,
+            transferRate: t.transferRate,
+          })),
+          printingDoc: formData.printingDoc,
+          receptionAreas: formData.receptionAreas,
+          replyDoc: formData.replyDoc,
+          users: formData.transferDocumentUsers.map((u) => ({
+            monthlyTransferDegree: u.monthlyTransferDegree,
+            userId: u.user.value,
+            userContractId: u.userContract.value,
+            yearlyTransferDegree: u.yearlyTransferDegree,
+          })),
+          wordDoc: formData.wordDoc,
+          expectedTime: formData.expectedTime,
+          formalDoc: formData.formalDoc,
+        },
+      },
+    });
+  };
 
   return (
     <Dialog open={isOpenDialog} onClose={onClose}>
@@ -140,7 +223,7 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
           轉供資料
         </Typography>
         <FieldsController
-          configs={transferDocumentInformationConfig}
+          configs={transferDocumentInformationConfigs}
           form={{ control, errors }}
         />
 
@@ -162,15 +245,19 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
             })}
           </Box>
           {transferDocumentPowerPlantsFields.map((x, index) => (
-            <Controller
+            <Box
               key={x.id}
-              control={control}
-              name={`transferDocumentPowerPlants.${index}.powerPlant`}
-              render={({ field }) => (
-                <>
+              sx={powerPlantIndex !== index ? { display: "none" } : {}}
+            >
+              <Controller
+                control={control}
+                name={`transferDocumentPowerPlants.${index}.powerPlant`}
+                render={({ field }) => (
                   <InputAutocomplete
-                    sx={powerPlantIndex !== index ? { display: "none" } : {}}
                     {...field}
+                    onChange={(e) => {
+                      field.onChange(e);
+                    }}
                     options={
                       powerPlantsData?.powerPlants.list.map((o) => ({
                         label: o.name,
@@ -181,9 +268,9 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                     placeholder={"請填入"}
                     required
                   />
-                </>
-              )}
-            ></Controller>
+                )}
+              />
+            </Box>
           ))}
         </Box>
 
@@ -250,31 +337,55 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
             })}
           </Box>
           {transferDocumentUsersFields.map((x, index) => (
-            <Controller
-              key={x.id}
-              control={control}
-              name={`transferDocumentUsers.${index}.user`}
-              render={({ field }) => {
-                console.log({ field });
-                return (
-                  <>
+            <Box key={x.id} sx={userIndex !== index ? { display: "none" } : {}}>
+              <Controller
+                key={x.id}
+                control={control}
+                name={`transferDocumentUsers.${index}.user`}
+                render={({ field }) => {
+                  return (
+                    <>
+                      <InputAutocomplete
+                        {...field}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          refetch({ userId: e!.value as string });
+                        }}
+                        options={
+                          usersData?.users.list.map((o) => ({
+                            label: o.name,
+                            value: o.id,
+                          })) ?? []
+                        }
+                        label={`用戶${index + 1}名稱`}
+                        placeholder={"請填入"}
+                        required
+                      />
+                    </>
+                  );
+                }}
+              />
+              {userContractsData ? (
+                <Controller
+                  control={control}
+                  name={`transferDocumentUsers.${index}.userContract`}
+                  render={({ field }) => (
                     <InputAutocomplete
-                      sx={userIndex !== index ? { display: "none" } : {}}
                       {...field}
                       options={
-                        usersData?.users.list.map((o) => ({
-                          label: o.name,
+                        userContractsData?.userContracts.list.map((o) => ({
+                          label: o.serialNumber,
                           value: o.id,
                         })) ?? []
                       }
-                      label={`用戶${index + 1}名稱`}
+                      label={`電號`}
                       placeholder={"請填入"}
                       required
                     />
-                  </>
-                );
-              }}
-            />
+                  )}
+                />
+              ) : null}
+            </Box>
           ))}
         </Box>
 
@@ -309,6 +420,10 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                     label: "",
                     value: "",
                   },
+                  userContract: {
+                    label: "",
+                    value: "",
+                  },
                   yearlyTransferDegree: 0,
                 };
                 const emptyArray = [];
@@ -323,6 +438,8 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
             </Button>
           </Grid>
         </Grid>
+
+        <FieldsController configs={docConfigs} form={{ control, errors }} />
 
         {/* 按鈕區塊 */}
         <Grid

@@ -8,6 +8,7 @@ export const TRANSFER_DOCUMENT_FIELDS = gql`
   fragment transferDocumentFields on TransferDocument {
     id
     name
+    number
     receptionAreas
     expectedTime
     printingDoc

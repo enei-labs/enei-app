@@ -4,3 +4,4 @@ export * from './useCompanyContracts';
 export * from './useUsers';
 export * from './useAccounts';
 export * from './usePowerPlants';
+export * from './useUserContracts';

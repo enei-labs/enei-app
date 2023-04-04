@@ -235,6 +235,7 @@ export type CreateTransferDocumentInput = {
   expectedTime: Scalars['DateTime'];
   formalDoc: Scalars['String'];
   name: Scalars['String'];
+  number: Scalars['String'];
   powerPlants: Array<CreateTransferDocumentPowerPlantInput>;
   printingDoc: Scalars['String'];
   receptionAreas: Scalars['String'];
@@ -251,6 +252,7 @@ export type CreateTransferDocumentPowerPlantInput = {
 
 export type CreateTransferDocumentUserInput = {
   monthlyTransferDegree: Scalars['Float'];
+  userContractId: Scalars['ID'];
   userId: Scalars['ID'];
   yearlyTransferDegree: Scalars['Float'];
 };
@@ -678,6 +680,7 @@ export type QueryUserContractArgs = {
 export type QueryUserContractsArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
+  userId?: InputMaybe<Scalars['UUID']>;
 };
 
 
@@ -748,6 +751,7 @@ export type TransferDocument = {
   formalDoc: Scalars['String'];
   id: Scalars['ID'];
   name: Scalars['String'];
+  number: Scalars['String'];
   printingDoc: Scalars['String'];
   receptionAreas: Scalars['String'];
   replyDoc: Scalars['String'];
@@ -773,6 +777,7 @@ export type TransferDocumentUserDto = {
   __typename?: 'TransferDocumentUserDto';
   monthlyTransferDegree: Scalars['Float'];
   user: User;
+  userContract: UserContract;
   yearlyTransferDegree: Scalars['Float'];
 };
 
@@ -819,6 +824,7 @@ export type UpdateTransferDocumentInput = {
   expectedTime: Scalars['DateTime'];
   formalDoc: Scalars['String'];
   name: Scalars['String'];
+  number: Scalars['String'];
   powerPlants: Array<CreateTransferDocumentPowerPlantInput>;
   printingDoc: Scalars['String'];
   receptionAreas: Scalars['String'];
