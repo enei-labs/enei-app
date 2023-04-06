@@ -112,11 +112,26 @@ const componentsTheme = createTheme({
         }
       }
     },
+    MuiTextField: {
+      defaultProps: {
+        size: 'small',
+      },
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        root: {
+          "&.Mui-disabled": {
+            fieldset: {
+              background: "#F5F5F5",
+            },
+          },
+        },
+      },
+    },
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
           fontSize: "16px",
-          height: "40px",
           ".Mui-disabled": {
             /** 讓 fieldSet 的背景色不會蓋住字 */
             zIndex: 10,
@@ -127,6 +142,13 @@ const componentsTheme = createTheme({
           },
         },
       },
+    },
+    MuiAutocomplete: {
+      styleOverrides: {
+        option: {
+          fontSize: "16px"
+        }
+      }
     },
     MuiDialog: {
       styleOverrides: {
@@ -156,17 +178,6 @@ const componentsTheme = createTheme({
           },
           "& .MuiTablePagination-displayedRows": {
             fontSize: "14px",
-          },
-        },
-      },
-    },
-    MuiInputBase: {
-      styleOverrides: {
-        root: {
-          "&.Mui-disabled": {
-            fieldset: {
-              background: "#F5F5F5",
-            },
           },
         },
       },
