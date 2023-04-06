@@ -108,13 +108,16 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
               justifyContent: "flex-start",
               alignItems: "center",
               paddingX: "25px",
+              cursor: 'pointer',
             }}
+            onClick={() => router.push('/main')}
           >
             <Logo height="40" />
           </Box>
           <Sidebar />
         </Drawer>
         <Box component="main" sx={style.main}>
+          <Toolbar />
           {children}
         </Box>
       </Box>

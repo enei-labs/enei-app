@@ -30,7 +30,6 @@ function TransferApplicationProgressPage() {
         <title>轉供申請進度</title>
         <meta name="description" content="轉供申請進度" />
       </Head>
-      <Toolbar />
       <IconBreadcrumbs
         items={[
           {

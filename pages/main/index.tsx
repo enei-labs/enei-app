@@ -73,7 +73,6 @@ function MainPage() {
         <meta name="description" content="戰情總版" />
       </Head>
       <>
-        <Toolbar />
         <IconBreadcrumbs
           items={[
             {

@@ -20,6 +20,9 @@ const styles = {
       columnGap: "8px",
       color: theme.palette.primary.main,
       border: "none",
+      "&:hover": {
+        border: 'none',
+      }
     }),
   ],
 };
