@@ -20,6 +20,7 @@ const CreateTransferDocumentBtn = (props: CreateTransferDocumentBtnProps) => {
     await createTransferDocument({
       variables: {
         input: {
+          number: formData.number,
           name: formData.name,
           receptionAreas: formData.receptionAreas,
           expectedTime: formData.expectedTime,
@@ -35,6 +36,7 @@ const CreateTransferDocumentBtn = (props: CreateTransferDocumentBtnProps) => {
           users: formData.transferDocumentUsers.map((u) => ({
             monthlyTransferDegree: u.monthlyTransferDegree,
             userId: u.user.value,
+            userContractId: u.userContract.value,
             yearlyTransferDegree: u.yearlyTransferDegree,
           })),
         },
