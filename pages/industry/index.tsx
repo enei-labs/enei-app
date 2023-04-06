@@ -28,7 +28,6 @@ function IndustryPage() {
         <title>發電業管理</title>
         <meta name="description" content="發電業管理" />
       </Head>
-      <Toolbar />
       <IconBreadcrumbs
         items={[
           {

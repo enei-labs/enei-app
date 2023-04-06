@@ -25,7 +25,6 @@ function CompanyContractPage() {
       </Head>
       {data ? (
         <>
-          <Toolbar />
           <IconBreadcrumbs
             items={[
               {
