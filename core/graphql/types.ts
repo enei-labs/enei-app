@@ -138,7 +138,7 @@ export type CompanyContract = {
   contactPhone: Scalars['String'];
   contractDoc: Scalars['String'];
   /** 轉供條件 */
-  daysToPay: Scalars['Float'];
+  daysToPay: Scalars['Int'];
   description?: Maybe<Scalars['String']>;
   /** 合約年限 */
   duration: Scalars['String'];
@@ -154,7 +154,7 @@ export type CompanyContract = {
   transferAt?: Maybe<Scalars['String']>;
   transferDoc: Scalars['String'];
   /** 轉供率要求（%） */
-  transferRate: Scalars['Float'];
+  transferRate: Scalars['Int'];
 };
 
 export type CompanyContractPage = {
@@ -200,7 +200,7 @@ export type CreateCompanyContractInput = {
   contactPhone: Scalars['String'];
   contractDoc: Scalars['String'];
   contractTimeType: ContractTimeType;
-  daysToPay: Scalars['Float'];
+  daysToPay: Scalars['Int'];
   description?: InputMaybe<Scalars['String']>;
   duration?: InputMaybe<Scalars['String']>;
   endedAt?: InputMaybe<Scalars['DateTime']>;
@@ -210,7 +210,7 @@ export type CreateCompanyContractInput = {
   price: Scalars['String'];
   startedAt: Scalars['DateTime'];
   transferDoc: Scalars['String'];
-  transferRate: Scalars['Float'];
+  transferRate: Scalars['Int'];
 };
 
 export type CreateCompanyInput = {
@@ -223,12 +223,12 @@ export type CreateCompanyInput = {
 
 export type CreatePowerPlantInput = {
   address: Scalars['String'];
-  capacity: Scalars['Float'];
+  capacity: Scalars['Int'];
   companyContractId: Scalars['ID'];
   name: Scalars['String'];
   number: Scalars['String'];
-  predictAnnualPowerGeneration: Scalars['Float'];
-  transferRate: Scalars['Float'];
+  predictAnnualPowerGeneration: Scalars['Int'];
+  transferRate: Scalars['Int'];
 };
 
 export type CreateTransferDocumentInput = {
@@ -245,29 +245,29 @@ export type CreateTransferDocumentInput = {
 };
 
 export type CreateTransferDocumentPowerPlantInput = {
-  estimateAnnualSupply: Scalars['Float'];
+  estimateAnnualSupply: Scalars['Int'];
   powerPlantId: Scalars['ID'];
-  transferRate: Scalars['Float'];
+  transferRate: Scalars['Int'];
 };
 
 export type CreateTransferDocumentUserInput = {
-  monthlyTransferDegree: Scalars['Float'];
+  monthlyTransferDegree: Scalars['Int'];
   userContractId: Scalars['ID'];
   userId: Scalars['ID'];
-  yearlyTransferDegree: Scalars['Float'];
+  yearlyTransferDegree: Scalars['Int'];
 };
 
 export type CreateUserContractInput = {
   contractDoc: Scalars['String'];
   electricNumberInfos: Array<ElectricNumberInfoInput>;
-  lowerLimit: Scalars['Float'];
+  lowerLimit: Scalars['Int'];
   name: Scalars['String'];
-  price: Scalars['Float'];
-  purchaseDegree: Scalars['Float'];
+  price: Scalars['Int'];
+  purchaseDegree: Scalars['Int'];
   salesPeriod: Scalars['String'];
   serialNumber: Scalars['String'];
   transferAt?: InputMaybe<Scalars['DateTime']>;
-  upperLimit: Scalars['Float'];
+  upperLimit: Scalars['Int'];
   userType: UserType;
 };
 
@@ -288,11 +288,11 @@ export type ElectricNumberInfo = {
   contractEmail: Scalars['String'];
   contractName: Scalars['String'];
   contractPhone: Scalars['String'];
-  degree: Scalars['Float'];
-  lowerLimit: Scalars['Float'];
+  degree: Scalars['Int'];
+  lowerLimit: Scalars['Int'];
   number: Scalars['String'];
   tableNumbers: Array<Scalars['Float']>;
-  upperLimit: Scalars['Float'];
+  upperLimit: Scalars['Int'];
 };
 
 export type ElectricNumberInfoInput = {
@@ -300,11 +300,11 @@ export type ElectricNumberInfoInput = {
   contractEmail: Scalars['String'];
   contractName: Scalars['String'];
   contractPhone: Scalars['String'];
-  degree: Scalars['Float'];
-  lowerLimit: Scalars['Float'];
+  degree: Scalars['Int'];
+  lowerLimit: Scalars['Int'];
   number: Scalars['String'];
   tableNumbers: Array<Scalars['Float']>;
-  upperLimit: Scalars['Float'];
+  upperLimit: Scalars['Int'];
 };
 
 export type Error = {
@@ -556,16 +556,16 @@ export type PasswordResetExpiredError = Error & {
 export type PowerPlant = {
   __typename?: 'PowerPlant';
   address: Scalars['String'];
-  annualPowerGeneration: Scalars['Float'];
-  capacity: Scalars['Float'];
+  annualPowerGeneration: Scalars['Int'];
+  capacity: Scalars['Int'];
   createdAt: Scalars['DateTime'];
   createdBy?: Maybe<Scalars['String']>;
   deletedAt?: Maybe<Scalars['DateTime']>;
   id: Scalars['ID'];
   name: Scalars['String'];
   number: Scalars['String'];
-  predictAnnualPowerGeneration: Scalars['Float'];
-  transferRate: Scalars['Float'];
+  predictAnnualPowerGeneration: Scalars['Int'];
+  transferRate: Scalars['Int'];
 };
 
 export type PowerPlantPage = {
@@ -768,17 +768,17 @@ export type TransferDocumentPage = {
 
 export type TransferDocumentPowerPlantDto = {
   __typename?: 'TransferDocumentPowerPlantDto';
-  estimateAnnualSupply: Scalars['Float'];
+  estimateAnnualSupply: Scalars['Int'];
   powerPlant: PowerPlant;
-  transferRate: Scalars['Float'];
+  transferRate: Scalars['Int'];
 };
 
 export type TransferDocumentUserDto = {
   __typename?: 'TransferDocumentUserDto';
-  monthlyTransferDegree: Scalars['Float'];
+  monthlyTransferDegree: Scalars['Int'];
   user: User;
   userContract: UserContract;
-  yearlyTransferDegree: Scalars['Float'];
+  yearlyTransferDegree: Scalars['Int'];
 };
 
 export type UpdateCompanyContractInput = {
@@ -787,7 +787,8 @@ export type UpdateCompanyContractInput = {
   contactName?: InputMaybe<Scalars['String']>;
   contactPhone?: InputMaybe<Scalars['String']>;
   contractDoc?: InputMaybe<Scalars['String']>;
-  daysToPay?: InputMaybe<Scalars['String']>;
+  contractTimeType: ContractTimeType;
+  daysToPay?: InputMaybe<Scalars['Int']>;
   description?: InputMaybe<Scalars['String']>;
   duration?: InputMaybe<Scalars['String']>;
   endedAt?: InputMaybe<Scalars['DateTime']>;
@@ -798,7 +799,7 @@ export type UpdateCompanyContractInput = {
   startedAt?: InputMaybe<Scalars['DateTime']>;
   transferAt?: InputMaybe<Scalars['DateTime']>;
   transferDoc?: InputMaybe<Scalars['String']>;
-  transferRate?: InputMaybe<Scalars['Float']>;
+  transferRate?: InputMaybe<Scalars['Int']>;
 };
 
 export type UpdateCompanyInput = {
@@ -812,12 +813,12 @@ export type UpdateCompanyInput = {
 
 export type UpdatePowerPlantInput = {
   address: Scalars['String'];
-  capacity: Scalars['Float'];
+  capacity: Scalars['Int'];
   id: Scalars['ID'];
   name: Scalars['String'];
   number: Scalars['String'];
-  predictAnnualPowerGeneration: Scalars['Float'];
-  transferRate: Scalars['Float'];
+  predictAnnualPowerGeneration: Scalars['Int'];
+  transferRate: Scalars['Int'];
 };
 
 export type UpdateTransferDocumentInput = {
@@ -851,14 +852,14 @@ export type UserContract = {
   contractDoc: Scalars['String'];
   electricNumberInfos: Array<ElectricNumberInfo>;
   id: Scalars['ID'];
-  lowerLimit: Scalars['Float'];
+  lowerLimit: Scalars['Int'];
   name: Scalars['String'];
-  price: Scalars['Float'];
-  purchaseDegree: Scalars['Float'];
+  price: Scalars['Int'];
+  purchaseDegree: Scalars['Int'];
   salesPeriod: Scalars['String'];
   serialNumber: Scalars['String'];
   transferAt?: Maybe<Scalars['DateTime']>;
-  upperLimit: Scalars['Float'];
+  upperLimit: Scalars['Int'];
   userType: UserType;
 };
 

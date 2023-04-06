@@ -5,6 +5,8 @@ import BorderColorOutlined from "@mui/icons-material/BorderColorOutlined";
 import DeleteOutlined from "@mui/icons-material/DeleteOutlined";
 import { IconBtn } from "@components/Button";
 import { useAuth } from "@core/context/auth";
+import { Box } from "@mui/material";
+import { useRouter } from "next/router";
 
 enum ActionTypeEnum {
   CREATE = "create",
@@ -22,11 +24,25 @@ interface UserPanelProps {
 const UserPanel = (props: UserPanelProps) => {
   const { users, loading = false, refetchFn, onAction } = props;
   const { me } = useAuth();
+  const router = useRouter();
 
   const configs: Config<User>[] = [
     {
       header: "用戶名稱",
       accessor: "name",
+      render: (rowData) => (
+        <Box
+          sx={{
+            cursor: "pointer",
+            "&:hover": {
+              color: "primary.main",
+            },
+          }}
+          onClick={() => router.push(`/user/${rowData.id}`)}
+        >
+          {rowData.name}
+        </Box>
+      ),
     },
     {
       header: "上月度數",

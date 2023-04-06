@@ -9,7 +9,6 @@ import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
 import MailIcon from "@mui/icons-material/MailOutlineOutlined";
 import PhoneIcon from "@mui/icons-material/PhoneOutlined";
 import PersonIcon from "@mui/icons-material/PersonOutlineOutlined";
-import BorderColorOutlined from "@mui/icons-material/BorderColorOutlined";
 import DeleteOutlined from "@mui/icons-material/DeleteOutlined";
 import FolderOutlinedIcon from "@mui/icons-material/FolderOutlined";
 import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
@@ -26,6 +25,7 @@ import { InputSearch } from "@components/Input";
 import PowerPlantPanel from "@components/PowerPlant/PowerPlantPanel";
 import AddPowerPlantBtn from "@components/PowerPlant/AddPowerPlantBtn";
 import { useRouter } from "next/router";
+import EditCompanyContractBtn from "@components/CompanyContract/CompanyContractDialog/EditCompanyContractBtn";
 
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
@@ -133,7 +133,7 @@ function CompanyContractCard(props: CompanyContractCardProps) {
         >
           <Typography variant="h4">{`${companyContract.number}(${companyContract.name})`}</Typography>
           <Box sx={{ display: "flex" }}>
-            <IconBtn icon={<BorderColorOutlined />} onClick={() => {}} />
+            <EditCompanyContractBtn companyContract={companyContract} />
             <IconBtn
               icon={<DeleteOutlined />}
               onClick={() => setOpenDeleteDialog(true)}

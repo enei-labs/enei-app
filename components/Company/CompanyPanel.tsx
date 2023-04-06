@@ -17,7 +17,15 @@ const CompanyPanel = (props: CompanyPanelProps) => {
       header: "公司名稱",
       accessor: "name",
       render: (rowData) => (
-        <Box sx={{ cursor: "pointer" }} onClick={() => setCompanyFn(rowData)}>
+        <Box
+          sx={{
+            cursor: "pointer",
+            "&:hover": {
+              color: "primary.main",
+            },
+          }}
+          onClick={() => setCompanyFn(rowData)}
+        >
           {rowData.name}
         </Box>
       ),

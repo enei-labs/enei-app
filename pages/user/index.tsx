@@ -23,7 +23,7 @@ enum ActionTypeEnum {
   CLOSE = "close",
 }
 
-const Users = () => {
+const UsersPage = () => {
   const { data: userData, loading, refetch } = useUsers();
   const [actionType, setActionType] = useState<ActionTypeEnum>(
     ActionTypeEnum.CLOSE
@@ -104,8 +104,8 @@ const Users = () => {
   );
 };
 
-Users.getLayout = (page: ReactElement) => {
+UsersPage.getLayout = (page: ReactElement) => {
   return <AuthLayout>{page}</AuthLayout>;
 };
 
-export default Users;
+export default UsersPage;

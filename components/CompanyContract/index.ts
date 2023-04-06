@@ -1,2 +1,2 @@
-export * from './AddCompanyContractBtn';
+export * from './CompanyContractDialog/AddCompanyContractBtn';
 export * from './CompanyContractPanel';

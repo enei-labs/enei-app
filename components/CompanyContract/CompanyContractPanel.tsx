@@ -3,7 +3,7 @@ import { useCompanyContracts } from "@utils/hooks/queries";
 import { Company } from "@core/graphql/types";
 import ContractBox from "../ContractBox";
 import { InputSearch } from "../Input";
-import AddCompanyContractBtn from "./AddCompanyContractBtn";
+import AddCompanyContractBtn from "./CompanyContractDialog/AddCompanyContractBtn";
 import { BasicSelect } from "../Select";
 import { useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
