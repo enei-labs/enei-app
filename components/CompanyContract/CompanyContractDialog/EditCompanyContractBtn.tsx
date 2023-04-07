@@ -28,7 +28,9 @@ const EditCompanyContractBtn = (props: CompanyContractProps) => {
     handleSubmit,
     formState: { errors },
   } = useValidatedForm<FormData>(fieldConfigs, {
+    /** @TODO 判斷 companyContractType */
     defaultValues: {
+      companyName: companyContract.company.name,
       name: companyContract.name,
       number: companyContract.number,
       contactName: companyContract.contactName,
@@ -101,7 +103,7 @@ const EditCompanyContractBtn = (props: CompanyContractProps) => {
         <CompanyContractDialog
           variant="edit"
           open={shownFormDialog}
-          closeFn={() => showFormDialog(true)}
+          closeFn={() => showEditConfirmDialog(true)}
           submitFn={handleSubmit(onSubmit)}
           displayFieldConfigs={displayFieldConfigs}
           form={{ control, errors }}

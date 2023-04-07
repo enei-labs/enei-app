@@ -133,6 +133,7 @@ export type Company = {
 
 export type CompanyContract = {
   __typename?: 'CompanyContract';
+  company: Company;
   contactEmail: Scalars['String'];
   contactName: Scalars['String'];
   contactPhone: Scalars['String'];
@@ -151,7 +152,7 @@ export type CompanyContract = {
   /** 合約價格 */
   price: Scalars['String'];
   startedAt: Scalars['DateTime'];
-  transferAt?: Maybe<Scalars['String']>;
+  transferAt?: Maybe<Scalars['DateTime']>;
   transferDoc: Scalars['String'];
   /** 轉供率要求（%） */
   transferRate: Scalars['Int'];
