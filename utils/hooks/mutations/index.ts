@@ -15,3 +15,4 @@ export * from "./useUpdatePowerPlant";
 export * from "./useCreateTransferDocument";
 export * from './useUpdateTransferDocument';
 export * from "./useRemoveTransferDocument";
+export * from "./useRemoveUser";

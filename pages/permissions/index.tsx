@@ -45,7 +45,6 @@ const Permissions = () => {
         <title>權限管理</title>
         <meta name="description" content="權限管理" />
       </Head>
-      <Toolbar></Toolbar>
       <IconBreadcrumbs
         items={[
           {

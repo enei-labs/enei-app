@@ -1,24 +1,25 @@
 import { Box, Card, Grid, Typography } from "@mui/material";
-import { useCompanyContracts } from "@utils/hooks/queries";
-import { Company } from "@core/graphql/types";
+import { useUserContracts } from "@utils/hooks/queries";
+import { User } from "@core/graphql/types";
 import { InputSearch } from "../Input";
-import AddCompanyContractBtn from "./CompanyContractDialog/AddCompanyContractBtn";
 import { BasicSelect } from "../Select";
 import { useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
-import CompanyContractBox from "@components/ContractBox/CompanyContractBox";
+import UserContractBox from "@components/ContractBox/UserContractBox";
 
-interface CompanyContractPanelProps {
-  company: Company;
+interface UserContractPanelProps {
+  user: User;
 }
 
-function CompanyContractPanel(props: CompanyContractPanelProps) {
-  const { company } = props;
+function UserContractPanel(props: UserContractPanelProps) {
+  const { user } = props;
   const [state, setState] = useState("");
-  const { data, loading } = useCompanyContracts({ companyId: company.id });
+  const { data, loading } = useUserContracts({
+    variables: { userId: user.id },
+  });
+
   return (
-    <Card sx={{ p: "36px" }}>
-      <Typography variant="h4">{company.name}</Typography>
+    <>
       <Box
         sx={{
           display: "flex",
@@ -30,23 +31,23 @@ function CompanyContractPanel(props: CompanyContractPanelProps) {
           <InputSearch />
           <BasicSelect state={state} setState={setState} items={[]} />
         </Box>
-        <AddCompanyContractBtn company={company} />
+        {/* <AddCompanyContractBtn company={company} /> */}
       </Box>
       <Grid container spacing={2} sx={{ mt: "24px" }}>
         {loading ? (
           <CircularProgress size="24px" />
-        ) : data && data.companyContracts.list.length !== 0 ? (
-          data.companyContracts.list.map((contract) => (
+        ) : data && data.userContracts.list.length !== 0 ? (
+          data.userContracts.list.map((contract) => (
             <Grid item sm={4} key={contract.id}>
-              <CompanyContractBox contract={contract} />
+              <UserContractBox contract={contract} />
             </Grid>
           ))
         ) : (
           <Box sx={{ width: "100%", textAlign: "center" }}>沒有資料</Box>
         )}
       </Grid>
-    </Card>
+    </>
   );
 }
 
-export default CompanyContractPanel;
+export default UserContractPanel;

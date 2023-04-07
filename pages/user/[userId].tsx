@@ -5,10 +5,11 @@ import { useRouter } from "next/router";
 import Person2OutlinedIcon from "@mui/icons-material/Person2Outlined";
 import CircularProgress from "@mui/material/CircularProgress";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
-import { Toolbar } from "@mui/material";
+import { Box, Toolbar } from "@mui/material";
 import { AuthLayout } from "@components/Layout";
 import { ReactElement } from "react";
 import { useUser } from "@utils/hooks/queries";
+import UserCard from "@components/User/UserCard";
 
 function UserPage() {
   const router = useRouter();
@@ -25,7 +26,6 @@ function UserPage() {
       </Head>
       {data ? (
         <>
-          <Toolbar />
           <IconBreadcrumbs
             items={[
               {
@@ -40,9 +40,9 @@ function UserPage() {
               },
             ]}
           />
-          {/* <Box sx={{ paddingTop: "12px" }}>
+          <Box sx={{ paddingTop: "12px" }}>
             <UserCard user={data.user} />
-          </Box> */}
+          </Box>
         </>
       ) : null}
     </>

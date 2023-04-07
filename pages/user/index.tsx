@@ -41,7 +41,6 @@ const UsersPage = () => {
         <title>用戶管理</title>
         <meta name="description" content="用戶管理" />
       </Head>
-      <Toolbar></Toolbar>
       <IconBreadcrumbs
         items={[
           {

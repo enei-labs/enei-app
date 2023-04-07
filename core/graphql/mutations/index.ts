@@ -19,3 +19,4 @@ export * from "./updatePowerPlant";
 export * from "./createTransferDocument";
 export * from "./updateTransferDocument";
 export * from "./removeTransferDocument";
+export * from "./removeUser";

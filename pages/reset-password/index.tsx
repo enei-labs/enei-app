@@ -99,7 +99,6 @@ const ResetPassword = () => {
         <title>修改密碼</title>
         <meta name="description" content="修改密碼" />
       </Head>
-      <Toolbar></Toolbar>
       <IconBreadcrumbs
         items={[
           {

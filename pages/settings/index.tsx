@@ -62,7 +62,6 @@ const Settings = () => {
         <title>帳戶設定</title>
         <meta name="description" content="帳戶設定" />
       </Head>
-      <Toolbar></Toolbar>
       <IconBreadcrumbs
         items={[
           {
