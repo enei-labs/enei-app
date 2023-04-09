@@ -286,26 +286,22 @@ export type CreateUserInput = {
 export type ElectricNumberInfo = {
   __typename?: 'ElectricNumberInfo';
   address: Scalars['String'];
-  contractEmail: Scalars['String'];
-  contractName: Scalars['String'];
-  contractPhone: Scalars['String'];
+  contactEmail: Scalars['String'];
+  contactName: Scalars['String'];
+  contactPhone: Scalars['String'];
   degree: Scalars['Int'];
-  lowerLimit: Scalars['Int'];
   number: Scalars['String'];
   tableNumbers: Array<Scalars['Float']>;
-  upperLimit: Scalars['Int'];
 };
 
 export type ElectricNumberInfoInput = {
   address: Scalars['String'];
-  contractEmail: Scalars['String'];
-  contractName: Scalars['String'];
-  contractPhone: Scalars['String'];
+  contactEmail: Scalars['String'];
+  contactName: Scalars['String'];
+  contactPhone: Scalars['String'];
   degree: Scalars['Int'];
-  lowerLimit: Scalars['Int'];
   number: Scalars['String'];
   tableNumbers: Array<Scalars['Float']>;
-  upperLimit: Scalars['Int'];
 };
 
 export type Error = {

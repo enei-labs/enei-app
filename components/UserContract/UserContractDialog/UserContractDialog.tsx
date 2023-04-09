@@ -6,16 +6,16 @@ import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOu
 import { ElectricNumberInfo, TransferDocument } from "@core/graphql/types";
 import { FieldsController } from "@components/Controller";
 import { FieldConfig } from "@core/types";
-import { textValidated } from "@core/types/fieldConfig";
 import { useValidatedForm } from "@utils/hooks";
 import dynamic from "next/dynamic";
 import Dialog from "@components/Dialog";
 import { FormData } from "./FormData";
 import { Controller, useFieldArray } from "react-hook-form";
-import { InputAutocomplete, InputNumber } from "@components/Input";
+import { InputNumber, InputText } from "@components/Input";
 import Chip from "@components/TransferDocument/Chip";
 import { useUsers } from "@utils/hooks/queries";
 import { useCreateUserContract } from "@utils/hooks/mutations/useCreateUserContract";
+import { TableNumbersField } from "@components/UserContract/UserContractDialog/TableNumbersField";
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
 interface UserContractDialogProps {
@@ -33,7 +33,7 @@ const contractConfigs: FieldConfig[] = [
     label: "契約名稱",
   },
   {
-    type: "FILE",
+    type: "TEXT",
     name: "number",
     required: true,
     label: "契約編號",
@@ -78,40 +78,6 @@ const docConfigs: FieldConfig[] = [
     required: true,
   },
 ];
-
-const contactConfigs: FieldConfig[] = [
-  {
-    type: "TEXT",
-    name: "contactName",
-    label: "聯絡人姓名",
-    required: true,
-    validated: textValidated,
-  },
-  {
-    type: "TEXT",
-    name: "contactPhone",
-    label: "聯絡人電話",
-    required: true,
-    validated: textValidated,
-  },
-  {
-    type: "TEXT",
-    name: "contactEmail",
-    label: "聯絡人信箱",
-    required: true,
-    validated: textValidated.email(),
-  },
-];
-
-// const electricConfigs: FieldConfig[] = [
-//   {
-//     type: "TEXT",
-//     name: "contactName",
-//     label: "電號",
-//     required: true,
-//     validated: textValidated,
-//   },
-// ];
 
 function UserContractDialog(props: UserContractDialogProps) {
   const { isOpenDialog, onClose, currentModifyTransferDocument, variant } =
@@ -213,31 +179,23 @@ function UserContractDialog(props: UserContractDialogProps) {
               );
             })}
           </Box>
-          {/* {fields.map((x, index) => (
+          {fields.map((x, index) => (
             <Box
               key={x.id}
+              display={"flex"}
+              flexDirection="column"
+              rowGap="24px"
               sx={electricNumberIndex !== index ? { display: "none" } : {}}
             >
               <Controller
-                key={x.id}
                 control={control}
-                name={`transferDocumentUsers.${index}.user`}
+                name={`electricNumberInfos.${index}.number`}
                 render={({ field }) => {
                   return (
                     <>
-                      <InputAutocomplete
+                      <InputText
                         {...field}
-                        onChange={(e) => {
-                          field.onChange(e);
-                          refetch({ userId: e!.value as string });
-                        }}
-                        options={
-                          usersData?.users.list.map((o) => ({
-                            label: o.name,
-                            value: o.id,
-                          })) ?? []
-                        }
-                        label={`用戶${index + 1}名稱`}
+                        label="電號"
                         placeholder={"請填入"}
                         required
                       />
@@ -245,28 +203,113 @@ function UserContractDialog(props: UserContractDialogProps) {
                   );
                 }}
               />
-              {userContractsData ? (
-                <Controller
-                  control={control}
-                  name={`transferDocumentUsers.${index}.userContract`}
-                  render={({ field }) => (
-                    <InputAutocomplete
-                      {...field}
-                      options={
-                        userContractsData?.userContracts.list.map((o) => ({
-                          label: o.serialNumber,
-                          value: o.id,
-                        })) ?? []
-                      }
-                      label={`電號`}
-                      placeholder={"請填入"}
-                      required
-                    />
-                  )}
-                />
-              ) : null}
+              <Controller
+                control={control}
+                name={`electricNumberInfos.${index}.degree`}
+                render={({ field }) => {
+                  return (
+                    <>
+                      <InputText
+                        {...field}
+                        type="number"
+                        label="年預計採購度數（kWh）"
+                        placeholder={"請填入"}
+                        required
+                      />
+                    </>
+                  );
+                }}
+              />
+              <Controller
+                control={control}
+                name={`electricNumberInfos.${index}.degree`}
+                render={({ field }) => {
+                  return (
+                    <>
+                      <InputText
+                        {...field}
+                        type="number"
+                        label="年預計採購度數（kWh）"
+                        placeholder={"請填入"}
+                        required
+                      />
+                    </>
+                  );
+                }}
+              />
+              <Controller
+                control={control}
+                name={`electricNumberInfos.${index}.tableNumbers`}
+                render={({ field }) => (
+                  <TableNumbersField field={field} control={control} />
+                )}
+              />
+              <Controller
+                control={control}
+                name={`electricNumberInfos.${index}.address`}
+                render={({ field }) => {
+                  return (
+                    <>
+                      <InputText
+                        {...field}
+                        label="電號地址"
+                        placeholder={"請填入"}
+                        required
+                      />
+                    </>
+                  );
+                }}
+              />
+              <Controller
+                control={control}
+                name={`electricNumberInfos.${index}.contactName`}
+                render={({ field }) => {
+                  return (
+                    <>
+                      <InputText
+                        {...field}
+                        label="聯絡人姓名"
+                        placeholder={"請填入"}
+                        required
+                      />
+                    </>
+                  );
+                }}
+              />
+              <Controller
+                control={control}
+                name={`electricNumberInfos.${index}.contactPhone`}
+                render={({ field }) => {
+                  return (
+                    <>
+                      <InputText
+                        {...field}
+                        label="聯絡人電話"
+                        placeholder={"請填入"}
+                        required
+                      />
+                    </>
+                  );
+                }}
+              />
+              <Controller
+                control={control}
+                name={`electricNumberInfos.${index}.contactEmail`}
+                render={({ field }) => {
+                  return (
+                    <>
+                      <InputText
+                        {...field}
+                        label="聯絡人信箱"
+                        placeholder={"請填入"}
+                        required
+                      />
+                    </>
+                  );
+                }}
+              />
             </Box>
-          ))} */}
+          ))}
         </Box>
 
         {/* 新增電號欄位 */}
@@ -296,14 +339,12 @@ function UserContractDialog(props: UserContractDialogProps) {
               onClick={() => {
                 const emptyElectricNumberInput: ElectricNumberInfo = {
                   address: "",
-                  contractEmail: "",
-                  contractName: "",
-                  contractPhone: "",
+                  contactEmail: "",
+                  contactName: "",
+                  contactPhone: "",
                   degree: 0,
-                  lowerLimit: 0,
                   number: "",
                   tableNumbers: [],
-                  upperLimit: 0,
                 };
                 const emptyArray = [];
                 for (let i = 1; i <= addElectricNumber; i++) {
@@ -317,8 +358,6 @@ function UserContractDialog(props: UserContractDialogProps) {
             </Button>
           </Grid>
         </Grid>
-
-        <FieldsController configs={docConfigs} form={{ control, errors }} />
 
         {/* 按鈕區塊 */}
         <Grid
