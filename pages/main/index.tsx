@@ -1,5 +1,4 @@
 import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
 import Divider from "@mui/material/Divider";
 import MailIcon from "@mui/icons-material/Mail";
 import BoltIcon from "@mui/icons-material/BoltOutlined";

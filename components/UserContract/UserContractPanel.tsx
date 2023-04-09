@@ -1,4 +1,5 @@
-import { Box, Card, Grid, Typography } from "@mui/material";
+import { match, P } from "ts-pattern";
+import { Box, Grid } from "@mui/material";
 import { useUserContracts } from "@utils/hooks/queries";
 import { User } from "@core/graphql/types";
 import { InputSearch } from "../Input";
@@ -6,6 +7,7 @@ import { BasicSelect } from "../Select";
 import { useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import UserContractBox from "@components/ContractBox/UserContractBox";
+import { AddUserContractBtn } from "@components/UserContract/UserContractDialog/AddUserContractBtn";
 
 interface UserContractPanelProps {
   user: User;
@@ -31,7 +33,7 @@ function UserContractPanel(props: UserContractPanelProps) {
           <InputSearch />
           <BasicSelect state={state} setState={setState} items={[]} />
         </Box>
-        {/* <AddCompanyContractBtn company={company} /> */}
+        <AddUserContractBtn />
       </Box>
       <Grid container spacing={2} sx={{ mt: "24px" }}>
         {loading ? (
