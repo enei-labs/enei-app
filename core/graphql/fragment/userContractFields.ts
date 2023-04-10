@@ -15,8 +15,6 @@ export const USER_CONTRACT_FIELDS = gql`
     contractDoc
 		electricNumberInfos {
 			number
-			upperLimit
-			lowerLimit
 			tableNumbers
 			address
 		}

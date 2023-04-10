@@ -19,18 +19,24 @@ export default function Chip(props: ChipProps) {
         border: "1px solid #004D40",
         fontSize: "14px",
         "& svg": {
-          color: "#009688",
-          "& :focus": {
-            color: "#FFF",
-          },
+          fill: "#009688",
         },
         "&:hover": {
           backgroundColor: "#004D40",
           color: "#FFF",
+          border: "1px solid #004D40",
+
+          "& svg": {
+            fill: "#FFF",
+          },
         },
         "&:focus": {
           backgroundColor: "#009688",
           color: "#FFF",
+          border: "1px solid #009688",
+          "& svg": {
+            fill: "#FFF",
+          },
         },
       }}
       label={label}
