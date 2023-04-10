@@ -10,6 +10,9 @@ export type FormData = {
   lowerLimit: number;
   salesPeriod: string;
   transferAt: Date;
-  contractDoc: string;
+  contractDoc: {
+    file: File;
+    id: string;
+  };
   electricNumberInfos: ElectricNumberInfoInput[];
 };

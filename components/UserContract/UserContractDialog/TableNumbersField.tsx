@@ -11,6 +11,7 @@ import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOu
 import { useState } from "react";
 import { IconBtn } from "@components/Button";
 import CloseIcon from "@mui/icons-material/HighlightOff";
+import DialogAlert from "@components/DialogAlert";
 
 interface TableNumbersFieldProps {
   control: Control<any, any>;
@@ -21,6 +22,8 @@ export function TableNumbersField(props: TableNumbersFieldProps) {
   const { field: rootField, control } = props;
 
   const [addTableNumber, setAddTableNumber] = useState<number>(1);
+  const [deleteTableNumberIndex, setDeleteTableNumberIndex] =
+    useState<number>(-1);
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -45,7 +48,7 @@ export function TableNumbersField(props: TableNumbersFieldProps) {
                 />
                 <IconBtn
                   icon={<CloseIcon />}
-                  onClick={() => remove(fieldIndex)}
+                  onClick={() => setDeleteTableNumberIndex(fieldIndex)}
                 />
               </Box>
             );
@@ -92,6 +95,21 @@ export function TableNumbersField(props: TableNumbersFieldProps) {
           </Button>
         </Grid>
       </Grid>
+
+      {deleteTableNumberIndex !== -1 ? (
+        <DialogAlert
+          open={deleteTableNumberIndex !== -1}
+          title={"刪除表號"}
+          content={"是否確認要刪除表號？"}
+          onConfirm={() => {
+            remove(deleteTableNumberIndex);
+            setDeleteTableNumberIndex(-1);
+          }}
+          onClose={() => {
+            setDeleteTableNumberIndex(-1);
+          }}
+        />
+      ) : null}
     </>
   );
 }

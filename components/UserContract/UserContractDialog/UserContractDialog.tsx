@@ -30,6 +30,10 @@ import Chip from "@components/TransferDocument/Chip";
 import { useUsers } from "@utils/hooks/queries";
 import { useCreateUserContract } from "@utils/hooks/mutations/useCreateUserContract";
 import { TableNumbersField } from "@components/UserContract/UserContractDialog/TableNumbersField";
+import { LoadingButton } from "@mui/lab";
+import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
+import { useRouter } from "next/router";
+
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
 interface UserContractDialogProps {
@@ -48,7 +52,7 @@ const contractConfigs: FieldConfig[] = [
   },
   {
     type: "TEXT",
-    name: "number",
+    name: "serialNumber",
     required: true,
     label: "契約編號",
   },
@@ -57,6 +61,12 @@ const contractConfigs: FieldConfig[] = [
     name: "price",
     required: true,
     label: "採購電價（元/kWh）",
+  },
+  {
+    type: "NUMBER",
+    name: "purchaseDegree",
+    required: true,
+    label: "契約總預計年採購度數（kWh）",
   },
   {
     type: "NUMBER",
@@ -94,6 +104,9 @@ const docConfigs: FieldConfig[] = [
 ];
 
 function UserContractDialog(props: UserContractDialogProps) {
+  const router = useRouter();
+  const userId = router.query.userId as string;
+
   const { isOpenDialog, onClose, currentModifyTransferDocument, variant } =
     props;
 
@@ -102,6 +115,7 @@ function UserContractDialog(props: UserContractDialogProps) {
     control,
     formState: { errors },
     handleSubmit,
+    reset,
   } = useValidatedForm<FormData>(undefined, {
     defaultValues: {},
   });
@@ -132,23 +146,30 @@ function UserContractDialog(props: UserContractDialogProps) {
 
   /** submit */
   const onSubmit = async (formData: FormData) => {
-    await createUserContract({
+    console.log({ formData });
+    const { data } = await createUserContract({
       variables: {
+        userId,
         input: {
           name: formData.name,
           userType: formData.userType,
           serialNumber: formData.serialNumber,
-          purchaseDegree: formData.purchaseDegree,
-          price: formData.price,
-          upperLimit: formData.upperLimit,
-          lowerLimit: formData.lowerLimit,
+          purchaseDegree: Number(formData.purchaseDegree),
+          price: Number(formData.price),
+          upperLimit: Number(formData.upperLimit),
+          lowerLimit: Number(formData.lowerLimit),
           salesPeriod: formData.salesPeriod,
           transferAt: formData.transferAt,
-          contractDoc: formData.contractDoc,
+          contractDoc: formData.contractDoc.id,
           electricNumberInfos: formData.electricNumberInfos,
         },
       },
     });
+
+    if (data?.createUserContract.__typename === "UserContract") {
+      reset();
+      onClose();
+    }
   };
 
   return (
@@ -427,6 +448,14 @@ function UserContractDialog(props: UserContractDialogProps) {
               onClose={onClose}
             />
           )} */}
+          <LoadingButton
+            startIcon={<AddIcon />}
+            variant="contained"
+            loading={loading}
+            onClick={handleSubmit(onSubmit)}
+          >
+            新增
+          </LoadingButton>
         </Grid>
       </>
 
