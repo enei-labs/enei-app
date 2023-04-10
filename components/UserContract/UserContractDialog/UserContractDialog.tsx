@@ -1,9 +1,23 @@
-import { Box, Button, Grid, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Grid,
+  Radio,
+  RadioGroup,
+  Typography,
+} from "@mui/material";
 import { useMemo, useState } from "react";
 import { IconBtn } from "@components/Button";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-import { ElectricNumberInfo, TransferDocument } from "@core/graphql/types";
+import {
+  ElectricNumberInfo,
+  TransferDocument,
+  UserType,
+} from "@core/graphql/types";
 import { FieldsController } from "@components/Controller";
 import { FieldConfig } from "@core/types";
 import { useValidatedForm } from "@utils/hooks";
@@ -151,6 +165,35 @@ function UserContractDialog(props: UserContractDialogProps) {
         <Typography variant="h5" textAlign={"left"}>
           契約資訊
         </Typography>
+        <Controller
+          control={control}
+          name={"userType"}
+          render={({ field }) => {
+            return (
+              <FormControl size="small" sx={{ alignItems: "flex-start" }}>
+                <FormLabel sx={{ fontSize: "14px" }}>用戶種類</FormLabel>
+                <RadioGroup {...field}>
+                  <FormControlLabel
+                    sx={{
+                      "& .MuiFormControlLabel-label": { fontSize: "16px" },
+                    }}
+                    value={UserType.Single}
+                    control={<Radio size="small" />}
+                    label="一般用戶"
+                  />
+                  <FormControlLabel
+                    sx={{
+                      "& .MuiFormControlLabel-label": { fontSize: "16px" },
+                    }}
+                    value={UserType.Multiple}
+                    control={<Radio size="small" />}
+                    label="單一電號多用戶"
+                  />
+                </RadioGroup>
+              </FormControl>
+            );
+          }}
+        />
         <FieldsController
           configs={contractConfigs}
           form={{ control, errors }}
