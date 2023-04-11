@@ -3,7 +3,7 @@ import { useMemo, useState } from "react";
 import { IconBtn } from "@components/Button";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-import { PowerPlant, TransferDocument } from "@core/graphql/types";
+import { TransferDocument } from "@core/graphql/types";
 import { FieldsController } from "@components/Controller";
 import { FieldConfig } from "@core/types";
 import { textValidated } from "@core/types/fieldConfig";
@@ -15,8 +15,8 @@ import { Controller, useFieldArray } from "react-hook-form";
 import { InputAutocomplete, InputNumber, InputText } from "@components/Input";
 import Chip from "@components/TransferDocument/Chip";
 import {
+  useLazyUserContracts,
   usePowerPlants,
-  useUserContracts,
   useUsers,
 } from "@utils/hooks/queries";
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
@@ -162,22 +162,8 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
   const { data: usersData } = useUsers();
   const { data: powerPlantsData } = usePowerPlants();
 
-  /** selected user/power-plant info */
-  const selectedUser = useMemo(() => {
-    if (!usersData) return null;
-
-    const selectedUserId = transferDocumentUsersFields[userIndex]?.id;
-    if (!selectedUserId) return null;
-
-    return usersData.users.list.find((u) => u.id === selectedUserId);
-  }, [userIndex, usersData, transferDocumentUsersFields]);
-
-  const { data: userContractsData, refetch } = useUserContracts({
-    skip: !selectedUser,
-    variables: { userId: selectedUser?.id },
-  });
-
-  console.log({ userContractsData });
+  const [getUserContracts, { data: userContractsData }] =
+    useLazyUserContracts();
 
   /** submit */
   const onSubmit = async (formData: FormData) => {
@@ -207,6 +193,16 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
       },
     });
   };
+
+  const currentPowerPlantNumber = useMemo(
+    () =>
+      powerPlantsData?.powerPlants.list.find(
+        (p) =>
+          p.id ===
+          transferDocumentPowerPlantsFields[powerPlantIndex]?.powerPlant.value
+      )?.number ?? "N/A",
+    [powerPlantIndex, powerPlantsData, transferDocumentPowerPlantsFields]
+  );
 
   return (
     <Dialog open={isOpenDialog} onClose={onClose}>
@@ -247,6 +243,9 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
           {transferDocumentPowerPlantsFields.map((x, index) => (
             <Box
               key={x.id}
+              display={"flex"}
+              flexDirection="column"
+              rowGap="24px"
               sx={powerPlantIndex !== index ? { display: "none" } : {}}
             >
               <Controller
@@ -255,9 +254,6 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                 render={({ field }) => (
                   <InputAutocomplete
                     {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                    }}
                     options={
                       powerPlantsData?.powerPlants.list.map((o) => ({
                         label: o.name,
@@ -265,6 +261,31 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                       })) ?? []
                     }
                     label={`電廠${index + 1}名稱`}
+                    placeholder={"請填入"}
+                    required
+                  />
+                )}
+              />
+              <InputText label="電號" value={currentPowerPlantNumber} />
+              <Controller
+                control={control}
+                name={`transferDocumentPowerPlants.${index}.transferRate`}
+                render={({ field }) => (
+                  <InputText
+                    {...field}
+                    label={`轉供比例（%）`}
+                    placeholder={"請填入"}
+                    required
+                  />
+                )}
+              />
+              <Controller
+                control={control}
+                name={`transferDocumentPowerPlants.${index}.estimateAnnualSupply`}
+                render={({ field }) => (
+                  <InputText
+                    {...field}
+                    label={`預計年供電度數（MWh）`}
                     placeholder={"請填入"}
                     required
                   />
@@ -337,7 +358,13 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
             })}
           </Box>
           {transferDocumentUsersFields.map((x, index) => (
-            <Box key={x.id} sx={userIndex !== index ? { display: "none" } : {}}>
+            <Box
+              key={x.id}
+              display={"flex"}
+              flexDirection="column"
+              rowGap="24px"
+              sx={userIndex !== index ? { display: "none" } : {}}
+            >
               <Controller
                 key={x.id}
                 control={control}
@@ -349,7 +376,9 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                         {...field}
                         onChange={(e) => {
                           field.onChange(e);
-                          refetch({ userId: e!.value as string });
+                          getUserContracts({
+                            variables: { userId: e!.value as string },
+                          });
                         }}
                         options={
                           usersData?.users.list.map((o) => ({
@@ -385,6 +414,30 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                   )}
                 />
               ) : null}
+              <Controller
+                control={control}
+                name={`transferDocumentUsers.${index}.monthlyTransferDegree`}
+                render={({ field }) => (
+                  <InputText
+                    {...field}
+                    label={`每月轉供契約度數（MWh）`}
+                    placeholder={"請填入"}
+                    required
+                  />
+                )}
+              />
+              <Controller
+                control={control}
+                name={`transferDocumentUsers.${index}.yearlyTransferDegree`}
+                render={({ field }) => (
+                  <InputText
+                    {...field}
+                    label={`年度轉供契約度數（MWh）`}
+                    placeholder={"請填入"}
+                    required
+                  />
+                )}
+              />
             </Box>
           ))}
         </Box>

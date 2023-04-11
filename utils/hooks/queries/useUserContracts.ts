@@ -1,6 +1,7 @@
 import { UserContractPage } from '@core/graphql/types'
 import useQuery from '../useQuery'
 import { USER_CONTRACTS } from '@core/graphql/queries';
+import { useLazyQuery } from '@apollo/client';
 
 interface Variables {
   offset?: number;
@@ -15,7 +16,7 @@ export const useUserContracts = ({ skip = false, variables }: {
   return useQuery<{ userContracts: UserContractPage }>(USER_CONTRACTS, {
     variables: variables,
     skip,
-    notifyOnNetworkStatusChange: false,
-    fetchPolicy: 'cache-first',
   })
 }
+
+export const useLazyUserContracts = () => useLazyQuery<{ userContracts: UserContractPage }>(USER_CONTRACTS);

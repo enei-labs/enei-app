@@ -146,7 +146,6 @@ function UserContractDialog(props: UserContractDialogProps) {
 
   /** submit */
   const onSubmit = async (formData: FormData) => {
-    console.log({ formData });
     const { data } = await createUserContract({
       variables: {
         userId,

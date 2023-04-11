@@ -5,4 +5,4 @@ export * from './useUser';
 export * from './useUsers';
 export * from './useAccounts';
 export * from './usePowerPlants';
-export * from './useUserContracts';
+export { useLazyUserContracts, useUserContracts } from './useUserContracts';
