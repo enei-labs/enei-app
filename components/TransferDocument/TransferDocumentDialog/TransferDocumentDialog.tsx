@@ -13,7 +13,7 @@ import Dialog from "@components/Dialog";
 import { FormData } from "./FormData";
 import { Controller, useFieldArray } from "react-hook-form";
 import { InputAutocomplete, InputNumber, InputText } from "@components/Input";
-import Chip from "@components/TransferDocument/Chip";
+import Chip from "@components/Chip";
 import {
   useLazyUserContracts,
   usePowerPlants,
@@ -21,7 +21,10 @@ import {
 } from "@utils/hooks/queries";
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 const CreateTransferDocumentBtn = dynamic(
-  () => import("@components/TransferDocument/CreateTransferDocumentBtn")
+  () =>
+    import(
+      "@components/TransferDocument/TransferDocumentDialog/CreateTransferDocumentBtn"
+    )
 );
 
 interface TransferDocumentDialogProps {

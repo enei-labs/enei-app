@@ -1,5 +1,4 @@
 import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
 import IconBreadcrumbs from "@components/BreadCrumbs";
 import { Button, Card, CircularProgress, Divider } from "@mui/material";
 import { AuthLayout } from "@components/Layout";
@@ -11,8 +10,12 @@ import { Role } from "@core/graphql/types";
 import ChartIcon from "@mui/icons-material/InsertChartOutlinedSharp";
 
 import dynamic from "next/dynamic";
+import TransferDocumentCard from "@components/TransferDocument/TransferDocumentCard";
 const TransferDocumentDialog = dynamic(
-  () => import("@components/TransferDocument/TransferDocumentDialog")
+  () =>
+    import(
+      "@components/TransferDocument/TransferDocumentDialog/TransferDocumentDialog"
+    )
 );
 
 const CompanyContractPanel = dynamic(
@@ -54,6 +57,7 @@ function TransferApplicationProgressPage() {
             </Box>
           </Card>
           <Divider sx={{ my: "24px" }} />
+          <TransferDocumentCard />
         </AuthGuard>
       </Box>
       {open ? (
