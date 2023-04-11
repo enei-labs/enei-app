@@ -94,6 +94,7 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
 
   /** form-data */
   const {
+    watch,
     control,
     formState: { errors },
     handleSubmit,
@@ -194,14 +195,16 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
     });
   };
 
+  const currentPowerPlant = watch(
+    `transferDocumentPowerPlants.${powerPlantIndex}.powerPlant`
+  );
+
   const currentPowerPlantNumber = useMemo(
     () =>
       powerPlantsData?.powerPlants.list.find(
-        (p) =>
-          p.id ===
-          transferDocumentPowerPlantsFields[powerPlantIndex]?.powerPlant.value
+        (p) => p.id === currentPowerPlant?.value
       )?.number ?? "N/A",
-    [powerPlantIndex, powerPlantsData, transferDocumentPowerPlantsFields]
+    [powerPlantsData, currentPowerPlant]
   );
 
   return (
@@ -254,6 +257,7 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                 render={({ field }) => (
                   <InputAutocomplete
                     {...field}
+                    onChange={(e) => field.onChange(e)}
                     options={
                       powerPlantsData?.powerPlants.list.map((o) => ({
                         label: o.name,
