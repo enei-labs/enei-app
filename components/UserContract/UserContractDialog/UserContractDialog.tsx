@@ -26,7 +26,7 @@ import Dialog from "@components/Dialog";
 import { FormData } from "./FormData";
 import { Controller, useFieldArray } from "react-hook-form";
 import { InputNumber, InputText } from "@components/Input";
-import Chip from "@components/TransferDocument/Chip";
+import Chip from "@components/Chip";
 import { useUsers } from "@utils/hooks/queries";
 import { useCreateUserContract } from "@utils/hooks/mutations/useCreateUserContract";
 import { TableNumbersField } from "@components/UserContract/UserContractDialog/TableNumbersField";
