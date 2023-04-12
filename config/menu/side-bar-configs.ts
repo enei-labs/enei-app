@@ -34,13 +34,13 @@ export const sideBarConfigs = {
     {
       name: "轉供資料管理",
       icon: TaskOutlinedIcon,
-      path: '/transform'
+      path: '/transfer'
 
     },
     {
       name: "電費單匯出",
       icon: MailIcon,
-      path: '/export'
+      path: '/bill'
     },
   ],
   down: [

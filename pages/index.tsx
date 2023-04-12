@@ -6,8 +6,8 @@ const Home = () => {
   return (
     <>
       <Head>
-        <title>Enei ERP System</title>
-        <meta name="description" content="Enei ERP System" />
+        <title>Anneal Energy ERP System</title>
+        <meta name="description" content="Anneal Energy ERP System" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
     </>

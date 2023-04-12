@@ -1,6 +1,12 @@
 import Box from "@mui/material/Box";
 import IconBreadcrumbs from "@components/BreadCrumbs";
-import { Button, Card, CircularProgress, Divider } from "@mui/material";
+import {
+  Button,
+  Card,
+  CircularProgress,
+  Divider,
+  Typography,
+} from "@mui/material";
 import { AuthLayout } from "@components/Layout";
 import { ReactElement, useState } from "react";
 import Head from "next/head";
@@ -8,9 +14,8 @@ import { InputSearch } from "@components/Input";
 import { AuthGuard } from "@components/AuthGuard";
 import { Role } from "@core/graphql/types";
 import ChartIcon from "@mui/icons-material/InsertChartOutlinedSharp";
-
+import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import dynamic from "next/dynamic";
-import TransferDocumentCard from "@components/TransferDocument/TransferDocumentCard";
 const TransferDocumentDialog = dynamic(
   () =>
     import(
@@ -25,26 +30,28 @@ const CompanyContractPanel = dynamic(
   }
 );
 
-function TransferDataManagementPage() {
+function ExportElectricBillPage() {
   const [open, setOpen] = useState(false);
   return (
     <>
       <Head>
-        <title>轉供資料管理</title>
-        <meta name="description" content="轉供資料管理" />
+        <title>電費單匯出</title>
+        <meta name="description" content="電費單匯出" />
       </Head>
       <IconBreadcrumbs
         items={[
           {
-            name: "轉供資料管理",
+            name: "電費單匯出",
             icon: ChartIcon,
-            href: "/transfer",
+            href: "/bill",
           },
         ]}
       />
       <Box sx={{ paddingTop: "12px" }}>
         <AuthGuard roles={[Role.Admin, Role.SuperAdmin]}>
           <Card sx={{ p: "36px" }}>
+            <Typography variant="h4">用戶電費單</Typography>
+
             <Box
               sx={{
                 display: "flex",
@@ -52,12 +59,24 @@ function TransferDataManagementPage() {
                 mb: "16px",
               }}
             >
-              <InputSearch />
-              {/* <Button onClick={() => setOpen(true)}>新增轉供合約</Button> */}
+              {/* 搜尋 */}
+              <InputSearch onChange={() => {}} />
+
+              {/* 新增電費單 */}
+              <Button startIcon={<AddIcon />} onClick={() => {}}>
+                新增電費單組合
+              </Button>
             </Box>
+
+            {/* 電費單表格 */}
+            {/* <UserPanel
+              users={userData?.users}
+              loading={loading}
+              refetchFn={refetch}
+              onAction={onAction}
+            /> */}
           </Card>
           <Divider sx={{ my: "24px" }} />
-          <TransferDocumentCard />
         </AuthGuard>
       </Box>
       {open ? (
@@ -71,8 +90,8 @@ function TransferDataManagementPage() {
   );
 }
 
-TransferDataManagementPage.getLayout = (page: ReactElement) => {
+ExportElectricBillPage.getLayout = (page: ReactElement) => {
   return <AuthLayout>{page}</AuthLayout>;
 };
 
-export default TransferDataManagementPage;
+export default ExportElectricBillPage;
