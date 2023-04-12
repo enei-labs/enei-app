@@ -63,6 +63,7 @@ const InputAutocomplete = React.forwardRef<
           />
         )
       }
+      noOptionsText={<div style={{ fontSize: "16px" }}>沒有資料</div>}
       renderOption={renderOption}
       isOptionEqualToValue={(option, value) => option.label === value.label}
     />
