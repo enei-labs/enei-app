@@ -10,7 +10,8 @@ import { Role } from "@core/graphql/types";
 import ChartIcon from "@mui/icons-material/InsertChartOutlinedSharp";
 
 import dynamic from "next/dynamic";
-import TransferDocumentCard from "@components/TransferDocument/TransferDocumentCard";
+import { useTransferDocuments } from "@utils/hooks/queries";
+
 const TransferDocumentDialog = dynamic(
   () =>
     import(
@@ -18,8 +19,8 @@ const TransferDocumentDialog = dynamic(
     )
 );
 
-const CompanyContractPanel = dynamic(
-  () => import("@components/CompanyContract/CompanyContractPanel"),
+const TransferDocumentPanel = dynamic(
+  () => import("@components/TransferDocument/TransferDocumentPanel"),
   {
     loading: () => <CircularProgress size="24px" />,
   }
@@ -27,6 +28,12 @@ const CompanyContractPanel = dynamic(
 
 function TransferApplicationProgressPage() {
   const [open, setOpen] = useState(false);
+  const {
+    data: transferDocumentsData,
+    loading,
+    refetch,
+  } = useTransferDocuments();
+
   return (
     <>
       <Head>
@@ -55,9 +62,14 @@ function TransferApplicationProgressPage() {
               <InputSearch />
               <Button onClick={() => setOpen(true)}>新增轉供合約</Button>
             </Box>
+            {/* 轉供申請進度表格 */}
+            <TransferDocumentPanel
+              transferDocuments={transferDocumentsData?.transferDocuments}
+              loading={loading}
+              refetchFn={refetch}
+            />
           </Card>
           <Divider sx={{ my: "24px" }} />
-          <TransferDocumentCard />
         </AuthGuard>
       </Box>
       {open ? (

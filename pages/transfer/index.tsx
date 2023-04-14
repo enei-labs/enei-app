@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import IconBreadcrumbs from "@components/BreadCrumbs";
-import { Button, Card, CircularProgress, Divider } from "@mui/material";
+import { Card, CircularProgress, Divider } from "@mui/material";
 import { AuthLayout } from "@components/Layout";
 import { ReactElement, useState } from "react";
 import Head from "next/head";
@@ -10,7 +10,7 @@ import { Role } from "@core/graphql/types";
 import ChartIcon from "@mui/icons-material/InsertChartOutlinedSharp";
 
 import dynamic from "next/dynamic";
-import TransferDocumentCard from "@components/TransferDocument/TransferDocumentCard";
+import { useTransferDocuments } from "@utils/hooks/queries";
 const TransferDocumentDialog = dynamic(
   () =>
     import(
@@ -18,15 +18,9 @@ const TransferDocumentDialog = dynamic(
     )
 );
 
-const CompanyContractPanel = dynamic(
-  () => import("@components/CompanyContract/CompanyContractPanel"),
-  {
-    loading: () => <CircularProgress size="24px" />,
-  }
-);
-
 function TransferDataManagementPage() {
   const [open, setOpen] = useState(false);
+  const { data: transferDocumentsData, loading } = useTransferDocuments();
   return (
     <>
       <Head>
@@ -55,9 +49,9 @@ function TransferDataManagementPage() {
               <InputSearch />
               {/* <Button onClick={() => setOpen(true)}>新增轉供合約</Button> */}
             </Box>
+            {/* 轉供資料管理表格 */}
           </Card>
           <Divider sx={{ my: "24px" }} />
-          <TransferDocumentCard />
         </AuthGuard>
       </Box>
       {open ? (

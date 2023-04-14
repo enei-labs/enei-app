@@ -7,7 +7,7 @@ import { TransferDocument } from "@core/graphql/types";
 import { FieldsController } from "@components/Controller";
 import { FieldConfig } from "@core/types";
 import { textValidated } from "@core/types/fieldConfig";
-import { useCreateTransferDocument, useValidatedForm } from "@utils/hooks";
+import { useValidatedForm } from "@utils/hooks";
 import dynamic from "next/dynamic";
 import Dialog from "@components/Dialog";
 import { FormData } from "./FormData";
@@ -67,7 +67,7 @@ const transferDocumentInformationConfigs: FieldConfig[] = [
 const docConfigs: FieldConfig[] = [
   {
     type: "FILE",
-    name: "printDoc",
+    name: "printingDoc",
     required: true,
     label: "轉供計畫書用印版",
   },
@@ -107,10 +107,22 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
           name: currentModifyTransferDocument.name,
           receptionAreas: currentModifyTransferDocument.receptionAreas,
           expectedTime: currentModifyTransferDocument.expectedTime,
-          printingDoc: currentModifyTransferDocument.printingDoc,
-          replyDoc: currentModifyTransferDocument.replyDoc,
-          wordDoc: currentModifyTransferDocument.wordDoc,
-          formalDoc: currentModifyTransferDocument.formalDoc,
+          printingDoc: {
+            file: undefined,
+            id: currentModifyTransferDocument.printingDoc,
+          },
+          replyDoc: {
+            file: undefined,
+            id: currentModifyTransferDocument.replyDoc,
+          },
+          wordDoc: {
+            file: undefined,
+            id: currentModifyTransferDocument.wordDoc,
+          },
+          formalDoc: {
+            file: undefined,
+            id: currentModifyTransferDocument.formalDoc,
+          },
           transferDocumentPowerPlants:
             currentModifyTransferDocument.transferDocumentPowerPlants.map(
               (t) => ({
@@ -162,41 +174,11 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
   const [userIndex, setUserIndex] = useState<number>(-1);
 
   /** apis */
-  const [createTransferDocument, { loading }] = useCreateTransferDocument();
   const { data: usersData } = useUsers();
   const { data: powerPlantsData } = usePowerPlants();
 
   const [getUserContracts, { data: userContractsData }] =
     useLazyUserContracts();
-
-  /** submit */
-  const onSubmit = async (formData: FormData) => {
-    await createTransferDocument({
-      variables: {
-        input: {
-          name: formData.name,
-          number: formData.number,
-          powerPlants: formData.transferDocumentPowerPlants.map((t) => ({
-            estimateAnnualSupply: t.estimateAnnualSupply,
-            powerPlantId: t.powerPlant.value,
-            transferRate: t.transferRate,
-          })),
-          printingDoc: formData.printingDoc,
-          receptionAreas: formData.receptionAreas,
-          replyDoc: formData.replyDoc,
-          users: formData.transferDocumentUsers.map((u) => ({
-            monthlyTransferDegree: u.monthlyTransferDegree,
-            userId: u.user.value,
-            userContractId: u.userContract.value,
-            yearlyTransferDegree: u.yearlyTransferDegree,
-          })),
-          wordDoc: formData.wordDoc,
-          expectedTime: formData.expectedTime,
-          formalDoc: formData.formalDoc,
-        },
-      },
-    });
-  };
 
   const currentPowerPlant = watch(
     `transferDocumentPowerPlants.${powerPlantIndex}.powerPlant`

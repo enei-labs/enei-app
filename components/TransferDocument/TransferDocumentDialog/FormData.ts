@@ -3,10 +3,10 @@ export type FormData = {
   number: string;
   receptionAreas: string;
   expectedTime: Date;
-  printingDoc: string;
-  replyDoc: string;
-  wordDoc: string;
-  formalDoc: string;
+  printingDoc: { id: string; file: File };
+  replyDoc: { id: string; file: File };
+  wordDoc: { id: string; file: File };
+  formalDoc: { id: string; file: File };
   transferDocumentPowerPlants: {
     estimateAnnualSupply: number;
     powerPlant: {

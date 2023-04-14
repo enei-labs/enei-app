@@ -3,9 +3,12 @@ import { TransferDocument } from "@core/graphql/types";
 import { Box, Card, Typography } from "@mui/material";
 import DeleteOutlined from "@mui/icons-material/DeleteOutlined";
 
-interface TransferDocumentProps {}
+interface TransferDocumentProps {
+  transferDocument: TransferDocument;
+}
 
 function TransferDocumentCard(props: TransferDocumentProps) {
+  const { transferDocument } = props;
   return (
     <Card sx={{ p: "36px" }}>
       <Box
@@ -15,7 +18,7 @@ function TransferDocumentCard(props: TransferDocumentProps) {
           alignItems: "center",
         }}
       >
-        <Typography variant="h4">{`test`}</Typography>
+        <Typography variant="h4">{`${transferDocument.number}(${transferDocument.name})`}</Typography>
         <Box sx={{ display: "flex" }}>
           {/* <EditCompanyContractBtn companyContract={companyContract} /> */}
           <IconBtn icon={<DeleteOutlined />} onClick={() => {}} />
