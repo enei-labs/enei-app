@@ -1,8 +1,9 @@
 import { ContractTimeType } from "@core/graphql/types";
 import { FieldConfig } from "@core/types";
 import { numberValidated, textValidated } from "@core/types/fieldConfig";
+import { useMemo } from "react";
 
-const contractTimeTypeMap = {
+export const contractTimeTypeMap = {
   [ContractTimeType.ContractEndTime]: "固定日期(填入合約結束日期)",
   [ContractTimeType.ContractStartTime]: "合約年限從合約起始日期起算",
   [ContractTimeType.TransferStartTime]: "合約年限從轉供起始日期起算",
@@ -129,3 +130,52 @@ export const fieldConfigs: FieldConfig[] = [
     label: "轉供所需資料",
   },
 ];
+
+export const useDisplayFieldConfigs = (contractTimeType: ContractTimeType, variant: 'edit' | 'create' = 'create') => {
+  const displayFieldConfigs = useMemo(() => {
+    const contractTimeTypeIndex = fieldConfigs.findIndex(
+      (c) => c.name === "contractTimeType"
+    );
+    if (variant === 'edit') fieldConfigs[contractTimeTypeIndex].disabled = true;
+
+    const baseConfigs = {
+      name: fieldConfigs.slice(0, 1),
+      contacts: fieldConfigs.slice(1, 4),
+      docs: fieldConfigs.slice(14),
+      contract: [fieldConfigs[contractTimeTypeIndex]],
+    };
+    const durationIndex = fieldConfigs.findIndex((c) => c.name === "duration");
+    const endAtIndex = fieldConfigs.findIndex((c) => c.name === "endedAt");
+    if (!contractTimeType) return baseConfigs;
+    switch (contractTimeType) {
+      case ContractTimeType.ContractEndTime:
+        return {
+          ...baseConfigs,
+          contract: [
+            ...fieldConfigs.slice(4, durationIndex),
+            ...fieldConfigs.slice(durationIndex, 13),
+          ],
+        };
+      case ContractTimeType.ContractStartTime:
+        return {
+          ...baseConfigs,
+          contract: [
+            ...fieldConfigs.slice(4, endAtIndex),
+            ...fieldConfigs.slice(endAtIndex, 13),
+          ],
+        };
+      case ContractTimeType.TransferStartTime:
+        return {
+          ...baseConfigs,
+          contract: [
+            ...fieldConfigs.slice(4, endAtIndex),
+            ...fieldConfigs.slice(endAtIndex, 13),
+          ],
+        };
+      default:
+        return baseConfigs;
+    }
+  }, [contractTimeType]);
+
+  return displayFieldConfigs;
+}

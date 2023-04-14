@@ -1,9 +1,13 @@
 import { useUpdateCompanyContract, useValidatedForm } from "@utils/hooks";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import BorderColorOutlined from "@mui/icons-material/BorderColorOutlined";
 import { CompanyContract } from "@core/graphql/types";
 import dynamic from "next/dynamic";
-import { fieldConfigs } from "@components/CompanyContract/CompanyContractDialog/fieldConfigs";
+import {
+  contractTimeTypeMap,
+  fieldConfigs,
+  useDisplayFieldConfigs,
+} from "@components/CompanyContract/CompanyContractDialog/fieldConfigs";
 import { FormData } from "@components/CompanyContract/CompanyContractDialog/FormData";
 import CompanyContractDialog from "@components/CompanyContract/CompanyContractDialog/CompanyContractDialog";
 import { IconBtn } from "@components/Button";
@@ -27,9 +31,13 @@ const EditCompanyContractBtn = (props: CompanyContractProps) => {
     control,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useValidatedForm<FormData>(fieldConfigs, {
-    /** @TODO 判斷 companyContractType */
     defaultValues: {
+      contractTimeType: {
+        label: contractTimeTypeMap[companyContract.contractTimeType],
+        value: companyContract.contractTimeType,
+      },
       companyName: companyContract.company.name,
       name: companyContract.name,
       number: companyContract.number,
@@ -48,6 +56,7 @@ const EditCompanyContractBtn = (props: CompanyContractProps) => {
       industryDoc: { id: companyContract.industryDoc, file: undefined },
     },
   });
+  const contractTimeType = watch("contractTimeType");
 
   const onSubmit = async (formData: FormData) => {
     const { data } = await updateCompanyContract({
@@ -80,17 +89,10 @@ const EditCompanyContractBtn = (props: CompanyContractProps) => {
     }
   };
 
-  const displayFieldConfigs = useMemo(() => {
-    const contractTimeTypeIndex = fieldConfigs.findIndex(
-      (c) => c.name === "contractTimeType"
-    );
-    return {
-      name: fieldConfigs.slice(0, 1),
-      contacts: fieldConfigs.slice(1, 4),
-      docs: fieldConfigs.slice(14),
-      contract: [fieldConfigs[contractTimeTypeIndex]],
-    };
-  }, []);
+  const displayFieldConfigs = useDisplayFieldConfigs(
+    contractTimeType?.value,
+    "edit"
+  );
 
   return (
     <>

@@ -250,9 +250,12 @@ function CompanyContractCard(props: CompanyContractCardProps) {
                 borderRadius: "16px",
                 width: "100%",
                 height: "100%",
+                padding: "16px 24px",
               }}
             >
-              {companyContract.description}
+              <Typography variant="body3">
+                {companyContract.description}
+              </Typography>
             </Box>
           </Box>
         </Box>

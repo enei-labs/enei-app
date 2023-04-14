@@ -1,18 +1,17 @@
 import Dialog from "@components/Dialog";
 import { Box, Button, Typography } from "@mui/material";
 import { useValidatedForm } from "@utils/hooks";
-import { useMemo, useReducer } from "react";
+import { useReducer } from "react";
 import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import CloseIcon from "@mui/icons-material/HighlightOff";
 import { useCreateCompanyContract } from "@utils/hooks/mutations/useCreateCompanyContract";
-import {
-  Company,
-  CompanyContract,
-  ContractTimeType,
-} from "@core/graphql/types";
+import { Company, CompanyContract } from "@core/graphql/types";
 import { COMPANY_CONTRACTS } from "@core/graphql/queries/companyContracts";
 import dynamic from "next/dynamic";
-import { fieldConfigs } from "@components/CompanyContract/CompanyContractDialog/fieldConfigs";
+import {
+  fieldConfigs,
+  useDisplayFieldConfigs,
+} from "@components/CompanyContract/CompanyContractDialog/fieldConfigs";
 import { FormData } from "@components/CompanyContract/CompanyContractDialog/FormData";
 
 const EditConfirmDialog = dynamic(
@@ -102,48 +101,7 @@ const AddCompanyContractBtn = (props: CompanyContractProps) => {
     }
   };
 
-  const displayFieldConfigs = useMemo(() => {
-    const contractTimeTypeIndex = fieldConfigs.findIndex(
-      (c) => c.name === "contractTimeType"
-    );
-    const baseConfigs = {
-      name: fieldConfigs.slice(0, 1),
-      contacts: fieldConfigs.slice(1, 4),
-      docs: fieldConfigs.slice(14),
-      contract: [fieldConfigs[contractTimeTypeIndex]],
-    };
-    const durationIndex = fieldConfigs.findIndex((c) => c.name === "duration");
-    const endAtIndex = fieldConfigs.findIndex((c) => c.name === "endedAt");
-    if (!contractTimeType) return baseConfigs;
-    switch (contractTimeType.value) {
-      case ContractTimeType.ContractEndTime:
-        return {
-          ...baseConfigs,
-          contract: [
-            ...fieldConfigs.slice(4, durationIndex),
-            ...fieldConfigs.slice(durationIndex, 13),
-          ],
-        };
-      case ContractTimeType.ContractStartTime:
-        return {
-          ...baseConfigs,
-          contract: [
-            ...fieldConfigs.slice(4, endAtIndex),
-            ...fieldConfigs.slice(endAtIndex, 13),
-          ],
-        };
-      case ContractTimeType.TransferStartTime:
-        return {
-          ...baseConfigs,
-          contract: [
-            ...fieldConfigs.slice(4, endAtIndex),
-            ...fieldConfigs.slice(endAtIndex, 13),
-          ],
-        };
-      default:
-        return baseConfigs;
-    }
-  }, [contractTimeType]);
+  const displayFieldConfigs = useDisplayFieldConfigs(contractTimeType?.value);
 
   return (
     <>

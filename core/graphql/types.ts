@@ -138,6 +138,7 @@ export type CompanyContract = {
   contactName: Scalars['String'];
   contactPhone: Scalars['String'];
   contractDoc: Scalars['String'];
+  contractTimeType: ContractTimeType;
   /** 轉供條件 */
   daysToPay: Scalars['Int'];
   description?: Maybe<Scalars['String']>;
