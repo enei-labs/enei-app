@@ -18,6 +18,8 @@ function TransferDocumentCard(props: TransferDocumentProps) {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [removeTransferDocument, { loading }] = useRemoveTransferDocument();
 
+  console.log({ transferDocument });
+
   return (
     <>
       <Card sx={{ p: "36px" }}>

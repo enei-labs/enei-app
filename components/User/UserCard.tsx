@@ -16,6 +16,11 @@ import { toast } from "react-toastify";
 import { InputSearch } from "@components/Input";
 import { useRouter } from "next/router";
 import UserContractPanel from "@components/UserContract/UserContractPanel";
+import InboxOutlinedIcon from "@mui/icons-material/InboxOutlined";
+import LaptopOutlinedIcon from "@mui/icons-material/LaptopOutlined";
+import AnalyticsOutlinedIcon from "@mui/icons-material/AnalyticsOutlined";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import AccountBalanceOutlinedIcon from "@mui/icons-material/AccountBalanceOutlined";
 
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
@@ -93,7 +98,7 @@ function UserCard(props: UserCardProps) {
         <Grid container>
           <Grid item sm={4} sx={{ padding: "36px 36px 36px 0" }}>
             <Box sx={{ display: "flex", columnGap: "12px" }}>
-              <FlagIcon width="20px" />
+              <InboxOutlinedIcon width="20px" />
               <Typography variant="body2">用戶預計年採購度數</Typography>
             </Box>
             <Box sx={styles.box}>
@@ -116,7 +121,7 @@ function UserCard(props: UserCardProps) {
           </Grid>
           <Grid item sm={4} sx={{ padding: "36px 36px 36px 0" }}>
             <Box sx={{ display: "flex", columnGap: "12px" }}>
-              <FlagIcon width="20px" />
+              <LaptopOutlinedIcon width="20px" />
               <Typography variant="body2">預估本年度可能採購度數</Typography>
             </Box>
             <Box sx={styles.box}>
@@ -139,7 +144,7 @@ function UserCard(props: UserCardProps) {
           </Grid>
           <Grid item sm={4} sx={{ padding: "36px 36px 36px 0" }}>
             <Box sx={{ display: "flex", columnGap: "12px" }}>
-              <FlagIcon width="20px" />
+              <AnalyticsOutlinedIcon width="20px" />
               <Typography variant="body2">用戶今年累積總度數</Typography>
             </Box>
             <Box sx={styles.box}>
@@ -165,30 +170,23 @@ function UserCard(props: UserCardProps) {
 
           <Grid item sm={4} sx={{ padding: "36px 36px 36px 0" }}>
             <Box sx={{ display: "flex", columnGap: "12px" }}>
-              <FlagIcon width="20px" />
+              <InfoOutlinedIcon width="20px" />
               <Typography variant="body2">用戶提醒</Typography>
             </Box>
-            <Box sx={styles.box}>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "flex-end",
-                  margin: "40px",
-                  columnGap: "4px",
-                }}
-              >
-                <Typography variant="h3" sx={{ whiteSpace: "nowrap" }}>
-                  {degrees}
-                </Typography>
-                <Typography variant="body3" sx={{ whiteSpace: "nowrap" }}>
-                  MWh/年
-                </Typography>
-              </Box>
+            <Box
+              sx={{
+                ...styles.box,
+                padding: "16px 24px",
+              }}
+            >
+              <Typography variant="body3" sx={{ whiteSpace: "nowrap" }}>
+                {user.warning}
+              </Typography>
             </Box>
           </Grid>
 
           <Grid item sm={4} sx={{ padding: "36px 0 36px 36px" }}>
-            <Grid container>
+            <Grid container sx={{ rowGap: "8px" }}>
               {cardInfo.map((c, index) => (
                 <Grid item sm={12} key={`${c.label}-${index}`}>
                   <InfoBox icon={c.icon} label={c.label} content={c.content} />
@@ -199,25 +197,25 @@ function UserCard(props: UserCardProps) {
 
           <Grid item sm={4} sx={{ padding: "36px 36px 36px 0" }}>
             <Box sx={{ display: "flex", columnGap: "12px" }}>
-              <FlagIcon width="20px" />
+              <AccountBalanceOutlinedIcon width="20px" />
               <Typography variant="body2">用戶付款帳號</Typography>
             </Box>
-            <Box sx={styles.box}>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "flex-end",
-                  margin: "40px",
-                  columnGap: "4px",
-                }}
-              >
-                <Typography variant="h3" sx={{ whiteSpace: "nowrap" }}>
-                  {degrees}
+            <Box
+              sx={{
+                ...styles.box,
+                justifyContent: "flex-start",
+                alignItems: "flex-start",
+                border: "1px solid",
+                borderColor: "secondary.main",
+                backgroundColor: "#FFF",
+                padding: "16px 24px",
+              }}
+            >
+              {user.bankAccounts.map((account) => (
+                <Typography key={account.code} variant="body3">
+                  {`(${account.code})${account.account}`}
                 </Typography>
-                <Typography variant="body3" sx={{ whiteSpace: "nowrap" }}>
-                  MWh/年
-                </Typography>
-              </Box>
+              ))}
             </Box>
           </Grid>
         </Grid>

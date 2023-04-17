@@ -173,7 +173,7 @@ function CompanyContractCard(props: CompanyContractCardProps) {
               borderRight: "1px solid rgba(0, 0, 0, 0.12)",
             }}
           >
-            <Grid container>
+            <Grid container sx={{ rowGap: "8px" }}>
               {companyContractInfo.map((c, index) => (
                 <Grid item sm={6} key={`${c.label}-${index}`}>
                   <InfoBox
@@ -187,7 +187,7 @@ function CompanyContractCard(props: CompanyContractCardProps) {
             </Grid>
           </Grid>
           <Grid item sm={4} sx={{ padding: "36px 0 36px 36px" }}>
-            <Grid container>
+            <Grid container sx={{ rowGap: "8px" }}>
               {contactInfo.map((c, index) => (
                 <Grid item sm={12} key={`${c.label}-${index}`}>
                   <InfoBox icon={c.icon} label={c.label} content={c.content} />

@@ -49,7 +49,7 @@ const UserPanel = (props: UserPanelProps) => {
       accessor: "taxId",
     },
     {
-      header: "今度累積度數",
+      header: "今年度累積轉供度數",
       accessor: "contactName",
     },
     {
