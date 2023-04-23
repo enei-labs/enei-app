@@ -58,13 +58,13 @@ function TransferDocumentPowerPlant(props: TransferDocumentPowerPlantProps) {
             <Typography sx={{ m: '0 0 8px 0' }} variant="h5">{el.powerPlant.name}</Typography>
         ),
         capacityNode: (
-            <Typography variant="body1">{el.powerPlant.capacity}<Typography variant="body4">kWh</Typography></Typography>
+            <Typography variant="body1">{el.powerPlant.capacity} <Typography variant="body4">kWh</Typography></Typography>
         ),
         estimateAnnualSupplyNode: (
-            <Typography variant="body1">{el.estimateAnnualSupply}<Typography variant="body4">MWh</Typography></Typography>
+            <Typography variant="body1">{el.estimateAnnualSupply} <Typography variant="body4">MWh</Typography></Typography>
         ),
         transferRateNode: (
-            <Typography variant="body1">{el.transferRate}<Typography variant="body4">%</Typography></Typography>
+            <Typography variant="body1">{el.transferRate} <Typography variant="body4">%</Typography></Typography>
         ),
       }));
 

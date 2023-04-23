@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Divider } from "@mui/material";
 import type { TransferDocumentUserDto, User, UserContract } from "@core/graphql/types";
 
 type TransferDocumentUsersItem =
@@ -6,20 +6,24 @@ type TransferDocumentUsersItem =
     & Pick<User, 'name'>
     & Pick<UserContract, 'purchaseDegree' | 'serialNumber'>
 
+type TransferDocumentUsersItemView = {
+    [key in keyof TransferDocumentUsersItem as `${key}Node`]: React.ReactNode;
+};
+
 const usersMappedLabels: Array<{
-    key: keyof Omit<TransferDocumentUsersItem, 'name'>;
+    key: keyof Omit<TransferDocumentUsersItemView, 'name'>;
     label: string;
 }> = [{
-    key: 'serialNumber',
+    key: 'serialNumberNode',
     label: '電號',
 }, {
-    key: 'purchaseDegree',
+    key: 'purchaseDegreeNode',
     label: '預計年採購度數',
 }, {
-    key: 'monthlyTransferDegree',
+    key: 'monthlyTransferDegreeNode',
     label: '月上限度數',
 }, {
-    key: 'yearlyTransferDegree',
+    key: 'yearlyTransferDegreeNode',
     label: '年上限度數',
 }];
 
@@ -28,23 +32,24 @@ interface TransferDocumentUsersProps {
 }
 
 interface TransferDocumentUsersItemProps {
-    transferDocumentUsers: TransferDocumentUsersItem;
+    transferDocumentUser: TransferDocumentUsersItemView;
 }
 
 function TransferDocumentUsersItem(props: TransferDocumentUsersItemProps) {
-    const { transferDocumentUsers } = props;
+    const { transferDocumentUser } = props;
 
     return (
-        <Box>
-            <Typography variant="h4">{transferDocumentUsers.name}</Typography>
-            <Box>
+        <Box sx={{ p: '8px 12px' }}>
+            {transferDocumentUser.nameNode}
+            <Box sx={{ display: 'flex' }}>
                 {usersMappedLabels.map(({ key, label }) => (
-                    <Box key={key}>
-                        <Typography>{label}</Typography>
-                        <Typography>{transferDocumentUsers[key]}</Typography>
+                    <Box sx={{ flexGrow: 1 }} key={key}>
+                        <Typography variant="body4">{label}</Typography>
+                        {transferDocumentUser[key]}
                     </Box>
                 ))}
             </Box>
+            <Divider sx={{ margin: '8px 0' }} />
         </Box>
     );
 }
@@ -52,13 +57,23 @@ function TransferDocumentUsersItem(props: TransferDocumentUsersItemProps) {
 function TransferDocumentUsers(props: TransferDocumentUsersProps) {
     const { transferDocumentUsers } = props;
 
-    // const transferDocumentUsersView = transferDocumentUsers.map(el => ({
-    //     name: el.user.name,
-    //     serialNumber: el.userContract.serialNumber,
-    //     purchaseDegree: el.userContract.purchaseDegree,
-    //     monthlyTransferDegree: el.monthlyTransferDegree,
-    //     yearlyTransferDegree: el.yearlyTransferDegree
-    // }));
+    const transferDocumentUsersView = transferDocumentUsers.map(el => ({
+        nameNode: (
+            <Typography sx={{ m: '0 0 8px 0' }} variant="h5">{el.user.name}</Typography>
+        ),
+        serialNumberNode: (
+            <Typography variant="body1">XXXX-XXXX-XX <Typography variant="body4">kWh</Typography></Typography>
+        ),
+        purchaseDegreeNode: (
+            <Typography variant="body1">2,000 <Typography variant="body4">MWh</Typography></Typography>
+        ),
+        monthlyTransferDegreeNode: (
+            <Typography variant="body1">180 <Typography variant="body4">MWh</Typography></Typography>
+        ),
+        yearlyTransferDegreeNode: (
+            <Typography variant="body1">2,000 <Typography variant="body4">MWh</Typography></Typography>
+        ),
+      }));
 
     return (
         <Box
@@ -72,9 +87,9 @@ function TransferDocumentUsers(props: TransferDocumentUsersProps) {
                 borderRadius: '8px',
                 height: '258px',
             }}>
-            {/* {transferDocumentUsersView.map(item => (
-               <TransferDocumentUsersItem key={item.name} transferDocumentUsers={item} /> 
-            ))} */}
+            {transferDocumentUsersView.map(item => (
+               <TransferDocumentUsersItem key={item.nameNode.props.children} transferDocumentUser={item} /> 
+            ))}
         </Box>
     );
 }
