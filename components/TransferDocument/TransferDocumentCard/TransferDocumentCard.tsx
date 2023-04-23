@@ -1,6 +1,6 @@
 import { IconBtn } from "@components/Button";
 import { TransferDocument } from "@core/graphql/types";
-import { Box, Card, Typography } from "@mui/material";
+import { Box, Card, Typography, Grid } from "@mui/material";
 import DeleteOutlined from "@mui/icons-material/DeleteOutlined";
 import { useState } from "react";
 import dynamic from "next/dynamic";
@@ -25,26 +25,31 @@ function TransferDocumentCard(props: TransferDocumentProps) {
 
   return (
     <>
-      <Card sx={{ p: "36px" }}>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Typography sx={{ margin: '0 0 32px 0' }} variant="h4">{`${transferDocument.number}(${transferDocument.name})`}</Typography>
-        <Box sx={{ display: "flex", margin: '' }}>
-          {/* <EditCompanyContractBtn companyContract={companyContract} /> */}
-          <IconBtn icon={<DriveFileRenameOutlineOutlinedIcon />} onClick={() => {}} />
-          <IconBtn icon={<DeleteOutlined />} onClick={() => {}} />
+      <Card sx={{ p: "36px", maxWidth: '1208px' }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            margin: '0 0 32px 0',
+          }}
+        >
+          <Typography variant="h4">{`${transferDocument.number}(${transferDocument.name})`}</Typography>
+          <Box sx={{ display: "flex" }}>
+            {/* <EditCompanyContractBtn companyContract={companyContract} /> */}
+            <IconBtn icon={<DriveFileRenameOutlineOutlinedIcon />} onClick={() => {}} />
+            <IconBtn icon={<DeleteOutlined />} onClick={() => {}} />
+          </Box>
         </Box>
-      </Box>
-      <Typography variant="h5">轉供組合 3 轉 6</Typography>
-      <Box>
-        <TransferDocumentPowerPlant transferDocumentPowerPlants={transferDocument.transferDocumentPowerPlants} />
-        {/* <TransferDocumentUsers transferDocumentUsers={transferDocumentUsers} /> */}
-      </Box>
+        <Typography sx={{ margin: '0 0 24px 0' }} variant="h5">轉供組合 3 轉 6</Typography>
+        <Grid container spacing={2}>
+          <Grid item xs={4}>
+            <TransferDocumentPowerPlant transferDocumentPowerPlants={transferDocument.transferDocumentPowerPlants} />
+          </Grid>
+          <Grid item xs={8}>
+            <TransferDocumentUsers transferDocumentUsers={transferDocument.transferDocumentUsers} />
+          </Grid>
+        </Grid>
       </Card>
       {openDeleteDialog ? (
         <DialogAlert

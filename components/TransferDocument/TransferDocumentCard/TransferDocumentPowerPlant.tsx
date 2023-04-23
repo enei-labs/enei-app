@@ -1,21 +1,25 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Divider } from "@mui/material";
 import type { TransferDocumentPowerPlantDto, PowerPlant } from "@core/graphql/types";
 
 type TransferDocumentPowerPlantItem =
     Pick<TransferDocumentPowerPlantDto, 'estimateAnnualSupply' | 'transferRate'>
     & Pick<PowerPlant, 'name' | 'capacity'>;
 
+type TransferDocumentPowerPlantItemView = {
+    [key in keyof TransferDocumentPowerPlantItem as `${key}Node`]: React.ReactNode;
+};
+
 const powerPlantMappedLabels: Array<{
-    key: keyof Omit<TransferDocumentPowerPlantItem, 'name'>;
+    key: keyof Omit<TransferDocumentPowerPlantItemView, 'name'>;
     label: string;
 }> = [{
-    key: 'capacity',
+    key: 'capacityNode',
     label: '裝置容量',
 }, {
-    key: 'estimateAnnualSupply',
+    key: 'estimateAnnualSupplyNode',
     label: '預計年採購度數',
 }, {
-    key: 'transferRate',
+    key: 'transferRateNode',
     label: '轉供比例',
 }];
 
@@ -24,23 +28,24 @@ interface TransferDocumentPowerPlantProps {
 }
 
 interface TransferDocumentPowerPlantItemProps {
-    transferDocumentPowerPlant: TransferDocumentPowerPlantItem;
+    transferDocumentPowerPlant: TransferDocumentPowerPlantItemView;
 }
 
 function TransferDocumentPowerPlantItem(props: TransferDocumentPowerPlantItemProps) {
     const { transferDocumentPowerPlant } = props;
 
     return (
-        <Box>
-            <Typography variant="h4">{transferDocumentPowerPlant.name}</Typography>
-            <Box>
+        <Box sx={{ p: '8px 12px' }}>
+            {transferDocumentPowerPlant.nameNode}
+            <Box sx={{ display: 'flex' }}>
                 {powerPlantMappedLabels.map(({ key, label }) => (
-                    <Box key={key}>
-                        <Typography>{label}</Typography>
-                        <Typography>{transferDocumentPowerPlant[key]}</Typography>
+                    <Box sx={{ flexGrow: 1 }} key={key}>
+                        <Typography variant="body4">{label}</Typography>
+                        {transferDocumentPowerPlant[key]}
                     </Box>
                 ))}
             </Box>
+            <Divider sx={{ margin: '8px 0' }} />
         </Box>
     );
 }
@@ -49,27 +54,34 @@ function TransferDocumentPowerPlant(props: TransferDocumentPowerPlantProps) {
     const { transferDocumentPowerPlants } = props;
 
     const transferDocumentPowerPlantsView = transferDocumentPowerPlants.map(el => ({
-        name: el.powerPlant.name,
-        capacity: el.powerPlant.capacity,
-        estimateAnnualSupply: el.estimateAnnualSupply,
-        transferRate: el.transferRate,
+        nameNode: (
+            <Typography sx={{ m: '0 0 8px 0' }} variant="h5">{el.powerPlant.name}</Typography>
+        ),
+        capacityNode: (
+            <Typography variant="body1">{el.powerPlant.capacity}<Typography variant="body4">kWh</Typography></Typography>
+        ),
+        estimateAnnualSupplyNode: (
+            <Typography variant="body1">{el.estimateAnnualSupply}<Typography variant="body4">MWh</Typography></Typography>
+        ),
+        transferRateNode: (
+            <Typography variant="body1">{el.transferRate}<Typography variant="body4">%</Typography></Typography>
+        ),
       }));
 
     return (
         <Box
             sx={{
-                maxWidth: '392px',
                 padding: '8px',
                 display: 'flex',
                 flexDirection: 'column',
                 overflowY: 'auto',
                 border: '2px solid',
                 borderColor: 'primary.main',
-                borderRadius: '2px',
-
+                borderRadius: '8px',
+                height: '258px',
             }}>
             {transferDocumentPowerPlantsView.map(item => (
-               <TransferDocumentPowerPlantItem key={item.name} transferDocumentPowerPlant={item} /> 
+               <TransferDocumentPowerPlantItem key={item.nameNode.props.children} transferDocumentPowerPlant={item} /> 
             ))}
         </Box>
     );

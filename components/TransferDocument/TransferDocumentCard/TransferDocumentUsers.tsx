@@ -52,30 +52,29 @@ function TransferDocumentUsersItem(props: TransferDocumentUsersItemProps) {
 function TransferDocumentUsers(props: TransferDocumentUsersProps) {
     const { transferDocumentUsers } = props;
 
-    const transferDocumentUsersView = transferDocumentUsers.map(el => ({
-        name: el.user.name,
-        serialNumber: el.userContract.serialNumber,
-        purchaseDegree: el.userContract.purchaseDegree,
-        monthlyTransferDegree: el.monthlyTransferDegree,
-        yearlyTransferDegree: el.yearlyTransferDegree
-      }));
+    // const transferDocumentUsersView = transferDocumentUsers.map(el => ({
+    //     name: el.user.name,
+    //     serialNumber: el.userContract.serialNumber,
+    //     purchaseDegree: el.userContract.purchaseDegree,
+    //     monthlyTransferDegree: el.monthlyTransferDegree,
+    //     yearlyTransferDegree: el.yearlyTransferDegree
+    // }));
 
     return (
         <Box
             sx={{
-                maxWidth: '392px',
                 padding: '8px',
                 display: 'flex',
                 flexDirection: 'column',
                 overflowY: 'auto',
                 border: '2px solid',
                 borderColor: 'primary.main',
-                borderRadius: '2px',
-
+                borderRadius: '8px',
+                height: '258px',
             }}>
-            {transferDocumentUsersView.map(item => (
+            {/* {transferDocumentUsersView.map(item => (
                <TransferDocumentUsersItem key={item.name} transferDocumentUsers={item} /> 
-            ))}
+            ))} */}
         </Box>
     );
 }
