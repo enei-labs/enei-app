@@ -8,7 +8,7 @@ import { AuthLayout } from "@components/Layout";
 import { ReactElement } from "react";
 import { useTransferDocument } from "@utils/hooks/queries";
 import ChartIcon from "@mui/icons-material/InsertChartOutlinedSharp";
-import TransferDocumentCard from "@components/TransferDocument/TransferDocumentCard";
+import TransferDocumentCard from "@components/TransferDocument/TransferDocumentCard/TransferDocumentCard";
 
 function TransferDocumentPage() {
   const router = useRouter();

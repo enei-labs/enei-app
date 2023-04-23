@@ -6,6 +6,9 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import { useRemoveTransferDocument } from "@utils/hooks";
 import { toast } from "react-toastify";
+import DriveFileRenameOutlineOutlinedIcon from '@mui/icons-material/DriveFileRenameOutlineOutlined';
+import TransferDocumentPowerPlant from './TransferDocumentPowerPlant';
+import TransferDocumentUsers from './TransferDocumentUsers';
 
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
@@ -18,27 +21,30 @@ function TransferDocumentCard(props: TransferDocumentProps) {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [removeTransferDocument, { loading }] = useRemoveTransferDocument();
 
-  console.log({ transferDocument });
+  console.log('transferDocument-->\n', transferDocument);
 
   return (
     <>
       <Card sx={{ p: "36px" }}>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Typography variant="h4">{`${transferDocument.number}(${transferDocument.name})`}</Typography>
-          <Box sx={{ display: "flex" }}>
-            {/* <EditCompanyContractBtn companyContract={companyContract} /> */}
-            <IconBtn
-              icon={<DeleteOutlined />}
-              onClick={() => setOpenDeleteDialog(true)}
-            />
-          </Box>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Typography sx={{ margin: '0 0 32px 0' }} variant="h4">{`${transferDocument.number}(${transferDocument.name})`}</Typography>
+        <Box sx={{ display: "flex", margin: '' }}>
+          {/* <EditCompanyContractBtn companyContract={companyContract} /> */}
+          <IconBtn icon={<DriveFileRenameOutlineOutlinedIcon />} onClick={() => {}} />
+          <IconBtn icon={<DeleteOutlined />} onClick={() => {}} />
         </Box>
+      </Box>
+      <Typography variant="h5">轉供組合 3 轉 6</Typography>
+      <Box>
+        <TransferDocumentPowerPlant transferDocumentPowerPlants={transferDocument.transferDocumentPowerPlants} />
+        {/* <TransferDocumentUsers transferDocumentUsers={transferDocumentUsers} /> */}
+      </Box>
       </Card>
       {openDeleteDialog ? (
         <DialogAlert
