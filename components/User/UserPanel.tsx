@@ -1,5 +1,5 @@
 import { Table } from "@components/Table";
-import { Role, User, UserPage } from "@core/graphql/types";
+import { Role, TransferDegree, User, UserPage } from "@core/graphql/types";
 import { Config, Page } from "../Table/Table";
 import BorderColorOutlined from "@mui/icons-material/BorderColorOutlined";
 import DeleteOutlined from "@mui/icons-material/DeleteOutlined";
@@ -13,6 +13,9 @@ enum ActionTypeEnum {
   EDIT = "edit",
   DELETE = "delete",
 }
+
+const addUp = (transferRecords: TransferDegree[]) =>
+  transferRecords.reduce((prev, curr) => prev + curr.degree, 0);
 
 interface UserPanelProps {
   users?: UserPage;
@@ -46,15 +49,19 @@ const UserPanel = (props: UserPanelProps) => {
     },
     {
       header: "上月度數",
-      accessor: "taxId",
+      render: (rowData) => {
+        return <Box>{addUp(rowData.lastMonthTransferRecords)}</Box>;
+      },
     },
     {
       header: "今年度累積轉供度數",
-      accessor: "contactName",
+      render: (rowData) => {
+        return <Box>{addUp(rowData.thisYearTransferRecords)}</Box>;
+      },
     },
     {
       header: "今年預估轉供度數",
-      accessor: "contactPhone",
+      accessor: "expectedTransferDegree",
     },
     {
       header: "平均購電價格",

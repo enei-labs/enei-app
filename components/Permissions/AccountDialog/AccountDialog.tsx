@@ -80,6 +80,7 @@ function AccountDialog(props: AccountDialogProps) {
   const role = watch("role");
 
   const { data: usersData } = useUsers({
+    onlyBasicInformation: true,
     skip: !role || role.value !== Role.User,
   });
 

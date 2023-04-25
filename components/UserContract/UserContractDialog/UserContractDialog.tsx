@@ -132,7 +132,7 @@ function UserContractDialog(props: UserContractDialogProps) {
 
   /** apis */
   const [createUserContract, { loading }] = useCreateUserContract();
-  const { data: usersData } = useUsers();
+  const { data: usersData } = useUsers({ onlyBasicInformation: true });
 
   /** selected user/power-plant info */
   const selectedUser = useMemo(() => {

@@ -174,7 +174,7 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
   const [userIndex, setUserIndex] = useState<number>(-1);
 
   /** apis */
-  const { data: usersData } = useUsers();
+  const { data: usersData } = useUsers({ onlyBasicInformation: true });
   const { data: powerPlantsData } = usePowerPlants();
 
   const [getUserContracts, { data: userContractsData }] =

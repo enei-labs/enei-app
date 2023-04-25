@@ -52,6 +52,7 @@ export enum Action {
   CreateCompanyContract = 'CREATE_COMPANY_CONTRACT',
   CreateGuest = 'CREATE_GUEST',
   CreatePowerPlant = 'CREATE_POWER_PLANT',
+  CreateTpcBill = 'CREATE_TPC_BILL',
   CreateTransferDocument = 'CREATE_TRANSFER_DOCUMENT',
   CreateUser = 'CREATE_USER',
   CreateUserContract = 'CREATE_USER_CONTRACT',
@@ -61,6 +62,7 @@ export enum Action {
   RemoveCompanyContract = 'REMOVE_COMPANY_CONTRACT',
   RemoveGuest = 'REMOVE_GUEST',
   RemovePowerPlant = 'REMOVE_POWER_PLANT',
+  RemoveTpcBill = 'REMOVE_TPC_BILL',
   RemoveTransferDocument = 'REMOVE_TRANSFER_DOCUMENT',
   RemoveUser = 'REMOVE_USER',
   RemoveUserContract = 'REMOVE_USER_CONTRACT',
@@ -69,6 +71,7 @@ export enum Action {
   UpdateCompany = 'UPDATE_COMPANY',
   UpdateCompanyContract = 'UPDATE_COMPANY_CONTRACT',
   UpdatePowerPlant = 'UPDATE_POWER_PLANT',
+  UpdateTpcBill = 'UPDATE_TPC_BILL',
   UpdateTransferDocument = 'UPDATE_TRANSFER_DOCUMENT',
   UpdateUser = 'UPDATE_USER',
   UpdateUserContract = 'UPDATE_USER_CONTRACT',
@@ -78,6 +81,7 @@ export enum Action {
   ViewCompanyList = 'VIEW_COMPANY_LIST',
   ViewGuestList = 'VIEW_GUEST_LIST',
   ViewPowerPlantList = 'VIEW_POWER_PLANT_LIST',
+  ViewTpcBillList = 'VIEW_TPC_BILL_LIST',
   ViewTransferDocumentList = 'VIEW_TRANSFER_DOCUMENT_LIST',
   ViewUserContractList = 'VIEW_USER_CONTRACT_LIST',
   ViewUserList = 'VIEW_USER_LIST'
@@ -233,6 +237,19 @@ export type CreatePowerPlantInput = {
   transferRate: Scalars['Int'];
 };
 
+export type CreateTpcBillInput = {
+  billDoc: Scalars['String'];
+  billReceivedDate: Scalars['DateTime'];
+  transferDocumentId: Scalars['ID'];
+  transferRecords: Array<CreateTransferRecordInput>;
+};
+
+export type CreateTransferDegreeInput = {
+  degree: Scalars['Int'];
+  userContractId: Scalars['ID'];
+  userId: Scalars['ID'];
+};
+
 export type CreateTransferDocumentInput = {
   expectedTime: Scalars['DateTime'];
   formalDoc: Scalars['String'];
@@ -257,6 +274,11 @@ export type CreateTransferDocumentUserInput = {
   userContractId: Scalars['ID'];
   userId: Scalars['ID'];
   yearlyTransferDegree: Scalars['Int'];
+};
+
+export type CreateTransferRecordInput = {
+  powerPlantId: Scalars['ID'];
+  transferDegrees: Array<CreateTransferDegreeInput>;
 };
 
 export type CreateUserContractInput = {
@@ -365,6 +387,7 @@ export type Mutation = {
   createCompany: Company;
   createCompanyContract: CompanyContract;
   createPowerPlant: PowerPlant;
+  createTPCBill: TpcBill;
   createTransferDocument: TransferDocument;
   createUser: User;
   createUserContract: UserContract;
@@ -423,6 +446,11 @@ export type MutationCreateCompanyContractArgs = {
 
 export type MutationCreatePowerPlantArgs = {
   input: CreatePowerPlantInput;
+};
+
+
+export type MutationCreateTpcBillArgs = {
+  input: CreateTpcBillInput;
 };
 
 
@@ -586,6 +614,8 @@ export type Query = {
   me?: Maybe<Account>;
   powerPlant: PowerPlant;
   powerPlants: PowerPlantPage;
+  tpcBill: TpcBill;
+  tpcBills: TpcBillPage;
   transferDocument: TransferDocument;
   transferDocuments: TransferDocumentPage;
   user: User;
@@ -649,6 +679,17 @@ export type QueryPowerPlantArgs = {
 
 
 export type QueryPowerPlantsArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+};
+
+
+export type QueryTpcBillArgs = {
+  id: Scalars['UUID'];
+};
+
+
+export type QueryTpcBillsArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
 };
@@ -743,6 +784,29 @@ export type Success = {
   message: Scalars['String'];
 };
 
+export type TpcBill = {
+  __typename?: 'TPCBill';
+  billDoc: Scalars['String'];
+  billReceivedDate: Scalars['DateTime'];
+  id: Scalars['ID'];
+  transferRecords: Array<TransferRecord>;
+};
+
+export type TpcBillPage = {
+  __typename?: 'TPCBillPage';
+  list: Array<TpcBill>;
+  total: Scalars['Int'];
+};
+
+export type TransferDegree = {
+  __typename?: 'TransferDegree';
+  degree: Scalars['Int'];
+  id: Scalars['ID'];
+  powerPlant: PowerPlant;
+  user: User;
+  userContract: UserContract;
+};
+
 export type TransferDocument = {
   __typename?: 'TransferDocument';
   expectedTime: Scalars['DateTime'];
@@ -753,8 +817,8 @@ export type TransferDocument = {
   printingDoc: Scalars['String'];
   receptionAreas: Scalars['String'];
   replyDoc: Scalars['String'];
-  transferDocumentPowerPlants: Array<TransferDocumentPowerPlantDto>;
-  transferDocumentUsers: Array<TransferDocumentUserDto>;
+  transferDocumentPowerPlants: Array<TransferDocumentPowerPlant>;
+  transferDocumentUsers: Array<TransferDocumentUser>;
   wordDoc: Scalars['String'];
 };
 
@@ -764,19 +828,25 @@ export type TransferDocumentPage = {
   total: Scalars['Int'];
 };
 
-export type TransferDocumentPowerPlantDto = {
-  __typename?: 'TransferDocumentPowerPlantDto';
+export type TransferDocumentPowerPlant = {
+  __typename?: 'TransferDocumentPowerPlant';
   estimateAnnualSupply: Scalars['Int'];
   powerPlant: PowerPlant;
   transferRate: Scalars['Int'];
 };
 
-export type TransferDocumentUserDto = {
-  __typename?: 'TransferDocumentUserDto';
+export type TransferDocumentUser = {
+  __typename?: 'TransferDocumentUser';
   monthlyTransferDegree: Scalars['Int'];
   user: User;
   userContract: UserContract;
   yearlyTransferDegree: Scalars['Int'];
+};
+
+export type TransferRecord = {
+  __typename?: 'TransferRecord';
+  powerPlantId: Scalars['ID'];
+  transferDegrees: Array<TransferDegree>;
 };
 
 export type UpdateCompanyContractInput = {
@@ -840,8 +910,10 @@ export type User = {
   contactName: Scalars['String'];
   contactPhone: Scalars['String'];
   id: Scalars['ID'];
+  lastMonthTransferRecords: Array<TransferDegree>;
   name: Scalars['String'];
   notes?: Maybe<Scalars['String']>;
+  thisYearTransferRecords: Array<TransferDegree>;
   warning?: Maybe<Scalars['String']>;
 };
 

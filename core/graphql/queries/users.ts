@@ -18,3 +18,22 @@ export const USERS = gql`
     }
   }
 `
+
+export const BASE_USERS = gql`
+  query baseUsers(
+    $limit: Int = 10
+    $offset: Int = 0
+  ) {
+    users(
+      limit: $limit
+      offset: $offset
+    ) {
+      total
+      list {
+        id
+        name
+        contactEmail
+      }
+    }
+  }
+`

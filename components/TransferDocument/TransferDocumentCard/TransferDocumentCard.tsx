@@ -45,7 +45,7 @@ function TransferDocumentCard(props: TransferDocumentProps) {
           </Box>
         </Box>
         <Typography sx={{ margin: "0 0 24px 0" }} variant="h5">
-          轉供組合 3 轉 6
+          {`轉供組合 ${transferDocument.transferDocumentPowerPlants.length} 轉 ${transferDocument.transferDocumentUsers.length}`}
         </Typography>
         <Grid container spacing={2}>
           <Grid item xs={4}>

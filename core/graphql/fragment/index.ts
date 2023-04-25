@@ -7,3 +7,4 @@ export * from "./powerPlants";
 export * from './transferDocumentFields';
 export * from './userContractFields';
 export * from './companyContractFields';
+export * from './transferDegreeFields';
