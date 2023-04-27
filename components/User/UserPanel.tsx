@@ -61,7 +61,7 @@ const UserPanel = (props: UserPanelProps) => {
     },
     {
       header: "今年預估轉供度數",
-      accessor: "expectedTransferDegree",
+      accessor: "estimatedTransferDegree",
     },
     {
       header: "平均購電價格",

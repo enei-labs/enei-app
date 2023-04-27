@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import DriveFileRenameOutlineOutlinedIcon from "@mui/icons-material/DriveFileRenameOutlineOutlined";
 import TransferDocumentPowerPlant from "./TransferDocumentPowerPlant";
 import TransferDocumentUsers from "./TransferDocumentUsers";
+import ProgressBar from "@components/TransferDocument/TransferDocumentCard/ProgressBar";
 
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
@@ -61,6 +62,7 @@ function TransferDocumentCard(props: TransferDocumentProps) {
             />
           </Grid>
         </Grid>
+        <ProgressBar />
       </Card>
       {openDeleteDialog ? (
         <DialogAlert

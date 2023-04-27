@@ -21,6 +21,7 @@ export const USER_FIELDS = gql`
     lastMonthTransferRecords {
       ...transferDegreeFields
     }
-    expectedTransferDegree
+    estimatedTransferDegree
+    expectedYearlyPurchaseDegree
   }
 `
