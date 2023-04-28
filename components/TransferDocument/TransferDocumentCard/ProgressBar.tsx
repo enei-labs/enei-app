@@ -14,6 +14,7 @@ import { ArrowBack, ArrowForward, Replay } from "@mui/icons-material";
 import InfoBox from "@components/InfoBox";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import EventNoteIcon from "@mui/icons-material/EventNote";
+import ProgressDialog from "@components/TransferDocument/TransferDocumentCard/ProgressDialog";
 
 const steps = [
   "轉供計畫書送審",
@@ -26,6 +27,7 @@ const steps = [
 const ProgressBar: React.FC = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [dates, setDates] = useState<string[]>(Array(steps.length).fill(""));
+  const [shownDialog, showDialog] = useState(false);
 
   const handleNext = () => {
     const newDates = [...dates];
@@ -36,11 +38,6 @@ const ProgressBar: React.FC = () => {
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
-    setDates(Array(steps.length).fill(""));
   };
 
   return (
@@ -68,7 +65,7 @@ const ProgressBar: React.FC = () => {
             <Button
               variant="contained"
               color="primary"
-              onClick={handleNext}
+              onClick={() => showDialog(true)}
               disabled={activeStep === steps.length - 1}
               endIcon={<ArrowForward sx={{ color: "white" }} />}
             >
@@ -101,6 +98,14 @@ const ProgressBar: React.FC = () => {
           ))}
         </Stepper>
       </Box>
+      {shownDialog ? (
+        <ProgressDialog
+          handleNextFn={handleNext}
+          onClose={() => showDialog(false)}
+          open={shownDialog}
+          showContractInput
+        />
+      ) : null}
     </Box>
   );
 };

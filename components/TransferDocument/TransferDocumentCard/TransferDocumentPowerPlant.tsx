@@ -1,14 +1,14 @@
 import { Box, Typography, Divider } from "@mui/material";
 import type {
-  TransferDocumentPowerPlantDto,
+  TransferDocumentPowerPlant,
   PowerPlant,
 } from "@core/graphql/types";
 
 type TransferDocumentPowerPlantItem = Pick<
-  TransferDocumentPowerPlantDto,
+  TransferDocumentPowerPlant,
   "estimateAnnualSupply" | "transferRate"
 > &
-  Pick<PowerPlant, "name" | "capacity">;
+  Pick<PowerPlant, "name" | "volume">;
 
 type TransferDocumentPowerPlantItemView = {
   [key in keyof TransferDocumentPowerPlantItem as `${key}Node`]: React.ReactNode;
@@ -19,7 +19,7 @@ const powerPlantMappedLabels: Array<{
   label: string;
 }> = [
   {
-    key: "capacityNode",
+    key: "volumeNode",
     label: "裝置容量",
   },
   {
@@ -33,7 +33,7 @@ const powerPlantMappedLabels: Array<{
 ];
 
 interface TransferDocumentPowerPlantProps {
-  transferDocumentPowerPlants: TransferDocumentPowerPlantDto[];
+  transferDocumentPowerPlants: TransferDocumentPowerPlant[];
 }
 
 interface TransferDocumentPowerPlantItemProps {
@@ -71,9 +71,9 @@ function TransferDocumentPowerPlant(props: TransferDocumentPowerPlantProps) {
           {el.powerPlant.name}
         </Typography>
       ),
-      capacityNode: (
+      volumeNode: (
         <Typography variant="body1">
-          {el.powerPlant.capacity} <Typography variant="body4">kWh</Typography>
+          {el.powerPlant.volume} <Typography variant="body4">kWh</Typography>
         </Typography>
       ),
       estimateAnnualSupplyNode: (

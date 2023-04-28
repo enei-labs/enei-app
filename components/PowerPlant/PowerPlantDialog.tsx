@@ -15,7 +15,7 @@ import { PowerPlant } from "@core/graphql/types";
 type FormData = {
   name: string;
   number: string;
-  capacity: number;
+  volume: number;
   predictAnnualPowerGeneration: number;
   transferRate: number;
   address: string;
@@ -38,7 +38,7 @@ const configs: FieldConfig[] = [
   },
   {
     type: "NUMBER",
-    name: "capacity",
+    name: "volume",
     label: "裝置容量（kW）",
     required: true,
     validated: numberValidated,
@@ -102,7 +102,7 @@ const PowerPlantDialog = (props: PowerPlantDialogProps) => {
           input: {
             name: formData.name,
             number: formData.number,
-            capacity: Number(formData.capacity),
+            volume: Number(formData.volume),
             predictAnnualPowerGeneration: Number(
               formData.predictAnnualPowerGeneration
             ),
@@ -125,7 +125,7 @@ const PowerPlantDialog = (props: PowerPlantDialogProps) => {
             id: defaultValues.id,
             name: formData.name,
             number: formData.number,
-            capacity: Number(formData.capacity),
+            volume: Number(formData.volume),
             predictAnnualPowerGeneration: Number(
               formData.predictAnnualPowerGeneration
             ),

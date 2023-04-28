@@ -229,7 +229,7 @@ export type CreateCompanyInput = {
 
 export type CreatePowerPlantInput = {
   address: Scalars['String'];
-  capacity: Scalars['Int'];
+  volume: Scalars['Int'];
   companyContractId: Scalars['ID'];
   name: Scalars['String'];
   number: Scalars['String'];
@@ -270,6 +270,8 @@ export type CreateTransferDocumentPowerPlantInput = {
 };
 
 export type CreateTransferDocumentUserInput = {
+  /** 要小於電號的電號年預計採購度數 */
+  expectedYearlyPurchaseDegree: Scalars['Int'];
   monthlyTransferDegree: Scalars['Int'];
   userContractId: Scalars['ID'];
   userId: Scalars['ID'];
@@ -583,7 +585,7 @@ export type PowerPlant = {
   __typename?: 'PowerPlant';
   address: Scalars['String'];
   annualPowerGeneration: Scalars['Int'];
-  capacity: Scalars['Int'];
+  volume: Scalars['Int'];
   createdAt: Scalars['DateTime'];
   createdBy?: Maybe<Scalars['String']>;
   deletedAt?: Maybe<Scalars['DateTime']>;
@@ -809,6 +811,7 @@ export type TransferDegree = {
 
 export type TransferDocument = {
   __typename?: 'TransferDocument';
+  /** 期望完成日：這份轉供合約涵蓋的用戶契約，在契約中約定的約定轉供日 */
   expectedTime: Scalars['DateTime'];
   formalDoc: Scalars['String'];
   id: Scalars['ID'];
@@ -837,6 +840,7 @@ export type TransferDocumentPowerPlant = {
 
 export type TransferDocumentUser = {
   __typename?: 'TransferDocumentUser';
+  expectedYearlyPurchaseDegree: Scalars['Int'];
   monthlyTransferDegree: Scalars['Int'];
   user: User;
   userContract: UserContract;
@@ -881,7 +885,7 @@ export type UpdateCompanyInput = {
 
 export type UpdatePowerPlantInput = {
   address: Scalars['String'];
-  capacity: Scalars['Int'];
+  volume: Scalars['Int'];
   id: Scalars['ID'];
   name: Scalars['String'];
   number: Scalars['String'];
@@ -909,6 +913,9 @@ export type User = {
   contactEmail: Scalars['String'];
   contactName: Scalars['String'];
   contactPhone: Scalars['String'];
+  estimatedTransferDegree: Scalars['Int'];
+  /** 用戶預計年採購度數 */
+  expectedYearlyPurchaseDegree: Scalars['Int'];
   id: Scalars['ID'];
   lastMonthTransferRecords: Array<TransferDegree>;
   name: Scalars['String'];

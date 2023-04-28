@@ -35,7 +35,7 @@ const PowerPlantPanel = () => {
     },
     {
       header: "裝置容量",
-      accessor: "capacity",
+      accessor: "volume",
     },
     {
       header: "單位預估年發電量",

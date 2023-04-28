@@ -5,7 +5,7 @@ export const POWER_PLANT_FIELDS = gql`
     id
     name
     number
-    capacity
+    volume
     annualPowerGeneration
     predictAnnualPowerGeneration
     transferRate

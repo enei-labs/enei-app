@@ -1,6 +1,6 @@
 import { IconBtn } from "@components/Button";
 import { TransferDocument } from "@core/graphql/types";
-import { Box, Card, Typography, Grid } from "@mui/material";
+import { Box, Card, Typography, Grid, Divider } from "@mui/material";
 import DeleteOutlined from "@mui/icons-material/DeleteOutlined";
 import { useState } from "react";
 import dynamic from "next/dynamic";
@@ -10,6 +10,7 @@ import DriveFileRenameOutlineOutlinedIcon from "@mui/icons-material/DriveFileRen
 import TransferDocumentPowerPlant from "./TransferDocumentPowerPlant";
 import TransferDocumentUsers from "./TransferDocumentUsers";
 import ProgressBar from "@components/TransferDocument/TransferDocumentCard/ProgressBar";
+import DownloadDocBox from "@components/DownloadDocBox";
 
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
@@ -63,6 +64,31 @@ function TransferDocumentCard(props: TransferDocumentProps) {
           </Grid>
         </Grid>
         <ProgressBar />
+
+        <Divider sx={{ margin: "36px 0" }} />
+
+        <Box sx={{ display: "flex", height: "462px" }}>
+          <Box
+            sx={{
+              paddingRight: "36px",
+              display: "flex",
+              flexDirection: "column",
+              rowGap: "6px",
+              width: "100%",
+            }}
+          >
+            <Box
+              sx={{ display: "flex", columnGap: "4px", marginBottom: "4px" }}
+            >
+              <Typography variant="h5">相關文件</Typography>
+            </Box>
+            <DownloadDocBox fileId={""} label="轉供計畫書用印版" />
+            <DownloadDocBox fileId={""} label="轉供函覆文" />
+            <DownloadDocBox fileId={""} label="轉供契約Word版" />
+            <DownloadDocBox fileId={""} label="正式轉供契約" />
+            <DownloadDocBox fileId={""} label="匯出電能轉供契約草稿" />
+          </Box>
+        </Box>
       </Card>
       {openDeleteDialog ? (
         <DialogAlert
