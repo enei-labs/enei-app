@@ -43,7 +43,7 @@ function ExportElectricBillPage() {
           {
             name: "電費單匯出",
             icon: ChartIcon,
-            href: "/bill",
+            href: "/user-bill",
           },
         ]}
       />
@@ -60,10 +60,10 @@ function ExportElectricBillPage() {
               }}
             >
               {/* 搜尋 */}
-              <InputSearch onChange={() => {}} />
+              <InputSearch onChange={() => { }} />
 
               {/* 新增電費單 */}
-              <Button startIcon={<AddIcon />} onClick={() => {}}>
+              <Button startIcon={<AddIcon />} onClick={() => { }}>
                 新增電費單組合
               </Button>
             </Box>

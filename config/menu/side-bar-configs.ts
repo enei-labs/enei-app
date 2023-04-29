@@ -40,7 +40,7 @@ export const sideBarConfigs = {
     {
       name: "電費單匯出",
       icon: MailIcon,
-      path: '/bill'
+      path: '/user-bill'
     },
   ],
   down: [
