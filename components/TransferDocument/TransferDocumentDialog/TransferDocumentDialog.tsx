@@ -104,46 +104,46 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
   } = useValidatedForm<FormData>(undefined, {
     defaultValues: currentModifyTransferDocument
       ? {
-          name: currentModifyTransferDocument.name,
-          receptionAreas: currentModifyTransferDocument.receptionAreas,
-          expectedTime: currentModifyTransferDocument.expectedTime,
-          printingDoc: {
-            file: undefined,
-            id: currentModifyTransferDocument.printingDoc,
-          },
-          replyDoc: {
-            file: undefined,
-            id: currentModifyTransferDocument.replyDoc,
-          },
-          wordDoc: {
-            file: undefined,
-            id: currentModifyTransferDocument.wordDoc,
-          },
-          formalDoc: {
-            file: undefined,
-            id: currentModifyTransferDocument.formalDoc,
-          },
-          transferDocumentPowerPlants:
-            currentModifyTransferDocument.transferDocumentPowerPlants.map(
-              (t) => ({
-                estimateAnnualSupply: t.estimateAnnualSupply,
-                powerPlant: {
-                  label: t.powerPlant.name,
-                  value: t.powerPlant.id,
-                },
-                transferRate: t.transferRate,
-              })
-            ),
-          transferDocumentUsers:
-            currentModifyTransferDocument.transferDocumentUsers.map((u) => ({
-              monthlyTransferDegree: u.monthlyTransferDegree,
-              user: {
-                label: u.user.name,
-                value: u.user.id,
+        name: currentModifyTransferDocument.name,
+        receptionAreas: currentModifyTransferDocument.receptionAreas,
+        expectedTime: currentModifyTransferDocument.expectedTime,
+        printingDoc: {
+          file: undefined,
+          id: currentModifyTransferDocument.printingDoc,
+        },
+        replyDoc: {
+          file: undefined,
+          id: currentModifyTransferDocument.replyDoc,
+        },
+        wordDoc: {
+          file: undefined,
+          id: currentModifyTransferDocument.wordDoc,
+        },
+        formalDoc: {
+          file: undefined,
+          id: currentModifyTransferDocument.formalDoc,
+        },
+        transferDocumentPowerPlants:
+          currentModifyTransferDocument.transferDocumentPowerPlants.map(
+            (t) => ({
+              estimateAnnualSupply: t.estimateAnnualSupply,
+              powerPlant: {
+                label: t.powerPlant.name,
+                value: t.powerPlant.id,
               },
-              yearlyTransferDegree: u.yearlyTransferDegree,
-            })),
-        }
+              transferRate: t.transferRate,
+            })
+          ),
+        transferDocumentUsers:
+          currentModifyTransferDocument.transferDocumentUsers.map((u) => ({
+            monthlyTransferDegree: u.monthlyTransferDegree,
+            user: {
+              label: u.user.name,
+              value: u.user.id,
+            },
+            yearlyTransferDegree: u.yearlyTransferDegree,
+          })),
+      }
       : {},
   });
   const {
@@ -405,6 +405,18 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
               ) : null}
               <Controller
                 control={control}
+                name={`transferDocumentUsers.${index}.expectedYearlyPurchaseDegree`}
+                render={({ field }) => (
+                  <InputText
+                    {...field}
+                    label={`預計年採購度數（MWh）`}
+                    placeholder={"請填入"}
+                    required
+                  />
+                )}
+              />
+              <Controller
+                control={control}
                 name={`transferDocumentUsers.${index}.monthlyTransferDegree`}
                 render={({ field }) => (
                   <InputText
@@ -467,6 +479,7 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                     value: "",
                   },
                   yearlyTransferDegree: 0,
+                  expectedYearlyPurchaseDegree: 0,
                 };
                 const emptyArray = [];
                 for (let i = 1; i <= addUserNumber; i++) {

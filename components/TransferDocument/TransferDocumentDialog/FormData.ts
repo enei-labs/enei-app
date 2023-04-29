@@ -16,6 +16,7 @@ export type FormData = {
     transferRate: number;
   }[];
   transferDocumentUsers: {
+    expectedYearlyPurchaseDegree: number;
     monthlyTransferDegree: number;
     user: {
       label: string;
