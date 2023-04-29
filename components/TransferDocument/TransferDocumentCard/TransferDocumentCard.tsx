@@ -13,6 +13,7 @@ import ProgressBar from "@components/TransferDocument/TransferDocumentCard/Progr
 import DownloadDocBox from "@components/DownloadDocBox";
 
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
+const TransferDocumentDialog = dynamic(() => import("@components/TransferDocument/TransferDocumentDialog/TransferDocumentDialog"));
 
 interface TransferDocumentProps {
   transferDocument: TransferDocument;
@@ -21,6 +22,7 @@ interface TransferDocumentProps {
 function TransferDocumentCard(props: TransferDocumentProps) {
   const { transferDocument } = props;
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [openEditDialog, setOpenEditDialog] = useState(false);
   const [removeTransferDocument, { loading }] = useRemoveTransferDocument();
 
   console.log("transferDocument-->\n", transferDocument);
@@ -38,12 +40,11 @@ function TransferDocumentCard(props: TransferDocumentProps) {
         >
           <Typography variant="h4">{`${transferDocument.number}(${transferDocument.name})`}</Typography>
           <Box sx={{ display: "flex" }}>
-            {/* <EditCompanyContractBtn companyContract={companyContract} /> */}
             <IconBtn
               icon={<DriveFileRenameOutlineOutlinedIcon />}
-              onClick={() => {}}
+              onClick={() => setOpenEditDialog(true)}
             />
-            <IconBtn icon={<DeleteOutlined />} onClick={() => {}} />
+            <IconBtn icon={<DeleteOutlined />} onClick={() => setOpenDeleteDialog(true)} />
           </Box>
         </Box>
         <Typography sx={{ margin: "0 0 24px 0" }} variant="h5">
@@ -63,6 +64,9 @@ function TransferDocumentCard(props: TransferDocumentProps) {
             />
           </Grid>
         </Grid>
+
+        <Divider sx={{ margin: "36px 0" }} />
+
         <ProgressBar />
 
         <Divider sx={{ margin: "36px 0" }} />
@@ -107,6 +111,14 @@ function TransferDocumentCard(props: TransferDocumentProps) {
           onClose={() => {
             setOpenDeleteDialog(false);
           }}
+        />
+      ) : null}
+      {openEditDialog ? (
+        <TransferDocumentDialog
+          currentModifyTransferDocument={transferDocument}
+          isOpenDialog={openEditDialog}
+          onClose={() => setOpenEditDialog(false)}
+          variant="edit"
         />
       ) : null}
     </>

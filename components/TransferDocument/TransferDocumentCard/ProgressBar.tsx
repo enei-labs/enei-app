@@ -7,10 +7,9 @@ import {
   StepLabel,
   Stepper,
   Typography,
-  Grid,
-  Paper,
+  Grid
 } from "@mui/material";
-import { ArrowBack, ArrowForward, Replay } from "@mui/icons-material";
+import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import InfoBox from "@components/InfoBox";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import EventNoteIcon from "@mui/icons-material/EventNote";
@@ -103,7 +102,7 @@ const ProgressBar: React.FC = () => {
           handleNextFn={handleNext}
           onClose={() => showDialog(false)}
           open={shownDialog}
-          showContractInput
+          showContractInput={activeStep === steps.length - 1}
         />
       ) : null}
     </Box>
