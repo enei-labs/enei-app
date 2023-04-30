@@ -104,46 +104,46 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
   } = useValidatedForm<FormData>(undefined, {
     defaultValues: currentModifyTransferDocument
       ? {
-        name: currentModifyTransferDocument.name,
-        receptionAreas: currentModifyTransferDocument.receptionAreas,
-        expectedTime: currentModifyTransferDocument.expectedTime,
-        printingDoc: {
-          file: undefined,
-          id: currentModifyTransferDocument.printingDoc,
-        },
-        replyDoc: {
-          file: undefined,
-          id: currentModifyTransferDocument.replyDoc,
-        },
-        wordDoc: {
-          file: undefined,
-          id: currentModifyTransferDocument.wordDoc,
-        },
-        formalDoc: {
-          file: undefined,
-          id: currentModifyTransferDocument.formalDoc,
-        },
-        transferDocumentPowerPlants:
-          currentModifyTransferDocument.transferDocumentPowerPlants.map(
-            (t) => ({
-              estimateAnnualSupply: t.estimateAnnualSupply,
-              powerPlant: {
-                label: t.powerPlant.name,
-                value: t.powerPlant.id,
+          name: currentModifyTransferDocument.name,
+          receptionAreas: currentModifyTransferDocument.receptionAreas,
+          expectedTime: currentModifyTransferDocument.expectedTime,
+          printingDoc: {
+            file: undefined,
+            id: currentModifyTransferDocument.printingDoc,
+          },
+          replyDoc: {
+            file: undefined,
+            id: currentModifyTransferDocument.replyDoc,
+          },
+          wordDoc: {
+            file: undefined,
+            id: currentModifyTransferDocument.wordDoc,
+          },
+          formalDoc: {
+            file: undefined,
+            id: currentModifyTransferDocument.formalDoc,
+          },
+          transferDocumentPowerPlants:
+            currentModifyTransferDocument.transferDocumentPowerPlants.map(
+              (t) => ({
+                estimateAnnualSupply: t.estimateAnnualSupply,
+                powerPlant: {
+                  label: t.powerPlant.name,
+                  value: t.powerPlant.id,
+                },
+                transferRate: t.transferRate,
+              })
+            ),
+          transferDocumentUsers:
+            currentModifyTransferDocument.transferDocumentUsers.map((u) => ({
+              monthlyTransferDegree: u.monthlyTransferDegree,
+              user: {
+                label: u.user.name,
+                value: u.user.id,
               },
-              transferRate: t.transferRate,
-            })
-          ),
-        transferDocumentUsers:
-          currentModifyTransferDocument.transferDocumentUsers.map((u) => ({
-            monthlyTransferDegree: u.monthlyTransferDegree,
-            user: {
-              label: u.user.name,
-              value: u.user.id,
-            },
-            yearlyTransferDegree: u.yearlyTransferDegree,
-          })),
-      }
+              yearlyTransferDegree: u.yearlyTransferDegree,
+            })),
+        }
       : {},
   });
   const {
@@ -184,13 +184,18 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
     `transferDocumentPowerPlants.${powerPlantIndex}.powerPlant`
   );
 
-  const currentPowerPlantNumber = useMemo(
-    () =>
-      powerPlantsData?.powerPlants.list.find(
-        (p) => p.id === currentPowerPlant?.value
-      )?.number ?? "N/A",
-    [powerPlantsData, currentPowerPlant]
-  );
+  const currentPowerPlantInfo = useMemo(() => {
+    const powerPlant = powerPlantsData?.powerPlants.list.find(
+      (p) => p.id === currentPowerPlant?.value
+    );
+
+    return {
+      number: powerPlant?.number ?? "N/A",
+      volume: powerPlant?.volume ?? "N/A",
+      estimatedAnnualPowerSupply:
+        powerPlant?.estimatedAnnualPowerSupply ?? "N/A",
+    };
+  }, [powerPlantsData, currentPowerPlant]);
 
   return (
     <Dialog open={isOpenDialog} onClose={onClose}>
@@ -255,7 +260,21 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                   />
                 )}
               />
-              <InputText label="電號" value={currentPowerPlantNumber} />
+              <InputText
+                label="電號"
+                value={currentPowerPlantInfo.number}
+                disabled
+              />
+              <InputText
+                label="裝置容量（kWh）"
+                value={currentPowerPlantInfo.volume}
+                disabled
+              />
+              <InputText
+                label="預計年發電量（MWh）"
+                value={currentPowerPlantInfo.estimatedAnnualPowerSupply}
+                disabled
+              />
               <Controller
                 control={control}
                 name={`transferDocumentPowerPlants.${index}.transferRate`}
@@ -267,6 +286,7 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                     required
                   />
                 )}
+                rules={{ max: 100, min: 0 }}
               />
               <Controller
                 control={control}

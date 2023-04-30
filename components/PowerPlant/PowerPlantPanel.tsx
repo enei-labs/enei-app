@@ -39,7 +39,7 @@ const PowerPlantPanel = () => {
     },
     {
       header: "單位預估年發電量",
-      accessor: "predictAnnualPowerGeneration",
+      accessor: "estimatedAnnualPowerGeneration",
     },
     {
       header: "轉供比例",

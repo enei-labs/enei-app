@@ -16,7 +16,7 @@ type FormData = {
   name: string;
   number: string;
   volume: number;
-  predictAnnualPowerGeneration: number;
+  estimatedAnnualPowerGeneration: number;
   transferRate: number;
   address: string;
 };
@@ -52,7 +52,7 @@ const configs: FieldConfig[] = [
   },
   {
     type: "NUMBER",
-    name: "predictAnnualPowerGeneration",
+    name: "estimatedAnnualPowerGeneration",
     label: "單位預估年發電量（度/kW）",
     required: true,
     validated: numberValidated,
@@ -103,8 +103,8 @@ const PowerPlantDialog = (props: PowerPlantDialogProps) => {
             name: formData.name,
             number: formData.number,
             volume: Number(formData.volume),
-            predictAnnualPowerGeneration: Number(
-              formData.predictAnnualPowerGeneration
+            estimatedAnnualPowerGeneration: Number(
+              formData.estimatedAnnualPowerGeneration
             ),
             transferRate: Number(formData.transferRate),
             address: formData.address,
@@ -126,8 +126,8 @@ const PowerPlantDialog = (props: PowerPlantDialogProps) => {
             name: formData.name,
             number: formData.number,
             volume: Number(formData.volume),
-            predictAnnualPowerGeneration: Number(
-              formData.predictAnnualPowerGeneration
+            estimatedAnnualPowerGeneration: Number(
+              formData.estimatedAnnualPowerGeneration
             ),
             transferRate: Number(formData.transferRate),
             address: formData.address,

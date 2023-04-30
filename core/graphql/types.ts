@@ -229,12 +229,12 @@ export type CreateCompanyInput = {
 
 export type CreatePowerPlantInput = {
   address: Scalars['String'];
-  volume: Scalars['Int'];
   companyContractId: Scalars['ID'];
+  estimatedAnnualPowerGeneration: Scalars['Int'];
   name: Scalars['String'];
   number: Scalars['String'];
-  predictAnnualPowerGeneration: Scalars['Int'];
   transferRate: Scalars['Int'];
+  volume: Scalars['Int'];
 };
 
 export type CreateTpcBillInput = {
@@ -585,15 +585,16 @@ export type PowerPlant = {
   __typename?: 'PowerPlant';
   address: Scalars['String'];
   annualPowerGeneration: Scalars['Int'];
-  volume: Scalars['Int'];
   createdAt: Scalars['DateTime'];
   createdBy?: Maybe<Scalars['String']>;
-  deletedAt?: Maybe<Scalars['DateTime']>;
+  estimatedAnnualPowerGeneration: Scalars['Int'];
+  /** 電廠預計年供電量 */
+  estimatedAnnualPowerSupply: Scalars['Int'];
   id: Scalars['ID'];
   name: Scalars['String'];
   number: Scalars['String'];
-  predictAnnualPowerGeneration: Scalars['Int'];
   transferRate: Scalars['Int'];
+  volume: Scalars['Int'];
 };
 
 export type PowerPlantPage = {
@@ -885,12 +886,12 @@ export type UpdateCompanyInput = {
 
 export type UpdatePowerPlantInput = {
   address: Scalars['String'];
-  volume: Scalars['Int'];
+  estimatedAnnualPowerGeneration: Scalars['Int'];
   id: Scalars['ID'];
   name: Scalars['String'];
   number: Scalars['String'];
-  predictAnnualPowerGeneration: Scalars['Int'];
   transferRate: Scalars['Int'];
+  volume: Scalars['Int'];
 };
 
 export type UpdateTransferDocumentInput = {

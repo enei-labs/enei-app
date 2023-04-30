@@ -7,7 +7,8 @@ export const POWER_PLANT_FIELDS = gql`
     number
     volume
     annualPowerGeneration
-    predictAnnualPowerGeneration
+    estimatedAnnualPowerGeneration
+    estimatedAnnualPowerSupply
     transferRate
     address
     createdBy
