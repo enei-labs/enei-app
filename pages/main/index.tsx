@@ -6,65 +6,81 @@ import OutlinedFlagIcon from "@mui/icons-material/OutlinedFlag";
 import IconBreadcrumbs from "@components/BreadCrumbs";
 import OverviewCard, { OverviewCardProps } from "@components/OverviewCard";
 import AnnualPrice from "@components/AnnualPrice";
-import { Card, Grid } from "@mui/material";
+import { Card, CircularProgress, Grid } from "@mui/material";
 import { AuthLayout } from "@components/Layout";
-import { ReactElement } from "react";
+import { ReactElement, useMemo } from "react";
 import PeopleOutlineOutlinedIcon from "@mui/icons-material/PeopleOutlineOutlined";
 import ChartIcon from "@mui/icons-material/InsertChartOutlinedSharp";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import Head from "next/head";
 import { BasicTable } from "@components/Table";
 import DemoChart from "@components/LineChart";
-
-const industryOverview: OverviewCardProps = {
-  topic: "發電業資訊",
-  basicInfos: [
-    {
-      icon: BoltIcon,
-      name: "發電業數量",
-      count: 47,
-      unit: "家",
-    },
-    {
-      icon: MailIcon,
-      name: "總裝置量",
-      count: 796885,
-      unit: "MW",
-    },
-    {
-      icon: BoltIcon,
-      name: "平均每kW發電度數",
-      count: 1300,
-      unit: "kWh",
-    },
-  ],
-};
-
-const userOverview = {
-  topic: "用戶資訊",
-  basicInfos: [
-    {
-      icon: PeopleOutlineOutlinedIcon,
-      name: "用戶數量",
-      count: 50,
-      unit: "位",
-    },
-    {
-      icon: ChartIcon,
-      name: "年度用戶成長數",
-      count: 10,
-      unit: "位",
-    },
-    {
-      icon: ShoppingCartOutlinedIcon,
-      name: "售出總度數",
-      count: 796885,
-      unit: "MW",
-    },
-  ],
-};
+import { useDashboard } from "@utils/hooks/queries/useDashboard";
 
 function MainPage() {
+  const { data, loading } = useDashboard();
+
+  const dashboardData = useMemo(() => {
+    const industryOverview: Pick<OverviewCardProps, "topic" | "basicInfos"> = {
+      topic: "發電業資訊",
+      basicInfos: data
+        ? [
+            {
+              icon: BoltIcon,
+              name: "發電業數量",
+              count: data.dashboard.companyInfo.count,
+              unit: "家",
+            },
+            {
+              icon: MailIcon,
+              name: "總裝置量",
+              count: data.dashboard.companyInfo.totalVolume,
+              unit: "MW",
+            },
+            {
+              icon: BoltIcon,
+              name: "平均每kW發電度數",
+              count: data.dashboard.companyInfo.totalDegree,
+              unit: "kWh",
+            },
+          ]
+        : [],
+    };
+
+    const userOverview: Pick<OverviewCardProps, "topic" | "basicInfos"> = {
+      topic: "用戶資訊",
+      basicInfos: data
+        ? [
+            {
+              icon: PeopleOutlineOutlinedIcon,
+              name: "用戶數量",
+              count: 50,
+              unit: "位",
+            },
+            {
+              icon: ChartIcon,
+              name: "年度用戶成長數",
+              count: 10,
+              unit: "位",
+            },
+            {
+              icon: ShoppingCartOutlinedIcon,
+              name: "售出總度數",
+              count: 796885,
+              unit: "MW",
+            },
+          ]
+        : [],
+    };
+
+    return {
+      industryOverview,
+      userOverview,
+    };
+  }, [data]);
+
+  const { industryOverview, userOverview } = dashboardData;
+
   return (
     <>
       <Head>
@@ -92,8 +108,8 @@ function MainPage() {
                 gap: "20px",
               }}
             >
-              <OverviewCard {...industryOverview} />
-              <OverviewCard {...userOverview} />
+              <OverviewCard {...industryOverview} loading={loading} />
+              <OverviewCard {...userOverview} loading={loading} />
             </Box>
           </Grid>
           <Grid item sm={5}>

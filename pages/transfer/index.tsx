@@ -11,6 +11,7 @@ import ChartIcon from "@mui/icons-material/InsertChartOutlinedSharp";
 
 import dynamic from "next/dynamic";
 import { useTransferDocuments } from "@utils/hooks/queries";
+import DemoChart from "@components/LineChart";
 const TransferDocumentDialog = dynamic(
   () =>
     import(
@@ -39,16 +40,8 @@ function TransferDataManagementPage() {
       <Box sx={{ paddingTop: "12px" }}>
         <AuthGuard roles={[Role.Admin, Role.SuperAdmin]}>
           <Card sx={{ p: "36px" }}>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                mb: "16px",
-              }}
-            >
-              <InputSearch />
-              {/* <Button onClick={() => setOpen(true)}>新增轉供合約</Button> */}
-            </Box>
+            <DemoChart name="每月轉供度數" />
+
             {/* 轉供資料管理表格 */}
           </Card>
           <Divider sx={{ my: "24px" }} />

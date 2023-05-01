@@ -308,6 +308,29 @@ export type CreateUserInput = {
   warning?: InputMaybe<Scalars['String']>;
 };
 
+export type Dashboard = {
+  __typename?: 'Dashboard';
+  companyInfo: DashboardCompany;
+  userInfo: DashboardUser;
+};
+
+export type DashboardCompany = {
+  __typename?: 'DashboardCompany';
+  count: Scalars['Int'];
+  /** 總裝置量 */
+  totalDegree: Scalars['Int'];
+  totalVolume: Scalars['Int'];
+};
+
+export type DashboardUser = {
+  __typename?: 'DashboardUser';
+  count: Scalars['Int'];
+  /** 售出總度數 */
+  totalSalesDegree: Scalars['Int'];
+  /** 年度用戶成長數 */
+  yearlyGrowth: Scalars['Int'];
+};
+
 export type ElectricNumberInfo = {
   __typename?: 'ElectricNumberInfo';
   address: Scalars['String'];
@@ -612,6 +635,7 @@ export type Query = {
   company: Company;
   companyContract: CompanyContract;
   companyContracts: CompanyContractPage;
+  dashboard: Dashboard;
   guest: Guest;
   guests: GuestPage;
   me?: Maybe<Account>;

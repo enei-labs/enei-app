@@ -1,13 +1,14 @@
-import { Card, Grid, Typography } from "@mui/material";
+import { Card, Grid, Skeleton, Typography } from "@mui/material";
 import { BasicInfo, BasicInfoProps } from "./BasicInfo";
 
 export interface OverviewCardProps {
   topic: string;
   basicInfos: BasicInfoProps[];
+  loading: boolean;
 }
 
 export default function OverviewCard(props: OverviewCardProps) {
-  const { topic, basicInfos } = props;
+  const { topic, basicInfos, loading } = props;
   return (
     <Card sx={{ p: "36px" }}>
       <Grid container spacing={1} rowGap="12px">
@@ -16,7 +17,7 @@ export default function OverviewCard(props: OverviewCardProps) {
         </Grid>
         {basicInfos.map((info) => (
           <Grid key={info.name} item sm={4}>
-            <BasicInfo {...info} />
+            {loading ? <Skeleton variant="text" /> : <BasicInfo {...info} />}
           </Grid>
         ))}
       </Grid>

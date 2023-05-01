@@ -9,3 +9,4 @@ export * from "./powerPlants";
 export * from "./transferDocument";
 export * from './transferDocuments';
 export * from './userContracts';
+export * from './dashboard';
