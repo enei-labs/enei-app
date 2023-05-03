@@ -56,10 +56,7 @@ export function TPCBillDialog(props: TPCBillDialogProps) {
     useLazyTransferDocument();
 
   /** component-state */
-  const [addElectricNumber, setAddElectricNumber] = useState<number>(1);
-  const [deleteElectricNumberIndex, setDeleteElectricNumberIndex] =
-    useState<number>(-1);
-  const [electricNumberIndex, setElectricNumberIndex] = useState<number>(-1);
+  const [selectedPowerPlant, selectPowerPlant] = useState<string | null>(null);
 
 
   return (
@@ -124,10 +121,9 @@ export function TPCBillDialog(props: TPCBillDialogProps) {
             {(transferDocumentData?.transferDocument.transferDocumentPowerPlants ?? []).map((item, index) => {
               return (
                 <Chip
-                  key={`${index}_${item.__typename}`}
-                  label={`電號${index + 1}`}
-                  handleClick={() => setElectricNumberIndex(index)}
-                  handleDelete={() => setDeleteElectricNumberIndex(index)}
+                  key={item.powerPlant.id}
+                  label={item.powerPlant.name}
+                  handleClick={() => selectPowerPlant(item.powerPlant.id)}
                 />
               );
             })}

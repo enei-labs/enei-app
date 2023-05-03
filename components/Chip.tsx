@@ -3,7 +3,7 @@ import { Chip as MuiChip } from "@mui/material";
 interface ChipProps {
   label: string;
   handleClick: VoidFunction;
-  handleDelete: VoidFunction;
+  handleDelete?: VoidFunction;
 }
 
 export default function Chip(props: ChipProps) {
