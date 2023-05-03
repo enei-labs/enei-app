@@ -1,33 +1,45 @@
 import Dialog from "@components/Dialog";
-import { Grid, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import { IconBtn } from "@components/Button";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { FieldsController } from "@components/Controller";
 import { useValidatedForm } from "@utils/hooks";
-import { textValidated } from "@core/types/fieldConfig";
+import FieldConfig, { textValidated } from "@core/types/fieldConfig";
+import { FormData } from "@components/TPCBill/TPCBillDialog/FormData";
+import { useState } from "react";
+import Chip from "@components/Chip";
 
 interface TPCBillDialogProps {
   isOpenDialog: boolean;
   onClose: VoidFunction;
-  variant: 'create' | 'edit'
+  variant: "create" | "edit";
 }
 
-const basicInfoConfigs = [
+const basicInfoConfigs: FieldConfig[] = [
   {
-    type: "TEXT",
-    name: "name",
+    type: "SINGLE_SELECT",
+    name: "transferDocument",
     label: "轉供契約編號",
     placeholder: "請填入",
     validated: textValidated,
   },
   {
     type: "DATE",
-    name: "number",
+    name: "billReceivedDate",
     label: "收到台電繳費單日期",
     placeholder: "請填入",
     validated: textValidated,
   },
-]
+];
+
+const docConfigs: FieldConfig[] = [
+  {
+    type: "FILE",
+    name: "billDoc",
+    label: "台電繳費單",
+    required: true,
+  },
+];
 
 export function TPCBillDialog(props: TPCBillDialogProps) {
   const { isOpenDialog, onClose, variant } = props;
@@ -37,7 +49,13 @@ export function TPCBillDialog(props: TPCBillDialogProps) {
     control,
     formState: { errors },
     handleSubmit,
-  } = useValidatedForm<FormData>(undefined)
+  } = useValidatedForm<FormData>(undefined);
+
+  /** component-state */
+  const [addElectricNumber, setAddElectricNumber] = useState<number>(1);
+  const [deleteElectricNumberIndex, setDeleteElectricNumberIndex] =
+    useState<number>(-1);
+  const [electricNumberIndex, setElectricNumberIndex] = useState<number>(-1);
 
   return (
     <Dialog open={isOpenDialog} onClose={onClose}>
@@ -54,10 +72,35 @@ export function TPCBillDialog(props: TPCBillDialogProps) {
           代輸繳費單資料
         </Typography>
         <FieldsController
-          configs={[]}
+          configs={basicInfoConfigs}
           form={{ control, errors }}
         />
+
+        {/* 相關文件 Block */}
+        <Typography textAlign="left" variant="h5">
+          相關文件
+        </Typography>
+        <FieldsController configs={docConfigs} form={{ control, errors }} />
+
+        {/* 轉供度數 Block */}
+        <Typography textAlign="left" variant="h5">
+          轉供度數
+        </Typography>
+        <Box display={"flex"} flexDirection="column" rowGap="24px">
+          <Box display={"flex"} gap="8px" flexWrap={"wrap"}>
+            {[].map((item, index) => {
+              return (
+                <Chip
+                  key={item.id}
+                  label={`電號${index + 1}`}
+                  handleClick={() => setElectricNumberIndex(index)}
+                  handleDelete={() => setDeleteElectricNumberIndex(index)}
+                />
+              );
+            })}
+          </Box>
+        </Box>
       </>
     </Dialog>
-  )
+  );
 }
