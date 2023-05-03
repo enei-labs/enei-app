@@ -6,5 +6,5 @@ export * from './useUsers';
 export * from './useAccounts';
 export * from './usePowerPlants';
 export { useLazyUserContracts, useUserContracts } from './useUserContracts';
-export * from "./useTransferDocument";
+export { useTransferDocument, useLazyTransferDocument } from "./useTransferDocument";
 export * from './useTransferDocuments'

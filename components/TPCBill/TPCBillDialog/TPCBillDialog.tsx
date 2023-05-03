@@ -8,6 +8,9 @@ import FieldConfig, { textValidated } from "@core/types/fieldConfig";
 import { FormData } from "@components/TPCBill/TPCBillDialog/FormData";
 import { useState } from "react";
 import Chip from "@components/Chip";
+import { useLazyTransferDocument, useTransferDocuments } from "@utils/hooks/queries";
+import { Controller } from "react-hook-form";
+import { InputAutocomplete } from "@components/Input";
 
 interface TPCBillDialogProps {
   isOpenDialog: boolean;
@@ -16,13 +19,6 @@ interface TPCBillDialogProps {
 }
 
 const basicInfoConfigs: FieldConfig[] = [
-  {
-    type: "SINGLE_SELECT",
-    name: "transferDocument",
-    label: "轉供契約編號",
-    placeholder: "請填入",
-    validated: textValidated,
-  },
   {
     type: "DATE",
     name: "billReceivedDate",
@@ -51,11 +47,20 @@ export function TPCBillDialog(props: TPCBillDialogProps) {
     handleSubmit,
   } = useValidatedForm<FormData>(undefined);
 
+  const {
+    data: transferDocumentsData,
+    loading,
+  } = useTransferDocuments();
+
+  const [getTransferDocument, { data: transferDocumentData }] =
+    useLazyTransferDocument();
+
   /** component-state */
   const [addElectricNumber, setAddElectricNumber] = useState<number>(1);
   const [deleteElectricNumberIndex, setDeleteElectricNumberIndex] =
     useState<number>(-1);
   const [electricNumberIndex, setElectricNumberIndex] = useState<number>(-1);
+
 
   return (
     <Dialog open={isOpenDialog} onClose={onClose}>
@@ -71,6 +76,34 @@ export function TPCBillDialog(props: TPCBillDialogProps) {
         <Typography variant="h5" textAlign={"left"}>
           代輸繳費單資料
         </Typography>
+        <Controller
+          control={control}
+          name={`transferDocument`}
+          render={({ field }) => {
+            return (
+              <>
+                <InputAutocomplete
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(e);
+                    getTransferDocument({
+                      variables: { id: e!.value as string },
+                    });
+                  }}
+                  options={
+                    transferDocumentsData?.transferDocuments.list.map((o) => ({
+                      label: o.name,
+                      value: o.id,
+                    })) ?? []
+                  }
+                  label={`轉供契約編號`}
+                  placeholder={"請填入"}
+                  required
+                />
+              </>
+            );
+          }}
+        />
         <FieldsController
           configs={basicInfoConfigs}
           form={{ control, errors }}
@@ -88,10 +121,10 @@ export function TPCBillDialog(props: TPCBillDialogProps) {
         </Typography>
         <Box display={"flex"} flexDirection="column" rowGap="24px">
           <Box display={"flex"} gap="8px" flexWrap={"wrap"}>
-            {[].map((item, index) => {
+            {(transferDocumentData?.transferDocument.transferDocumentPowerPlants ?? []).map((item, index) => {
               return (
                 <Chip
-                  key={item.id}
+                  key={`${index}_${item.__typename}`}
                   label={`電號${index + 1}`}
                   handleClick={() => setElectricNumberIndex(index)}
                   handleDelete={() => setDeleteElectricNumberIndex(index)}
