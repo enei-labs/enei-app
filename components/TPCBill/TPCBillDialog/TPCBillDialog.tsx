@@ -8,9 +8,12 @@ import FieldConfig, { textValidated } from "@core/types/fieldConfig";
 import { FormData } from "@components/TPCBill/TPCBillDialog/FormData";
 import { useState } from "react";
 import Chip from "@components/Chip";
-import { useLazyTransferDocument, useTransferDocuments } from "@utils/hooks/queries";
+import {
+  useLazyTransferDocument,
+  useTransferDocuments,
+} from "@utils/hooks/queries";
 import { Controller } from "react-hook-form";
-import { InputAutocomplete } from "@components/Input";
+import { InputAutocomplete, InputText } from "@components/Input";
 
 interface TPCBillDialogProps {
   isOpenDialog: boolean;
@@ -37,7 +40,7 @@ const docConfigs: FieldConfig[] = [
   },
 ];
 
-export function TPCBillDialog(props: TPCBillDialogProps) {
+export default function TPCBillDialog(props: TPCBillDialogProps) {
   const { isOpenDialog, onClose, variant } = props;
 
   const {
@@ -47,17 +50,13 @@ export function TPCBillDialog(props: TPCBillDialogProps) {
     handleSubmit,
   } = useValidatedForm<FormData>(undefined);
 
-  const {
-    data: transferDocumentsData,
-    loading,
-  } = useTransferDocuments();
+  const { data: transferDocumentsData, loading } = useTransferDocuments();
 
   const [getTransferDocument, { data: transferDocumentData }] =
     useLazyTransferDocument();
 
   /** component-state */
   const [selectedPowerPlant, selectPowerPlant] = useState<string | null>(null);
-
 
   return (
     <Dialog open={isOpenDialog} onClose={onClose}>
@@ -118,7 +117,10 @@ export function TPCBillDialog(props: TPCBillDialogProps) {
         </Typography>
         <Box display={"flex"} flexDirection="column" rowGap="24px">
           <Box display={"flex"} gap="8px" flexWrap={"wrap"}>
-            {(transferDocumentData?.transferDocument.transferDocumentPowerPlants ?? []).map((item, index) => {
+            {(
+              transferDocumentData?.transferDocument
+                .transferDocumentPowerPlants ?? []
+            ).map((item, index) => {
               return (
                 <Chip
                   key={item.powerPlant.id}
@@ -128,6 +130,17 @@ export function TPCBillDialog(props: TPCBillDialogProps) {
               );
             })}
           </Box>
+          {(
+            transferDocumentData?.transferDocument.transferDocumentUsers ?? []
+          ).map((item) => {
+            return (
+              <InputText
+                key={item.user.id}
+                label={item.user.contactName}
+                name={item.user.id}
+              />
+            );
+          })}
         </Box>
       </>
     </Dialog>

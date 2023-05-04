@@ -19,6 +19,7 @@ import {
   usePowerPlants,
   useUsers,
 } from "@utils/hooks/queries";
+import EditTransferDocumentBtn from "@components/TransferDocument/TransferDocumentDialog/EditTransferDocumentBtn";
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 const CreateTransferDocumentBtn = dynamic(
   () =>
@@ -528,7 +529,12 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
               handleSubmit={handleSubmit}
               onClose={onClose}
             />
-          ) : null}
+          ) : (
+            <EditTransferDocumentBtn
+              handleSubmit={handleSubmit}
+              onClose={onClose}
+            />
+          )}
           {/* {!currentModifyTransferDocument ? (
             <CreateTransferDocumentBtn
               handleSubmit={handleSubmit}

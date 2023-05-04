@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import IconBreadcrumbs from "@components/BreadCrumbs";
-import { Card, CircularProgress, Divider } from "@mui/material";
+import { Button, Card, Divider } from "@mui/material";
 import { AuthLayout } from "@components/Layout";
 import { ReactElement, useState } from "react";
 import Head from "next/head";
@@ -12,11 +12,11 @@ import ChartIcon from "@mui/icons-material/InsertChartOutlinedSharp";
 import dynamic from "next/dynamic";
 import { useTransferDocuments } from "@utils/hooks/queries";
 import DemoChart from "@components/LineChart";
-const TransferDocumentDialog = dynamic(
-  () =>
-    import(
-      "@components/TransferDocument/TransferDocumentDialog/TransferDocumentDialog"
-    )
+import TransferDocumentPanel from "@components/TransferDocument/TransferDocumentPanel";
+
+const TPCBillDialog = dynamic(
+  () => import("@components/TPCBill/TPCBillDialog/TPCBillDialog"),
+  { ssr: false }
 );
 
 function TransferDataManagementPage() {
@@ -45,10 +45,29 @@ function TransferDataManagementPage() {
             {/* 轉供資料管理表格 */}
           </Card>
           <Divider sx={{ my: "24px" }} />
+          {/* 轉供申請進度表格 */}
+          <Card sx={{ p: "36px" }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                mb: "16px",
+              }}
+            >
+              <InputSearch />
+              <Button onClick={() => setOpen(true)}>新增台電代輸繳費單</Button>
+            </Box>
+            {/* 轉供申請進度表格 */}
+            <TransferDocumentPanel
+              transferDocuments={transferDocumentsData?.transferDocuments}
+              loading={loading}
+              refetchFn={() => {}}
+            />
+          </Card>
         </AuthGuard>
       </Box>
       {open ? (
-        <TransferDocumentDialog
+        <TPCBillDialog
           isOpenDialog={open}
           onClose={() => setOpen(false)}
           variant="create"
