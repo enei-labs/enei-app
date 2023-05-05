@@ -5,15 +5,16 @@ import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { FieldsController } from "@components/Controller";
 import { useValidatedForm } from "@utils/hooks";
 import FieldConfig, { textValidated } from "@core/types/fieldConfig";
-import { FormData } from "@components/TPCBill/TPCBillDialog/FormData";
+import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { useState } from "react";
 import Chip from "@components/Chip";
 import {
   useLazyTransferDocument,
   useTransferDocuments,
 } from "@utils/hooks/queries";
-import { Controller } from "react-hook-form";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { InputAutocomplete, InputText } from "@components/Input";
+import { LoadingButton } from "@mui/lab";
 
 interface TPCBillDialogProps {
   isOpenDialog: boolean;
@@ -48,7 +49,12 @@ export default function TPCBillDialog(props: TPCBillDialogProps) {
     control,
     formState: { errors },
     handleSubmit,
-  } = useValidatedForm<FormData>(undefined);
+  } = useForm();
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "transferDegrees",
+  });
 
   const { data: transferDocumentsData, loading } = useTransferDocuments();
 
@@ -57,6 +63,10 @@ export default function TPCBillDialog(props: TPCBillDialogProps) {
 
   /** component-state */
   const [selectedPowerPlant, selectPowerPlant] = useState<string | null>(null);
+
+  const onCreateTPCBill = async (formData: any) => {
+    console.log({ formData });
+  };
 
   return (
     <Dialog open={isOpenDialog} onClose={onClose}>
@@ -120,7 +130,7 @@ export default function TPCBillDialog(props: TPCBillDialogProps) {
             {(
               transferDocumentData?.transferDocument
                 .transferDocumentPowerPlants ?? []
-            ).map((item, index) => {
+            ).map((item) => {
               return (
                 <Chip
                   key={item.powerPlant.id}
@@ -132,16 +142,34 @@ export default function TPCBillDialog(props: TPCBillDialogProps) {
           </Box>
           {(
             transferDocumentData?.transferDocument.transferDocumentUsers ?? []
-          ).map((item) => {
+          ).map((item, index) => {
+            console.log(
+              `transferDegrees.${item.user.id}.${item.userContract.id}.${selectedPowerPlant}_${index}`
+            );
             return (
-              <InputText
-                key={item.user.id}
-                label={item.user.contactName}
-                name={item.user.id}
+              <Controller
+                key={`transferDegrees.${item.user.id}.${item.userContract.id}.${selectedPowerPlant}_${index}`}
+                control={control}
+                name={`transferDegrees.${item.user.id}.${item.userContract.id}.${selectedPowerPlant}_${index}`}
+                render={({ field }) => (
+                  <InputText
+                    {...field}
+                    type="number"
+                    label={`${item.user.contactName}(kWh)`}
+                  />
+                )}
+                rules={{ min: 0 }}
               />
             );
           })}
         </Box>
+        <LoadingButton
+          loading={loading}
+          startIcon={<AddIcon />}
+          onClick={handleSubmit(onCreateTPCBill)}
+        >
+          新增
+        </LoadingButton>
       </>
     </Dialog>
   );

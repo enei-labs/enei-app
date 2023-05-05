@@ -40,6 +40,7 @@ export const TRANSFER_DOCUMENT_FIELDS = gql`
       }
       monthlyTransferDegree
       yearlyTransferDegree
+      expectedYearlyPurchaseDegree
     }
   }
 `
