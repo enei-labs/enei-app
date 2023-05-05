@@ -106,6 +106,7 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
     defaultValues: currentModifyTransferDocument
       ? {
           name: currentModifyTransferDocument.name,
+          number: currentModifyTransferDocument.number,
           receptionAreas: currentModifyTransferDocument.receptionAreas,
           expectedTime: currentModifyTransferDocument.expectedTime,
           printingDoc: {
@@ -137,12 +138,17 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
             ),
           transferDocumentUsers:
             currentModifyTransferDocument.transferDocumentUsers.map((u) => ({
+              expectedYearlyPurchaseDegree: u.expectedYearlyPurchaseDegree,
               monthlyTransferDegree: u.monthlyTransferDegree,
               user: {
                 label: u.user.name,
                 value: u.user.id,
               },
               yearlyTransferDegree: u.yearlyTransferDegree,
+              userContract: {
+                label: u.userContract.name,
+                value: u.userContract.id,
+              },
             })),
         }
       : {},
@@ -531,22 +537,11 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
             />
           ) : (
             <EditTransferDocumentBtn
+              transferDocumentId={currentModifyTransferDocument.id}
               handleSubmit={handleSubmit}
               onClose={onClose}
             />
           )}
-          {/* {!currentModifyTransferDocument ? (
-            <CreateTransferDocumentBtn
-              handleSubmit={handleSubmit}
-              onClose={onClose}
-            />
-          ) : (
-            <EditTransferDocumentBtns
-              handleSubmit={handleSubmit}
-              id={currentModifyTransferDocument.id}
-              onClose={onClose}
-            />
-          )} */}
         </Grid>
       </>
 

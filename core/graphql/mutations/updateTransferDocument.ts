@@ -3,8 +3,8 @@ import { TRANSFER_DOCUMENT_FIELDS } from '@core/graphql/fragment'
 
 export const UPDATE_TRANSFER_DOCUMENT = gql`
   ${TRANSFER_DOCUMENT_FIELDS}
-  mutation updateTransferDocument($input: UpdateTransferDocumentInput!) {
-    updateTransferDocument(input: $input) {
+  mutation updateTransferDocument($id: UUID!, $input: UpdateTransferDocumentInput!) {
+    updateTransferDocument(id: $id, input: $input) {
       __typename
       ...transferDocumentFields
     }

@@ -429,24 +429,6 @@ function UserContractDialog(props: UserContractDialogProps) {
           alignItems={"center"}
           gap={"10px"}
         >
-          {/* {!currentModifyTransferDocument ? (
-            <CreateTransferDocumentBtn
-              handleSubmit={handleSubmit}
-              onClose={onClose}
-            />
-          ) : null} */}
-          {/* {!currentModifyTransferDocument ? (
-            <CreateTransferDocumentBtn
-              handleSubmit={handleSubmit}
-              onClose={onClose}
-            />
-          ) : (
-            <EditTransferDocumentBtns
-              handleSubmit={handleSubmit}
-              id={currentModifyTransferDocument.id}
-              onClose={onClose}
-            />
-          )} */}
           <LoadingButton
             startIcon={<AddIcon />}
             variant="contained"

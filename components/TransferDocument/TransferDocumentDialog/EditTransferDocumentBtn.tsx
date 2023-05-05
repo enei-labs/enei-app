@@ -6,19 +6,22 @@ import { toast } from "react-toastify";
 import { useUpdateTransferDocument } from "@utils/hooks/mutations";
 
 interface EditTransferDocumentBtnProps {
+  transferDocumentId: string;
   onClose: VoidFunction;
   handleSubmit: UseFormHandleSubmit<FormData>;
 }
 
 const EditTransferDocumentBtn = (props: EditTransferDocumentBtnProps) => {
-  const { onClose, handleSubmit } = props;
+  const { transferDocumentId, onClose, handleSubmit } = props;
 
   const [updateTransferDocument, { loading }] = useUpdateTransferDocument();
 
   /** 新增用戶 mutation */
   const onUpdateTransferDocument = async (formData: FormData) => {
+    console.log({ formData });
     await updateTransferDocument({
       variables: {
+        id: transferDocumentId,
         input: {
           number: formData.number,
           name: formData.name,
@@ -35,7 +38,9 @@ const EditTransferDocumentBtn = (props: EditTransferDocumentBtnProps) => {
           })),
           users: formData.transferDocumentUsers.map((u) => ({
             monthlyTransferDegree: Number(u.monthlyTransferDegree),
-            expectedYearlyPurchaseDegree: u.expectedYearlyPurchaseDegree,
+            expectedYearlyPurchaseDegree: Number(
+              u.expectedYearlyPurchaseDegree
+            ),
             userId: u.user.value,
             userContractId: u.userContract.value,
             yearlyTransferDegree: Number(u.yearlyTransferDegree),

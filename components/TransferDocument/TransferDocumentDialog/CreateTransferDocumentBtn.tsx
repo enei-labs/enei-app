@@ -35,7 +35,9 @@ const CreateTransferDocumentBtn = (props: CreateTransferDocumentBtnProps) => {
           })),
           users: formData.transferDocumentUsers.map((u) => ({
             monthlyTransferDegree: Number(u.monthlyTransferDegree),
-            expectedYearlyPurchaseDegree: u.expectedYearlyPurchaseDegree,
+            expectedYearlyPurchaseDegree: Number(
+              u.expectedYearlyPurchaseDegree
+            ),
             userId: u.user.value,
             userContractId: u.userContract.value,
             yearlyTransferDegree: Number(u.yearlyTransferDegree),
