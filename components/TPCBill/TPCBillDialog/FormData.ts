@@ -5,4 +5,5 @@ export type FormData = {
   };
   billReceivedDate: Date;
   billDoc: string;
+  transferDegrees: Record<string, string>;
 }

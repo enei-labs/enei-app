@@ -66,6 +66,20 @@ export default function TPCBillDialog(props: TPCBillDialogProps) {
 
   const onCreateTPCBill = async (formData: any) => {
     console.log({ formData });
+    const transferDegrees = Object.entries(formData.transferDegrees).map(
+      ([key, value]) => {
+        const [userId, userContractId, powerPlantId, index] = key.split("_");
+        return {
+          userId,
+          userContractId,
+          powerPlantId,
+          index,
+          degree: value,
+        };
+      }
+    );
+
+    console.log({ transferDegrees });
   };
 
   return (
@@ -140,28 +154,27 @@ export default function TPCBillDialog(props: TPCBillDialogProps) {
               );
             })}
           </Box>
-          {(
-            transferDocumentData?.transferDocument.transferDocumentUsers ?? []
-          ).map((item, index) => {
-            console.log(
-              `transferDegrees.${item.user.id}.${item.userContract.id}.${selectedPowerPlant}_${index}`
-            );
-            return (
-              <Controller
-                key={`transferDegrees.${item.user.id}.${item.userContract.id}.${selectedPowerPlant}_${index}`}
-                control={control}
-                name={`transferDegrees.${item.user.id}.${item.userContract.id}.${selectedPowerPlant}_${index}`}
-                render={({ field }) => (
-                  <InputText
-                    {...field}
-                    type="number"
-                    label={`${item.user.contactName}(kWh)`}
-                  />
-                )}
-                rules={{ min: 0 }}
-              />
-            );
-          })}
+          {transferDocumentData && selectedPowerPlant
+            ? transferDocumentData.transferDocument.transferDocumentUsers.map(
+                (item, index) => {
+                  return (
+                    <Controller
+                      key={`transferDegrees.${item.user.id}_${item.userContract.id}_${selectedPowerPlant}_${index}`}
+                      control={control}
+                      name={`transferDegrees.${item.user.id}_${item.userContract.id}_${selectedPowerPlant}_${index}`}
+                      render={({ field }) => (
+                        <InputText
+                          {...field}
+                          type="number"
+                          label={`${item.user.contactName}(kWh)`}
+                        />
+                      )}
+                      rules={{ min: 0 }}
+                    />
+                  );
+                }
+              )
+            : null}
         </Box>
         <LoadingButton
           loading={loading}
