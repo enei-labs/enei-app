@@ -21,3 +21,4 @@ export * from "./updateTransferDocument";
 export * from "./removeTransferDocument";
 export * from "./removeUser";
 export * from './createUserContract';
+export * from './createTPCBill';

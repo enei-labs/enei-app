@@ -3,7 +3,6 @@ import { Box, Grid, Typography } from "@mui/material";
 import { IconBtn } from "@components/Button";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { FieldsController } from "@components/Controller";
-import { useValidatedForm } from "@utils/hooks";
 import FieldConfig, { textValidated } from "@core/types/fieldConfig";
 import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { useState } from "react";
@@ -12,9 +11,12 @@ import {
   useLazyTransferDocument,
   useTransferDocuments,
 } from "@utils/hooks/queries";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { InputAutocomplete, InputText } from "@components/Input";
 import { LoadingButton } from "@mui/lab";
+import { useCreateTPCBill } from "@utils/hooks";
+import { FormData } from "@components/TPCBill/TPCBillDialog/FormData";
+import { toast } from "react-toastify";
 
 interface TPCBillDialogProps {
   isOpenDialog: boolean;
@@ -45,18 +47,13 @@ export default function TPCBillDialog(props: TPCBillDialogProps) {
   const { isOpenDialog, onClose, variant } = props;
 
   const {
-    watch,
     control,
     formState: { errors },
     handleSubmit,
-  } = useForm();
-
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "transferDegrees",
-  });
+  } = useForm<FormData>();
 
   const { data: transferDocumentsData, loading } = useTransferDocuments();
+  const [createTPCBill, { loading: createLoading }] = useCreateTPCBill();
 
   const [getTransferDocument, { data: transferDocumentData }] =
     useLazyTransferDocument();
@@ -64,22 +61,33 @@ export default function TPCBillDialog(props: TPCBillDialogProps) {
   /** component-state */
   const [selectedPowerPlant, selectPowerPlant] = useState<string | null>(null);
 
-  const onCreateTPCBill = async (formData: any) => {
-    console.log({ formData });
+  const onCreateTPCBill = async (formData: FormData) => {
     const transferDegrees = Object.entries(formData.transferDegrees).map(
       ([key, value]) => {
-        const [userId, userContractId, powerPlantId, index] = key.split("_");
+        const [userId, userContractId, powerPlantId] = key.split("_");
         return {
           userId,
           userContractId,
           powerPlantId,
-          index,
-          degree: value,
+          degree: Number(value),
         };
       }
     );
 
-    console.log({ transferDegrees });
+    await createTPCBill({
+      variables: {
+        input: {
+          billDoc: formData.billDoc.id,
+          billReceivedDate: formData.billReceivedDate,
+          transferDocumentId: formData.transferDocument.value,
+          transferDegrees,
+        },
+      },
+      onCompleted: () => {
+        toast.success("新增成功");
+        onClose();
+      },
+    });
   };
 
   return (
@@ -177,7 +185,7 @@ export default function TPCBillDialog(props: TPCBillDialogProps) {
             : null}
         </Box>
         <LoadingButton
-          loading={loading}
+          loading={createLoading}
           startIcon={<AddIcon />}
           onClick={handleSubmit(onCreateTPCBill)}
         >

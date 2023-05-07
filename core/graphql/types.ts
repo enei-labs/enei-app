@@ -240,12 +240,13 @@ export type CreatePowerPlantInput = {
 export type CreateTpcBillInput = {
   billDoc: Scalars['String'];
   billReceivedDate: Scalars['DateTime'];
+  transferDegrees: Array<CreateTransferDegreeInput>;
   transferDocumentId: Scalars['ID'];
-  transferRecords: Array<CreateTransferRecordInput>;
 };
 
 export type CreateTransferDegreeInput = {
   degree: Scalars['Int'];
+  powerPlantId: Scalars['ID'];
   userContractId: Scalars['ID'];
   userId: Scalars['ID'];
 };
@@ -276,11 +277,6 @@ export type CreateTransferDocumentUserInput = {
   userContractId: Scalars['ID'];
   userId: Scalars['ID'];
   yearlyTransferDegree: Scalars['Int'];
-};
-
-export type CreateTransferRecordInput = {
-  powerPlantId: Scalars['ID'];
-  transferDegrees: Array<CreateTransferDegreeInput>;
 };
 
 export type CreateUserContractInput = {
@@ -874,7 +870,7 @@ export type TransferDocumentUser = {
 
 export type TransferRecord = {
   __typename?: 'TransferRecord';
-  powerPlantId: Scalars['ID'];
+  powerPlant: PowerPlant;
   transferDegrees: Array<TransferDegree>;
 };
 
