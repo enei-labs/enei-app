@@ -19,5 +19,6 @@ export const TRANSFER_DEGREE_FIELDS = gql`
     powerPlant {
       ...powerPlantFields
     }
+    createdAt
   }
 `

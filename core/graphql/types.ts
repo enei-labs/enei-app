@@ -812,7 +812,7 @@ export type TpcBill = {
   billDoc: Scalars['String'];
   billReceivedDate: Scalars['DateTime'];
   id: Scalars['ID'];
-  transferRecords: Array<TransferRecord>;
+  transferDegrees: Array<TransferDegree>;
 };
 
 export type TpcBillPage = {
@@ -823,6 +823,7 @@ export type TpcBillPage = {
 
 export type TransferDegree = {
   __typename?: 'TransferDegree';
+  createdAt: Scalars['DateTime'];
   degree: Scalars['Int'];
   id: Scalars['ID'];
   powerPlant: PowerPlant;
@@ -866,12 +867,6 @@ export type TransferDocumentUser = {
   user: User;
   userContract: UserContract;
   yearlyTransferDegree: Scalars['Int'];
-};
-
-export type TransferRecord = {
-  __typename?: 'TransferRecord';
-  powerPlant: PowerPlant;
-  transferDegrees: Array<TransferDegree>;
 };
 
 export type UpdateCompanyContractInput = {

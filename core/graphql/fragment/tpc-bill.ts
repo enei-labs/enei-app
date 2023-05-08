@@ -5,20 +5,20 @@ export const TPC_BILL_FIELDS = gql`
     id
     billReceivedDate
     billDoc
-    transferRecords {
-      powerPlantId
-      transferDegrees {
+    transferDegrees {
+      id
+      degree
+      userContract {
         id
-        degree
-        userContract {
-          id
-        }
-        user {
-          id
-        }
-        powerPlant {
-          id
-        }
+        name
+      }
+      user {
+        id
+        name
+      }
+      powerPlant {
+        id
+        name
       }
     }
   }

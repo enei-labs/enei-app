@@ -47,7 +47,7 @@ function UserContractBox(props: UserContractBoxProps) {
 
   return (
     <ContractBox
-      onClickFn={() => router.push(`/industry/${contract.id}`)}
+      onClickFn={() => {}}
       title={`${contract.name}`}
       contractInfos={contractInfos}
     />

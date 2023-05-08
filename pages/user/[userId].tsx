@@ -1,11 +1,10 @@
 import Head from "next/head";
 import IconBreadcrumbs from "@components/BreadCrumbs";
-import BoltIcon from "@mui/icons-material/BoltOutlined";
 import { useRouter } from "next/router";
 import Person2OutlinedIcon from "@mui/icons-material/Person2Outlined";
 import CircularProgress from "@mui/material/CircularProgress";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
-import { Box, Toolbar } from "@mui/material";
+import { Box } from "@mui/material";
 import { AuthLayout } from "@components/Layout";
 import { ReactElement } from "react";
 import { useUser } from "@utils/hooks/queries";
@@ -13,8 +12,9 @@ import UserCard from "@components/User/UserCard";
 
 function UserPage() {
   const router = useRouter();
-  const { userId } = router.query;
-  const { data, loading } = useUser(userId as string);
+  const userId = router.query.userId as string;
+
+  const { data, loading } = useUser(userId);
 
   if (loading) return <CircularProgress size="24px" />;
 
