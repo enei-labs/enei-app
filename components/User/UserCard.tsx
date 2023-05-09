@@ -21,6 +21,7 @@ import LaptopOutlinedIcon from "@mui/icons-material/LaptopOutlined";
 import AnalyticsOutlinedIcon from "@mui/icons-material/AnalyticsOutlined";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import AccountBalanceOutlinedIcon from "@mui/icons-material/AccountBalanceOutlined";
+import UserTransferDegreeChart from "@components/User/UserTransferDegreeChart";
 
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
@@ -223,7 +224,10 @@ function UserCard(props: UserCardProps) {
         </Grid>
 
         <Divider sx={{ margin: "36px 0 " }} />
-        <DemoChart name="月轉供量" />
+        <UserTransferDegreeChart
+          name="月轉供量"
+          thisYearTransferRecords={user.thisYearTransferRecords}
+        />
         <Divider sx={{ margin: "36px 0 " }} />
 
         <UserContractPanel user={user} />

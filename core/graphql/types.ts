@@ -133,6 +133,8 @@ export type Company = {
   id: Scalars['ID'];
   name: Scalars['String'];
   taxId: Scalars['String'];
+  /** 裝置量=該發電業簽署的合約裡面，所有裝置量的加總 */
+  totalVolume: Scalars['Int'];
 };
 
 export type CompanyContract = {

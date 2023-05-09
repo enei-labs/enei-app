@@ -8,5 +8,6 @@ export const COMPANY_FIELDS = gql`
     contactName
     contactEmail
     contactPhone
+    totalVolume
   }
 `

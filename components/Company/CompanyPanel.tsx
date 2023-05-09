@@ -48,6 +48,7 @@ const CompanyPanel = (props: CompanyPanelProps) => {
     },
     {
       header: "裝置量",
+      accessor: "totalVolume",
     },
     {
       header: "修改刪除",
