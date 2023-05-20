@@ -4,7 +4,15 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import { AuthLayout } from "@components/Layout";
-import { Box, Card, Container, Grid, Toolbar, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  Container,
+  Divider,
+  Grid,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import { ReactElement, useState } from "react";
 import Head from "next/head";
 import IconBreadcrumbs from "@components/BreadCrumbs";
@@ -12,6 +20,7 @@ import { IconBtn } from "@components/Button";
 import { useAuth } from "@core/context/auth";
 import dynamic from "next/dynamic";
 import { SvgIconComponent } from "@mui/icons-material";
+import InfoBox from "@components/InfoBox";
 
 const SettingDialog = dynamic(
   () => import("@components/Settings/SettingDialog")
@@ -73,11 +82,9 @@ const Settings = () => {
       />
       <Box sx={{ paddingTop: "12px" }}>
         <Card>
-          <Box
-            sx={{ marginTop: "44px", marginLeft: "32px", marginRight: "32px" }}
-          >
+          <Box margin="44px 32px">
             <Grid container justifyContent={"space-between"}>
-              <Typography variant="h4">個人資料</Typography>
+              <Typography variant="h4">帳戶資料</Typography>
               <IconBtn
                 icon={<BorderColorOutlinedIcon />}
                 onClick={() => {
@@ -88,31 +95,66 @@ const Settings = () => {
           </Box>
 
           {me ? (
-            <Container sx={{ margin: "32px 0" }}>
-              <Grid
-                container
-                direction={"column"}
-                spacing={2}
-                justifyContent={"center"}
-                sx={{ padding: "0 10px" }}
-              >
-                <ProfileWithIcons
-                  icon={PersonOutlineOutlinedIcon}
-                  type={ProfileInfoType.USER_NAME}
-                  text={me.name}
-                />
-                <ProfileWithIcons
-                  icon={HomeOutlinedIcon}
-                  type={ProfileInfoType.ACCOMPANY_NAME}
-                  text={me.companyName ?? ""}
-                />
-                <ProfileWithIcons
-                  icon={EmailOutlinedIcon}
-                  type={ProfileInfoType.USER_EMAIL}
-                  text={me.email}
-                />
-              </Grid>
-            </Container>
+            <Box display="flex">
+              <Container sx={{ margin: "32px 0" }}>
+                <Typography variant="h5">個人資料</Typography>
+                <Grid
+                  container
+                  direction={"column"}
+                  spacing={2}
+                  justifyContent={"center"}
+                  sx={{ padding: "0 10px" }}
+                >
+                  <ProfileWithIcons
+                    icon={PersonOutlineOutlinedIcon}
+                    type={ProfileInfoType.USER_NAME}
+                    text={me.name}
+                  />
+                  <ProfileWithIcons
+                    icon={HomeOutlinedIcon}
+                    type={ProfileInfoType.ACCOMPANY_NAME}
+                    text={me.companyName ?? ""}
+                  />
+                  <ProfileWithIcons
+                    icon={EmailOutlinedIcon}
+                    type={ProfileInfoType.USER_EMAIL}
+                    text={me.email}
+                  />
+                </Grid>
+              </Container>
+              <Divider orientation="vertical" />
+
+              <Box>
+                <Typography variant="h5">收款帳戶</Typography>
+                <Box>
+                  {[].map((x) => (
+                    <Grid container key={x.id}>
+                      <Grid item sm={4} key={`${c.label}-${index}`}>
+                        <InfoBox
+                          icon={c.icon}
+                          label={c.label}
+                          content={c.content}
+                        />
+                      </Grid>
+                      <Grid item sm={4} key={`${c.label}-${index}`}>
+                        <InfoBox
+                          icon={c.icon}
+                          label={c.label}
+                          content={c.content}
+                        />
+                      </Grid>
+                      <Grid item sm={4} key={`${c.label}-${index}`}>
+                        <InfoBox
+                          icon={c.icon}
+                          label={c.label}
+                          content={c.content}
+                        />
+                      </Grid>
+                    </Grid>
+                  ))}
+                </Box>
+              </Box>
+            </Box>
           ) : null}
         </Card>
       </Box>

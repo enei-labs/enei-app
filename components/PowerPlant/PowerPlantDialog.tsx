@@ -4,7 +4,11 @@ import { FieldConfig, Option } from "@core/types";
 import { numberValidated, textValidated } from "@core/types/fieldConfig";
 import { LoadingButton } from "@mui/lab";
 import { Grid, Typography } from "@mui/material";
-import { useUpdatePowerPlant, useValidatedForm } from "@utils/hooks";
+import {
+  useCreateOrUpdate,
+  useUpdatePowerPlant,
+  useValidatedForm,
+} from "@utils/hooks";
 import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { IconBtn } from "../Button";
 import CloseIcon from "@mui/icons-material/HighlightOff";
@@ -84,8 +88,11 @@ interface PowerPlantDialogProps {
 const PowerPlantDialog = (props: PowerPlantDialogProps) => {
   const { open, companyContractId, onClose, variant, defaultValues } = props;
 
-  const [createPowerPlant, { loading }] = useCreatePowerPlant();
-  const [updatePowerPlant, { loading: updateLoading }] = useUpdatePowerPlant();
+  const [createPowerPlant, updatePowerPlant, loading] = useCreateOrUpdate(
+    variant,
+    useCreatePowerPlant,
+    useUpdatePowerPlant
+  );
 
   const {
     control,
@@ -153,7 +160,7 @@ const PowerPlantDialog = (props: PowerPlantDialogProps) => {
       <LoadingButton
         startIcon={<AddIcon />}
         variant="contained"
-        loading={variant === "edit" ? updateLoading : loading}
+        loading={loading}
         onClick={handleSubmit(onSubmit)}
       >
         {variant === "edit" ? "更新" : "新增"}
