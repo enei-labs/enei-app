@@ -1,91 +1,89 @@
 import { FieldsController } from "@components/Controller";
 import Dialog from "@components/Dialog";
-import { FieldConfig, Option } from "@core/types";
-import { numberValidated, textValidated } from "@core/types/fieldConfig";
+import { FieldConfig } from "@core/types";
+import { textValidated } from "@core/types/fieldConfig";
 import { LoadingButton } from "@mui/lab";
 import { Grid, Typography } from "@mui/material";
-import { useUpdatePowerPlant, useValidatedForm } from "@utils/hooks";
+import {
+  useCreateOrUpdate,
+  useUpdateCompany,
+  useValidatedForm,
+} from "@utils/hooks";
 import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { IconBtn } from "../Button";
 import CloseIcon from "@mui/icons-material/HighlightOff";
-import { useCreatePowerPlant } from "@utils/hooks/mutations/useCreatePowerPlant";
 import { toast } from "react-toastify";
-import { PowerPlant } from "@core/graphql/types";
+import { Company } from "@core/graphql/types";
+import { useCreateCompany } from "@utils/hooks/mutations/useCreateCompany";
+import { COMPANIES } from "@core/graphql/queries";
 
 type FormData = {
   name: string;
-  number: string;
-  volume: number;
-  estimatedAnnualPowerGeneration: number;
-  transferRate: number;
-  address: string;
+  taxId: string;
+  contactName: string;
+  contactEmail: string;
+  contactPhone: string;
+  recipientAccounts: {
+    bankCode: string;
+    bankBranchCode: string;
+    accountName: string;
+    account: string;
+  }[];
 };
 
 const configs: FieldConfig[] = [
   {
     type: "TEXT",
     name: "name",
-    label: "電廠名稱",
+    label: "公司名稱",
     required: true,
     validated: textValidated,
   },
   {
     type: "TEXT",
-    name: "number",
-    label: "電號",
-    required: true,
-    validated: textValidated,
-  },
-  {
-    type: "NUMBER",
-    name: "volume",
-    label: "裝置容量（kW）",
-    required: true,
-    validated: numberValidated,
-  },
-  {
-    type: "NUMBER",
-    name: "annualPowerGeneration",
-    label: "年發電量（MWh",
-    required: true,
-    validated: numberValidated,
-  },
-  {
-    type: "NUMBER",
-    name: "estimatedAnnualPowerGeneration",
-    label: "單位預估年發電量（度/kW）",
-    required: true,
-    validated: numberValidated,
-  },
-  {
-    type: "TEXT",
-    name: "transferRate",
-    label: "轉供比例（%）",
+    name: "taxId",
+    label: "統一編號",
     required: true,
     validated: textValidated,
   },
   {
     type: "TEXT",
-    name: "address",
-    label: "地址",
+    name: "contactName",
+    label: "聯絡人姓名",
     required: true,
     validated: textValidated,
+  },
+  {
+    type: "TEXT",
+    name: "contactPhone",
+    label: "聯絡人電話",
+    required: true,
+    validated: textValidated,
+  },
+  {
+    type: "TEXT",
+    name: "contactEmail",
+    label: "聯絡人信箱",
+    required: true,
+    validated: textValidated.email(),
   },
 ];
 
-interface PowerPlantDialogProps {
+interface CompanyDialogProps {
   open: boolean;
   variant: "edit" | "create";
-  companyContractId?: string;
   onClose: VoidFunction;
-  defaultValues?: Omit<PowerPlant, "annualPowerGeneration">;
+  defaultValues?: Company;
 }
 
-const PowerPlantDialog = (props: PowerPlantDialogProps) => {
-  const { open, companyContractId, onClose, variant, defaultValues } = props;
+const CompanyDialog = (props: CompanyDialogProps) => {
+  const { open, onClose, variant, defaultValues } = props;
 
-  const [createPowerPlant, { loading }] = useCreatePowerPlant();
-  const [updatePowerPlant, { loading: updateLoading }] = useUpdatePowerPlant();
+  const [createCompany, updateCompany, loading] = useCreateOrUpdate(
+    variant,
+    useCreateCompany,
+    useUpdateCompany
+  );
 
   const {
     control,
@@ -96,41 +94,32 @@ const PowerPlantDialog = (props: PowerPlantDialogProps) => {
   });
 
   const onSubmit = async (formData: FormData) => {
-    if (variant === "create" && companyContractId) {
-      await createPowerPlant({
+    if (variant === "create") {
+      const { data } = await createCompany({
         variables: {
           input: {
             name: formData.name,
-            number: formData.number,
-            volume: Number(formData.volume),
-            estimatedAnnualPowerGeneration: Number(
-              formData.estimatedAnnualPowerGeneration
-            ),
-            transferRate: Number(formData.transferRate),
-            address: formData.address,
-            companyContractId,
+            taxId: formData.taxId,
+            contactName: formData.contactName,
+            contactEmail: formData.contactEmail,
+            contactPhone: formData.contactPhone,
           },
         },
-        onCompleted: () => {
-          toast.success("新增成功");
-          onClose();
-        },
+        refetchQueries: [COMPANIES],
       });
     }
 
     if (variant === "edit" && defaultValues) {
-      await updatePowerPlant({
+      await updateCompany({
         variables: {
           input: {
-            id: defaultValues.id,
+            companyId: defaultValues.id,
             name: formData.name,
-            number: formData.number,
-            volume: Number(formData.volume),
-            estimatedAnnualPowerGeneration: Number(
-              formData.estimatedAnnualPowerGeneration
-            ),
-            transferRate: Number(formData.transferRate),
-            address: formData.address,
+            taxId: formData.taxId,
+            contactName: formData.contactName,
+            contactEmail: formData.contactEmail,
+            contactPhone: formData.contactPhone,
+            recipientAccounts: formData.recipientAccounts,
           },
         },
         onCompleted: () => {
@@ -142,19 +131,12 @@ const PowerPlantDialog = (props: PowerPlantDialogProps) => {
   };
 
   return (
-    <Dialog
-      key="form"
-      open={!!state.form}
-      onClose={() => dispatch({ form: false })}
-    >
+    <Dialog key="form" open={open} onClose={onClose}>
       <Grid container justifyContent={"space-between"} alignItems={"center"}>
         <Typography variant="h4" textAlign={"left"}>
           公司資訊
         </Typography>
-        <IconBtn
-          icon={<CloseIcon />}
-          onClick={() => dispatch({ form: false })}
-        />
+        <IconBtn icon={<CloseIcon />} onClick={onClose} />
       </Grid>
       <FieldsController
         configs={configs.slice(0, 2)}
@@ -170,10 +152,10 @@ const PowerPlantDialog = (props: PowerPlantDialogProps) => {
         loading={loading}
         onClick={handleSubmit(onSubmit)}
       >
-        新增
+        {variant === "edit" ? "更新" : "新增"}
       </LoadingButton>
     </Dialog>
   );
 };
 
-export default PowerPlantDialog;
+export default CompanyDialog;

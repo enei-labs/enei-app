@@ -18,3 +18,4 @@ export * from "./useRemoveTransferDocument";
 export * from "./useRemoveUser";
 export * from './useCreateTPCBill';
 export * from './useRemoveCompany';
+export * from './useUpdateCompany';

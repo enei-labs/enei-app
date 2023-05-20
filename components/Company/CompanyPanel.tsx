@@ -1,5 +1,5 @@
 import { Table } from "@components/Table";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { useCompanies } from "@utils/hooks/queries";
 import { Company } from "@core/graphql/types";
 import { Config } from "../Table/Table";
@@ -8,6 +8,9 @@ import BorderColorOutlined from "@mui/icons-material/BorderColorOutlined";
 import DeleteOutlined from "@mui/icons-material/DeleteOutlined";
 import { useState } from "react";
 import { useRemoveCompany } from "@utils/hooks";
+import DialogAlert from "@components/DialogAlert";
+import { toast } from "react-toastify";
+import CompanyDialog from "@components/Company/CompanyDialog";
 
 interface CompanyPanelProps {
   setCompanyFn: (company: Company) => void;
@@ -100,7 +103,7 @@ const CompanyPanel = (props: CompanyPanelProps) => {
         }
       />
       {openUpdateDialog && selectedData ? (
-        <PowerPlantDialog
+        <CompanyDialog
           open={openUpdateDialog}
           onClose={() => setOpenUpdateDialog(false)}
           variant="edit"
@@ -110,10 +113,10 @@ const CompanyPanel = (props: CompanyPanelProps) => {
       {openDeleteDialog && selectedData ? (
         <DialogAlert
           open={openDeleteDialog}
-          title={"刪除電廠"}
-          content={"是否確認要刪除電廠？"}
+          title={"刪除公司"}
+          content={"是否確認要刪除公司？"}
           onConfirm={() => {
-            removePowerPlant({
+            removeCompany({
               variables: { id: selectedData.id },
               onCompleted: () => {
                 toast.success("刪除成功");

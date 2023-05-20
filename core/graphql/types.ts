@@ -132,6 +132,7 @@ export type Company = {
   contactPhone: Scalars['String'];
   id: Scalars['ID'];
   name: Scalars['String'];
+  recipientAccounts: Array<RecipientAccount>;
   taxId: Scalars['String'];
   /** 裝置量=該發電業簽署的合約裡面，所有裝置量的加總 */
   totalVolume: Scalars['Int'];
@@ -403,7 +404,6 @@ export type ModifyUserResponse = AccountAlreadyExistsError | User;
 
 export type Mutation = {
   __typename?: 'Mutation';
-  UpdateCompany: Company;
   changePassword: ChangePasswordResponse;
   createAccount: CreateAccountResponse;
   createAdmin: CreateAdminResponse;
@@ -430,14 +430,10 @@ export type Mutation = {
   setPassword: Account;
   signIn: SignInResponse;
   signOut: Success;
+  updateCompany: Company;
   updateCompanyContract: CompanyContract;
   updatePowerPlant: PowerPlant;
   updateTransferDocument: TransferDocument;
-};
-
-
-export type MutationUpdateCompanyArgs = {
-  input: UpdateCompanyInput;
 };
 
 
@@ -573,6 +569,11 @@ export type MutationSetPasswordArgs = {
 export type MutationSignInArgs = {
   email: Scalars['String'];
   password: Scalars['String'];
+};
+
+
+export type MutationUpdateCompanyArgs = {
+  input: UpdateCompanyInput;
 };
 
 
@@ -754,6 +755,22 @@ export type QueryUsersArgs = {
   roles?: Array<Role>;
 };
 
+export type RecipientAccount = {
+  __typename?: 'RecipientAccount';
+  /** 帳號 */
+  account: Scalars['String'];
+  /** 戶名 */
+  accountName: Scalars['String'];
+  /** 分行代碼 */
+  bankBranchCode: Scalars['String'];
+  /** 分行名稱 */
+  bankBranchName: Scalars['String'];
+  /** 銀行代碼 */
+  bankCode: Scalars['String'];
+  /** 銀行名稱 */
+  bankName: Scalars['String'];
+};
+
 export type RemoveAccountInput = {
   accountId: Scalars['ID'];
   reason?: InputMaybe<Scalars['String']>;
@@ -898,6 +915,7 @@ export type UpdateCompanyInput = {
   contactName?: InputMaybe<Scalars['String']>;
   contactPhone?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
+  recipientAccounts?: Array<UpdateRecipientAccountInput>;
   taxId?: InputMaybe<Scalars['String']>;
 };
 
@@ -909,6 +927,13 @@ export type UpdatePowerPlantInput = {
   number: Scalars['String'];
   transferRate: Scalars['Int'];
   volume: Scalars['Int'];
+};
+
+export type UpdateRecipientAccountInput = {
+  account: Scalars['String'];
+  accountName: Scalars['String'];
+  bankBranchCode: Scalars['String'];
+  bankCode: Scalars['String'];
 };
 
 export type UpdateTransferDocumentInput = {
