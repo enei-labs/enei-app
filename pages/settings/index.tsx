@@ -21,6 +21,8 @@ import { useAuth } from "@core/context/auth";
 import dynamic from "next/dynamic";
 import { SvgIconComponent } from "@mui/icons-material";
 import InfoBox from "@components/InfoBox";
+import CreditCardIcon from "@mui/icons-material/CreditCard";
+import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 
 const SettingDialog = dynamic(
   () => import("@components/Settings/SettingDialog")
@@ -60,9 +62,9 @@ const ProfileWithIcons = (props: {
   );
 };
 
+/** @TODO 銀行/分行名稱 */
 const Settings = () => {
   const [isOpenDialog, setIsOpenDialog] = useState<boolean>(false);
-
   const { me } = useAuth();
 
   return (
@@ -82,7 +84,7 @@ const Settings = () => {
       />
       <Box sx={{ paddingTop: "12px" }}>
         <Card>
-          <Box margin="44px 32px">
+          <Box margin="36px 32px">
             <Grid container justifyContent={"space-between"}>
               <Typography variant="h4">帳戶資料</Typography>
               <IconBtn
@@ -95,15 +97,15 @@ const Settings = () => {
           </Box>
 
           {me ? (
-            <Box display="flex">
-              <Container sx={{ margin: "32px 0" }}>
+            <Box display="flex" marginBottom="36px">
+              <Container sx={{ margin: "32px 0", flex: 1 }}>
                 <Typography variant="h5">個人資料</Typography>
                 <Grid
                   container
                   direction={"column"}
                   spacing={2}
                   justifyContent={"center"}
-                  sx={{ padding: "0 10px" }}
+                  sx={{ marginTop: "12px" }}
                 >
                   <ProfileWithIcons
                     icon={PersonOutlineOutlinedIcon}
@@ -122,38 +124,53 @@ const Settings = () => {
                   />
                 </Grid>
               </Container>
-              <Divider orientation="vertical" />
+              <Divider orientation="vertical" flexItem />
 
-              <Box>
+              <Container sx={{ margin: "32px 0", flex: 1 }}>
                 <Typography variant="h5">收款帳戶</Typography>
-                <Box>
-                  {[].map((x) => (
-                    <Grid container key={x.id}>
-                      <Grid item sm={4} key={`${c.label}-${index}`}>
+                <Box
+                  sx={{
+                    marginTop: "12px",
+                    display: "flex",
+                    flexDirection: "column",
+                    rowGap: "8px",
+                  }}
+                >
+                  {(me.recipientAccounts ?? []).map((recipientAccount) => (
+                    <Grid
+                      container
+                      key={recipientAccount.account}
+                      sx={{
+                        border: "2px solid #B2DFDB",
+                        borderRadius: "4px",
+                        padding: "8px 16px",
+                      }}
+                    >
+                      <Grid item sm={4}>
                         <InfoBox
-                          icon={c.icon}
-                          label={c.label}
-                          content={c.content}
+                          icon={CreditCardIcon}
+                          label="銀行"
+                          content={`${recipientAccount.bankCode}`}
                         />
                       </Grid>
-                      <Grid item sm={4} key={`${c.label}-${index}`}>
+                      <Grid item sm={4}>
                         <InfoBox
-                          icon={c.icon}
-                          label={c.label}
-                          content={c.content}
+                          icon={AccountCircleOutlinedIcon}
+                          label="戶名"
+                          content={recipientAccount.accountName}
                         />
                       </Grid>
-                      <Grid item sm={4} key={`${c.label}-${index}`}>
+                      <Grid item sm={4}>
                         <InfoBox
-                          icon={c.icon}
-                          label={c.label}
-                          content={c.content}
+                          icon={AccountBalanceWalletOutlinedIcon}
+                          label="帳號"
+                          content={recipientAccount.account}
                         />
                       </Grid>
                     </Grid>
                   ))}
                 </Box>
-              </Box>
+              </Container>
             </Box>
           ) : null}
         </Card>
