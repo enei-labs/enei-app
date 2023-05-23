@@ -497,12 +497,14 @@ export type MutationModifyAccountArgs = {
   email?: InputMaybe<Scalars['String']>;
   id: Scalars['ID'];
   name?: InputMaybe<Scalars['String']>;
+  recipientAccounts?: InputMaybe<Array<UpdateRecipientAccountInput>>;
 };
 
 
 export type MutationModifyProfileArgs = {
   email?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
+  recipientAccounts?: InputMaybe<Array<UpdateRecipientAccountInput>>;
 };
 
 
@@ -918,7 +920,6 @@ export type UpdateCompanyInput = {
   contactName?: InputMaybe<Scalars['String']>;
   contactPhone?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
-  recipientAccounts?: Array<UpdateRecipientAccountInput>;
   taxId?: InputMaybe<Scalars['String']>;
 };
 

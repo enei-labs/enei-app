@@ -72,8 +72,6 @@ function UserCard(props: UserCardProps) {
   const [removeUser] = useRemoveUser();
   const cardInfo = userCardInfo(user);
 
-  console.log({ user });
-
   return (
     <>
       <Card sx={{ p: "36px" }}>

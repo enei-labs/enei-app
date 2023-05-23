@@ -11,6 +11,9 @@ export const ACCOUNT_FIELDS = gql`
     companyName
     recipientAccounts {
 			bankCode
+      bankName
+      bankBranchCode
+      bankBranchName
 			accountName
       account
     }
