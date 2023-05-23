@@ -120,8 +120,6 @@ export default function UserTransferDegreeChart(props: DemoChartProps) {
   const [value, setValue] = useState();
   const { name, thisYearTransferRecords } = props;
 
-  console.log({ thisYearTransferRecords });
-
   return (
     <Box sx={styles.container}>
       <Box sx={styles.flex}>

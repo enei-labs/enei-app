@@ -23,6 +23,7 @@ export type Account = {
   hasSetPassword: Scalars['Boolean'];
   id: Scalars['ID'];
   name: Scalars['String'];
+  recipientAccounts?: Maybe<Array<RecipientAccount>>;
   removeRecord?: Maybe<RemoveAccountRecord>;
   role: Role;
 };
@@ -97,6 +98,7 @@ export type Admin = Account & {
   hasSetPassword: Scalars['Boolean'];
   id: Scalars['ID'];
   name: Scalars['String'];
+  recipientAccounts?: Maybe<Array<RecipientAccount>>;
   removeRecord?: Maybe<RemoveAccountRecord>;
   role: Role;
 };
@@ -367,6 +369,7 @@ export type Guest = Account & {
   hasSetPassword: Scalars['Boolean'];
   id: Scalars['ID'];
   name: Scalars['String'];
+  recipientAccounts?: Maybe<Array<RecipientAccount>>;
   removeRecord?: Maybe<RemoveAccountRecord>;
   role: Role;
 };
@@ -494,12 +497,14 @@ export type MutationModifyAccountArgs = {
   email?: InputMaybe<Scalars['String']>;
   id: Scalars['ID'];
   name?: InputMaybe<Scalars['String']>;
+  recipientAccounts?: InputMaybe<Array<UpdateRecipientAccountInput>>;
 };
 
 
 export type MutationModifyProfileArgs = {
   email?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
+  recipientAccounts?: InputMaybe<Array<UpdateRecipientAccountInput>>;
 };
 
 

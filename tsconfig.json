@@ -22,8 +22,8 @@
       "@styles/*": ["styles/*"],
       "@utils/*": ["utils/*"],
       "@core/*": ["core/*"]
-    }
+    },
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.json"],
   "exclude": ["node_modules"]
 }
