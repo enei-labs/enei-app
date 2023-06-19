@@ -16,6 +16,7 @@ import { Role } from "@core/graphql/types";
 import ChartIcon from "@mui/icons-material/InsertChartOutlinedSharp";
 import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import dynamic from "next/dynamic";
+import UserBillDialog from "@components/UserBill/UserBillDialog/UserBillDialog";
 const TransferDocumentDialog = dynamic(
   () =>
     import(
@@ -32,6 +33,7 @@ const CompanyContractPanel = dynamic(
 
 function ExportElectricBillPage() {
   const [open, setOpen] = useState(false);
+  const [showUserBillDialog, setShowUserBillDialog] = useState(false);
   return (
     <>
       <Head>
@@ -60,10 +62,13 @@ function ExportElectricBillPage() {
               }}
             >
               {/* 搜尋 */}
-              <InputSearch onChange={() => { }} />
+              <InputSearch onChange={() => {}} />
 
               {/* 新增電費單 */}
-              <Button startIcon={<AddIcon />} onClick={() => { }}>
+              <Button
+                startIcon={<AddIcon />}
+                onClick={() => setShowUserBillDialog(true)}
+              >
                 新增電費單組合
               </Button>
             </Box>
@@ -84,6 +89,13 @@ function ExportElectricBillPage() {
           isOpenDialog={open}
           onClose={() => setOpen(false)}
           variant="create"
+        />
+      ) : null}
+      {showUserBillDialog ? (
+        <UserBillDialog
+          isOpenDialog={showUserBillDialog}
+          variant="create"
+          onClose={() => setShowUserBillDialog(false)}
         />
       ) : null}
     </>

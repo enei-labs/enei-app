@@ -23,6 +23,7 @@ interface FieldConfig {
     | 'ADDRESS'
     | 'COMPONENT'
     | 'ACCOUNT_TYPE'
+    | 'RADIO'
   name: string
   label?: string | number | React.ReactNode
   value?: any

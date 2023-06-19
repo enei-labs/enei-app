@@ -56,6 +56,7 @@ export enum Action {
   CreateTpcBill = 'CREATE_TPC_BILL',
   CreateTransferDocument = 'CREATE_TRANSFER_DOCUMENT',
   CreateUser = 'CREATE_USER',
+  CreateUserBill = 'CREATE_USER_BILL',
   CreateUserContract = 'CREATE_USER_CONTRACT',
   RemoveAccount = 'REMOVE_ACCOUNT',
   RemoveAdmin = 'REMOVE_ADMIN',
@@ -66,6 +67,7 @@ export enum Action {
   RemoveTpcBill = 'REMOVE_TPC_BILL',
   RemoveTransferDocument = 'REMOVE_TRANSFER_DOCUMENT',
   RemoveUser = 'REMOVE_USER',
+  RemoveUserBill = 'REMOVE_USER_BILL',
   RemoveUserContract = 'REMOVE_USER_CONTRACT',
   SendResetPasswordEmail = 'SEND_RESET_PASSWORD_EMAIL',
   UpdateAccount = 'UPDATE_ACCOUNT',
@@ -75,6 +77,7 @@ export enum Action {
   UpdateTpcBill = 'UPDATE_TPC_BILL',
   UpdateTransferDocument = 'UPDATE_TRANSFER_DOCUMENT',
   UpdateUser = 'UPDATE_USER',
+  UpdateUserBill = 'UPDATE_USER_BILL',
   UpdateUserContract = 'UPDATE_USER_CONTRACT',
   ViewAccountList = 'VIEW_ACCOUNT_LIST',
   ViewAdminList = 'VIEW_ADMIN_LIST',
@@ -84,6 +87,7 @@ export enum Action {
   ViewPowerPlantList = 'VIEW_POWER_PLANT_LIST',
   ViewTpcBillList = 'VIEW_TPC_BILL_LIST',
   ViewTransferDocumentList = 'VIEW_TRANSFER_DOCUMENT_LIST',
+  ViewUserBillList = 'VIEW_USER_BILL_LIST',
   ViewUserContractList = 'VIEW_USER_CONTRACT_LIST',
   ViewUserList = 'VIEW_USER_LIST'
 }
@@ -126,6 +130,11 @@ export type BankAccountInput = {
 };
 
 export type ChangePasswordResponse = Admin | InvalidCurrentPasswordError;
+
+export enum ChargeType {
+  Self = 'SELF',
+  User = 'USER'
+}
 
 export type Company = {
   __typename?: 'Company';
@@ -284,6 +293,26 @@ export type CreateTransferDocumentUserInput = {
   yearlyTransferDegree: Scalars['Int'];
 };
 
+export type CreateUserBillInput = {
+  address: Scalars['String'];
+  contactEmail: Scalars['String'];
+  contactName: Scalars['String'];
+  contactPhone: Scalars['String'];
+  credentialInspectionFee: ChargeType;
+  credentialServiceFee: ChargeType;
+  electricNumbers: Array<Scalars['String']>;
+  /** 預計電費單寄出期限（收到繳費通知單後天數 */
+  estimatedBillDeliverDate: Scalars['Float'];
+  name: Scalars['String'];
+  noticeForTPCBill: Scalars['Boolean'];
+  noticeForTheBuilding: Scalars['Boolean'];
+  /** 用戶繳費期限（收到繳費通知單後天數） */
+  paymentDeadline: Scalars['Float'];
+  recipientAccount: UserBillRecipientAccountInput;
+  transportationFee: ChargeType;
+  userId: Scalars['String'];
+};
+
 export type CreateUserContractInput = {
   contractDoc: Scalars['String'];
   electricNumberInfos: Array<ElectricNumberInfoInput>;
@@ -416,6 +445,7 @@ export type Mutation = {
   createTPCBill: TpcBill;
   createTransferDocument: TransferDocument;
   createUser: User;
+  createUserBill: UserBill;
   createUserContract: UserContract;
   modifyAccount: Account;
   modifyProfile: Account;
@@ -483,6 +513,11 @@ export type MutationCreateTransferDocumentArgs = {
 
 export type MutationCreateUserArgs = {
   input: CreateUserInput;
+};
+
+
+export type MutationCreateUserBillArgs = {
+  input: CreateUserBillInput;
 };
 
 
@@ -650,6 +685,8 @@ export type Query = {
   transferDocument: TransferDocument;
   transferDocuments: TransferDocumentPage;
   user: User;
+  userBill: UserBill;
+  userBills: UserBillPage;
   userContract: UserContract;
   userContracts: UserContractPage;
   users: UserPage;
@@ -739,6 +776,17 @@ export type QueryTransferDocumentsArgs = {
 
 export type QueryUserArgs = {
   id: Scalars['UUID'];
+};
+
+
+export type QueryUserBillArgs = {
+  id: Scalars['UUID'];
+};
+
+
+export type QueryUserBillsArgs = {
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -920,7 +968,6 @@ export type UpdateCompanyInput = {
   contactName?: InputMaybe<Scalars['String']>;
   contactPhone?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
-  recipientAccounts?: Array<UpdateRecipientAccountInput>;
   taxId?: InputMaybe<Scalars['String']>;
 };
 
@@ -972,14 +1019,69 @@ export type User = {
   warning?: Maybe<Scalars['String']>;
 };
 
+export type UserBill = {
+  __typename?: 'UserBill';
+  address: Scalars['String'];
+  contactEmail: Scalars['String'];
+  contactName: Scalars['String'];
+  contactPhone: Scalars['String'];
+  credentialInspectionFee: ChargeType;
+  credentialServiceFee: ChargeType;
+  electricNumberInfos: Array<UserBillElectricNumberInfo>;
+  /** 預計電費單寄出期限（收到繳費通知單後天數 */
+  estimatedBillDeliverDate: Scalars['Int'];
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  noticeForTPCBill: Scalars['Boolean'];
+  noticeForTheBuilding: Scalars['Boolean'];
+  /** 用戶繳費期限（收到繳費通知單後天數） */
+  paymentDeadline: Scalars['Int'];
+  recipientAccount: UserBillRecipientAccount;
+  transportationFee: ChargeType;
+  user: User;
+};
+
+export type UserBillElectricNumberInfo = {
+  __typename?: 'UserBillElectricNumberInfo';
+  number: Scalars['String'];
+  /** 採購電價（元/kWh） */
+  price: Scalars['String'];
+};
+
+export type UserBillPage = {
+  __typename?: 'UserBillPage';
+  list: Array<UserBill>;
+  total: Scalars['Int'];
+};
+
+export type UserBillRecipientAccount = {
+  __typename?: 'UserBillRecipientAccount';
+  /** 帳號 */
+  account: Scalars['String'];
+  /** 分行代碼 */
+  bankBranchCode: Scalars['String'];
+  /** 銀行代碼 */
+  bankCode: Scalars['String'];
+};
+
+export type UserBillRecipientAccountInput = {
+  /** 帳號 */
+  account: Scalars['String'];
+  /** 分行代碼 */
+  bankBranchCode?: Scalars['String'];
+  /** 銀行代碼 */
+  bankCode: Scalars['String'];
+};
+
 export type UserContract = {
   __typename?: 'UserContract';
   contractDoc: Scalars['String'];
+  /** 電號資訊 */
   electricNumberInfos: Array<ElectricNumberInfo>;
   id: Scalars['ID'];
   lowerLimit: Scalars['Int'];
   name: Scalars['String'];
-  price: Scalars['Int'];
+  price: Scalars['String'];
   purchaseDegree: Scalars['Int'];
   salesPeriod: Scalars['String'];
   serialNumber: Scalars['String'];

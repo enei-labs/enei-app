@@ -25,3 +25,4 @@ export * from './createTPCBill';
 export * from './createCompany';
 export * from './updateCompany';
 export * from './removeCompany';
+export * from './createUserBill';

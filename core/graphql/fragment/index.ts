@@ -9,4 +9,5 @@ export * from './userContractFields';
 export * from './companyContractFields';
 export * from './transferDegreeFields';
 export * from './dashboardFields';
-export * from './tpc-bill';
+export * from './tpcBillFields';
+export * from './userBillFields';
