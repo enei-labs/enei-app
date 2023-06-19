@@ -15,6 +15,7 @@ import { InputText } from "@components/Input";
 import RadioGroup from "@components/RadioGroup";
 import { ChargeType } from "@core/graphql/types";
 import { ElectricNumbersField } from "@components/UserBill/UserBillDialog/ElectricNumbersField";
+import { useUsers } from "@utils/hooks/queries";
 
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
@@ -24,44 +25,6 @@ interface UserBillDialogProps {
   variant: "edit" | "create";
   onClose: VoidFunction;
 }
-
-const userInformationConfig: FieldConfig[] = [
-  {
-    type: "TEXT",
-    name: "name",
-    label: "電費單名稱",
-    placeholder: "請填入",
-    validated: textValidated,
-  },
-  {
-    type: "SINGLE_SELECT",
-    name: "userId",
-    label: "用戶",
-    placeholder: "請填入",
-    validated: textValidated,
-  },
-  {
-    type: "SINGLE_SELECT",
-    name: "recipientAccount",
-    label: "收款帳戶",
-    placeholder: "請填入",
-    validated: textValidated,
-  },
-  {
-    type: "NUMBER",
-    name: "estimatedBillDeliverDate",
-    label: "預計電費單寄出期限（收到繳費通知單後天數）",
-    placeholder: "請填入",
-    validated: textValidated,
-  },
-  {
-    type: "NUMBER",
-    name: "paymentDeadline",
-    label: "用戶繳費期限（收到繳費通知單後天數）",
-    placeholder: "請填入",
-    validated: textValidated,
-  },
-];
 
 const ChargeTypeRadios = [
   {
@@ -81,6 +44,51 @@ const ChargeTypeMap = {
 
 function UserBillDialog(props: UserBillDialogProps) {
   const { isOpenDialog, onClose, currentModifyUserBill, variant } = props;
+
+  const { data, loading } = useUsers();
+
+  const userInformationConfig: FieldConfig[] = [
+    {
+      type: "TEXT",
+      name: "name",
+      label: "電費單名稱",
+      placeholder: "請填入",
+      validated: textValidated,
+    },
+    {
+      type: "SINGLE_SELECT",
+      name: "userId",
+      label: "用戶",
+      placeholder: "請填入",
+      options:
+        data?.users.list.map((user) => ({
+          label: `${user.contactEmail}(${user.name})`,
+          value: user.id,
+        })) ?? [],
+      validated: textValidated,
+    },
+    {
+      type: "SINGLE_SELECT",
+      name: "recipientAccount",
+      label: "收款帳戶",
+      placeholder: "請填入",
+      validated: textValidated,
+    },
+    {
+      type: "NUMBER",
+      name: "estimatedBillDeliverDate",
+      label: "預計電費單寄出期限（收到繳費通知單後天數）",
+      placeholder: "請填入",
+      validated: textValidated,
+    },
+    {
+      type: "NUMBER",
+      name: "paymentDeadline",
+      label: "用戶繳費期限（收到繳費通知單後天數）",
+      placeholder: "請填入",
+      validated: textValidated,
+    },
+  ];
 
   const {
     control,
