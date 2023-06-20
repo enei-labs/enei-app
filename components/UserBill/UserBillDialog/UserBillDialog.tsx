@@ -99,7 +99,10 @@ function UserBillDialog(props: UserBillDialogProps) {
     defaultValues: currentModifyUserBill
       ? {
           name: currentModifyUserBill.name,
-          userId: currentModifyUserBill.user.id,
+          userId: {
+            label: currentModifyUserBill.user.contactEmail,
+            value: currentModifyUserBill.user.id,
+          },
           recipientAccount: {
             bankCode: currentModifyUserBill.recipientAccount.bankCode,
             bankBranchCode:
@@ -241,7 +244,7 @@ function UserBillDialog(props: UserBillDialogProps) {
           用戶電號
         </Typography>
 
-        {userId ? (
+        {userId && userId.value ? (
           <Controller
             control={control}
             name={`electricNumberInfos`}
@@ -249,7 +252,7 @@ function UserBillDialog(props: UserBillDialogProps) {
               <ElectricNumbersField
                 field={field}
                 control={control}
-                userId={userId}
+                userId={userId.value}
               />
             )}
           />

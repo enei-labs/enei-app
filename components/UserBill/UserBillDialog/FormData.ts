@@ -2,7 +2,10 @@ import { ChargeType } from "@core/graphql/types";
 
 export type FormData = {
   name: string;
-  userId: string;
+  userId: {
+    label: string,
+    value: string;
+  };
   recipientAccount: {
     bankCode: string;
     bankBranchCode: string;
