@@ -12,3 +12,4 @@ export * from './userContracts';
 export * from './dashboard';
 export * from './tpcBill';
 export * from './userBill';
+export * from './fee';

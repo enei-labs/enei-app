@@ -11,3 +11,4 @@ export * from './transferDegreeFields';
 export * from './dashboardFields';
 export * from './tpcBillFields';
 export * from './userBillFields';
+export * from './feeFields';

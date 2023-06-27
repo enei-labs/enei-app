@@ -51,6 +51,7 @@ export enum Action {
   CreateAdmin = 'CREATE_ADMIN',
   CreateCompany = 'CREATE_COMPANY',
   CreateCompanyContract = 'CREATE_COMPANY_CONTRACT',
+  CreateFee = 'CREATE_FEE',
   CreateGuest = 'CREATE_GUEST',
   CreatePowerPlant = 'CREATE_POWER_PLANT',
   CreateTpcBill = 'CREATE_TPC_BILL',
@@ -73,6 +74,7 @@ export enum Action {
   UpdateAccount = 'UPDATE_ACCOUNT',
   UpdateCompany = 'UPDATE_COMPANY',
   UpdateCompanyContract = 'UPDATE_COMPANY_CONTRACT',
+  UpdateFee = 'UPDATE_FEE',
   UpdatePowerPlant = 'UPDATE_POWER_PLANT',
   UpdateTpcBill = 'UPDATE_TPC_BILL',
   UpdateTransferDocument = 'UPDATE_TRANSFER_DOCUMENT',
@@ -387,6 +389,18 @@ export type Error = {
   message: Scalars['String'];
 };
 
+export type Fee = {
+  __typename?: 'Fee';
+  /** 憑證服務費 */
+  certificateServiceFee: Scalars['String'];
+  /** 憑證查驗費 */
+  certificateVerificationFee: Scalars['String'];
+  id: Scalars['ID'];
+  /** 代輸費 */
+  substitutionFee: Scalars['String'];
+  updatedAt: Scalars['DateTime'];
+};
+
 export type Guest = Account & {
   __typename?: 'Guest';
   actions: Array<Action>;
@@ -465,6 +479,7 @@ export type Mutation = {
   signOut: Success;
   updateCompany: Company;
   updateCompanyContract: CompanyContract;
+  updateFee: Fee;
   updatePowerPlant: PowerPlant;
   updateTransferDocument: TransferDocument;
 };
@@ -622,6 +637,11 @@ export type MutationUpdateCompanyContractArgs = {
 };
 
 
+export type MutationUpdateFeeArgs = {
+  input: UpdateFeeInput;
+};
+
+
 export type MutationUpdatePowerPlantArgs = {
   input: UpdatePowerPlantInput;
 };
@@ -675,6 +695,7 @@ export type Query = {
   companyContract: CompanyContract;
   companyContracts: CompanyContractPage;
   dashboard: Dashboard;
+  fee: Fee;
   guest: Guest;
   guests: GuestPage;
   me?: Maybe<Account>;
@@ -969,6 +990,12 @@ export type UpdateCompanyInput = {
   contactPhone?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   taxId?: InputMaybe<Scalars['String']>;
+};
+
+export type UpdateFeeInput = {
+  certificateServiceFee?: InputMaybe<Scalars['String']>;
+  certificateVerificationFee?: InputMaybe<Scalars['String']>;
+  substitutionFee?: InputMaybe<Scalars['String']>;
 };
 
 export type UpdatePowerPlantInput = {
