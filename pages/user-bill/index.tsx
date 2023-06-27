@@ -5,6 +5,7 @@ import {
   Card,
   CircularProgress,
   Divider,
+  Grid,
   Typography,
 } from "@mui/material";
 import { AuthLayout } from "@components/Layout";
@@ -17,6 +18,11 @@ import ChartIcon from "@mui/icons-material/InsertChartOutlinedSharp";
 import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import dynamic from "next/dynamic";
 import UserBillDialog from "@components/UserBill/UserBillDialog/UserBillDialog";
+import { useFee } from "@utils/hooks/queries";
+import InboxOutlinedIcon from "@mui/icons-material/InboxOutlined";
+import LaptopOutlinedIcon from "@mui/icons-material/LaptopOutlined";
+import AnalyticsOutlinedIcon from "@mui/icons-material/AnalyticsOutlined";
+
 const TransferDocumentDialog = dynamic(
   () =>
     import(
@@ -31,9 +37,23 @@ const CompanyContractPanel = dynamic(
   }
 );
 
+const styles = {
+  box: {
+    backgroundColor: "primary.light",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: "10px",
+    height: "172px",
+    marginTop: "10px",
+  },
+} as const;
+
 function ExportElectricBillPage() {
   const [open, setOpen] = useState(false);
   const [showUserBillDialog, setShowUserBillDialog] = useState(false);
+  const { data, loading } = useFee();
+
   return (
     <>
       <Head>
@@ -52,13 +72,90 @@ function ExportElectricBillPage() {
       <Box sx={{ paddingTop: "12px" }}>
         <AuthGuard roles={[Role.Admin, Role.SuperAdmin]}>
           <Card sx={{ p: "36px" }}>
+            <Typography variant="h4">規費設定</Typography>
+            <Grid container>
+              <Grid item sm={4} sx={{ padding: "36px 36px 36px 0" }}>
+                <Box sx={{ display: "flex", columnGap: "12px" }}>
+                  <InboxOutlinedIcon width="20px" />
+                  <Typography variant="body2">代輸費</Typography>
+                </Box>
+                <Box sx={styles.box}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "flex-end",
+                      margin: "40px",
+                      columnGap: "4px",
+                    }}
+                  >
+                    <Typography variant="h3" sx={{ whiteSpace: "nowrap" }}>
+                      {"test"}
+                    </Typography>
+                    <Typography variant="body3" sx={{ whiteSpace: "nowrap" }}>
+                      元/kWh
+                    </Typography>
+                  </Box>
+                </Box>
+              </Grid>
+              <Grid item sm={4} sx={{ padding: "36px 36px 36px 0" }}>
+                <Box sx={{ display: "flex", columnGap: "12px" }}>
+                  <LaptopOutlinedIcon width="20px" />
+                  <Typography variant="body2">憑證查驗費</Typography>
+                </Box>
+                <Box sx={styles.box}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "flex-end",
+                      margin: "40px",
+                      columnGap: "4px",
+                    }}
+                  >
+                    <Typography variant="h3" sx={{ whiteSpace: "nowrap" }}>
+                      {"test"}
+                    </Typography>
+                    <Typography variant="body3" sx={{ whiteSpace: "nowrap" }}>
+                      元/kWh
+                    </Typography>
+                  </Box>
+                </Box>
+              </Grid>
+              <Grid item sm={4} sx={{ padding: "36px 36px 36px 0" }}>
+                <Box sx={{ display: "flex", columnGap: "12px" }}>
+                  <AnalyticsOutlinedIcon width="20px" />
+                  <Typography variant="body2">憑證服務費</Typography>
+                </Box>
+                <Box sx={styles.box}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "flex-end",
+                      margin: "40px",
+                      columnGap: "4px",
+                    }}
+                  >
+                    <Typography variant="h3" sx={{ whiteSpace: "nowrap" }}>
+                      {"test"}
+                    </Typography>
+                    <Typography variant="body3" sx={{ whiteSpace: "nowrap" }}>
+                      元/kWh
+                    </Typography>
+                  </Box>
+                </Box>
+              </Grid>
+            </Grid>
+          </Card>
+
+          <Divider sx={{ margin: "36px 0 " }} />
+
+          <Card sx={{ p: "36px" }}>
             <Typography variant="h4">用戶電費單</Typography>
 
             <Box
               sx={{
                 display: "flex",
                 justifyContent: "space-between",
-                mb: "16px",
+                my: "16px",
               }}
             >
               {/* 搜尋 */}
