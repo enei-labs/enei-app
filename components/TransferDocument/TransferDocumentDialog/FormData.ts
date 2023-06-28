@@ -26,6 +26,10 @@ export type FormData = {
       label: string;
       value: string;
     }
+    electricNumber: {
+      label: string;
+      value: string;
+    }
     yearlyTransferDegree: number;
   }[];
 };

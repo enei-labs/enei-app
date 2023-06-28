@@ -149,6 +149,10 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                 label: u.userContract.name,
                 value: u.userContract.id,
               },
+              electricNumber: {
+                label: u.electricNumberInfo.number,
+                value: u.electricNumberInfo.number,
+              },
             })),
         }
       : {},
@@ -189,6 +193,10 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
 
   const currentPowerPlant = watch(
     `transferDocumentPowerPlants.${powerPlantIndex}.powerPlant`
+  );
+
+  const currentUserContract = watch(
+    `transferDocumentUsers.${userIndex}.userContract`
   );
 
   const currentPowerPlantInfo = useMemo(() => {
@@ -417,13 +425,44 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                   render={({ field }) => (
                     <InputAutocomplete
                       {...field}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        getUserContracts({
+                          variables: { userId: e!.value as string },
+                        });
+                      }}
                       options={
                         userContractsData?.userContracts.list.map((o) => ({
-                          label: o.serialNumber,
+                          label: `${o.serialNumber} ${o.name}`,
                           value: o.id,
                         })) ?? []
                       }
-                      label={`電號`}
+                      label={`契約編號`}
+                      placeholder={"請填入"}
+                      required
+                    />
+                  )}
+                />
+              ) : null}
+              {currentUserContract?.value ? (
+                <Controller
+                  control={control}
+                  name={`transferDocumentUsers.${index}.electricNumber`}
+                  render={({ field }) => (
+                    <InputAutocomplete
+                      {...field}
+                      options={
+                        userContractsData?.userContracts.list
+                          .find(
+                            (contract) =>
+                              contract.id === currentUserContract.value
+                          )
+                          ?.electricNumberInfos.map((info) => ({
+                            label: info.number,
+                            value: info.number,
+                          })) ?? []
+                      }
+                      label={`契約編號`}
                       placeholder={"請填入"}
                       required
                     />
@@ -502,6 +541,10 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                     value: "",
                   },
                   userContract: {
+                    label: "",
+                    value: "",
+                  },
+                  electricNumber: {
                     label: "",
                     value: "",
                   },

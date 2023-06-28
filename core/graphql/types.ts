@@ -287,6 +287,7 @@ export type CreateTransferDocumentPowerPlantInput = {
 };
 
 export type CreateTransferDocumentUserInput = {
+  electricNumber: Scalars['String'];
   /** 要小於電號的電號年預計採購度數 */
   expectedYearlyPurchaseDegree: Scalars['Int'];
   monthlyTransferDegree: Scalars['Int'];
@@ -955,6 +956,7 @@ export type TransferDocumentPowerPlant = {
 
 export type TransferDocumentUser = {
   __typename?: 'TransferDocumentUser';
+  electricNumberInfo: ElectricNumberInfo;
   expectedYearlyPurchaseDegree: Scalars['Int'];
   monthlyTransferDegree: Scalars['Int'];
   user: User;
