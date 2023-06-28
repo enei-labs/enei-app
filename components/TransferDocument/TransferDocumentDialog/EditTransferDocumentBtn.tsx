@@ -42,6 +42,7 @@ const EditTransferDocumentBtn = (props: EditTransferDocumentBtnProps) => {
             ),
             userId: u.user.value,
             userContractId: u.userContract.value,
+            electricNumber: u.electricNumber.value,
             yearlyTransferDegree: Number(u.yearlyTransferDegree),
           })),
         },
