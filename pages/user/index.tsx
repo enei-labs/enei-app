@@ -11,17 +11,11 @@ import { Role, User } from "@core/graphql/types";
 import UserPanel from "@components/User/UserPanel";
 import { useUsers } from "@utils/hooks/queries";
 import dynamic from "next/dynamic";
+import { ActionTypeEnum } from "@core/types/actionTypeEnum";
 
 const UserDialog = dynamic(
   () => import("@components/User/UserDialog/UserDialog")
 );
-
-enum ActionTypeEnum {
-  CREATE = "create",
-  EDIT = "edit",
-  DELETE = "delete",
-  CLOSE = "close",
-}
 
 const UsersPage = () => {
   const { data: userData, loading, refetch } = useUsers();

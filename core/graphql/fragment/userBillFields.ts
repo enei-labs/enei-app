@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 export const USER_BILL_FIELDS = gql`
-  fragment userBillFields on userBill {
+  fragment userBillFields on UserBill {
     id
     name
     estimatedBillDeliverDate
@@ -13,7 +13,7 @@ export const USER_BILL_FIELDS = gql`
     }
     electricNumberInfos {
       number
-      degree
+      price
     }
     transportationFee
     credentialInspectionFee

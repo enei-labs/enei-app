@@ -18,10 +18,12 @@ import ChartIcon from "@mui/icons-material/InsertChartOutlinedSharp";
 import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import dynamic from "next/dynamic";
 import UserBillDialog from "@components/UserBill/UserBillDialog/UserBillDialog";
-import { useFee } from "@utils/hooks/queries";
+import { useFee, useUserBills } from "@utils/hooks/queries";
 import InboxOutlinedIcon from "@mui/icons-material/InboxOutlined";
 import LaptopOutlinedIcon from "@mui/icons-material/LaptopOutlined";
 import AnalyticsOutlinedIcon from "@mui/icons-material/AnalyticsOutlined";
+import UserPanel from "@components/User/UserPanel";
+import UserBillPanel from "@components/UserBill/UserBillPanel";
 
 const TransferDocumentDialog = dynamic(
   () =>
@@ -53,6 +55,7 @@ function ExportElectricBillPage() {
   const [open, setOpen] = useState(false);
   const [showUserBillDialog, setShowUserBillDialog] = useState(false);
   const { data, loading } = useFee();
+  const { data: userBillsData, loading: userBillLoading } = useUserBills();
 
   return (
     <>
@@ -171,12 +174,12 @@ function ExportElectricBillPage() {
             </Box>
 
             {/* 電費單表格 */}
-            {/* <UserPanel
-              users={userData?.users}
-              loading={loading}
-              refetchFn={refetch}
-              onAction={onAction}
-            /> */}
+            <UserBillPanel
+              userBills={userBillsData?.userBills}
+              loading={userBillLoading}
+              refetchFn={() => {}}
+              onAction={() => {}}
+            />
           </Card>
           <Divider sx={{ my: "24px" }} />
         </AuthGuard>

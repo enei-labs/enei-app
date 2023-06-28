@@ -5,17 +5,10 @@ import { Box } from "@mui/material";
 import { useRouter } from "next/router";
 import { formatDateTime } from "@utils/format";
 
-enum ActionTypeEnum {
-  CREATE = "create",
-  EDIT = "edit",
-  DELETE = "delete",
-}
-
 interface TransferDocumentPanelProps {
   transferDocuments?: TransferDocumentPage;
   loading?: boolean;
   refetchFn: (transferDocument: Page) => void;
-  // onAction: (action: ActionTypeEnum, user?: User) => void;
 }
 
 const TransferDocumentPanel = (props: TransferDocumentPanelProps) => {
