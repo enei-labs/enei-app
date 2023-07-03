@@ -30,7 +30,11 @@ function ProgressDialog(props: ProgressDialogProps) {
       <InputDate value={date} onChange={setDate} label="進展日期" />
 
       {showContractInput ? (
-        <InputText value={number} onChange={setNumber} label="契約編號" />
+        <InputText
+          value={number}
+          onChange={setNumber as any}
+          label="契約編號"
+        />
       ) : null}
 
       <Box
