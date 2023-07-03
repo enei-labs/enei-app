@@ -2,7 +2,7 @@ import type { TextFieldProps } from "@mui/material";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import React from "react";
+import React, { ChangeEvent } from "react";
 
 const style = {
   text: [
@@ -14,7 +14,11 @@ const style = {
   ],
 };
 
-const InputText = React.forwardRef<HTMLInputElement, TextFieldProps>(
+interface InputTextProps extends Omit<TextFieldProps, "onChange"> {
+  onChange?: (e: string) => void;
+}
+
+const InputText = React.forwardRef<HTMLInputElement, InputTextProps>(
   function InputText(props, ref) {
     const { label, value, required, helperText, onChange } = props;
 

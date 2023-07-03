@@ -14,6 +14,11 @@ export const BASE_TRANSFER_DOCUMENT_FIELDS = gql`
     replyDoc
     wordDoc
     formalDoc
+    planSubmissionDate
+    responseAcquisitionDate
+    contractReviewDate
+    contractCompletionDate
+    officialTransferDate
   }
 `
 

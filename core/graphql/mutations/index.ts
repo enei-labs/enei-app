@@ -18,6 +18,7 @@ export * from "./createPowerPlant";
 export * from "./updatePowerPlant";
 export * from "./createTransferDocument";
 export * from "./updateTransferDocument";
+export * from './updateTransferDocumentStage';
 export * from "./removeTransferDocument";
 export * from "./removeUser";
 export * from './createUserContract';

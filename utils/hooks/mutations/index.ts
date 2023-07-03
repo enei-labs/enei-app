@@ -14,6 +14,7 @@ export * from "./useRemoveCompanyContract";
 export * from "./useUpdatePowerPlant";
 export * from "./useCreateTransferDocument";
 export * from './useUpdateTransferDocument';
+export * from './useUpdateTransferDocumentStage';
 export * from "./useRemoveTransferDocument";
 export * from "./useRemoveUser";
 export * from './useCreateTPCBill';

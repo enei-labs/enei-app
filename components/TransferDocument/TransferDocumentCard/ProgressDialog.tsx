@@ -3,24 +3,35 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CloseIcon from "@mui/icons-material/HighlightOff";
 import Dialog from "@components/Dialog";
 import { InputDate, InputText } from "@components/Input";
+import { useForwardTransferDocumentStage } from "@utils/hooks";
+import { LoadingButton } from "@mui/lab";
+import { useState } from "react";
 
 interface ProgressDialogProps {
   handleNextFn: VoidFunction;
   open: boolean;
   onClose: VoidFunction;
   showContractInput: boolean;
+  transferDocumentId: string;
 }
 
 function ProgressDialog(props: ProgressDialogProps) {
-  const { open, onClose, showContractInput, handleNextFn } = props;
+  const { open, onClose, showContractInput, handleNextFn, transferDocumentId } =
+    props;
+  const [updateStage, loading] =
+    useForwardTransferDocumentStage(transferDocumentId);
+  const [date, setDate] = useState(new Date().toString());
+  const [number, setNumber] = useState<string>("");
 
   return (
     <Dialog maxWidth="xs" key="confirm" open={open} onClose={onClose}>
       <Typography variant="h4">填入進展日期</Typography>
 
-      <InputDate label="進展日期" />
+      <InputDate value={date} onChange={setDate} label="進展日期" />
 
-      {showContractInput ? <InputText label="契約編號" /> : null}
+      {showContractInput ? (
+        <InputText value={number} onChange={setNumber} label="契約編號" />
+      ) : null}
 
       <Box
         sx={{
@@ -29,16 +40,18 @@ function ProgressDialog(props: ProgressDialogProps) {
           gap: "8px",
         }}
       >
-        <Button
+        <LoadingButton
+          loading={loading}
           startIcon={<CheckCircleOutlineIcon />}
           variant="contained"
-          onClick={() => {
+          onClick={async () => {
+            await updateStage(new Date(date), number);
             handleNextFn();
             onClose();
           }}
         >
           確認
-        </Button>
+        </LoadingButton>
         <Button startIcon={<CloseIcon />} variant="outlined" onClick={onClose}>
           取消
         </Button>

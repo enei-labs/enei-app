@@ -7,13 +7,17 @@ import {
   StepLabel,
   Stepper,
   Typography,
-  Grid
+  Grid,
 } from "@mui/material";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import InfoBox from "@components/InfoBox";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import ProgressDialog from "@components/TransferDocument/TransferDocumentCard/ProgressDialog";
+import { TransferDocument } from "@core/graphql/types";
+import { useBackwardTransferDocumentStage } from "@utils/hooks";
+import { LoadingButton } from "@mui/lab";
+import { formatDateTime } from "@utils/format";
 
 const steps = [
   "轉供計畫書送審",
@@ -23,20 +27,65 @@ const steps = [
   "正式轉供日",
 ] as const;
 
-const ProgressBar: React.FC = () => {
-  const [activeStep, setActiveStep] = useState(0);
-  const [dates, setDates] = useState<string[]>(Array(steps.length).fill(""));
+type ProgressBarProps = {
+  transferDocument: TransferDocument;
+};
+
+const getCurrentStep = (transferDocument: TransferDocument) => {
+  if (transferDocument.officialTransferDate) {
+    return 5;
+  }
+
+  if (transferDocument.contractCompletionDate) {
+    return 4;
+  }
+
+  if (transferDocument.contractReviewDate) {
+    return 3;
+  }
+
+  if (transferDocument.responseAcquisitionDate) {
+    return 2;
+  }
+
+  if (transferDocument.planSubmissionDate) {
+    return 1;
+  }
+
+  return 0;
+};
+
+const ProgressBar = ({ transferDocument }: ProgressBarProps) => {
+  const [activeStep, setActiveStep] = useState(
+    getCurrentStep(transferDocument)
+  );
   const [shownDialog, showDialog] = useState(false);
+  const [backward, loading] = useBackwardTransferDocumentStage(
+    transferDocument.id
+  );
 
   const handleNext = () => {
-    const newDates = [...dates];
-    newDates[activeStep] = new Date().toLocaleDateString();
-    setDates(newDates);
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
-  const handleBack = () => {
+  const handleBack = async () => {
+    await backward();
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const getDate = (index: number) => {
+    switch (index) {
+      case 0:
+        return formatDateTime(transferDocument.planSubmissionDate);
+      case 1:
+        return formatDateTime(transferDocument.responseAcquisitionDate);
+      case 2:
+        return formatDateTime(transferDocument.contractReviewDate);
+      case 3:
+        return formatDateTime(transferDocument.contractCompletionDate);
+      case 4:
+        return formatDateTime(transferDocument.officialTransferDate);
+    }
   };
 
   return (
@@ -52,7 +101,8 @@ const ProgressBar: React.FC = () => {
         </Typography>
         <Grid item>
           <Stack direction="row" spacing={2}>
-            <Button
+            <LoadingButton
+              loading={loading}
               variant="contained"
               color="primary"
               onClick={handleBack}
@@ -60,12 +110,12 @@ const ProgressBar: React.FC = () => {
               startIcon={<ArrowBack />}
             >
               倒退
-            </Button>
+            </LoadingButton>
             <Button
               variant="contained"
               color="primary"
               onClick={() => showDialog(true)}
-              disabled={activeStep === steps.length - 1}
+              disabled={activeStep === steps.length}
               endIcon={<ArrowForward sx={{ color: "white" }} />}
             >
               進展
@@ -79,7 +129,11 @@ const ProgressBar: React.FC = () => {
           label="受理台電區處"
           content="台北西處"
         />
-        <InfoBox icon={EventNoteIcon} label="期望轉供日" content="2020.12.21" />
+        <InfoBox
+          icon={EventNoteIcon}
+          label="期望轉供日"
+          content={formatDateTime(transferDocument.expectedTime)}
+        />
       </Box>
       <Box padding="24px 8px" border={"2px solid #B2DFDB"} borderRadius="4px">
         <Stepper activeStep={activeStep} alternativeLabel>
@@ -87,9 +141,9 @@ const ProgressBar: React.FC = () => {
             <Step key={label}>
               <StepLabel icon=" ">
                 {label}
-                {dates[index] && (
+                {getDate(index) && (
                   <Typography variant="caption" display="block">
-                    {dates[index]}
+                    {getDate(index)}
                   </Typography>
                 )}
               </StepLabel>
@@ -99,6 +153,7 @@ const ProgressBar: React.FC = () => {
       </Box>
       {shownDialog ? (
         <ProgressDialog
+          transferDocumentId={transferDocument.id}
           handleNextFn={handleNext}
           onClose={() => showDialog(false)}
           open={shownDialog}

@@ -483,6 +483,7 @@ export type Mutation = {
   updateFee: Fee;
   updatePowerPlant: PowerPlant;
   updateTransferDocument: TransferDocument;
+  updateTransferDocumentStage: TransferDocument;
 };
 
 
@@ -651,6 +652,13 @@ export type MutationUpdatePowerPlantArgs = {
 export type MutationUpdateTransferDocumentArgs = {
   id: Scalars['UUID'];
   input: UpdateTransferDocumentInput;
+};
+
+
+export type MutationUpdateTransferDocumentStageArgs = {
+  id: Scalars['UUID'];
+  input?: InputMaybe<UpdateTransferDocumentStageInput>;
+  moveNextStep: Scalars['Boolean'];
 };
 
 export type PasswordReset = {
@@ -927,15 +935,21 @@ export type TransferDegree = {
 
 export type TransferDocument = {
   __typename?: 'TransferDocument';
+  contractCompletionDate?: Maybe<Scalars['DateTime']>;
+  contractReviewDate?: Maybe<Scalars['DateTime']>;
   /** 期望完成日：這份轉供合約涵蓋的用戶契約，在契約中約定的約定轉供日 */
   expectedTime: Scalars['DateTime'];
   formalDoc: Scalars['String'];
   id: Scalars['ID'];
   name: Scalars['String'];
-  number: Scalars['String'];
+  /** 契約編號 */
+  number?: Maybe<Scalars['String']>;
+  officialTransferDate?: Maybe<Scalars['DateTime']>;
+  planSubmissionDate?: Maybe<Scalars['DateTime']>;
   printingDoc: Scalars['String'];
   receptionAreas: Scalars['String'];
   replyDoc: Scalars['String'];
+  responseAcquisitionDate?: Maybe<Scalars['DateTime']>;
   transferDocumentPowerPlants: Array<TransferDocumentPowerPlant>;
   transferDocumentUsers: Array<TransferDocumentUser>;
   wordDoc: Scalars['String'];
@@ -1028,6 +1042,11 @@ export type UpdateTransferDocumentInput = {
   replyDoc: Scalars['String'];
   users: Array<CreateTransferDocumentUserInput>;
   wordDoc: Scalars['String'];
+};
+
+export type UpdateTransferDocumentStageInput = {
+  date: Scalars['DateTime'];
+  number?: InputMaybe<Scalars['String']>;
 };
 
 export type User = {

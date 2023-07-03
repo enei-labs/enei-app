@@ -13,7 +13,12 @@ import ProgressBar from "@components/TransferDocument/TransferDocumentCard/Progr
 import DownloadDocBox from "@components/DownloadDocBox";
 
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
-const TransferDocumentDialog = dynamic(() => import("@components/TransferDocument/TransferDocumentDialog/TransferDocumentDialog"));
+const TransferDocumentDialog = dynamic(
+  () =>
+    import(
+      "@components/TransferDocument/TransferDocumentDialog/TransferDocumentDialog"
+    )
+);
 
 interface TransferDocumentProps {
   transferDocument: TransferDocument;
@@ -38,13 +43,18 @@ function TransferDocumentCard(props: TransferDocumentProps) {
             margin: "0 0 32px 0",
           }}
         >
-          <Typography variant="h4">{`${transferDocument.number}(${transferDocument.name})`}</Typography>
+          <Typography variant="h4">{`${
+            transferDocument.number ?? "轉供契約申請中"
+          }(${transferDocument.name})`}</Typography>
           <Box sx={{ display: "flex" }}>
             <IconBtn
               icon={<DriveFileRenameOutlineOutlinedIcon />}
               onClick={() => setOpenEditDialog(true)}
             />
-            <IconBtn icon={<DeleteOutlined />} onClick={() => setOpenDeleteDialog(true)} />
+            <IconBtn
+              icon={<DeleteOutlined />}
+              onClick={() => setOpenDeleteDialog(true)}
+            />
           </Box>
         </Box>
         <Typography sx={{ margin: "0 0 24px 0" }} variant="h5">
@@ -67,7 +77,7 @@ function TransferDocumentCard(props: TransferDocumentProps) {
 
         <Divider sx={{ margin: "36px 0" }} />
 
-        <ProgressBar />
+        <ProgressBar transferDocument={transferDocument} />
 
         <Divider sx={{ margin: "36px 0" }} />
 
