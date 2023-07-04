@@ -65,12 +65,12 @@ const ProgressBar = ({ transferDocument }: ProgressBarProps) => {
   );
 
   const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setActiveStep((prevActiveStep) => Math.min(prevActiveStep + 1, steps.length));
   };
 
   const handleBack = async () => {
     await backward();
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    setActiveStep((prevActiveStep) => Math.max(prevActiveStep - 1, 0));
   };
 
   const getDate = (index: number) => {
