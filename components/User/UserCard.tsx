@@ -230,8 +230,8 @@ function UserCard(props: UserCardProps) {
       {openDeleteDialog ? (
         <DialogAlert
           open={openDeleteDialog}
-          title={"刪除合約"}
-          content={"是否確認要刪除合約？"}
+          title={"刪除用戶"}
+          content={"是否確認要刪除用戶？"}
           onConfirm={() => {
             removeUser({
               variables: { id: user.id },

@@ -163,7 +163,6 @@ function UserDialog(props: UserDialogProps) {
         <Typography variant="h5" textAlign={"left"}>
           付款帳號
         </Typography>
-
         {bankAccountsFields.map((item, index) => {
           return (
             <Grid container key={item.id} flexWrap={"nowrap"}>
