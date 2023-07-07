@@ -9,9 +9,7 @@ import {
   Card,
   Container,
   Divider,
-  Grid,
-  Toolbar,
-  Typography,
+  Grid, Typography
 } from "@mui/material";
 import { ReactElement, useState } from "react";
 import Head from "next/head";
@@ -124,6 +122,7 @@ const Settings = () => {
                   />
                 </Grid>
               </Container>
+
               <Divider orientation="vertical" flexItem />
 
               <Container sx={{ margin: "32px 0", flex: 1 }}>

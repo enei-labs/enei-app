@@ -170,6 +170,17 @@ function UserDialog(props: UserDialogProps) {
                 render={({ field }) => (
                   <InputText
                     {...field}
+                    label={`銀行代碼${index + 1}`}
+                    placeholder={"請填入"}
+                  />
+                )}
+                name={`bankAccounts.${index}.code`}
+                control={control}
+              />
+              <Controller
+                render={({ field }) => (
+                  <InputText
+                    {...field}
                     label={`帳號${index + 1}`}
                     placeholder={"請填入"}
                   />
