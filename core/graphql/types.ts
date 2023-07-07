@@ -1115,8 +1115,6 @@ export type UserBillRecipientAccount = {
 export type UserBillRecipientAccountInput = {
   /** 帳號 */
   account: Scalars['String'];
-  /** 分行代碼 */
-  bankBranchCode?: Scalars['String'];
   /** 銀行代碼 */
   bankCode: Scalars['String'];
 };

@@ -16,6 +16,7 @@ import RadioGroup from "@components/RadioGroup";
 import { ChargeType } from "@core/graphql/types";
 import { ElectricNumbersField } from "@components/UserBill/UserBillDialog/ElectricNumbersField";
 import { useUsers } from "@utils/hooks/queries";
+import CreateUserBillBtn from "@components/UserBill/UserBillDialog/CreateUserBillBtn";
 
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
@@ -37,6 +38,17 @@ const ChargeTypeRadios = [
   },
 ];
 
+const YesOrNoRadios = [
+  {
+    label: "是",
+    value: true,
+  },
+  {
+    label: "不是",
+    value: false,
+  },
+];
+
 const ChargeTypeMap = {
   [ChargeType.User]: "向用戶收取",
   [ChargeType.Self]: "自行負擔",
@@ -46,6 +58,51 @@ function UserBillDialog(props: UserBillDialogProps) {
   const { isOpenDialog, onClose, currentModifyUserBill, variant } = props;
 
   const { data, loading } = useUsers();
+
+  const {
+    control,
+    formState: { errors },
+    handleSubmit,
+    watch,
+  } = useValidatedForm<FormData>(undefined, {
+    defaultValues: currentModifyUserBill
+      ? {
+          name: currentModifyUserBill.name,
+          userId: {
+            label: currentModifyUserBill.user.contactEmail,
+            value: currentModifyUserBill.user.id,
+          },
+          recipientAccount: {
+            label: `(${currentModifyUserBill.recipientAccount.bankCode}) ${currentModifyUserBill.recipientAccount.account}`,
+            value: {
+              bankCode: currentModifyUserBill.recipientAccount.bankCode,
+              account: currentModifyUserBill.recipientAccount.account,
+            },
+          },
+          estimatedBillDeliverDate:
+            currentModifyUserBill.estimatedBillDeliverDate,
+          paymentDeadline: currentModifyUserBill.paymentDeadline,
+          transportationFee: currentModifyUserBill.transportationFee,
+          credentialInspectionFee:
+            currentModifyUserBill.credentialInspectionFee,
+          credentialServiceFee: currentModifyUserBill.credentialServiceFee,
+          noticeForTheBuilding: currentModifyUserBill.noticeForTheBuilding,
+          noticeForTPCBill: currentModifyUserBill.noticeForTPCBill,
+          electricNumberInfos: (
+            currentModifyUserBill.electricNumberInfos ?? []
+          ).map((info) => ({
+            number: info.number,
+            price: info.price,
+          })),
+          contactName: currentModifyUserBill.contactName,
+          contactEmail: currentModifyUserBill.contactEmail,
+          contactPhone: currentModifyUserBill.contactPhone,
+          address: currentModifyUserBill.address,
+        }
+      : {},
+  });
+
+  const userId = watch("userId");
 
   const userInformationConfig: FieldConfig[] = [
     {
@@ -73,6 +130,16 @@ function UserBillDialog(props: UserBillDialogProps) {
       label: "收款帳戶",
       placeholder: "請填入",
       validated: textValidated,
+      options:
+        data?.users.list
+          .find((user) => userId?.value === user.id)
+          ?.bankAccounts.map((b) => ({
+            label: `(${b.code}) ${b.account}`,
+            value: {
+              bankCode: b.code,
+              account: b.account,
+            },
+          })) ?? [],
     },
     {
       type: "NUMBER",
@@ -89,62 +156,6 @@ function UserBillDialog(props: UserBillDialogProps) {
       validated: textValidated,
     },
   ];
-
-  const {
-    control,
-    formState: { errors },
-    handleSubmit,
-    watch,
-  } = useValidatedForm<FormData>(undefined, {
-    defaultValues: currentModifyUserBill
-      ? {
-          name: currentModifyUserBill.name,
-          userId: {
-            label: currentModifyUserBill.user.contactEmail,
-            value: currentModifyUserBill.user.id,
-          },
-          recipientAccount: {
-            bankCode: currentModifyUserBill.recipientAccount.bankCode,
-            bankBranchCode:
-              currentModifyUserBill.recipientAccount.bankBranchCode,
-            account: currentModifyUserBill.recipientAccount.account,
-          },
-          estimatedBillDeliverDate:
-            currentModifyUserBill.estimatedBillDeliverDate,
-          paymentDeadline: currentModifyUserBill.paymentDeadline,
-          transportationFee: {
-            label: ChargeTypeMap[currentModifyUserBill.transportationFee],
-            value: currentModifyUserBill.transportationFee,
-          },
-          credentialInspectionFee: {
-            label: ChargeTypeMap[currentModifyUserBill.credentialInspectionFee],
-            value: currentModifyUserBill.credentialInspectionFee,
-          },
-          credentialServiceFee: {
-            label: ChargeTypeMap[currentModifyUserBill.credentialServiceFee],
-            value: currentModifyUserBill.credentialServiceFee,
-          },
-          noticeForTheBuilding: {
-            label: currentModifyUserBill.noticeForTheBuilding ? "是" : "否",
-            value: currentModifyUserBill.noticeForTheBuilding,
-          },
-          noticeForTPCBill: {
-            label: currentModifyUserBill.noticeForTPCBill ? "是" : "否",
-            value: currentModifyUserBill.noticeForTPCBill,
-          },
-          electricNumberInfos: (
-            currentModifyUserBill.electricNumberInfos ?? []
-          ).map((info) => ({
-            number: info.number,
-            price: info.price,
-          })),
-          contactName: currentModifyUserBill.contactName,
-          contactEmail: currentModifyUserBill.contactEmail,
-          contactPhone: currentModifyUserBill.contactPhone,
-        }
-      : {},
-  });
-  const userId = watch("userId");
 
   const [addAccountNumber, setAddAccountNumber] = useState<number>(1);
 
@@ -219,7 +230,7 @@ function UserBillDialog(props: UserBillDialogProps) {
               <RadioGroup
                 {...field}
                 label="是否需要大樓通知單"
-                radios={ChargeTypeRadios}
+                radios={YesOrNoRadios}
               />
             );
           }}
@@ -233,7 +244,7 @@ function UserBillDialog(props: UserBillDialogProps) {
               <RadioGroup
                 {...field}
                 label="是否需包含台電代輸費單"
-                radios={ChargeTypeRadios}
+                radios={YesOrNoRadios}
               />
             );
           }}
@@ -277,7 +288,7 @@ function UserBillDialog(props: UserBillDialogProps) {
             render={({ field }) => (
               <>
                 <InputText
-                  label={"聯絡人姓名"}
+                  label={"收件人姓名"}
                   {...field}
                   placeholder={"請填入"}
                   required
@@ -291,7 +302,7 @@ function UserBillDialog(props: UserBillDialogProps) {
             render={({ field }) => (
               <>
                 <InputText
-                  label={"聯絡人電話"}
+                  label={"收件人電話"}
                   {...field}
                   placeholder={"請填入"}
                   required
@@ -307,7 +318,22 @@ function UserBillDialog(props: UserBillDialogProps) {
           render={({ field }) => (
             <>
               <InputText
-                label={"聯絡人信箱"}
+                label={"收件人信箱"}
+                {...field}
+                placeholder={"請填入"}
+                required
+              />
+            </>
+          )}
+        ></Controller>
+
+        <Controller
+          control={control}
+          name={"address"}
+          render={({ field }) => (
+            <>
+              <InputText
+                label={"收件人地址"}
                 {...field}
                 placeholder={"請填入"}
                 required
@@ -317,22 +343,17 @@ function UserBillDialog(props: UserBillDialogProps) {
         ></Controller>
 
         {/* 按鈕區塊 */}
-        {/* <Grid
+        <Grid
           container
           justifyContent={"flex-start"}
           alignItems={"center"}
           gap={"10px"}
         >
+          {/** @TODO modifyUserBill */}
           {!currentModifyUserBill ? (
-            <CreateUserBtn handleSubmit={handleSubmit} onClose={onClose} />
-          ) : (
-            <EditUserBtns
-              handleSubmit={handleSubmit}
-              id={currentModifyUserBill.id}
-              onClose={onClose}
-            />
-          )}
-        </Grid> */}
+            <CreateUserBillBtn handleSubmit={handleSubmit} onClose={onClose} />
+          ) : null}
+        </Grid>
       </>
 
       {/* 刪除付款帳號 Dialog */}

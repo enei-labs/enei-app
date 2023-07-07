@@ -13,6 +13,8 @@ import { useAuth } from "@core/context/auth";
 import { Box } from "@mui/material";
 import { useRouter } from "next/router";
 import { ActionTypeEnum } from "@core/types/actionTypeEnum";
+import { useState } from "react";
+import { UserBillDownloadDialog } from "@components/UserBill/UserBillDownloadDialog";
 
 interface UserBillPanelProps {
   userBills?: UserBillPage;
@@ -25,6 +27,8 @@ const UserBillPanel = (props: UserBillPanelProps) => {
   const { userBills, loading = false, refetchFn, onAction } = props;
   const { me } = useAuth();
   const router = useRouter();
+  const [currentUserBill, setCurrentUserBill] = useState<UserBill | null>(null);
+  const [isOpenDialog, setOpenDownloadDialog] = useState(false);
 
   const configs: Config<UserBill>[] = [
     {
@@ -58,6 +62,17 @@ const UserBillPanel = (props: UserBillPanelProps) => {
     },
     {
       header: "電費單下載",
+      render: (rowData) => {
+        return (
+          <IconBtn
+            icon={<BorderColorOutlined />}
+            onClick={() => {
+              setOpenDownloadDialog(true);
+              setCurrentUserBill(rowData);
+            }}
+          />
+        );
+      },
     },
     {
       header: "大樓電費單下載",
@@ -96,6 +111,13 @@ const UserBillPanel = (props: UserBillPanelProps) => {
         loading={loading}
         onPageChange={refetchFn}
       />
+      {currentUserBill ? (
+        <UserBillDownloadDialog
+          userBill={currentUserBill}
+          isOpenDialog={isOpenDialog}
+          onClose={() => setOpenDownloadDialog(false)}
+        />
+      ) : null}
     </>
   );
 };

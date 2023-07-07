@@ -2,6 +2,7 @@ export * from "./useSetPassword";
 export * from "./useSignIn";
 export * from "./useSignOut";
 export * from "./useCreateUser";
+export * from './useCreateUserBill';
 export * from "./useModifyUser";
 export * from "./useCreateAccount";
 export * from "./useModifyAccount";
