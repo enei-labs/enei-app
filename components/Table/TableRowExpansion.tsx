@@ -4,7 +4,7 @@ import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
-import { get } from "lodash";
+import get from "lodash/get";
 import { useState } from "react";
 import { Config } from "./Table";
 

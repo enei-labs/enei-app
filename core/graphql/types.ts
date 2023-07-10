@@ -372,7 +372,7 @@ export type ElectricNumberInfo = {
   contactPhone: Scalars['String'];
   degree: Scalars['Int'];
   number: Scalars['String'];
-  tableNumbers: Array<Scalars['Float']>;
+  tableNumbers: Array<Scalars['String']>;
 };
 
 export type ElectricNumberInfoInput = {
@@ -382,7 +382,7 @@ export type ElectricNumberInfoInput = {
   contactPhone: Scalars['String'];
   degree: Scalars['Int'];
   number: Scalars['String'];
-  tableNumbers: Array<Scalars['Float']>;
+  tableNumbers: Array<Scalars['String']>;
 };
 
 export type Error = {

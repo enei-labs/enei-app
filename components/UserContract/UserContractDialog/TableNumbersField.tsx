@@ -36,7 +36,7 @@ export function TableNumbersField(props: TableNumbersFieldProps) {
         <Controller
           key={field.id}
           control={control}
-          name={`${rootField.name}.${fieldIndex}.tableNumber`}
+          name={`${rootField.name}.${fieldIndex}`}
           render={({ field }) => {
             return (
               <Box display={"flex"} columnGap="12px">
@@ -83,9 +83,7 @@ export function TableNumbersField(props: TableNumbersFieldProps) {
             onClick={() => {
               const emptyArray = [];
               for (let i = 1; i <= addTableNumber; i++) {
-                emptyArray.push({
-                  tableNumber: "",
-                });
+                emptyArray.push("");
               }
 
               append(emptyArray);

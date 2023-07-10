@@ -160,7 +160,10 @@ function UserContractDialog(props: UserContractDialogProps) {
           salesPeriod: formData.salesPeriod,
           transferAt: formData.transferAt,
           contractDoc: formData.contractDoc.id,
-          electricNumberInfos: formData.electricNumberInfos,
+          electricNumberInfos: formData.electricNumberInfos.map((info) => ({
+            ...info,
+            degree: Number(info.degree),
+          })),
         },
       },
     });
@@ -259,23 +262,6 @@ function UserContractDialog(props: UserContractDialogProps) {
                       <InputText
                         {...field}
                         label="電號"
-                        placeholder={"請填入"}
-                        required
-                      />
-                    </>
-                  );
-                }}
-              />
-              <Controller
-                control={control}
-                name={`electricNumberInfos.${index}.degree`}
-                render={({ field }) => {
-                  return (
-                    <>
-                      <InputText
-                        {...field}
-                        type="number"
-                        label="年預計採購度數（kWh）"
                         placeholder={"請填入"}
                         required
                       />

@@ -1,4 +1,4 @@
-import { InputNumber, InputText } from "@components/Input";
+import { InputAutocomplete, InputNumber, InputText } from "@components/Input";
 import { FormData } from "./FormData";
 import { Box, Button, CircularProgress, Grid, Typography } from "@mui/material";
 import {
@@ -8,11 +8,12 @@ import {
   useFieldArray,
 } from "react-hook-form";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { IconBtn } from "@components/Button";
 import CloseIcon from "@mui/icons-material/HighlightOff";
 import DialogAlert from "@components/DialogAlert";
 import { useUserContracts } from "@utils/hooks/queries";
+import { ElectricNumberInfo } from "@core/graphql/types";
 
 interface ElectricNumbersFieldProps {
   control: Control<any, any>;
@@ -42,6 +43,13 @@ export function ElectricNumbersField(props: ElectricNumbersFieldProps) {
 
   if (loading) return <CircularProgress size="24px" />;
 
+  const flattenElectricNumberOptions =
+    data?.userContracts.list.reduce((agg, curr) => {
+      if (!curr.electricNumberInfos || !curr.electricNumberInfos.length)
+        return agg;
+      return [...agg, ...curr.electricNumberInfos];
+    }, [] as ElectricNumberInfo[]) ?? [];
+
   return (
     <>
       {fields.map((field, fieldIndex) => (
@@ -51,8 +59,15 @@ export function ElectricNumbersField(props: ElectricNumbersFieldProps) {
             name={`${rootField.name}.${fieldIndex}.number`}
             render={({ field }) => {
               return (
-                <InputText
+                <InputAutocomplete
                   {...field}
+                  onChange={(e) => field.onChange(e)}
+                  options={
+                    flattenElectricNumberOptions.map((o) => ({
+                      label: o.number,
+                      value: o.number,
+                    })) ?? []
+                  }
                   label={`用戶電號${fieldIndex + 1}`}
                   placeholder={"請填入"}
                   required

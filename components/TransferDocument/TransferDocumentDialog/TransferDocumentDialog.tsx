@@ -425,19 +425,14 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                   render={({ field }) => (
                     <InputAutocomplete
                       {...field}
-                      onChange={(e) => {
-                        field.onChange(e);
-                        getUserContracts({
-                          variables: { userId: e!.value as string },
-                        });
-                      }}
+                      onChange={(e) => field.onChange(e)}
                       options={
                         userContractsData?.userContracts.list.map((o) => ({
-                          label: `${o.serialNumber} ${o.name}`,
+                          label: `${o.serialNumber}(${o.name})`,
                           value: o.id,
                         })) ?? []
                       }
-                      label={`契約編號`}
+                      label={`用戶契約編號`}
                       placeholder={"請填入"}
                       required
                     />
@@ -462,7 +457,7 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                             value: info.number,
                           })) ?? []
                       }
-                      label={`契約編號`}
+                      label={`電號`}
                       placeholder={"請填入"}
                       required
                     />
