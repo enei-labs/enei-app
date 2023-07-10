@@ -1,5 +1,6 @@
 import { Table } from "@components/Table";
 import {
+  Fee,
   Role,
   TransferDegree,
   UserBill,
@@ -15,16 +16,18 @@ import { useRouter } from "next/router";
 import { ActionTypeEnum } from "@core/types/actionTypeEnum";
 import { useState } from "react";
 import { UserBillDownloadDialog } from "@components/UserBill/UserBillDownloadDialog";
+import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 
 interface UserBillPanelProps {
   userBills?: UserBillPage;
   loading?: boolean;
   refetchFn: (userBill: Page) => void;
   onAction: (action: ActionTypeEnum, userBill?: UserBill) => void;
+  fee: Fee;
 }
 
 const UserBillPanel = (props: UserBillPanelProps) => {
-  const { userBills, loading = false, refetchFn, onAction } = props;
+  const { userBills, loading = false, refetchFn, onAction, fee } = props;
   const { me } = useAuth();
   const router = useRouter();
   const [currentUserBill, setCurrentUserBill] = useState<UserBill | null>(null);
@@ -65,7 +68,7 @@ const UserBillPanel = (props: UserBillPanelProps) => {
       render: (rowData) => {
         return (
           <IconBtn
-            icon={<BorderColorOutlined />}
+            icon={<FileDownloadOutlinedIcon />}
             onClick={() => {
               setOpenDownloadDialog(true);
               setCurrentUserBill(rowData);
@@ -113,6 +116,7 @@ const UserBillPanel = (props: UserBillPanelProps) => {
       />
       {currentUserBill ? (
         <UserBillDownloadDialog
+          fee={fee}
           userBill={currentUserBill}
           isOpenDialog={isOpenDialog}
           onClose={() => setOpenDownloadDialog(false)}

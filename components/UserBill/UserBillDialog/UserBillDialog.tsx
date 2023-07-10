@@ -49,11 +49,6 @@ const YesOrNoRadios = [
   },
 ];
 
-const ChargeTypeMap = {
-  [ChargeType.User]: "向用戶收取",
-  [ChargeType.Self]: "自行負擔",
-};
-
 function UserBillDialog(props: UserBillDialogProps) {
   const { isOpenDialog, onClose, currentModifyUserBill, variant } = props;
 

@@ -6,18 +6,6 @@ import axios from "axios";
 
 const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "";
 
-const uploadFile = async (file: File) => {
-  const formData = new FormData();
-  formData.append("file", file);
-
-  const { data } = await axios.post(`${apiBaseUrl}/s3/upload`, formData, {
-    headers: { "Content-Type": "multipart/form-data" },
-    withCredentials: true,
-  });
-
-  return data;
-};
-
 const styles = {
   box: {
     display: "flex",

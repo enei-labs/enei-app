@@ -176,12 +176,13 @@ function ExportElectricBillPage() {
             </Box>
 
             {/* 電費單表格 */}
-            <UserBillPanel
+           {data?.fee ? <UserBillPanel
+              fee={data.fee}
               userBills={userBillsData?.userBills}
               loading={userBillLoading}
               refetchFn={() => {}}
               onAction={() => {}}
-            />
+            /> : null}
           </Card>
           <Divider sx={{ my: "24px" }} />
         </AuthGuard>
