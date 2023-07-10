@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
+import { ELECTRIC_NUMBER_INFO_FIELDS } from '@core/graphql/fragment/electricNumberInfoFields'
 import { POWER_PLANT_FIELDS } from '@core/graphql/fragment/powerPlants'
 import { USER_CONTRACT_FIELDS } from '@core/graphql/fragment/userContractFields'
-import { USER_FIELDS } from '@core/graphql/fragment/userFields'
 
 export const BASE_TRANSFER_DOCUMENT_FIELDS = gql`
   fragment baseTransferDocumentFields on TransferDocument {
@@ -25,8 +25,8 @@ export const BASE_TRANSFER_DOCUMENT_FIELDS = gql`
 export const TRANSFER_DOCUMENT_FIELDS = gql`
   ${BASE_TRANSFER_DOCUMENT_FIELDS}
   ${POWER_PLANT_FIELDS}
-  ${USER_FIELDS}
   ${USER_CONTRACT_FIELDS}
+  ${ELECTRIC_NUMBER_INFO_FIELDS}
   fragment transferDocumentFields on TransferDocument {
     ...baseTransferDocumentFields
     transferDocumentPowerPlants {
@@ -38,7 +38,10 @@ export const TRANSFER_DOCUMENT_FIELDS = gql`
     }
     transferDocumentUsers {
       user {
-        ...userFields
+        id
+        name
+        estimatedTransferDegree
+        expectedYearlyPurchaseDegree
       }
       userContract {
         ...userContractFields
@@ -46,6 +49,9 @@ export const TRANSFER_DOCUMENT_FIELDS = gql`
       monthlyTransferDegree
       yearlyTransferDegree
       expectedYearlyPurchaseDegree
+      electricNumberInfo {
+        ...electricNumberInfoFields
+      }
     }
   }
 `
