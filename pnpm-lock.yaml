@@ -36,6 +36,7 @@ specifiers:
   react-apexcharts: ^1.4.0
   react-dom: 18.2.0
   react-hook-form: ^7.42.1
+  react-to-print: ^2.14.13
   react-toastify: ^9.1.1
   typescript: 4.9.4
   yup: ^0.32.11
@@ -72,6 +73,7 @@ dependencies:
   react-apexcharts: 1.4.0_g3lvop6jrvmpqnlf3mxot4n2ym
   react-dom: 18.2.0_react@18.2.0
   react-hook-form: 7.42.1_react@18.2.0
+  react-to-print: 2.14.13_biqbaboplfbrettd7655fr4n2y
   react-toastify: 9.1.1_biqbaboplfbrettd7655fr4n2y
   yup: 0.32.11
 
@@ -5993,6 +5995,16 @@ packages:
 
   /react-is/18.2.0:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
+    dev: false
+
+  /react-to-print/2.14.13_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-PqUGgTRZvkyBzWgaZHVBECWPX2nGEc3HOUy6WNXof6HT4yTFI92wtIkqQtr4jfvHbadqjwTgzgh6vgN8KXlWWw==}
+    peerDependencies:
+      react: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
     dev: false
 
   /react-toastify/9.1.1_biqbaboplfbrettd7655fr4n2y:
