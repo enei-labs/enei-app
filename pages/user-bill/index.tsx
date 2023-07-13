@@ -22,8 +22,9 @@ import { useFee, useUserBills } from "@utils/hooks/queries";
 import InboxOutlinedIcon from "@mui/icons-material/InboxOutlined";
 import LaptopOutlinedIcon from "@mui/icons-material/LaptopOutlined";
 import AnalyticsOutlinedIcon from "@mui/icons-material/AnalyticsOutlined";
-import UserPanel from "@components/User/UserPanel";
 import UserBillPanel from "@components/UserBill/UserBillPanel";
+import BorderColorOutlined from "@mui/icons-material/BorderColorOutlined";
+import { IconBtn } from "@components/Button";
 
 const TransferDocumentDialog = dynamic(
   () =>
@@ -32,12 +33,7 @@ const TransferDocumentDialog = dynamic(
     )
 );
 
-const CompanyContractPanel = dynamic(
-  () => import("@components/CompanyContract/CompanyContractPanel"),
-  {
-    loading: () => <CircularProgress size="24px" />,
-  }
-);
+const FeeDialog = dynamic(() => import("@components/UserBill/FeeDialog"));
 
 const styles = {
   box: {
@@ -54,6 +50,7 @@ const styles = {
 function ExportElectricBillPage() {
   const [open, setOpen] = useState(false);
   const [showUserBillDialog, setShowUserBillDialog] = useState(false);
+  const [showFeeDialog, setShowFeeDialog] = useState(false);
   const { data, loading } = useFee();
   const { data: userBillsData, loading: userBillLoading } = useUserBills();
 
@@ -75,8 +72,16 @@ function ExportElectricBillPage() {
       <Box sx={{ paddingTop: "12px" }}>
         <AuthGuard roles={[Role.Admin, Role.SuperAdmin]}>
           <Card sx={{ p: "36px" }}>
-            <Typography variant="h4">規費設定</Typography>
-            {loading ? <CircularProgress size="24px" /> : (
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Typography variant="h4">規費設定</Typography>
+              <IconBtn
+                icon={<BorderColorOutlined />}
+                onClick={() => setShowFeeDialog(true)}
+              />
+            </Box>
+            {loading ? (
+              <CircularProgress size="24px" />
+            ) : (
               <Grid container>
                 <Grid item sm={4} sx={{ padding: "36px 36px 36px 0" }}>
                   <Box sx={{ display: "flex", columnGap: "12px" }}>
@@ -93,7 +98,7 @@ function ExportElectricBillPage() {
                       }}
                     >
                       <Typography variant="h3" sx={{ whiteSpace: "nowrap" }}>
-                        {data?.fee.substitutionFee ?? '-'}
+                        {data?.fee.substitutionFee ?? "-"}
                       </Typography>
                       <Typography variant="body3" sx={{ whiteSpace: "nowrap" }}>
                         元/kWh
@@ -116,7 +121,7 @@ function ExportElectricBillPage() {
                       }}
                     >
                       <Typography variant="h3" sx={{ whiteSpace: "nowrap" }}>
-                        {data?.fee.certificateVerificationFee ?? '-'}
+                        {data?.fee.certificateVerificationFee ?? "-"}
                       </Typography>
                       <Typography variant="body3" sx={{ whiteSpace: "nowrap" }}>
                         元/kWh
@@ -139,7 +144,7 @@ function ExportElectricBillPage() {
                       }}
                     >
                       <Typography variant="h3" sx={{ whiteSpace: "nowrap" }}>
-                        {data?.fee.certificateServiceFee ?? '-'}
+                        {data?.fee.certificateServiceFee ?? "-"}
                       </Typography>
                       <Typography variant="body3" sx={{ whiteSpace: "nowrap" }}>
                         元/kWh
@@ -176,13 +181,15 @@ function ExportElectricBillPage() {
             </Box>
 
             {/* 電費單表格 */}
-           {data?.fee ? <UserBillPanel
-              fee={data.fee}
-              userBills={userBillsData?.userBills}
-              loading={userBillLoading}
-              refetchFn={() => {}}
-              onAction={() => {}}
-            /> : null}
+            {data?.fee ? (
+              <UserBillPanel
+                fee={data.fee}
+                userBills={userBillsData?.userBills}
+                loading={userBillLoading}
+                refetchFn={() => {}}
+                onAction={() => {}}
+              />
+            ) : null}
           </Card>
           <Divider sx={{ my: "24px" }} />
         </AuthGuard>
@@ -199,6 +206,13 @@ function ExportElectricBillPage() {
           isOpenDialog={showUserBillDialog}
           variant="create"
           onClose={() => setShowUserBillDialog(false)}
+        />
+      ) : null}
+
+      {showFeeDialog ? (
+        <FeeDialog
+          isOpenDialog={showFeeDialog}
+          onClose={() => setShowFeeDialog(false)}
         />
       ) : null}
     </>

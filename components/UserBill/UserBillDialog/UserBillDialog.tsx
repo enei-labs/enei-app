@@ -1,5 +1,4 @@
 import { Grid, Typography } from "@mui/material";
-import { useState } from "react";
 import { IconBtn } from "@components/Button";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { UserBill } from "@core/graphql/types";
@@ -151,10 +150,6 @@ function UserBillDialog(props: UserBillDialogProps) {
       validated: textValidated,
     },
   ];
-
-  const [addAccountNumber, setAddAccountNumber] = useState<number>(1);
-
-  const [deleteAccountIndex, setDeleteAccountIndex] = useState<number>(-1);
 
   return (
     <Dialog open={isOpenDialog} onClose={onClose}>
