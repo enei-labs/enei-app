@@ -5,7 +5,7 @@ import { REMOVE_USER } from '@core/graphql/mutations';
 
 
 export const useRemoveUser = () => {
-  return useMutation<{ removeUSER: User }, { id: string }>(
+  return useMutation<{ removeUser: User }, { id: string }>(
     REMOVE_USER, {
       /** @need refactor */
       refetchQueries: [USERS]

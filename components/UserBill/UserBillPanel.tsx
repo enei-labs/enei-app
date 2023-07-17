@@ -1,11 +1,5 @@
 import { Table } from "@components/Table";
-import {
-  Fee,
-  Role,
-  TransferDegree,
-  UserBill,
-  UserBillPage,
-} from "@core/graphql/types";
+import { Fee, Role, UserBill, UserBillPage } from "@core/graphql/types";
 import { Config, Page } from "../Table/Table";
 import BorderColorOutlined from "@mui/icons-material/BorderColorOutlined";
 import DeleteOutlined from "@mui/icons-material/DeleteOutlined";
@@ -16,7 +10,13 @@ import { useRouter } from "next/router";
 import { ActionTypeEnum } from "@core/types/actionTypeEnum";
 import { useState } from "react";
 import { UserBillDownloadDialog } from "@components/UserBill/UserBillDownloadDialog";
-import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
+import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
+import dynamic from "next/dynamic";
+import { useRemoveUserBill } from "@utils/hooks/mutations/useRemoveUserBill";
+import { toast } from "react-toastify";
+import UserBillDialog from "@components/UserBill/UserBillDialog/UserBillDialog";
+
+const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
 interface UserBillPanelProps {
   userBills?: UserBillPage;
@@ -32,6 +32,10 @@ const UserBillPanel = (props: UserBillPanelProps) => {
   const router = useRouter();
   const [currentUserBill, setCurrentUserBill] = useState<UserBill | null>(null);
   const [isOpenDialog, setOpenDownloadDialog] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
+
+  const [removeUserBill] = useRemoveUserBill();
 
   const configs: Config<UserBill>[] = [
     {
@@ -53,9 +57,9 @@ const UserBillPanel = (props: UserBillPanelProps) => {
     },
     {
       header: "用戶",
-      // render: (rowData) => {
-      //   return <Box>{addUp(rowData.lastMonthTransferRecords)}</Box>;
-      // },
+      render: (rowData) => {
+        return <Box>{rowData.user.name}</Box>;
+      },
     },
     {
       header: "本月使用度數",
@@ -82,22 +86,24 @@ const UserBillPanel = (props: UserBillPanelProps) => {
     },
     {
       header: "修改 / 刪除",
-      render: (user) => (
+      render: (userBill) => (
         <>
           {/* 修改 */}
           <IconBtn
             icon={<BorderColorOutlined />}
             onClick={() => {
-              onAction(ActionTypeEnum.EDIT, user);
+              setCurrentUserBill(userBill);
+              setOpenUpdateDialog(true);
             }}
           />
 
           {/* 刪除 */}
           <IconBtn
-            disabled={me?.role !== Role.SuperAdmin}
+            disabled={!me || me.role === Role.User}
             icon={<DeleteOutlined />}
             onClick={() => {
-              onAction(ActionTypeEnum.DELETE, user);
+              setCurrentUserBill(userBill);
+              setOpenDeleteDialog(true);
             }}
           />
         </>
@@ -114,12 +120,40 @@ const UserBillPanel = (props: UserBillPanelProps) => {
         loading={loading}
         onPageChange={refetchFn}
       />
-      {currentUserBill ? (
+
+      {currentUserBill && currentUserBill ? (
         <UserBillDownloadDialog
           fee={fee}
           userBill={currentUserBill}
           isOpenDialog={isOpenDialog}
           onClose={() => setOpenDownloadDialog(false)}
+        />
+      ) : null}
+
+      {openUpdateDialog && currentUserBill ? (
+        <UserBillDialog
+          isOpenDialog={openUpdateDialog}
+          onClose={() => setOpenUpdateDialog(false)}
+          variant="edit"
+          currentModifyUserBill={currentUserBill}
+        />
+      ) : null}
+
+      {openDeleteDialog && currentUserBill ? (
+        <DialogAlert
+          open={openDeleteDialog}
+          title={"刪除電費單"}
+          content={"是否確認要刪除電費單？"}
+          onConfirm={() => {
+            removeUserBill({
+              variables: { id: currentUserBill.id },
+              onCompleted: () => {
+                toast.success("刪除成功");
+                setOpenDeleteDialog(false);
+              },
+            });
+          }}
+          onClose={() => setOpenDeleteDialog(false)}
         />
       ) : null}
     </>

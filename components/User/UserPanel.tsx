@@ -84,7 +84,7 @@ const UserPanel = (props: UserPanelProps) => {
 
           {/* 刪除 */}
           <IconBtn
-            disabled={me?.role !== Role.SuperAdmin}
+            disabled={!me || me.role === Role.User}
             icon={<DeleteOutlined />}
             onClick={() => {
               onAction(ActionTypeEnum.DELETE, user);

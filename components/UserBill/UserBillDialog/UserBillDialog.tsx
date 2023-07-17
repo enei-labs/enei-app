@@ -17,8 +17,6 @@ import { ElectricNumbersField } from "@components/UserBill/UserBillDialog/Electr
 import { useUsers } from "@utils/hooks/queries";
 import CreateUserBillBtn from "@components/UserBill/UserBillDialog/CreateUserBillBtn";
 
-const DialogAlert = dynamic(() => import("@components/DialogAlert"));
-
 interface UserBillDialogProps {
   isOpenDialog: boolean;
   currentModifyUserBill?: UserBill;

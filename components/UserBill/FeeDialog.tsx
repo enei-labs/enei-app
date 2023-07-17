@@ -89,7 +89,7 @@ function FeeDialog(props: FeeDialogProps) {
         variant="contained"
         onClick={handleSubmit(onSubmit)}
       >
-        確定
+        儲存
       </LoadingButton>
     </Dialog>
   );

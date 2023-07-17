@@ -51,7 +51,7 @@ const UserBill = forwardRef((props: UserBillProps, ref) => {
   console.log({ userBill });
 
   const electricNumberInfos = useMemo(() => {
-    const f = userBill.electricNumberInfos.map((x) => x.number);
+    // const f = userBill.electricNumberInfos.map((x) => x.number === );
   }, [userBill]);
 
   return (
