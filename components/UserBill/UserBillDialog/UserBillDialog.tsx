@@ -16,6 +16,7 @@ import { ChargeType } from "@core/graphql/types";
 import { ElectricNumbersField } from "@components/UserBill/UserBillDialog/ElectricNumbersField";
 import { useUsers } from "@utils/hooks/queries";
 import CreateUserBillBtn from "@components/UserBill/UserBillDialog/CreateUserBillBtn";
+import UpdateUserBillBtn from "@components/UserBill/UserBillDialog/UpdateUserBillBtn";
 
 interface UserBillDialogProps {
   isOpenDialog: boolean;
@@ -337,10 +338,15 @@ function UserBillDialog(props: UserBillDialogProps) {
           alignItems={"center"}
           gap={"10px"}
         >
-          {/** @TODO modifyUserBill */}
           {!currentModifyUserBill ? (
             <CreateUserBillBtn handleSubmit={handleSubmit} onClose={onClose} />
-          ) : null}
+          ) : (
+            <UpdateUserBillBtn
+              handleSubmit={handleSubmit}
+              onClose={onClose}
+              userBillId={currentModifyUserBill.id}
+            />
+          )}
         </Grid>
       </>
 

@@ -28,3 +28,4 @@ export * from './updateCompany';
 export * from './removeCompany';
 export * from './createUserBill';
 export * from './updateFee';
+export * from './updateUserBill';

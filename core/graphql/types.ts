@@ -472,6 +472,7 @@ export type Mutation = {
   removePowerPlant: PowerPlant;
   removeTransferDocument: TransferDocument;
   removeUser: User;
+  removeUserBill: UserBill;
   requestResetPassword: RequestResetPasswordResponse;
   resetPassword: ResetPasswordResponse;
   sendResetPasswordEmail: SendResetPasswordEmailResponse;
@@ -484,6 +485,7 @@ export type Mutation = {
   updatePowerPlant: PowerPlant;
   updateTransferDocument: TransferDocument;
   updateTransferDocumentStage: TransferDocument;
+  updateUserBill: UserBill;
 };
 
 
@@ -601,6 +603,11 @@ export type MutationRemoveUserArgs = {
 };
 
 
+export type MutationRemoveUserBillArgs = {
+  input: RemoveUserBillInput;
+};
+
+
 export type MutationRequestResetPasswordArgs = {
   id: Scalars['ID'];
   oldPassword: Scalars['String'];
@@ -659,6 +666,11 @@ export type MutationUpdateTransferDocumentStageArgs = {
   id: Scalars['UUID'];
   input?: InputMaybe<UpdateTransferDocumentStageInput>;
   moveNextStep: Scalars['Boolean'];
+};
+
+
+export type MutationUpdateUserBillArgs = {
+  input: UpdateUserBillInput;
 };
 
 export type PasswordReset = {
@@ -877,6 +889,10 @@ export type RemoveGuestInput = {
   reason: Scalars['String'];
 };
 
+export type RemoveUserBillInput = {
+  userBillId: Scalars['UUID'];
+};
+
 export type RemoveUserInput = {
   userId: Scalars['UUID'];
 };
@@ -1049,6 +1065,27 @@ export type UpdateTransferDocumentStageInput = {
   number?: InputMaybe<Scalars['String']>;
 };
 
+export type UpdateUserBillInput = {
+  address: Scalars['String'];
+  contactEmail: Scalars['String'];
+  contactName: Scalars['String'];
+  contactPhone: Scalars['String'];
+  credentialInspectionFee: ChargeType;
+  credentialServiceFee: ChargeType;
+  electricNumbers: Array<Scalars['String']>;
+  /** 預計電費單寄出期限（收到繳費通知單後天數 */
+  estimatedBillDeliverDate: Scalars['Float'];
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  noticeForTPCBill: Scalars['Boolean'];
+  noticeForTheBuilding: Scalars['Boolean'];
+  /** 用戶繳費期限（收到繳費通知單後天數） */
+  paymentDeadline: Scalars['Float'];
+  recipientAccount: UserBillRecipientAccountInput;
+  transportationFee: ChargeType;
+  userId: Scalars['String'];
+};
+
 export type User = {
   __typename?: 'User';
   bankAccounts: Array<BankAccount>;
@@ -1056,9 +1093,9 @@ export type User = {
   contactEmail: Scalars['String'];
   contactName: Scalars['String'];
   contactPhone: Scalars['String'];
-  estimatedTransferDegree: Scalars['Int'];
+  estimatedTransferDegree: Scalars['String'];
   /** 用戶預計年採購度數 */
-  expectedYearlyPurchaseDegree: Scalars['Int'];
+  expectedYearlyPurchaseDegree: Scalars['String'];
   id: Scalars['ID'];
   lastMonthTransferRecords: Array<TransferDegree>;
   name: Scalars['String'];
@@ -1073,6 +1110,7 @@ export type UserBill = {
   contactEmail: Scalars['String'];
   contactName: Scalars['String'];
   contactPhone: Scalars['String'];
+  createdAt: Scalars['DateTime'];
   credentialInspectionFee: ChargeType;
   credentialServiceFee: ChargeType;
   electricNumberInfos: Array<UserBillElectricNumberInfo>;
