@@ -71,11 +71,11 @@ export const fieldConfigs: FieldConfig[] = [
     options: contractTimeTypeOptions,
   },
   {
-    type: "NUMBER",
+    type: "TEXT",
     name: "duration",
     label: "合約年限（年）",
     required: true,
-    validated: numberValidated,
+    validated: textValidated,
   },
   {
     type: "DATE",
