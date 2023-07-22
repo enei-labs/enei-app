@@ -175,7 +175,7 @@ export const useDisplayFieldConfigs = (contractTimeType: ContractTimeType, varia
       default:
         return baseConfigs;
     }
-  }, [contractTimeType]);
+  }, [variant, contractTimeType]);
 
   return displayFieldConfigs;
 }

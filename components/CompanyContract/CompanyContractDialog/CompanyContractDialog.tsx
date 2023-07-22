@@ -7,10 +7,12 @@ import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import CloseIcon from "@mui/icons-material/HighlightOff";
 import { IconBtn } from "@components/Button";
 import { Form } from "@core/types/fieldController";
+import { InputText } from "@components/Input";
 
 interface CompanyContractProps {
   variant: "edit" | "create";
   open: boolean;
+  companyName: string;
   closeFn: VoidFunction;
   submitFn: any;
   displayFieldConfigs: {
@@ -32,6 +34,7 @@ const CompanyContractDialog = (props: CompanyContractProps) => {
     displayFieldConfigs,
     form,
     loading,
+    companyName,
   } = props;
 
   return (
@@ -45,7 +48,9 @@ const CompanyContractDialog = (props: CompanyContractProps) => {
       <Typography textAlign="left" variant="h5">
         發電業資訊
       </Typography>
-      <FieldsController configs={displayFieldConfigs.name} form={form} />
+      {/** work-around about display correct company name */}
+      <InputText label="公司名稱" value={companyName} disabled />
+      {/* <FieldsController configs={displayFieldConfigs.name} form={form} /> */}
 
       <Typography textAlign="left" variant="h5">
         聯絡人資訊

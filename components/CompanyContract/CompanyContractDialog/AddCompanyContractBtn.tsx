@@ -121,6 +121,7 @@ const AddCompanyContractBtn = (props: CompanyContractProps) => {
           displayFieldConfigs={displayFieldConfigs}
           form={{ control, errors }}
           loading={loading}
+          companyName={company.name}
         />
       ) : null}
 

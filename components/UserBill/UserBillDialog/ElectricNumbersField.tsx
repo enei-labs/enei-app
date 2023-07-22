@@ -30,8 +30,6 @@ export function ElectricNumbersField(props: ElectricNumbersFieldProps) {
     })
   );
 
-  console.log({ data });
-
   const [addElectricNumber, setAddElectricNumber] = useState<number>(1);
   const [deleteElectricNumberIndex, setDeleteElectricNumberIndex] =
     useState<number>(-1);

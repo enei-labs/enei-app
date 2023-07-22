@@ -22,6 +22,7 @@ const CompanyContractPanel = dynamic(
 
 function IndustryPage() {
   const [company, setCompany] = useState<Company | null>(null);
+
   return (
     <>
       <Head>

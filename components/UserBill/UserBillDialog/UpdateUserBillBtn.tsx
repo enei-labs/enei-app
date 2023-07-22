@@ -18,7 +18,6 @@ const UpdateUserBillBtn = (props: UpdateUserBillBtnProps) => {
 
   /** 新增用戶 mutation */
   const onUpdateUserBill = async (formData: FormData) => {
-    console.log({ formData });
     await updateUserBill({
       variables: {
         input: {

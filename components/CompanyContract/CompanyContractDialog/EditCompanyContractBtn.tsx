@@ -103,6 +103,7 @@ const EditCompanyContractBtn = (props: CompanyContractProps) => {
 
       {shownFormDialog ? (
         <CompanyContractDialog
+          companyName={companyContract.company.name}
           variant="edit"
           open={shownFormDialog}
           closeFn={() => showEditConfirmDialog(true)}
