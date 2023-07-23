@@ -161,7 +161,12 @@ function AccountDialog(props: AccountDialogProps) {
             form={{ control, errors }}
           />
           <HelperText>
-            若查無此公司，請先前往『發電業管理』頁面新增公司
+            <ul style={{ textAlign: "left" }}>
+              <li>若查無此公司，請先前往『發電業管理』頁面新增公司</li>
+              <li>
+                在權限管理面板中，需點擊『發送密碼設定信件』按鈕，用戶將會收到一封包含重設帳戶密碼連結的信件。用戶需要透過該連結來重設他們的帳戶密碼，並在完成重設後方能繼續使用該帳戶
+              </li>
+            </ul>
           </HelperText>
           <Grid
             container
