@@ -22,6 +22,17 @@ const uploadFile = async (file: File) => {
   return data;
 };
 
+const deleteFile = async (fileId: string) => {
+  const { data } = await axios.delete(
+    `${apiBaseUrl}/s3/delete?fileId=${fileId}`,
+    {
+      withCredentials: true,
+    }
+  );
+
+  return data;
+};
+
 const styles = {
   box: {
     display: "flex",
@@ -51,9 +62,16 @@ const styles = {
   },
 };
 
-interface UploadDocBoxProps extends StandardTextFieldProps {
+interface DocumentValue {
+  id: string;
+  file: File;
+}
+
+interface UploadDocBoxProps
+  extends Omit<StandardTextFieldProps, "onChange" | "value"> {
   accept?: string;
-  onChange: (document: any) => void;
+  value?: DocumentValue;
+  onChange: (document: DocumentValue | null) => void;
   label: React.ReactNode;
 }
 
@@ -64,10 +82,26 @@ const UploadDocBox = React.forwardRef<HTMLInputElement, UploadDocBoxProps>(
 
     const { runAsync, loading } = useRequest(uploadFile, {
       manual: true,
+      onSuccess: () => toast.success("上傳成功"),
       onError: (error: any) => {
         toast.error(error.message);
       },
     });
+
+    const { runAsync: deleteFn, loading: deleteLoading } = useRequest(
+      deleteFile,
+      {
+        manual: true,
+        onSuccess: () => {
+          toast.success("刪除成功");
+          setFileName(null);
+          onChange(null);
+        },
+        onError: (error: any) => {
+          toast.error(error.message);
+        },
+      }
+    );
 
     const [fileName, setFileName] = useState<any>(value);
 
@@ -106,7 +140,8 @@ const UploadDocBox = React.forwardRef<HTMLInputElement, UploadDocBoxProps>(
           </label>
           <IconBtn
             icon={<DeleteOutlinedIcon />}
-            onClick={() => console.log("delete")}
+            onClick={() => value?.id && deleteFn(value.id)}
+            disabled={!fileName || !value || deleteLoading}
           />
         </Box>
       </Box>
