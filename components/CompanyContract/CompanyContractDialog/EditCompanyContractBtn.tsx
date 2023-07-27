@@ -11,6 +11,7 @@ import {
 import { FormData } from "@components/CompanyContract/CompanyContractDialog/FormData";
 import CompanyContractDialog from "@components/CompanyContract/CompanyContractDialog/CompanyContractDialog";
 import { IconBtn } from "@components/Button";
+import { toast } from "react-toastify";
 
 const EditConfirmDialog = dynamic(
   () => import("@components/EditConfirmDialog")
@@ -81,6 +82,7 @@ const EditCompanyContractBtn = (props: CompanyContractProps) => {
           industryDoc: formData.industryDoc.id,
         },
       },
+      onCompleted: () => toast.success("更新成功！"),
     });
 
     if (data?.updateCompanyContract.__typename === "CompanyContract") {
