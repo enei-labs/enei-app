@@ -1,7 +1,7 @@
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
-import { AuthLayout } from "@components/Layout";
-import { Box, Card, Toolbar, Typography } from "@mui/material";
-import { ReactElement, useState } from "react";
+import { AuthLayout, Layout } from "@components/Layout";
+import { Box, Card, Typography } from "@mui/material";
+import { ReactElement, useEffect, useState } from "react";
 import Head from "next/head";
 import IconBreadcrumbs from "@components/BreadCrumbs";
 import FieldConfig, { textValidated } from "@core/types/fieldConfig";
@@ -53,6 +53,10 @@ const ResetPassword = () => {
 
   const configs = token ? fieldConfigs.slice(1) : fieldConfigs.slice(0, 1);
 
+  useEffect(() => {
+    if (_token) setToken(_token);
+  }, [_token]);
+
   const { me } = useAuth();
 
   const {
@@ -76,6 +80,7 @@ const ResetPassword = () => {
             toast.success("密碼更換成功");
             router.push("/main");
           },
+          onError: () => toast.error("驗證信已過期，請聯繫管理員重新寄驗證信"),
         });
       }
     } else {
@@ -136,7 +141,7 @@ const ResetPassword = () => {
 };
 
 ResetPassword.getLayout = (page: ReactElement) => {
-  return <AuthLayout>{page}</AuthLayout>;
+  return <Layout>{page}</Layout>;
 };
 
 export default ResetPassword;
