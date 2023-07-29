@@ -41,21 +41,10 @@ interface CompanyContractProps {
   company: Company;
 }
 
-const AddCompanyContractBtn = (props: CompanyContractProps) => {
-  const { company } = props;
-  const [state, dispatch] = useReducer(
-    (prev: DialogState, next: DialogState) => {
-      return { ...prev, ...next };
-    },
-    {
-      showFormDialog: false,
-      showNextDialog: false,
-      showEditConfirmDialog: false,
-      showPowerPlantDialog: false,
-      companyContract: null,
-    }
-  );
-
+export const useCreateCompanyContractSubmitFn = (
+  company: Company | null,
+  createSuccessCallback: VoidFunction
+) => {
   const [createCompanyContract, { loading }] = useCreateCompanyContract();
 
   const {
@@ -65,7 +54,7 @@ const AddCompanyContractBtn = (props: CompanyContractProps) => {
     formState: { errors },
     watch,
   } = useValidatedForm<FormData>(fieldConfigs, {
-    defaultValues: { companyName: company.name },
+    defaultValues: { companyName: company?.name },
   });
   const contractTimeType = watch("contractTimeType");
 
@@ -73,7 +62,7 @@ const AddCompanyContractBtn = (props: CompanyContractProps) => {
     const { data } = await createCompanyContract({
       variables: {
         input: {
-          companyId: company.id,
+          companyId: company?.id ?? "",
           name: formData.name,
           number: formData.number,
           contactName: formData.contactName,
@@ -97,11 +86,42 @@ const AddCompanyContractBtn = (props: CompanyContractProps) => {
 
     if (data?.createCompanyContract.__typename === "CompanyContract") {
       reset();
-      dispatch({ showFormDialog: false, showEditConfirmDialog: false });
+      createSuccessCallback();
     }
   };
 
   const displayFieldConfigs = useDisplayFieldConfigs(contractTimeType?.value);
+
+  return {
+    displayFieldConfigs,
+    submitFn: handleSubmit(onSubmit),
+    loading,
+    form: {
+      control,
+      errors,
+    },
+  };
+};
+
+const AddCompanyContractBtn = (props: CompanyContractProps) => {
+  const { company } = props;
+  const [state, dispatch] = useReducer(
+    (prev: DialogState, next: DialogState) => {
+      return { ...prev, ...next };
+    },
+    {
+      showFormDialog: false,
+      showNextDialog: false,
+      showEditConfirmDialog: false,
+      showPowerPlantDialog: false,
+      companyContract: null,
+    }
+  );
+
+  const { displayFieldConfigs, submitFn, loading, form } =
+    useCreateCompanyContractSubmitFn(company, () =>
+      dispatch({ showFormDialog: false, showEditConfirmDialog: false })
+    );
 
   return (
     <>
@@ -117,9 +137,9 @@ const AddCompanyContractBtn = (props: CompanyContractProps) => {
           variant="create"
           open={!!state.showFormDialog}
           closeFn={() => dispatch({ showEditConfirmDialog: true })}
-          submitFn={handleSubmit(onSubmit)}
+          submitFn={submitFn}
           displayFieldConfigs={displayFieldConfigs}
-          form={{ control, errors }}
+          form={form}
           loading={loading}
           companyName={company.name}
         />
@@ -132,7 +152,7 @@ const AddCompanyContractBtn = (props: CompanyContractProps) => {
       >
         <Typography variant="h5">新增合約完成</Typography>
 
-        <Typography variant="h5">已新增發電業，是否立刻新增電廠？</Typography>
+        <Typography variant="h5">已新增合約，是否立刻新增電廠？</Typography>
 
         <Box sx={{ display: "flex", justifyContent: "center", gap: "8px" }}>
           <Button

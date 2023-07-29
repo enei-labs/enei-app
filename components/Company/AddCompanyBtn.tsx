@@ -1,16 +1,19 @@
 import { FieldsController } from "@components/Controller";
 import Dialog from "@components/Dialog";
-import { FieldConfig, Option } from "@core/types";
+import { FieldConfig } from "@core/types";
 import { textValidated } from "@core/types/fieldConfig";
 import { LoadingButton } from "@mui/lab";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import { useValidatedForm } from "@utils/hooks";
-import { useReducer } from "react";
+import { useReducer, useState } from "react";
 import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { useCreateCompany } from "@utils/hooks/mutations/useCreateCompany";
 import { COMPANIES } from "@core/graphql/queries/companies";
 import { IconBtn } from "../Button";
 import CloseIcon from "@mui/icons-material/HighlightOff";
+import CompanyContractDialog from "@components/CompanyContract/CompanyContractDialog/CompanyContractDialog";
+import { useCreateCompanyContractSubmitFn } from "@components/CompanyContract";
+import { Company } from "@core/graphql/types";
 
 type FormData = {
   name: string;
@@ -61,6 +64,7 @@ const configs: FieldConfig[] = [
 type DialogState = {
   form?: boolean;
   next?: boolean;
+  showContractDialog?: boolean;
 };
 
 const AddCompanyBtn = () => {
@@ -70,6 +74,7 @@ const AddCompanyBtn = () => {
     },
     { form: false, next: false }
   );
+  const [company, setCompany] = useState<Company | null>(null);
 
   const [createCompany, { loading }] = useCreateCompany();
 
@@ -97,8 +102,18 @@ const AddCompanyBtn = () => {
     if (data?.createCompany.__typename === "Company") {
       reset();
       dispatch({ form: false, next: true });
+      setCompany(data.createCompany);
     }
   };
+
+  const {
+    displayFieldConfigs,
+    submitFn,
+    loading: createCompanyContractLoading,
+    form,
+  } = useCreateCompanyContractSubmitFn(company, () =>
+    dispatch({ showContractDialog: false })
+  );
 
   return (
     <>
@@ -154,7 +169,7 @@ const AddCompanyBtn = () => {
           <Button
             startIcon={<AddIcon />}
             variant="contained"
-            onClick={() => console.log("click")}
+            onClick={() => dispatch({ next: false, showContractDialog: true })}
           >
             新增
           </Button>
@@ -167,6 +182,19 @@ const AddCompanyBtn = () => {
           </Button>
         </Box>
       </Dialog>
+
+      {!!state.showContractDialog && company ? (
+        <CompanyContractDialog
+          variant="create"
+          open={!!state.showContractDialog}
+          closeFn={() => dispatch({ showContractDialog: false })}
+          submitFn={submitFn}
+          displayFieldConfigs={displayFieldConfigs}
+          form={form}
+          loading={createCompanyContractLoading}
+          companyName={company.name}
+        />
+      ) : null}
     </>
   );
 };
