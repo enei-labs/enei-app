@@ -1,6 +1,6 @@
 import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { AuthLayout } from "@components/Layout";
-import { Box, Button, Card, Divider, Toolbar } from "@mui/material";
+import { Box, Button, Card, Divider } from "@mui/material";
 import { ReactElement, useState } from "react";
 import Head from "next/head";
 import IconBreadcrumbs from "@components/BreadCrumbs";
@@ -10,12 +10,8 @@ import { AuthGuard } from "@components/AuthGuard";
 import { Role, User } from "@core/graphql/types";
 import UserPanel from "@components/User/UserPanel";
 import { useUsers } from "@utils/hooks/queries";
-import dynamic from "next/dynamic";
 import { ActionTypeEnum } from "@core/types/actionTypeEnum";
-
-const UserDialog = dynamic(
-  () => import("@components/User/UserDialog/UserDialog")
-);
+import UserDialog from "@components/User/UserDialog/UserDialog";
 
 const UsersPage = () => {
   const { data: userData, loading, refetch } = useUsers();
