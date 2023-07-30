@@ -234,7 +234,7 @@ function UserCard(props: UserCardProps) {
           content={"是否確認要刪除用戶？"}
           onConfirm={() => {
             removeUser({
-              variables: { id: user.id },
+              variables: { input: { userId: user.id } },
               onCompleted: () => {
                 toast.success("刪除成功");
                 setOpenDeleteDialog(false);
