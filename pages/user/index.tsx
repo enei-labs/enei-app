@@ -7,11 +7,14 @@ import IconBreadcrumbs from "@components/BreadCrumbs";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import { InputSearch } from "@components/Input";
 import { AuthGuard } from "@components/AuthGuard";
-import { Role, User } from "@core/graphql/types";
+import { Action, Role, User } from "@core/graphql/types";
 import UserPanel from "@components/User/UserPanel";
 import { useUsers } from "@utils/hooks/queries";
 import { ActionTypeEnum } from "@core/types/actionTypeEnum";
 import UserDialog from "@components/User/UserDialog/UserDialog";
+import DialogAlert from "@components/DialogAlert";
+import { useRemoveUser } from "@utils/hooks";
+import { toast } from "react-toastify";
 
 const UsersPage = () => {
   const { data: userData, loading, refetch } = useUsers();
@@ -24,6 +27,8 @@ const UsersPage = () => {
     setActionType(action);
     setCurrentModifyUser(user);
   };
+
+  const [removeUser] = useRemoveUser();
 
   return (
     <>
@@ -89,6 +94,24 @@ const UsersPage = () => {
           currentModifyUser={currentModifyUser}
         />
       ) : null}
+
+      <DialogAlert
+        open={actionType === ActionTypeEnum.DELETE}
+        title={"刪除用戶"}
+        content={"是否確認要刪除用戶？"}
+        onConfirm={() => {
+          if (currentModifyUser) {
+            removeUser({
+              variables: { input: { userId: currentModifyUser.id } },
+              onCompleted: () => {
+                toast.success("刪除成功");
+                onAction(ActionTypeEnum.CLOSE);
+              },
+            });
+          }
+        }}
+        onClose={() => onAction(ActionTypeEnum.CLOSE)}
+      />
     </>
   );
 };

@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client'
 
 export const REMOVE_USER = gql`
-  mutation removeUser($id: UUID!) {
-    removeUser(id: $id) {
+  mutation removeUser($input: RemoveUserInput!) {
+    removeUser(input: $input) {
       __typename
     }
   }
