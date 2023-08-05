@@ -34,19 +34,20 @@ function MainPage() {
             {
               icon: MailIcon,
               name: "總裝置量",
-              count: data.dashboard.companyInfo.totalVolume,
+              count: Number(data.dashboard.companyInfo.totalVolume),
               unit: "MW",
             },
             {
               icon: BoltIcon,
               name: "平均每kW發電度數",
-              count: data.dashboard.companyInfo.totalDegree,
+              count: Number(data.dashboard.companyInfo.totalDegree),
               unit: "kWh",
             },
           ]
         : [],
     };
 
+    /** @TODO user data */
     const userOverview: Pick<OverviewCardProps, "topic" | "basicInfos"> = {
       topic: "用戶資訊",
       basicInfos: data

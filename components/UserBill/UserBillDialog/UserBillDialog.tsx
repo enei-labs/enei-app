@@ -127,9 +127,9 @@ function UserBillDialog(props: UserBillDialogProps) {
         data?.users.list
           .find((user) => userId?.value === user.id)
           ?.bankAccounts.map((b) => ({
-            label: `(${b.code}) ${b.account}`,
+            label: `${b.bankCode}(${b.bankName}) ${b.account}`,
             value: {
-              bankCode: b.code,
+              bankCode: b.bankCode,
               account: b.account,
             },
           })) ?? [],
