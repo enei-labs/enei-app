@@ -48,6 +48,10 @@ const UserPanel = (props: UserPanelProps) => {
       ),
     },
     {
+      header: "Email",
+      accessor: "contactEmail",
+    },
+    {
       header: "上月度數",
       render: (rowData) => {
         return <Box>{addUp(rowData.lastMonthTransferRecords)}</Box>;
@@ -65,7 +69,6 @@ const UserPanel = (props: UserPanelProps) => {
     },
     {
       header: "平均購電價格",
-      accessor: "contactEmail",
     },
     {
       header: "警示提醒",

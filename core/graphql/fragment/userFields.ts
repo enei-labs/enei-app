@@ -12,7 +12,11 @@ export const USER_FIELDS = gql`
     contactPhone
     contactEmail
     bankAccounts {
-      code
+      bankCode
+      bankName
+      bankBranchCode
+      bankBranchName
+      accountName
       account
     }
     thisYearTransferRecords {

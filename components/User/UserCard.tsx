@@ -210,8 +210,8 @@ function UserCard(props: UserCardProps) {
               }}
             >
               {user.bankAccounts.map((account) => (
-                <Typography key={account.code} variant="body3">
-                  {`(${account.code})${account.account}`}
+                <Typography key={account.bankCode} variant="body3">
+                  {`(${account.bankCode}(${account.bankName})${account.account}`}
                 </Typography>
               ))}
             </Box>

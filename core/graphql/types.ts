@@ -122,13 +122,25 @@ export enum AdminRole {
 
 export type BankAccount = {
   __typename?: 'BankAccount';
+  /** 帳號 */
   account: Scalars['String'];
-  code: Scalars['String'];
+  /** 戶名 */
+  accountName: Scalars['String'];
+  /** 分行代碼 */
+  bankBranchCode: Scalars['String'];
+  /** 分行名稱 */
+  bankBranchName: Scalars['String'];
+  /** 銀行代碼 */
+  bankCode: Scalars['String'];
+  /** 銀行名稱 */
+  bankName: Scalars['String'];
 };
 
 export type BankAccountInput = {
   account: Scalars['String'];
-  code: Scalars['String'];
+  accountName: Scalars['String'];
+  bankBranchCode: Scalars['String'];
+  bankCode: Scalars['String'];
 };
 
 export type ChangePasswordResponse = Admin | InvalidCurrentPasswordError;
@@ -351,8 +363,8 @@ export type DashboardCompany = {
   __typename?: 'DashboardCompany';
   count: Scalars['Int'];
   /** 總裝置量 */
-  totalDegree: Scalars['Int'];
-  totalVolume: Scalars['Int'];
+  totalDegree: Scalars['String'];
+  totalVolume: Scalars['String'];
 };
 
 export type DashboardUser = {
@@ -467,6 +479,7 @@ export type Mutation = {
   modifyUser: ModifyUserResponse;
   removeAccount: Account;
   removeAdmin: Admin;
+  removeCompany: Company;
   removeCompanyContract: CompanyContract;
   removeGuest: Guest;
   removePowerPlant: PowerPlant;
@@ -575,6 +588,11 @@ export type MutationRemoveAccountArgs = {
 
 export type MutationRemoveAdminArgs = {
   input: RemoveAdminInput;
+};
+
+
+export type MutationRemoveCompanyArgs = {
+  id: Scalars['UUID'];
 };
 
 
@@ -687,12 +705,12 @@ export type PasswordResetExpiredError = Error & {
 export type PowerPlant = {
   __typename?: 'PowerPlant';
   address: Scalars['String'];
-  annualPowerGeneration: Scalars['Int'];
+  annualPowerGeneration: Scalars['String'];
   createdAt: Scalars['DateTime'];
   createdBy?: Maybe<Scalars['String']>;
   estimatedAnnualPowerGeneration: Scalars['Int'];
   /** 電廠預計年供電量 */
-  estimatedAnnualPowerSupply: Scalars['Int'];
+  estimatedAnnualPowerSupply: Scalars['String'];
   id: Scalars['ID'];
   name: Scalars['String'];
   number: Scalars['String'];

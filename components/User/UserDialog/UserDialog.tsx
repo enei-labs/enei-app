@@ -1,5 +1,5 @@
-import { Button, Grid, Typography } from "@mui/material";
-import { useState } from "react";
+import { Box, Button, Grid, Typography } from "@mui/material";
+import { useMemo, useState } from "react";
 import { IconBtn } from "@components/Button";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
@@ -13,9 +13,12 @@ import dynamic from "next/dynamic";
 import Dialog from "@components/Dialog";
 import { FormData } from "./FormData";
 import { Controller, useFieldArray } from "react-hook-form";
-import { InputNumber, InputText } from "@components/Input";
+import { InputAutocomplete, InputNumber, InputText } from "@components/Input";
 import CreateUserBtn from "@components/User/UserDialog/CreateUserBtn";
 import EditUserBtns from "@components/User/UserDialog/EditUserBtns";
+import bankJson from "@public/bank_with_branchs_remix_version.json";
+import Chip from "@components/Chip";
+
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
 interface UserDialogProps {
@@ -56,6 +59,7 @@ function UserDialog(props: UserDialogProps) {
     control,
     formState: { errors },
     handleSubmit,
+    watch,
   } = useValidatedForm<FormData>(undefined, {
     defaultValues: currentModifyUser
       ? {
@@ -65,7 +69,21 @@ function UserDialog(props: UserDialogProps) {
           contactName: currentModifyUser.contactName,
           contactEmail: currentModifyUser.contactEmail,
           contactPhone: currentModifyUser.contactPhone,
-          bankAccounts: currentModifyUser.bankAccounts,
+          bankAccounts: (currentModifyUser?.bankAccounts ?? []).map(
+            (bankAccount) => ({
+              bankCode: {
+                label: bankAccount.bankCode,
+                value: bankAccount.bankCode,
+              },
+              bankName: bankAccount.bankName,
+              bankBranchCode: {
+                label: `${bankAccount.bankBranchCode} ${bankAccount.bankBranchName}`,
+                value: bankAccount.bankBranchCode,
+              },
+              accountName: bankAccount.accountName,
+              account: bankAccount.account,
+            })
+          ),
         }
       : {},
   });
@@ -79,8 +97,30 @@ function UserDialog(props: UserDialogProps) {
   });
 
   const [addAccountNumber, setAddAccountNumber] = useState<number>(1);
+  const [deleteBankAccountIndex, setDeleteBankAccountIndex] =
+    useState<number>(-1);
+  const [bankAccountIndex, setBankAccountIndex] = useState<number>(-1);
 
-  const [deleteAccountIndex, setDeleteAccountIndex] = useState<number>(-1);
+  const currentBankCode = watch(
+    `bankAccounts.${bankAccountIndex}.bankCode`
+  )?.value;
+
+  const currentBankBranchCode = watch(
+    `bankAccounts.${bankAccountIndex}.bankBranchCode`
+  )?.value;
+
+  const currentBank = useMemo(
+    () => (bankJson as any)[currentBankCode],
+    [currentBankCode]
+  );
+
+  const currentBranchBank = useMemo(() => {
+    if (!currentBank) return null;
+
+    return (currentBank?.branchs ?? []).find(
+      (x: { branch_code: string }) => x.branch_code === currentBankBranchCode
+    );
+  }, [currentBank, currentBankBranchCode]);
 
   return (
     <Dialog open={isOpenDialog} onClose={onClose}>
@@ -163,40 +203,137 @@ function UserDialog(props: UserDialogProps) {
         <Typography variant="h5" textAlign={"left"}>
           付款帳號
         </Typography>
-        {bankAccountsFields.map((item, index) => {
-          return (
-            <Grid container key={item.id} flexWrap={"nowrap"}>
+        <Box display={"flex"} flexDirection="column" rowGap="24px">
+          <Box display={"flex"} gap="8px" flexWrap={"wrap"}>
+            {bankAccountsFields.map((item, index) => {
+              return (
+                <Chip
+                  key={item.id}
+                  label={
+                    item.bankCode.value
+                      ? `${item.bankCode.value} ${
+                          (bankJson as any)[item.bankCode.value]?.name ?? ""
+                        } ${
+                          (
+                            (bankJson as any)[item.bankCode.value]?.branchs ??
+                            []
+                          ).find(
+                            (x: { branch_code: string }) =>
+                              x.branch_code === item.bankBranchCode.value
+                          )?.name ?? ""
+                        }`
+                      : `銀行${index + 1}`
+                  }
+                  handleClick={() => setBankAccountIndex(index)}
+                  handleDelete={() => setDeleteBankAccountIndex(index)}
+                />
+              );
+            })}
+          </Box>
+
+          {bankAccountsFields.map((x, index) => (
+            <Box
+              key={x.id}
+              display={"flex"}
+              flexDirection="column"
+              rowGap="24px"
+              sx={bankAccountIndex !== index ? { display: "none" } : {}}
+            >
               <Controller
+                control={control}
+                name={`bankAccounts.${index}.bankCode`}
                 render={({ field }) => (
-                  <InputText
+                  <InputAutocomplete
                     {...field}
-                    label={`銀行代碼${index + 1}`}
+                    options={(Object.entries(bankJson) ?? []).map(
+                      ([bankCode, bankData]) => ({
+                        label: `${bankCode} ${bankData.name}`,
+                        value: bankCode,
+                      })
+                    )}
+                    label="銀行代碼"
                     placeholder={"請填入"}
+                    required
                   />
                 )}
-                name={`bankAccounts.${index}.code`}
-                control={control}
               />
               <Controller
+                control={control}
+                name={`bankAccounts.${index}.bankName`}
                 render={({ field }) => (
                   <InputText
                     {...field}
-                    label={`帳號${index + 1}`}
-                    placeholder={"請填入"}
+                    value={currentBank?.name ?? ""}
+                    label={`銀行名稱`}
                   />
                 )}
+              />
+              <Controller
+                control={control}
+                name={`bankAccounts.${index}.bankBranchCode`}
+                render={({ field }) => (
+                  <InputAutocomplete
+                    {...field}
+                    options={
+                      currentBankCode
+                        ? (currentBank?.branchs ?? []).map(
+                            (branch: {
+                              name: string;
+                              branch_code: string;
+                            }) => ({
+                              label: `${branch.branch_code} ${branch.name}`,
+                              value: branch.branch_code,
+                            })
+                          )
+                        : []
+                    }
+                    label="分行名稱"
+                    placeholder={"請填入"}
+                    required
+                    disabled={!currentBankCode}
+                  />
+                )}
+              />
+              <Controller
+                control={control}
+                name={`bankAccounts.${index}.bankBranchName`}
+                render={({ field }) => (
+                  <InputText
+                    {...field}
+                    value={currentBranchBank?.name ?? ""}
+                    label={`分行名稱`}
+                    placeholder={"請填入"}
+                    required
+                  />
+                )}
+              />
+              <Controller
+                control={control}
+                name={`bankAccounts.${index}.accountName`}
+                render={({ field }) => (
+                  <InputText
+                    {...field}
+                    label={`戶名`}
+                    placeholder={"請填入"}
+                    required
+                  />
+                )}
+              />
+              <Controller
+                control={control}
                 name={`bankAccounts.${index}.account`}
-                control={control}
+                render={({ field }) => (
+                  <InputText
+                    {...field}
+                    label={`帳號`}
+                    placeholder={"請填入"}
+                    required
+                  />
+                )}
               />
-              <IconBtn
-                icon={<CancelOutlinedIcon />}
-                onClick={() => {
-                  setDeleteAccountIndex(index);
-                }}
-              />
-            </Grid>
-          );
-        })}
+            </Box>
+          ))}
+        </Box>
 
         {/* 新增付款欄位 */}
         <Grid
@@ -223,12 +360,26 @@ function UserDialog(props: UserDialogProps) {
             <Button
               startIcon={<AddCircleOutlineOutlinedIcon />}
               onClick={() => {
-                const emptyAccountInput = { account: "", code: "" };
+                const emptyAccountInput = {
+                  bankCode: {
+                    label: "",
+                    value: "",
+                  },
+                  bankBranchCode: {
+                    label: "",
+                    value: "",
+                  },
+                  bankBranchName: "",
+                  bankName: "",
+                  accountName: "",
+                  account: "",
+                };
                 const emptyArray = [];
                 for (let i = 1; i <= addAccountNumber; i++) {
                   emptyArray.push(emptyAccountInput);
                 }
                 append(emptyArray);
+                if (!bankAccountsFields.length) setBankAccountIndex(0);
               }}
             >
               新增
@@ -256,17 +407,17 @@ function UserDialog(props: UserDialogProps) {
       </>
 
       {/* 刪除付款帳號 Dialog */}
-      {deleteAccountIndex !== -1 ? (
+      {deleteBankAccountIndex !== -1 ? (
         <DialogAlert
-          open={deleteAccountIndex !== -1}
+          open={deleteBankAccountIndex !== -1}
           title={"刪除付款帳號"}
           content={"是否確認要刪除付款帳號？"}
           onConfirm={() => {
-            remove(deleteAccountIndex);
-            setDeleteAccountIndex(-1);
+            remove(deleteBankAccountIndex);
+            setDeleteBankAccountIndex(-1);
           }}
           onClose={() => {
-            setDeleteAccountIndex(-1);
+            setDeleteBankAccountIndex(-1);
           }}
         />
       ) : null}

@@ -29,7 +29,12 @@ const EditUserBtns = (props: EditUserBtnsProps) => {
           contactName: formData.contactName,
           contactPhone: formData.contactPhone,
           contactEmail: formData.contactEmail,
-          bankAccounts: formData.bankAccounts,
+          bankAccounts: (formData.bankAccounts ?? []).map((bankAccount) => ({
+            bankCode: bankAccount.bankCode.value,
+            bankBranchCode: bankAccount.bankBranchCode.value,
+            accountName: bankAccount.accountName,
+            account: bankAccount.account,
+          })),
         },
       },
       refetchQueries: [USERS],
