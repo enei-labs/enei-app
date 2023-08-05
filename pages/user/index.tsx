@@ -72,7 +72,12 @@ const UsersPage = () => {
             <UserPanel
               users={userData?.users}
               loading={loading}
-              refetchFn={refetch}
+              refetchFn={(page) =>
+                refetch({
+                  limit: page.rows,
+                  offset: page.rows * page.index,
+                })
+              }
               onAction={onAction}
             />
           </Card>

@@ -21,7 +21,11 @@ const TPCBillDialog = dynamic(
 
 function TransferDataManagementPage() {
   const [open, setOpen] = useState(false);
-  const { data: transferDocumentsData, loading } = useTransferDocuments();
+  const {
+    data: transferDocumentsData,
+    loading,
+    refetch,
+  } = useTransferDocuments();
   return (
     <>
       <Head>
@@ -61,7 +65,12 @@ function TransferDataManagementPage() {
             <TransferDocumentPanel
               transferDocuments={transferDocumentsData?.transferDocuments}
               loading={loading}
-              refetchFn={() => {}}
+              refetchFn={(page) =>
+                refetch({
+                  limit: page.rows,
+                  offset: page.rows * page.index,
+                })
+              }
             />
           </Card>
         </AuthGuard>

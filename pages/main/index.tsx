@@ -6,7 +6,7 @@ import OutlinedFlagIcon from "@mui/icons-material/OutlinedFlag";
 import IconBreadcrumbs from "@components/BreadCrumbs";
 import OverviewCard, { OverviewCardProps } from "@components/OverviewCard";
 import AnnualPrice from "@components/AnnualPrice";
-import { Card, CircularProgress, Grid } from "@mui/material";
+import { Card, Grid } from "@mui/material";
 import { AuthLayout } from "@components/Layout";
 import { ReactElement, useMemo } from "react";
 import PeopleOutlineOutlinedIcon from "@mui/icons-material/PeopleOutlineOutlined";

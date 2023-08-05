@@ -66,7 +66,12 @@ function TransferApplicationProgressPage() {
             <TransferDocumentPanel
               transferDocuments={transferDocumentsData?.transferDocuments}
               loading={loading}
-              refetchFn={refetch}
+              refetchFn={(page) =>
+                refetch({
+                  limit: page.rows,
+                  offset: page.rows * page.index,
+                })
+              }
             />
           </Card>
           <Divider sx={{ my: "24px" }} />

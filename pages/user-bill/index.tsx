@@ -52,7 +52,11 @@ function ExportElectricBillPage() {
   const [showUserBillDialog, setShowUserBillDialog] = useState(false);
   const [showFeeDialog, setShowFeeDialog] = useState(false);
   const { data, loading } = useFee();
-  const { data: userBillsData, loading: userBillLoading } = useUserBills();
+  const {
+    data: userBillsData,
+    loading: userBillLoading,
+    refetch,
+  } = useUserBills();
 
   return (
     <>
@@ -186,7 +190,12 @@ function ExportElectricBillPage() {
                 fee={data.fee}
                 userBills={userBillsData?.userBills}
                 loading={userBillLoading}
-                refetchFn={() => {}}
+                refetchFn={(page) =>
+                  refetch({
+                    limit: page.rows,
+                    offset: page.rows * page.index,
+                  })
+                }
                 onAction={() => {}}
               />
             ) : null}
