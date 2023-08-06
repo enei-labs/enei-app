@@ -153,7 +153,7 @@ export const useDisplayFieldConfigs = (contractTimeType: ContractTimeType, varia
           ...baseConfigs,
           contract: [
             ...fieldConfigs.slice(4, durationIndex),
-            ...fieldConfigs.slice(durationIndex, 13),
+            ...fieldConfigs.slice(durationIndex, 14),
           ],
         };
       case ContractTimeType.ContractStartTime:
@@ -161,7 +161,7 @@ export const useDisplayFieldConfigs = (contractTimeType: ContractTimeType, varia
           ...baseConfigs,
           contract: [
             ...fieldConfigs.slice(4, endAtIndex),
-            ...fieldConfigs.slice(endAtIndex, 13),
+            ...fieldConfigs.slice(endAtIndex, 14),
           ],
         };
       case ContractTimeType.TransferStartTime:
@@ -169,7 +169,7 @@ export const useDisplayFieldConfigs = (contractTimeType: ContractTimeType, varia
           ...baseConfigs,
           contract: [
             ...fieldConfigs.slice(4, endAtIndex),
-            ...fieldConfigs.slice(endAtIndex, 13),
+            ...fieldConfigs.slice(endAtIndex, 14),
           ],
         };
       default:
