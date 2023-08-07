@@ -211,14 +211,14 @@ function UserCard(props: UserCardProps) {
             >
               {user.bankAccounts.map((account) => (
                 <Typography key={account.bankCode} variant="body3">
-                  {`(${account.bankCode}(${account.bankName})${account.account}`}
+                  {`${account.bankCode}(${account.bankName})${account.account}`}
                 </Typography>
               ))}
             </Box>
           </Grid>
         </Grid>
 
-        <Divider sx={{ margin: "36px 0 " }} />
+        <Divider sx={{ margin: "36px 0" }} />
         <UserTransferDegreeChart
           name="月轉供量"
           thisYearTransferRecords={user.thisYearTransferRecords}
