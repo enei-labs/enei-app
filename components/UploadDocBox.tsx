@@ -75,7 +75,6 @@ interface UploadDocBoxProps
   label: React.ReactNode;
 }
 
-// @TODO delete function
 const UploadDocBox = React.forwardRef<HTMLInputElement, UploadDocBoxProps>(
   function InputUpload(props, ref) {
     const { name, label, value, accept, required, onChange } = props;
