@@ -140,8 +140,23 @@ const ResetPassword = () => {
   );
 };
 
-ResetPassword.getLayout = (page: ReactElement) => {
+ResetPassword.getLayout = (page: ReactElement, loggedIn: boolean) => {
+  if (loggedIn) {
+    return <AuthLayout>{page}</AuthLayout>;
+  }
   return <Layout>{page}</Layout>;
 };
 
-export default ResetPassword;
+const withAuthLayout = (WrappedComponent: any) => {
+  return (props: any) => {
+    const { me } = useAuth();
+
+    const layoutPage = WrappedComponent.getLayout(
+      <WrappedComponent {...props} />,
+      !!me
+    );
+    return layoutPage;
+  };
+};
+
+export default withAuthLayout(ResetPassword);

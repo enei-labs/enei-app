@@ -31,7 +31,7 @@ const EditAccountBtns = (props: EditAccountBtnsProps) => {
     });
 
     if (data && data.modifyAccount.__typename === "Success") {
-      toast.success("Success");
+      toast.success("更新成功");
       onClose();
     }
   };

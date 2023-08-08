@@ -41,7 +41,7 @@ const EditUserBtns = (props: EditUserBtnsProps) => {
     });
 
     if (data && data.modifyUser.__typename === "User") {
-      toast.success("Success");
+      toast.success("更新成功");
       onClose();
     }
   };

@@ -60,7 +60,7 @@ const LogInSetNewPwdDialog: React.FC<LogInSetNewPwdDialogProps> = ({
     });
 
     if (data?.setPassword.__typename === "Admin") {
-      toast.success("Success");
+      toast.success("設定成功");
       onClose();
     }
   };
