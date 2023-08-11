@@ -23,6 +23,7 @@ export * from "./removeTransferDocument";
 export * from "./removeUser";
 export * from './createUserContract';
 export * from './createTPCBill';
+export * from './removeTPCBill';
 export * from './createCompany';
 export * from './updateCompany';
 export * from './removeCompany';

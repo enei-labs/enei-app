@@ -483,6 +483,7 @@ export type Mutation = {
   removeCompanyContract: CompanyContract;
   removeGuest: Guest;
   removePowerPlant: PowerPlant;
+  removeTPCBill: TpcBill;
   removeTransferDocument: TransferDocument;
   removeUser: User;
   removeUserBill: UserBill;
@@ -608,6 +609,11 @@ export type MutationRemoveGuestArgs = {
 
 export type MutationRemovePowerPlantArgs = {
   id: Scalars['UUID'];
+};
+
+
+export type MutationRemoveTpcBillArgs = {
+  input: RemoveTpcBillInput;
 };
 
 
@@ -820,6 +826,7 @@ export type QueryTpcBillArgs = {
 export type QueryTpcBillsArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
+  transferDocumentId: Scalars['UUID'];
 };
 
 
@@ -905,6 +912,10 @@ export type RemoveAdminInput = {
 export type RemoveGuestInput = {
   guestId: Scalars['UUID'];
   reason: Scalars['String'];
+};
+
+export type RemoveTpcBillInput = {
+  tpcBillId: Scalars['UUID'];
 };
 
 export type RemoveUserBillInput = {

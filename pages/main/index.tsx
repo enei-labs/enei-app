@@ -66,7 +66,7 @@ function MainPage() {
             },
             {
               icon: ShoppingCartOutlinedIcon,
-              name: "售出總度數",
+              name: "今年售出總度數",
               count: 796885,
               unit: "MW",
             },

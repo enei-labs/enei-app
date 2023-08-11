@@ -79,7 +79,7 @@ function TransferDocumentUsers(props: TransferDocumentUsersProps) {
     ),
     purchaseDegreeNode: (
       <Typography variant="body1">
-        {el.userContract.purchaseDegree}
+        {el.userContract.purchaseDegree}{" "}
         <Typography variant="body4">MWh</Typography>
       </Typography>
     ),
@@ -91,7 +91,7 @@ function TransferDocumentUsers(props: TransferDocumentUsersProps) {
     ),
     yearlyTransferDegreeNode: (
       <Typography variant="body1">
-        {el.userContract.lowerLimit}
+        {el.userContract.lowerLimit}{" "}
         <Typography variant="body4">MWh</Typography>
       </Typography>
     ),

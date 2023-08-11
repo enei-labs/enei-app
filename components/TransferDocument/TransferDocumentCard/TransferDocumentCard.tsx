@@ -11,6 +11,8 @@ import TransferDocumentPowerPlant from "./TransferDocumentPowerPlant";
 import TransferDocumentUsers from "./TransferDocumentUsers";
 import ProgressBar from "@components/TransferDocument/TransferDocumentCard/ProgressBar";
 import DownloadDocBox from "@components/DownloadDocBox";
+import { BasicTable } from "@components/Table";
+import TPCPanel from "@components/TPCBill/TPCPanel";
 
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 const TransferDocumentDialog = dynamic(
@@ -104,6 +106,21 @@ function TransferDocumentCard(props: TransferDocumentProps) {
           </Box>
         </Box>
       </Card>
+
+      <Divider sx={{ margin: "36px 0" }} />
+
+      <Grid container spacing={4}>
+        <Grid item sm={6}>
+          <Card sx={{ p: "36px" }}>
+            <TPCPanel transferDocument={transferDocument} />
+          </Card>
+        </Grid>
+        <Grid item sm={6}>
+          <Card sx={{ p: "36px" }}>
+            <BasicTable title="容量剩餘發電業名單" />
+          </Card>
+        </Grid>
+      </Grid>
       {openDeleteDialog ? (
         <DialogAlert
           open={openDeleteDialog}
