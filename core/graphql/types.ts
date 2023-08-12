@@ -826,7 +826,7 @@ export type QueryTpcBillArgs = {
 export type QueryTpcBillsArgs = {
   limit?: InputMaybe<Scalars['Int']>;
   offset?: InputMaybe<Scalars['Int']>;
-  transferDocumentId: Scalars['UUID'];
+  transferDocumentId?: InputMaybe<Scalars['UUID']>;
 };
 
 

@@ -4,7 +4,7 @@ import { TPC_BILL_FIELDS } from '@core/graphql/fragment'
 export const TPC_BILLS = gql`
   ${TPC_BILL_FIELDS}
   query tpcBills(
-    $transferDocumentId: UUID!
+    $transferDocumentId: UUID
     $limit: Int = 10
     $offset: Int = 0
   ) {

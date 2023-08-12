@@ -3,7 +3,7 @@ import useQuery from '../useQuery';
 import { TPC_BILLS } from '@core/graphql/queries';
 
 interface Variables {
-  transferDocumentId: string;
+  transferDocumentId?: string;
   offset?: number;
   limit?: number;
 }
