@@ -7,5 +7,8 @@ export const DASHBOARD_FIELDS = gql`
       totalDegree
       totalVolume
     }
+    userInfo {
+      count
+    }
   }
 `

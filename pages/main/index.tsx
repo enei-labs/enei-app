@@ -20,6 +20,8 @@ import { useDashboard } from "@utils/hooks/queries/useDashboard";
 function MainPage() {
   const { data, loading } = useDashboard();
 
+  console.log({ data });
+
   const dashboardData = useMemo(() => {
     const industryOverview: Pick<OverviewCardProps, "topic" | "basicInfos"> = {
       topic: "發電業資訊",
@@ -55,7 +57,7 @@ function MainPage() {
             {
               icon: PeopleOutlineOutlinedIcon,
               name: "用戶數量",
-              count: 50,
+              count: data.dashboard.userInfo.count,
               unit: "位",
             },
             {
