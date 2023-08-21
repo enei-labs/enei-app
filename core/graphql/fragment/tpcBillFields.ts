@@ -20,6 +20,7 @@ export const TPC_BILL_FIELDS = gql`
         id
         name
       }
+      createdAt
     }
   }
 `

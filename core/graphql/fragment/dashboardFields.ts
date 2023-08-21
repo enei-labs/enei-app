@@ -9,6 +9,7 @@ export const DASHBOARD_FIELDS = gql`
     }
     userInfo {
       count
+      yearlyGrowth
     }
   }
 `

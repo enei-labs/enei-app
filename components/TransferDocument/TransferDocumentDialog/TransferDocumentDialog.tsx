@@ -35,6 +35,7 @@ interface TransferDocumentDialogProps {
   onClose: VoidFunction;
 }
 
+/** @TODO 轉供合約編號跟正式轉供日要寫的契約編號是一樣的嗎？ */
 const transferDocumentInformationConfigs: FieldConfig[] = [
   {
     type: "TEXT",
@@ -42,6 +43,7 @@ const transferDocumentInformationConfigs: FieldConfig[] = [
     label: "轉供合約名稱",
     placeholder: "請填入",
     validated: textValidated,
+    required: true,
   },
   {
     type: "TEXT",
@@ -49,6 +51,7 @@ const transferDocumentInformationConfigs: FieldConfig[] = [
     label: "轉供合約編號",
     placeholder: "請填入",
     validated: textValidated,
+    required: true,
   },
   {
     type: "TEXT",
@@ -56,12 +59,14 @@ const transferDocumentInformationConfigs: FieldConfig[] = [
     label: "轉供受理區處",
     placeholder: "請填入",
     validated: textValidated,
+    required: true,
   },
   {
     type: "DATE",
     name: "expectedTime",
     label: "期望完成日",
     placeholder: "請填入",
+    required: true,
   },
 ];
 

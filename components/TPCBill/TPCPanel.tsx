@@ -1,6 +1,6 @@
 import { IconBtn } from "@components/Button";
 import Table, { Config } from "@components/Table/Table";
-import { TpcBill, TransferDocument } from "@core/graphql/types";
+import { TpcBill, TpcBillPage } from "@core/graphql/types";
 import BorderColorOutlined from "@mui/icons-material/BorderColorOutlined";
 import DeleteOutlined from "@mui/icons-material/DeleteOutlined";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
@@ -10,28 +10,33 @@ import dynamic from "next/dynamic";
 import { toast } from "react-toastify";
 import { useRemoveTPCBill } from "@utils/hooks";
 import { useRouter } from "next/router";
+import { Box } from "@mui/material";
+import { formatDateTime } from "@utils/format";
 
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
 interface TPCPanelProps {
-  transferDocument: TransferDocument;
+  transferDocumentId: string;
+  tpcBillPage?: TpcBillPage;
+  loading: boolean;
 }
 
 const TPCPanel = (props: TPCPanelProps) => {
-  const { transferDocument } = props;
+  const { tpcBillPage, loading, transferDocumentId } = props;
   const router = useRouter();
-  const { data, loading, refetch } = useTpcBills({
-    transferDocumentId: transferDocument.id,
-  });
+  const { refetch } = useTpcBills({ transferDocumentId });
   const [removeTPCBill] = useRemoveTPCBill();
   const [currentTPCBill, setCurrentTPCBill] = useState<TpcBill | null>(null);
   const [isOpenDialog, setOpenDownloadDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-
+  tpcBillPage?.list[0].billReceivedDate;
   const configs: Config<TpcBill>[] = [
     {
       header: "收到日期",
-      accessor: "date",
+      accessor: "",
+      render: (rowData) => {
+        return <Box>{formatDateTime(rowData.billReceivedDate)}</Box>;
+      },
     },
     {
       header: "電費單下載",
@@ -77,8 +82,8 @@ const TPCPanel = (props: TPCPanelProps) => {
     <>
       <Table
         configs={configs}
-        list={data?.tpcBills.list}
-        total={data?.tpcBills.total}
+        list={tpcBillPage?.list}
+        total={tpcBillPage?.total}
         loading={loading}
         onPageChange={refetch}
       />

@@ -18,6 +18,7 @@ const EditTransferDocumentBtn = (props: EditTransferDocumentBtnProps) => {
 
   /** 新增用戶 mutation */
   const onUpdateTransferDocument = async (formData: FormData) => {
+    console.log({ formData });
     await updateTransferDocument({
       variables: {
         id: transferDocumentId,

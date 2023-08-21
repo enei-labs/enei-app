@@ -13,6 +13,8 @@ import ProgressBar from "@components/TransferDocument/TransferDocumentCard/Progr
 import DownloadDocBox from "@components/DownloadDocBox";
 import { BasicTable } from "@components/Table";
 import TPCPanel from "@components/TPCBill/TPCPanel";
+import TransferDocumentInfoBox from "@components/TransferDocument/TransferDocumentInfoBox";
+import { useTpcBills } from "@utils/hooks/queries";
 
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 const TransferDocumentDialog = dynamic(
@@ -30,9 +32,15 @@ function TransferDocumentCard(props: TransferDocumentProps) {
   const { transferDocument } = props;
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
-  const [removeTransferDocument, { loading }] = useRemoveTransferDocument();
+  const [removeTransferDocument] = useRemoveTransferDocument();
 
-  console.log("transferDocument-->\n", transferDocument);
+  const { data, loading, refetch } = useTpcBills({
+    transferDocumentId: transferDocument.id,
+    offset: 0,
+    limit: 1000,
+  });
+
+  console.log("transferDocument-->\n", transferDocument, data);
 
   return (
     <>
@@ -109,15 +117,25 @@ function TransferDocumentCard(props: TransferDocumentProps) {
 
       <Divider sx={{ margin: "36px 0" }} />
 
-      <Grid container spacing={4}>
+      <Grid container spacing={4} maxWidth={"1280px"}>
         <Grid item sm={6}>
           <Card sx={{ p: "36px" }}>
-            <TPCPanel transferDocument={transferDocument} />
+            <Typography variant="h4">台電代輸繳費單</Typography>
+            <TPCPanel
+              transferDocumentId={transferDocument.id}
+              loading={loading}
+              tpcBillPage={data?.tpcBills}
+            />
           </Card>
         </Grid>
         <Grid item sm={6}>
           <Card sx={{ p: "36px" }}>
-            <BasicTable title="容量剩餘發電業名單" />
+            <Typography variant="h4">容量剩餘發電業名單</Typography>
+            <TransferDocumentInfoBox
+              transferDocument={transferDocument}
+              loading={loading}
+              tpcBillPage={data?.tpcBills}
+            />
           </Card>
         </Grid>
       </Grid>
