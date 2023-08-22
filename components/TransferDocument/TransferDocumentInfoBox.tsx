@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import groupBy from "lodash/groupBy";
 import Chip from "@components/Chip";
 import {
   TpcBillPage,
@@ -70,12 +71,6 @@ function TransferDocumentInfoBox(props: TransferDocumentInfoBoxProps) {
   }, [tpcBillPage]);
 
   const currentPowerPlant = useMemo(() => {
-    // let result = {
-    //   transferDegreesThisMonthData: [],
-    //   aggregateTransferDegreesLastMonth: 0,
-    //   aggregateTransferDegreesThisMonth: 0,
-    //   aggregateTransferDegreesThisYear: 0,
-    // }
     console.log({ powerPlantId });
     console.log({ powerPlantsMap });
     if (!powerPlantId) return null;
@@ -106,10 +101,24 @@ function TransferDocumentInfoBox(props: TransferDocumentInfoBoxProps) {
       }
     );
 
-    console.log({ transferDegreesThisMonth });
+    const groupByUserTransferDegrees = groupBy(
+      transferDegreesThisMonth,
+      (transferDegree) => transferDegree.user.id
+    );
+
+    const transferDegreesUserList = (
+      Object.values(groupByUserTransferDegrees) ?? []
+    ).map((transferDegrees) => ({
+      ...transferDegrees[0].user,
+      aggregateTransferDegrees: transferDegrees.reduce(
+        (acc, curr) => acc + curr.degree,
+        0
+      ),
+    }));
 
     return {
-      transferDegreesThisMonthData: [],
+      transferDegreesThisMonth,
+      transferDegreesUserList,
       aggregateTransferDegreesLastMonth: 0,
       aggregateTransferDegreesThisMonth: transferDegreesThisMonth.reduce(
         (acc, curr) => acc + curr.degree,
@@ -163,15 +172,14 @@ function TransferDocumentInfoBox(props: TransferDocumentInfoBoxProps) {
       <Divider />
 
       <Grid container>
-        <Grid item sm={4}>
-          本月轉供度數
-        </Grid>
-        <Grid item sm={4}>
-          本月轉供度數
-        </Grid>
-        <Grid item sm={4}>
-          本月轉供度數
-        </Grid>
+        {currentPowerPlant?.transferDegreesUserList.map((user) => (
+          <Grid item sm={4} key={user.id}>
+            <TransferBox
+              title={user.name}
+              count={user.aggregateTransferDegrees}
+            />
+          </Grid>
+        ))}
       </Grid>
     </Box>
   );
