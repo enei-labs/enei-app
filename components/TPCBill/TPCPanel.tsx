@@ -12,6 +12,7 @@ import { useRemoveTPCBill } from "@utils/hooks";
 import { useRouter } from "next/router";
 import { Box } from "@mui/material";
 import { formatDateTime } from "@utils/format";
+import { handleDownload } from "@utils/download";
 
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
@@ -27,9 +28,8 @@ const TPCPanel = (props: TPCPanelProps) => {
   const { refetch } = useTpcBills({ transferDocumentId });
   const [removeTPCBill] = useRemoveTPCBill();
   const [currentTPCBill, setCurrentTPCBill] = useState<TpcBill | null>(null);
-  const [isOpenDialog, setOpenDownloadDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  tpcBillPage?.list[0].billReceivedDate;
+  console.log({ tpcBillPage });
   const configs: Config<TpcBill>[] = [
     {
       header: "收到日期",
@@ -45,7 +45,7 @@ const TPCPanel = (props: TPCPanelProps) => {
           <IconBtn
             icon={<FileDownloadOutlinedIcon />}
             onClick={() => {
-              setOpenDownloadDialog(true);
+              handleDownload(rowData.billDoc);
               setCurrentTPCBill(rowData);
             }}
           />

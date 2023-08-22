@@ -1,10 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import { IconBtn } from "./Button";
-import React from "react";
-import axios from "axios";
-
-const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "";
+import { handleDownload } from "@utils/download";
 
 const styles = {
   box: {
@@ -35,26 +32,14 @@ interface DownloadDocBoxProps {
 const DownloadDocBox = (props: DownloadDocBoxProps) => {
   const { label, fileId } = props;
 
-  const handleDownload = async () => {
-    const response = await axios.get<{ signedUrl: string }>(
-      `${apiBaseUrl}/s3/getSignedUrl?fileId=${fileId}`
-    );
-    const { signedUrl } = response.data;
-
-    const link = document.createElement("a");
-    link.href = signedUrl;
-    link.target = "_blank";
-    link.download = fileId;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
   return (
     <Box sx={styles.box}>
       <Typography variant="h6">{label}</Typography>
       <Box sx={styles.container}>
-        <IconBtn icon={<FileDownloadOutlinedIcon />} onClick={handleDownload} />
+        <IconBtn
+          icon={<FileDownloadOutlinedIcon />}
+          onClick={() => handleDownload(fileId)}
+        />
       </Box>
     </Box>
   );
