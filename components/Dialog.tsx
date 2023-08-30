@@ -11,7 +11,12 @@ const Dialog: React.FC<DialogProps> = ({
   children,
 }) => {
   return (
-    <MuiDialog fullWidth maxWidth={maxWidth} open={open} onClose={onClose}>
+    <MuiDialog
+      fullWidth
+      maxWidth={maxWidth}
+      open={open}
+      // onClose={onClose} --> disableBackdropClick
+    >
       <DialogContent>
         <Stack gap="30px">{children}</Stack>
       </DialogContent>
