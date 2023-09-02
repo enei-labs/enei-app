@@ -1,5 +1,5 @@
 import { useAuth } from "@core/context/auth";
-import { Divider, Drawer, Toolbar } from "@mui/material";
+import { Drawer, Toolbar } from "@mui/material";
 import Box from "@mui/material/Box";
 import type { Theme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
@@ -72,12 +72,24 @@ const style = {
 
 const drawerWidth = 240;
 
+const isSafari = (): boolean => {
+  const ua = navigator.userAgent.toLowerCase();
+  return !!~ua.indexOf("safari") && !~ua.indexOf("chrome");
+};
+
 const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
   const router = useRouter();
   const { status } = useAuth();
 
   useEffect(() => {
     if (status === "unauthenticated") router.push("/logIn");
+
+    if (isSafari()) {
+      document.requestStorageAccess().catch((err) => {
+        // Storage access is denied.
+        console.error("Storage access was denied", err);
+      });
+    }
   }, [router, status]);
 
   if (status === "loading" || status === "unauthenticated") {
@@ -108,9 +120,9 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
               justifyContent: "flex-start",
               alignItems: "center",
               paddingX: "25px",
-              cursor: 'pointer',
+              cursor: "pointer",
             }}
-            onClick={() => router.push('/main')}
+            onClick={() => router.push("/main")}
           >
             <Logo height="40" />
           </Box>

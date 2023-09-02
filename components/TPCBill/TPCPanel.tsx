@@ -29,7 +29,7 @@ const TPCPanel = (props: TPCPanelProps) => {
   const [removeTPCBill] = useRemoveTPCBill();
   const [currentTPCBill, setCurrentTPCBill] = useState<TpcBill | null>(null);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  console.log({ tpcBillPage });
+
   const configs: Config<TpcBill>[] = [
     {
       header: "收到日期",

@@ -71,11 +71,8 @@ function TransferDocumentInfoBox(props: TransferDocumentInfoBoxProps) {
   }, [tpcBillPage]);
 
   const currentPowerPlant = useMemo(() => {
-    console.log({ powerPlantId });
-    console.log({ powerPlantsMap });
     if (!powerPlantId) return null;
     const transferDegrees = powerPlantsMap.get(powerPlantId);
-    console.log({ transferDegrees });
     if (!transferDegrees) return null;
 
     const currentYear = new Date().getFullYear();
@@ -89,7 +86,6 @@ function TransferDocumentInfoBox(props: TransferDocumentInfoBoxProps) {
     });
     const currentMonth = new Date().getMonth();
     const startOfMonth = new Date(currentYear, currentMonth, 1);
-    console.log({ currentMonth, startOfMonth });
     const endOfMonth = new Date(currentYear, currentMonth + 1, 0);
     const transferDegreesThisMonth = transferDegrees.filter(
       (transferDegree) => {
@@ -130,8 +126,6 @@ function TransferDocumentInfoBox(props: TransferDocumentInfoBoxProps) {
       ),
     };
   }, [powerPlantId, powerPlantsMap]);
-
-  console.log({ currentPowerPlant });
 
   if (loading) return <CircularProgress />;
 

@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 import Logo from "public/logo-with-name.svg";
 import LoginIcon from "@mui/icons-material/Login";
 import dynamic from "next/dynamic";
+import { ME } from "@core/graphql/queries";
 
 const LogInSetNewPwdDialog = dynamic(
   () => import("@components/LogIn/LogInSetNewPwdDialog")
