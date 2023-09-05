@@ -10,16 +10,42 @@ import { LoadingButton } from "@mui/lab";
 
 const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "";
 
-const uploadFile = async (file: File) => {
-  const formData = new FormData();
-  formData.append("file", file);
+// const uploadFile = async (file: File) => {
+//   const formData = new FormData();
+//   formData.append("file", file);
 
-  const { data } = await axios.post(`${apiBaseUrl}/s3/upload`, formData, {
-    headers: { "Content-Type": "multipart/form-data" },
+//   const { data } = await axios.post(`${apiBaseUrl}/s3/upload`, formData, {
+//     headers: { "Content-Type": "multipart/form-data" },
+//     withCredentials: true,
+//   });
+
+//   return data;
+// };
+
+const getSignedUrl = async (fileId: string) => {
+  try {
+    const { data } = await axios.get(`${apiBaseUrl}/s3/getSignedUrl`, {
+      params: { fileId },
+    });
+    return data.signedUrl;
+  } catch (error) {
+    console.error("Error fetching signed URL:", error);
+    return null;
+  }
+};
+
+const uploadFile = async (file: File) => {
+  const fileId = crypto.randomUUID();
+  const signedUrl = await getSignedUrl(fileId);
+
+  await axios.put(signedUrl, file, {
+    headers: {
+      "Content-Type": file.type,
+    },
     withCredentials: true,
   });
 
-  return data;
+  return { success: true, fileId };
 };
 
 const deleteFile = async (fileId: string) => {
@@ -110,7 +136,7 @@ const UploadDocBox = React.forwardRef<HTMLInputElement, UploadDocBoxProps>(
 
       if (file) {
         const data = await runAsync(file);
-        onChange({ id: data?.id, file: file });
+        onChange({ id: data.fileId, file: file });
         setFileName({ id: file.name });
       }
     };
