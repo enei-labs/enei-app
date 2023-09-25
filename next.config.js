@@ -12,6 +12,7 @@ const nextConfig = {
 
     return config
   },
+  transpilePackages: ['ahooks']
 }
 
 module.exports = withBundleAnalyzer(nextConfig)
