@@ -26,6 +26,7 @@ const getSignedUrl = async (fileId: string) => {
   try {
     const { data } = await axios.get(`${apiBaseUrl}/s3/getSignedUrl`, {
       params: { fileId },
+      withCredentials: true,
     });
     return data.signedUrl;
   } catch (error) {
@@ -42,7 +43,6 @@ const uploadFile = async (file: File) => {
     headers: {
       "Content-Type": file.type,
     },
-    withCredentials: true,
   });
 
   return { success: true, fileId };
