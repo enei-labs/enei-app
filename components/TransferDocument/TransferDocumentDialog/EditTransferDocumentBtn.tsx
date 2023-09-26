@@ -16,14 +16,13 @@ const EditTransferDocumentBtn = (props: EditTransferDocumentBtnProps) => {
 
   const [updateTransferDocument, { loading }] = useUpdateTransferDocument();
 
-  /** 新增用戶 mutation */
   const onUpdateTransferDocument = async (formData: FormData) => {
     console.log({ formData });
     await updateTransferDocument({
       variables: {
         id: transferDocumentId,
         input: {
-          number: formData.number,
+          // number: formData.number,
           name: formData.name,
           receptionAreas: formData.receptionAreas,
           expectedTime: formData.expectedTime,
