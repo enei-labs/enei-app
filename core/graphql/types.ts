@@ -361,7 +361,8 @@ export type Dashboard = {
 
 export type DashboardCompany = {
   __typename?: 'DashboardCompany';
-  count: Scalars['Int'];
+  /** 電廠數量 */
+  powerPlantCount: Scalars['Int'];
   /** 總裝置量 */
   totalDegree: Scalars['String'];
   totalVolume: Scalars['String'];
@@ -370,8 +371,8 @@ export type DashboardCompany = {
 export type DashboardUser = {
   __typename?: 'DashboardUser';
   count: Scalars['Int'];
-  /** 售出總度數 */
-  totalSalesDegree: Scalars['Int'];
+  /** 總綠電需求度數 */
+  totalRequireDegree: Scalars['Int'];
   /** 年度用戶成長數 */
   yearlyGrowth: Scalars['Int'];
 };
@@ -987,7 +988,7 @@ export type TransferDocument = {
   formalDoc: Scalars['String'];
   id: Scalars['ID'];
   name: Scalars['String'];
-  /** 契約編號 */
+  /** 轉供合約編號 */
   number?: Maybe<Scalars['String']>;
   officialTransferDate?: Maybe<Scalars['DateTime']>;
   planSubmissionDate?: Maybe<Scalars['DateTime']>;
@@ -1080,7 +1081,6 @@ export type UpdateTransferDocumentInput = {
   expectedTime: Scalars['DateTime'];
   formalDoc: Scalars['String'];
   name: Scalars['String'];
-  number: Scalars['String'];
   powerPlants: Array<CreateTransferDocumentPowerPlantInput>;
   printingDoc: Scalars['String'];
   receptionAreas: Scalars['String'];

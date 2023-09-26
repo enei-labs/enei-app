@@ -70,7 +70,7 @@ const UserBill = forwardRef((props: UserBillProps, ref) => {
         <Typography variant="body4">{userBill.address}</Typography>
       </Box>
       <Grid container spacing={"8px"}>
-        <Grid item sm={4}>
+        <Grid item sm={6}>
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <Typography sx={styles.boxTitle}>應繳金額</Typography>
           </Box>
@@ -80,7 +80,7 @@ const UserBill = forwardRef((props: UserBillProps, ref) => {
             </Typography>
           </Box>
         </Grid>
-        <Grid item sm={4}>
+        <Grid item sm={6}>
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <Typography sx={styles.boxTitle}>繳費期限</Typography>
           </Box>
@@ -90,7 +90,7 @@ const UserBill = forwardRef((props: UserBillProps, ref) => {
             </Typography>
           </Box>
         </Grid>
-        <Grid item sm={4}>
+        {/* <Grid item sm={4}>
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <Typography sx={styles.boxTitle}>匯款資訊</Typography>
           </Box>
@@ -128,7 +128,7 @@ const UserBill = forwardRef((props: UserBillProps, ref) => {
               </Box>
             </Box>
           </Box>
-        </Grid>
+        </Grid> */}
       </Grid>
       <Box marginTop={"12px"}>
         <Typography
@@ -268,15 +268,12 @@ const UserBill = forwardRef((props: UserBillProps, ref) => {
             <TableRow>
               <TableCell colSpan={5} sx={{ padding: "3px" }}>
                 <Box sx={styles.contentText}>
-                  本期計費期間：2022.03.01-2022.03.31 1.
-                  轉供度數以台電公司寄給XXXX（售電業公司名稱）之「台灣電力股份有限公司繳費通知單」所載之代輸電力度數為準。
-                  2.
-                  如用戶逾期繳納金額，按中華郵政股份一年期定期儲金利率固定牌告利率加年息2.5%，計算遲延利息。3.
-                  如用戶逾期繳納金額累計達1個月，並經定期催告仍無於一定期限內給付，依雙方簽訂契約之損害賠償責任辦理。4.
-                  電費奉准以元為單位，不及一元者四捨五入計算。 5.
+                  本期計費期間：2022.03.01-2022.03.31 1. 1.
+                  轉供度數以台電公司寄給艾涅爾電力之「台灣電力股份有限公司繳費通知單」所載之代輸電力度數為準。
+                  2. 電費奉准以元為單位，不及一元者四捨五入計算。 3.
                   憑證每達一千度累積電量，憑證中心核發一張，憑證之數量以憑證中心每個月核發之數量為準。
-                  6. 憑證附隨電能一併出售予用戶，不另外計價 。 7.
-                  本繳費憑證各項金額數目係由機器印出，如發現非機器列印或有塗改字跡，概屬無效。
+                  4. 憑證附隨電能一併出售予用戶，不另外計價 。 5.
+                  本繳費憑證各項金額數目係由機器印出，如發現非機器列印或有塗改字跡，概屬無效
                 </Box>
               </TableCell>
             </TableRow>

@@ -27,9 +27,9 @@ function MainPage() {
         ? [
             {
               icon: BoltIcon,
-              name: "發電業數量",
-              count: data.dashboard.companyInfo.count,
-              unit: "家",
+              name: "電廠數量",
+              count: data.dashboard.companyInfo.powerPlantCount,
+              unit: "座",
             },
             {
               icon: MailIcon,
@@ -66,8 +66,8 @@ function MainPage() {
             },
             {
               icon: ShoppingCartOutlinedIcon,
-              name: "今年售出總度數",
-              count: 796885,
+              name: "今年總綠電需求度數",
+              count: data.dashboard.userInfo.totalRequireDegree,
               unit: "MW",
             },
           ]
