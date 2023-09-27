@@ -16,7 +16,7 @@ import Head from "next/head";
 import { BasicTable } from "@components/Table";
 import DemoChart from "@components/LineChart";
 import { useDashboard } from "@utils/hooks/queries/useDashboard";
-import TurnoverChart from "@components/Dashboard/TurnOverChart";
+import TurnoverChart from "@components/Dashboard/TurnoverChart";
 
 function MainPage() {
   const { data, loading } = useDashboard();
