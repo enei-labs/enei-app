@@ -42,7 +42,7 @@ export function ElectricNumbersField(props: ElectricNumbersFieldProps) {
   if (loading) return <CircularProgress size="24px" />;
 
   const flattenElectricNumberOptions =
-    data?.userContracts.list.reduce((agg, curr) => {
+    data?.userContracts.list.reduce((agg: ElectricNumberInfo[], curr) => {
       if (!curr.electricNumberInfos || !curr.electricNumberInfos.length)
         return agg;
       return [...agg, ...curr.electricNumberInfos];

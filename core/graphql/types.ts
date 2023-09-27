@@ -356,6 +356,7 @@ export type CreateUserInput = {
 export type Dashboard = {
   __typename?: 'Dashboard';
   companyInfo: DashboardCompany;
+  userBillInfo: DashboardUserBill;
   userInfo: DashboardUser;
 };
 
@@ -375,6 +376,12 @@ export type DashboardUser = {
   totalRequireDegree: Scalars['Int'];
   /** 年度用戶成長數 */
   yearlyGrowth: Scalars['Int'];
+};
+
+export type DashboardUserBill = {
+  __typename?: 'DashboardUserBill';
+  /** 營業額 */
+  turnover: Array<Scalars['Int']>;
 };
 
 export type ElectricNumberInfo = {

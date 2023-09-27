@@ -16,9 +16,12 @@ import Head from "next/head";
 import { BasicTable } from "@components/Table";
 import DemoChart from "@components/LineChart";
 import { useDashboard } from "@utils/hooks/queries/useDashboard";
+import TurnoverChart from "@components/Dashboard/TurnOverChart";
 
 function MainPage() {
   const { data, loading } = useDashboard();
+
+  console.log({ data });
 
   const dashboardData = useMemo(() => {
     const industryOverview: Pick<OverviewCardProps, "topic" | "basicInfos"> = {
@@ -47,7 +50,6 @@ function MainPage() {
         : [],
     };
 
-    /** @TODO user data */
     const userOverview: Pick<OverviewCardProps, "topic" | "basicInfos"> = {
       topic: "用戶資訊",
       basicInfos: data
@@ -120,7 +122,10 @@ function MainPage() {
           </Grid>
           <Grid item sm={6}>
             <Card sx={{ p: "36px" }}>
-              <DemoChart name="營業額" />
+              <TurnoverChart
+                name="營業額"
+                data={data?.dashboard.userBillInfo.turnover}
+              />
             </Card>
           </Grid>
           <Grid item sm={6}>

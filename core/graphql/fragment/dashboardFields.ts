@@ -12,5 +12,8 @@ export const DASHBOARD_FIELDS = gql`
       yearlyGrowth
       totalRequireDegree
     }
+    userBillInfo {
+      turnover
+    }
   }
 `
