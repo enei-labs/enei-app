@@ -8,6 +8,7 @@ export type FormData = {
   price: number;
   upperLimit: number;
   lowerLimit: number;
+  salesAt: Date;
   salesPeriod: string;
   transferAt: Date;
   contractDoc: {

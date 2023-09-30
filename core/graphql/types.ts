@@ -335,6 +335,7 @@ export type CreateUserContractInput = {
   name: Scalars['String'];
   price: Scalars['Int'];
   purchaseDegree: Scalars['Int'];
+  salesAt: Scalars['DateTime'];
   salesPeriod: Scalars['String'];
   serialNumber: Scalars['String'];
   transferAt?: InputMaybe<Scalars['DateTime']>;
@@ -357,6 +358,7 @@ export type Dashboard = {
   __typename?: 'Dashboard';
   companyInfo: DashboardCompany;
   userBillInfo: DashboardUserBill;
+  userContractInfo: DashboardUserContract;
   userInfo: DashboardUser;
 };
 
@@ -382,6 +384,12 @@ export type DashboardUserBill = {
   __typename?: 'DashboardUserBill';
   /** 營業額 */
   turnover: Array<Scalars['Int']>;
+};
+
+export type DashboardUserContract = {
+  __typename?: 'DashboardUserContract';
+  /** 未來一年用戶合約到期名單 */
+  userContracts: Array<UserContract>;
 };
 
 export type ElectricNumberInfo = {
@@ -1203,7 +1211,9 @@ export type UserContract = {
   name: Scalars['String'];
   price: Scalars['String'];
   purchaseDegree: Scalars['Int'];
+  salesAt: Scalars['DateTime'];
   salesPeriod: Scalars['String'];
+  salesTo: Scalars['DateTime'];
   serialNumber: Scalars['String'];
   transferAt?: Maybe<Scalars['DateTime']>;
   upperLimit: Scalars['Int'];

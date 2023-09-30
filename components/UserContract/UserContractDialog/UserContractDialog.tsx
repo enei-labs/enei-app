@@ -33,6 +33,7 @@ import { TableNumbersField } from "@components/UserContract/UserContractDialog/T
 import { LoadingButton } from "@mui/lab";
 import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
@@ -79,6 +80,12 @@ const contractConfigs: FieldConfig[] = [
     name: "lowerLimit",
     required: true,
     label: "預計最低採購下限（契約）（kWh）",
+  },
+  {
+    type: "DATE",
+    name: "salesAt",
+    required: true,
+    label: "契約生效日期",
   },
   {
     type: "NUMBER",
@@ -146,6 +153,10 @@ function UserContractDialog(props: UserContractDialogProps) {
 
   /** submit */
   const onSubmit = async (formData: FormData) => {
+    if (!formData.contractDoc) {
+      toast.error("尚未上傳用戶契約");
+    }
+
     const { data } = await createUserContract({
       variables: {
         userId,
@@ -157,6 +168,7 @@ function UserContractDialog(props: UserContractDialogProps) {
           price: Number(formData.price),
           upperLimit: Number(formData.upperLimit),
           lowerLimit: Number(formData.lowerLimit),
+          salesAt: formData.salesAt,
           salesPeriod: formData.salesPeriod,
           transferAt: formData.transferAt,
           contractDoc: formData.contractDoc.id,
