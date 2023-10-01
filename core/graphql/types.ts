@@ -389,7 +389,7 @@ export type DashboardUserBill = {
 export type DashboardUserContract = {
   __typename?: 'DashboardUserContract';
   /** 未來一年用戶合約到期名單 */
-  userContracts: Array<UserContract>;
+  userContractsExpiringSoon: Array<UserContract>;
 };
 
 export type ElectricNumberInfo = {

@@ -1,6 +1,7 @@
 import { gql } from '@apollo/client'
 
 export const DASHBOARD_FIELDS = gql`
+
   fragment dashboardFields on Dashboard {
     companyInfo {
       powerPlantCount
@@ -14,6 +15,15 @@ export const DASHBOARD_FIELDS = gql`
     }
     userBillInfo {
       turnover
+    }
+    userContractInfo {
+      userContractsExpiringSoon {
+        id
+        name
+        serialNumber
+        salesAt
+        salesTo
+      }
     }
   }
 `

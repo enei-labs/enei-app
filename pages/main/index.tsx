@@ -17,6 +17,7 @@ import { BasicTable } from "@components/Table";
 import DemoChart from "@components/LineChart";
 import { useDashboard } from "@utils/hooks/queries/useDashboard";
 import TurnoverChart from "@components/Dashboard/TurnoverChart";
+import UserContractExpiredPanel from "@components/Dashboard/UserContractExpiredPanel";
 
 function MainPage() {
   const { data, loading } = useDashboard();
@@ -134,10 +135,9 @@ function MainPage() {
             </Card>
           </Grid>
         </Grid>
+
         <Divider sx={{ margin: "24px 0" }} />
-        <Card sx={{ p: "36px" }}>
-          <DemoChart name="未來一年容量平衡" />
-        </Card>
+
         <Grid container spacing={4} marginTop="4px">
           <Grid item sm={6}>
             <Card sx={{ p: "36px" }}>
@@ -147,6 +147,25 @@ function MainPage() {
           <Grid item sm={6}>
             <Card sx={{ p: "36px" }}>
               <BasicTable title="容量剩餘發電業名單" />
+            </Card>
+          </Grid>
+        </Grid>
+
+        <Grid container spacing={4} marginTop="4px">
+          <Grid item sm={6}>
+            <Card sx={{ p: "36px" }}>
+              <UserContractExpiredPanel
+                loading={loading}
+                userContracts={
+                  data?.dashboard.userContractInfo.userContractsExpiringSoon ??
+                  []
+                }
+              />
+            </Card>
+          </Grid>
+          <Grid item sm={6}>
+            <Card sx={{ p: "36px" }}>
+              <BasicTable title="未來一年電廠合約到期名單" />
             </Card>
           </Grid>
         </Grid>
