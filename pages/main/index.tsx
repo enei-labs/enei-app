@@ -14,10 +14,10 @@ import ChartIcon from "@mui/icons-material/InsertChartOutlinedSharp";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import Head from "next/head";
 import { BasicTable } from "@components/Table";
-import DemoChart from "@components/LineChart";
 import { useDashboard } from "@utils/hooks/queries/useDashboard";
 import TurnoverChart from "@components/Dashboard/TurnoverChart";
 import UserContractExpiredPanel from "@components/Dashboard/UserContractExpiredPanel";
+import TransferDegreeChart from "@components/Dashboard/TransferDegreeChart";
 
 function MainPage() {
   const { data, loading } = useDashboard();
@@ -131,7 +131,10 @@ function MainPage() {
           </Grid>
           <Grid item sm={6}>
             <Card sx={{ p: "36px" }}>
-              <DemoChart name="轉供度數" />
+              <TransferDegreeChart
+                name="轉供度數"
+                data={data?.dashboard.transferDegreeInfo.monthlyTransferDegree}
+              />
             </Card>
           </Grid>
         </Grid>

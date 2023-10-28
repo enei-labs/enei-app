@@ -357,6 +357,8 @@ export type CreateUserInput = {
 export type Dashboard = {
   __typename?: 'Dashboard';
   companyInfo: DashboardCompany;
+  tpcBillInfo: DashboardUserContract;
+  transferDegreeInfo: DashboardTransferDegree;
   userBillInfo: DashboardUserBill;
   userContractInfo: DashboardUserContract;
   userInfo: DashboardUser;
@@ -369,6 +371,12 @@ export type DashboardCompany = {
   /** 總裝置量 */
   totalDegree: Scalars['String'];
   totalVolume: Scalars['String'];
+};
+
+export type DashboardTransferDegree = {
+  __typename?: 'DashboardTransferDegree';
+  /** 轉供度數 */
+  monthlyTransferDegree: Array<Scalars['Int']>;
 };
 
 export type DashboardUser = {
