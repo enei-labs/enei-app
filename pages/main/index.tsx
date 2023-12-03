@@ -19,6 +19,7 @@ import TurnoverChart from "@components/Dashboard/TurnoverChart";
 import UserContractExpiredPanel from "@components/Dashboard/UserContractExpiredPanel";
 import TransferDegreeChart from "@components/Dashboard/TransferDegreeChart";
 import RemainingDemandFromUserContractPanel from "@components/Dashboard/RemainingDemandFromUserContractPanel";
+import RemainingDemandFromCompanyContractPanel from "@components/Dashboard/RemainingDemandFromCompanyContractPanel";
 
 function MainPage() {
   const { data, loading } = useDashboard();
@@ -156,7 +157,13 @@ function MainPage() {
           </Grid>
           <Grid item sm={6}>
             <Card sx={{ p: "36px" }}>
-              <BasicTable title="容量剩餘發電業名單" />
+              <RemainingDemandFromCompanyContractPanel
+                loading={loading}
+                companyContracts={
+                  data?.dashboard.companyContractInfo
+                    .remainingDemandFromCompanyContracts ?? []
+                }
+              />
             </Card>
           </Grid>
         </Grid>

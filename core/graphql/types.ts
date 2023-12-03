@@ -356,9 +356,10 @@ export type CreateUserInput = {
 
 export type Dashboard = {
   __typename?: 'Dashboard';
+  companyContractInfo: DashboardCompanyContract;
   companyInfo: DashboardCompany;
   powerPlantInfo: DashboardPowerPlant;
-  tpcBillInfo: DashboardUserContract;
+  tpcBillInfo: DashboardTpcBill;
   transferDegreeInfo: DashboardTransferDegree;
   userBillInfo: DashboardUserBill;
   userContractInfo: DashboardUserContract;
@@ -374,10 +375,21 @@ export type DashboardCompany = {
   totalVolume: Scalars['String'];
 };
 
+export type DashboardCompanyContract = {
+  __typename?: 'DashboardCompanyContract';
+  /** 容量剩餘發電業名單 */
+  remainingDemandFromCompanyContracts: Array<RemainingDemandFromCompanyContract>;
+};
+
 export type DashboardPowerPlant = {
   __typename?: 'DashboardPowerPlant';
   /** 容量剩餘發電業名單 */
   remainingDemandFromPowerPlant: PowerPlant;
+};
+
+export type DashboardTpcBill = {
+  __typename?: 'DashboardTPCBill';
+  tpcBills: Array<TpcBill>;
 };
 
 export type DashboardTransferDegree = {
@@ -922,6 +934,35 @@ export type RecipientAccount = {
   bankCode: Scalars['String'];
   /** 銀行名稱 */
   bankName: Scalars['String'];
+};
+
+export type RemainingDemandFromCompanyContract = {
+  __typename?: 'RemainingDemandFromCompanyContract';
+  capacity: Scalars['Int'];
+  company: Company;
+  contactEmail: Scalars['String'];
+  contactName: Scalars['String'];
+  contactPhone: Scalars['String'];
+  contractDoc: Scalars['String'];
+  contractTimeType: ContractTimeType;
+  /** 轉供條件 */
+  daysToPay: Scalars['Int'];
+  description?: Maybe<Scalars['String']>;
+  /** 合約年限 */
+  duration: Scalars['String'];
+  endedAt: Scalars['DateTime'];
+  id: Scalars['ID'];
+  industryDoc: Scalars['String'];
+  name: Scalars['String'];
+  /** 合約編號 */
+  number: Scalars['String'];
+  /** 合約價格 */
+  price: Scalars['String'];
+  startedAt: Scalars['DateTime'];
+  transferAt?: Maybe<Scalars['DateTime']>;
+  transferDoc: Scalars['String'];
+  /** 轉供率要求（%） */
+  transferRate: Scalars['Int'];
 };
 
 export type RemainingDemandFromUserContract = {
