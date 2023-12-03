@@ -18,6 +18,7 @@ import { useDashboard } from "@utils/hooks/queries/useDashboard";
 import TurnoverChart from "@components/Dashboard/TurnoverChart";
 import UserContractExpiredPanel from "@components/Dashboard/UserContractExpiredPanel";
 import TransferDegreeChart from "@components/Dashboard/TransferDegreeChart";
+import RemainingDemandFromUserContractPanel from "@components/Dashboard/RemainingDemandFromUserContractPanel";
 
 function MainPage() {
   const { data, loading } = useDashboard();
@@ -144,7 +145,13 @@ function MainPage() {
         <Grid container spacing={4} marginTop="4px">
           <Grid item sm={6}>
             <Card sx={{ p: "36px" }}>
-              <BasicTable title="容量不足用戶名單" />
+              <RemainingDemandFromUserContractPanel
+                loading={loading}
+                userContracts={
+                  data?.dashboard.userContractInfo
+                    .remainingDemandFromUserContracts ?? []
+                }
+              />
             </Card>
           </Grid>
           <Grid item sm={6}>

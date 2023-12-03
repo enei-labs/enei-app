@@ -357,6 +357,7 @@ export type CreateUserInput = {
 export type Dashboard = {
   __typename?: 'Dashboard';
   companyInfo: DashboardCompany;
+  powerPlantInfo: DashboardPowerPlant;
   tpcBillInfo: DashboardUserContract;
   transferDegreeInfo: DashboardTransferDegree;
   userBillInfo: DashboardUserBill;
@@ -371,6 +372,12 @@ export type DashboardCompany = {
   /** 總裝置量 */
   totalDegree: Scalars['String'];
   totalVolume: Scalars['String'];
+};
+
+export type DashboardPowerPlant = {
+  __typename?: 'DashboardPowerPlant';
+  /** 容量剩餘發電業名單 */
+  remainingDemandFromPowerPlant: PowerPlant;
 };
 
 export type DashboardTransferDegree = {
@@ -396,6 +403,8 @@ export type DashboardUserBill = {
 
 export type DashboardUserContract = {
   __typename?: 'DashboardUserContract';
+  /** 容量不足用戶名單 */
+  remainingDemandFromUserContracts: Array<RemainingDemandFromUserContract>;
   /** 未來一年用戶合約到期名單 */
   userContractsExpiringSoon: Array<UserContract>;
 };
@@ -913,6 +922,26 @@ export type RecipientAccount = {
   bankCode: Scalars['String'];
   /** 銀行名稱 */
   bankName: Scalars['String'];
+};
+
+export type RemainingDemandFromUserContract = {
+  __typename?: 'RemainingDemandFromUserContract';
+  capacity: Scalars['Int'];
+  contractDoc: Scalars['String'];
+  /** 電號資訊 */
+  electricNumberInfos: Array<ElectricNumberInfo>;
+  id: Scalars['ID'];
+  lowerLimit: Scalars['Int'];
+  name: Scalars['String'];
+  price: Scalars['String'];
+  purchaseDegree: Scalars['Int'];
+  salesAt: Scalars['DateTime'];
+  salesPeriod: Scalars['String'];
+  salesTo: Scalars['DateTime'];
+  serialNumber: Scalars['String'];
+  transferAt?: Maybe<Scalars['DateTime']>;
+  upperLimit: Scalars['Int'];
+  userType: UserType;
 };
 
 export type RemoveAccountInput = {

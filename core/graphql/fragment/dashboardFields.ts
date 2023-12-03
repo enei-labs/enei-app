@@ -23,6 +23,11 @@ export const DASHBOARD_FIELDS = gql`
         salesAt
         salesTo
       }
+      remainingDemandFromUserContracts {
+        id
+        name
+        capacity
+      }
     }
     transferDegreeInfo {
       monthlyTransferDegree
