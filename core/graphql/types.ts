@@ -1081,7 +1081,7 @@ export type TransferDocument = {
   formalDoc: Scalars['String'];
   id: Scalars['ID'];
   name: Scalars['String'];
-  /** 轉供合約編號 */
+  /** 轉供契約編號 */
   number?: Maybe<Scalars['String']>;
   officialTransferDate?: Maybe<Scalars['DateTime']>;
   planSubmissionDate?: Maybe<Scalars['DateTime']>;

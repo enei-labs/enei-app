@@ -57,7 +57,7 @@ const userCardInfo = (user: User) => {
     },
     {
       icon: HomeOutlinedIcon,
-      label: "總公司地址",
+      label: "發票寄送地址",
       content: user.companyAddress,
     },
   ];

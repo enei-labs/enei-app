@@ -33,7 +33,7 @@ function ProgressDialog(props: ProgressDialogProps) {
         <InputText
           value={number}
           onChange={setNumber as any}
-          label="轉供合約編號"
+          label="轉供契約編號"
         />
       ) : null}
 

@@ -47,7 +47,7 @@ const transferDocumentInformationConfigs: FieldConfig[] = [
   {
     type: "TEXT",
     name: "number",
-    label: "轉供合約編號",
+    label: "轉供契約編號",
     placeholder: "請填入",
     disabled: true,
   },

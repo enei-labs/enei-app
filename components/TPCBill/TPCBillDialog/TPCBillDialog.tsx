@@ -124,7 +124,7 @@ export default function TPCBillDialog(props: TPCBillDialogProps) {
                       value: o.id,
                     })) ?? []
                   }
-                  label={`轉供合約編號`}
+                  label={`轉供契約編號`}
                   placeholder={"請填入"}
                   required
                 />

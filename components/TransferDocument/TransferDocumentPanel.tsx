@@ -34,7 +34,7 @@ const TransferDocumentPanel = (props: TransferDocumentPanelProps) => {
       ),
     },
     {
-      header: "轉供合約編號",
+      header: "轉供契約編號",
       accessor: "number",
     },
     {
