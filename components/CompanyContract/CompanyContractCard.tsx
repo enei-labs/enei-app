@@ -6,9 +6,6 @@ import EventOutlinedIcon from "@mui/icons-material/EventOutlined";
 import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined";
 import CreditCardOutlinedIcon from "@mui/icons-material/CreditCardOutlined";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
-import MailIcon from "@mui/icons-material/MailOutlineOutlined";
-import PhoneIcon from "@mui/icons-material/PhoneOutlined";
-import PersonIcon from "@mui/icons-material/PersonOutlineOutlined";
 import DeleteOutlined from "@mui/icons-material/DeleteOutlined";
 import FolderOutlinedIcon from "@mui/icons-material/FolderOutlined";
 import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
@@ -90,25 +87,7 @@ const companyContractCardInfo = (companyContract: CompanyContract) => {
     },
   ];
 
-  const contactInfo = [
-    {
-      icon: PersonIcon,
-      label: "聯絡人",
-      content: companyContract.contactName,
-    },
-    {
-      icon: PhoneIcon,
-      label: "聯絡人電話",
-      content: companyContract.contactPhone,
-    },
-    {
-      icon: MailIcon,
-      label: "聯絡人信箱",
-      content: companyContract.contactEmail,
-    },
-  ];
-
-  return { companyContractInfo, contactInfo };
+  return { companyContractInfo };
 };
 
 function CompanyContractCard(props: CompanyContractCardProps) {
@@ -118,8 +97,7 @@ function CompanyContractCard(props: CompanyContractCardProps) {
   const degrees = 20;
 
   const [removeCompanyContract] = useRemoveCompanyContract();
-  const { companyContractInfo, contactInfo } =
-    companyContractCardInfo(companyContract);
+  const { companyContractInfo } = companyContractCardInfo(companyContract);
 
   return (
     <>
@@ -182,15 +160,6 @@ function CompanyContractCard(props: CompanyContractCardProps) {
                     content={c.content}
                     unit={c.unit}
                   />
-                </Grid>
-              ))}
-            </Grid>
-          </Grid>
-          <Grid item sm={4} sx={{ padding: "36px 0 36px 36px" }}>
-            <Grid container sx={{ rowGap: "8px" }}>
-              {contactInfo.map((c, index) => (
-                <Grid item sm={12} key={`${c.label}-${index}`}>
-                  <InfoBox icon={c.icon} label={c.label} content={c.content} />
                 </Grid>
               ))}
             </Grid>

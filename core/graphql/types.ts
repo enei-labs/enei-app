@@ -166,9 +166,6 @@ export type Company = {
 export type CompanyContract = {
   __typename?: 'CompanyContract';
   company: Company;
-  contactEmail: Scalars['String'];
-  contactName: Scalars['String'];
-  contactPhone: Scalars['String'];
   contractDoc: Scalars['String'];
   contractTimeType: ContractTimeType;
   /** 轉供條件 */
@@ -229,9 +226,6 @@ export type CreateAdminResponse = AccountAlreadyExistsError | Admin;
 
 export type CreateCompanyContractInput = {
   companyId: Scalars['ID'];
-  contactEmail: Scalars['String'];
-  contactName: Scalars['String'];
-  contactPhone: Scalars['String'];
   contractDoc: Scalars['String'];
   contractTimeType: ContractTimeType;
   daysToPay: Scalars['Int'];
@@ -940,9 +934,6 @@ export type RemainingDemandFromCompanyContract = {
   __typename?: 'RemainingDemandFromCompanyContract';
   capacity: Scalars['Int'];
   company: Company;
-  contactEmail: Scalars['String'];
-  contactName: Scalars['String'];
-  contactPhone: Scalars['String'];
   contractDoc: Scalars['String'];
   contractTimeType: ContractTimeType;
   /** 轉供條件 */
@@ -1119,9 +1110,6 @@ export type TransferDocumentUser = {
 
 export type UpdateCompanyContractInput = {
   companyContractId: Scalars['ID'];
-  contactEmail?: InputMaybe<Scalars['String']>;
-  contactName?: InputMaybe<Scalars['String']>;
-  contactPhone?: InputMaybe<Scalars['String']>;
   contractDoc?: InputMaybe<Scalars['String']>;
   contractTimeType: ContractTimeType;
   daysToPay?: InputMaybe<Scalars['Int']>;

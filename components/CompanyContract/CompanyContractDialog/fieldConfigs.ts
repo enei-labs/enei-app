@@ -23,27 +23,6 @@ export const fieldConfigs: FieldConfig[] = [
   },
   {
     type: "TEXT",
-    name: "contactName",
-    label: "聯絡人姓名",
-    required: true,
-    validated: textValidated,
-  },
-  {
-    type: "TEXT",
-    name: "contactPhone",
-    label: "聯絡人電話",
-    required: true,
-    validated: textValidated,
-  },
-  {
-    type: "TEXT",
-    name: "contactEmail",
-    label: "聯絡人信箱",
-    required: true,
-    validated: textValidated.email(),
-  },
-  {
-    type: "TEXT",
     name: "name",
     label: "合約名稱",
     required: true,
@@ -140,8 +119,7 @@ export const useDisplayFieldConfigs = (contractTimeType: ContractTimeType, varia
 
     const baseConfigs = {
       name: fieldConfigs.slice(0, 1),
-      contacts: fieldConfigs.slice(1, 4),
-      docs: fieldConfigs.slice(14),
+      docs: fieldConfigs.slice(11),
       contract: [fieldConfigs[contractTimeTypeIndex]],
     };
     const durationIndex = fieldConfigs.findIndex((c) => c.name === "duration");

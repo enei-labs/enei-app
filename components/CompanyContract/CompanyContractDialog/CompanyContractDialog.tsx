@@ -17,7 +17,6 @@ interface CompanyContractProps {
   submitFn: any;
   displayFieldConfigs: {
     name: FieldConfig[];
-    contacts: FieldConfig[];
     docs: FieldConfig[];
     contract: FieldConfig[];
   };
@@ -51,11 +50,6 @@ const CompanyContractDialog = (props: CompanyContractProps) => {
       {/** work-around about display correct company name */}
       <InputText label="公司名稱" value={companyName} disabled />
       {/* <FieldsController configs={displayFieldConfigs.name} form={form} /> */}
-
-      <Typography textAlign="left" variant="h5">
-        聯絡人資訊
-      </Typography>
-      <FieldsController configs={displayFieldConfigs.contacts} form={form} />
 
       <Typography textAlign="left" variant="h5">
         合約資訊

@@ -39,7 +39,7 @@ const userInformationConfig: FieldConfig[] = [
   {
     type: "TEXT",
     name: "companyAddress",
-    label: "用戶總公司地址",
+    label: "發票寄送地址",
     placeholder: "請填入",
     validated: textValidated,
   },
