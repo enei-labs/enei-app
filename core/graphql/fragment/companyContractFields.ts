@@ -13,9 +13,6 @@ export const COMPANY_CONTRACT_FIELDS = gql`
     endedAt
     transferRate
     daysToPay
-    contactName
-    contactEmail
-    contactPhone
     contractDoc
     industryDoc
     transferDoc

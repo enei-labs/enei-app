@@ -49,7 +49,7 @@ const transferDocumentInformationConfigs: FieldConfig[] = [
     name: "number",
     label: "轉供契約編號",
     placeholder: "請填入",
-    disabled: true,
+    required: true,
   },
   {
     type: "TEXT",
@@ -413,7 +413,7 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                             value: o.id,
                           })) ?? []
                         }
-                        label={`用戶${index + 1}名稱`}
+                        label={`用戶名稱`}
                         placeholder={"請填入"}
                         required
                       />
@@ -485,7 +485,7 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                 render={({ field }) => (
                   <InputText
                     {...field}
-                    label={`每月轉供契約度數（MWh）`}
+                    label={`每月轉供度數（MWh）`}
                     placeholder={"請填入"}
                     required
                   />
@@ -497,7 +497,7 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                 render={({ field }) => (
                   <InputText
                     {...field}
-                    label={`年度轉供契約度數（MWh）`}
+                    label={`年轉供度數（MWh）`}
                     placeholder={"請填入"}
                     required
                   />
