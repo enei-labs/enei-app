@@ -20,7 +20,10 @@ const useMutation = <
 ): MutationTuple<TData, TVariables, TContext, ApolloCache<any>> => {
   return apolloMutation(mutation, {
     awaitRefetchQueries: true,
-    onError: error => toast.error(error.message),
+    onError: error => {
+      console.log({ error });
+      toast.error(error.message)
+    },
     ...options,
   })
 }

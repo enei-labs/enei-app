@@ -1,7 +1,7 @@
 import { CreateUserBillInput, UserBill, UserBillPage } from "@core/graphql/types";
 import { CREATE_USER_BILL } from "@core/graphql/mutations";
 import useMutation from "../useMutation";
-import { USER_BILL_FIELDS } from "@core/graphql/fragment";
+import { USER_BILLS } from "@core/graphql/queries";
 
 export const useCreateUserBill = () => {
   return useMutation<
@@ -9,24 +9,22 @@ export const useCreateUserBill = () => {
     { input: CreateUserBillInput }
   >(CREATE_USER_BILL, {
     update(cache, { data }) {
-      if (data && data.createUserBill.__typename === 'UserBill') {
-        cache.modify({
-          fields: {
-            userBills(userBillPage: UserBillPage) {
-              const newUserBill = cache.writeFragment({
-                data: data.createUserBill,
-                fragment: USER_BILL_FIELDS
-              });
+      if (data?.createUserBill?.__typename === 'UserBill') {
+        const existingUserBills = cache.readQuery<{ userBills: UserBillPage }>({ query: USER_BILLS });
 
-              return {
-                total: userBillPage.total + 1,
-                list: [newUserBill, ...userBillPage.list],
-              };
-            }
-          },
-          broadcast: false,
-        });
+        if (existingUserBills) {
+          cache.writeQuery({
+            query: USER_BILLS,
+            data: {
+              userBills: {
+                ...existingUserBills.userBills,
+                total: existingUserBills.userBills.total + 1,
+                list: [data.createUserBill, ...existingUserBills.userBills.list],
+              },
+            },
+          });
+        }
       }
-    }
+    },
   });
 };

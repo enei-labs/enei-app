@@ -10,8 +10,24 @@ interface TransferDocumentUpdateQuery {
 export const useRemoveTransferDocument = () => {
   return useMutation<{ removeTransferDocument: TransferDocument }, { id: string }>(
     REMOVE_TRANSFER_DOCUMENT, {
-      /** @need refactor */
-      refetchQueries: [TRANSFER_DOCUMENTS]
+      update(cache, { data }) {
+        if (data?.removeTransferDocument?.__typename === 'TransferDocument') {
+          const existingTransferDocuments = cache.readQuery<{ transferDocuments: TransferDocumentPage }>({ query: TRANSFER_DOCUMENTS });
+
+          if (existingTransferDocuments) {
+            cache.writeQuery({
+              query: TRANSFER_DOCUMENTS,
+              data: {
+                transferDocuments: {
+                  ...existingTransferDocuments.transferDocuments,
+                  total: existingTransferDocuments.transferDocuments.total - 1,
+                  list: existingTransferDocuments.transferDocuments.list.filter(user => user.id !== data.removeTransferDocument.id),
+                },
+              },
+            });
+          }
+        }
+      },
     }
   )
 }
