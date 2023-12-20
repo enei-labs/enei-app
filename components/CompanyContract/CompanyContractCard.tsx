@@ -23,6 +23,7 @@ import PowerPlantPanel from "@components/PowerPlant/PowerPlantPanel";
 import AddPowerPlantBtn from "@components/PowerPlant/AddPowerPlantBtn";
 import { useRouter } from "next/router";
 import EditCompanyContractBtn from "@components/CompanyContract/CompanyContractDialog/EditCompanyContractBtn";
+import MonthlyTransferDegreeChart from "@components/CompanyContract/MonthlyTransferDegreeChart";
 
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
@@ -230,7 +231,10 @@ function CompanyContractCard(props: CompanyContractCardProps) {
         </Box>
 
         <Divider sx={{ margin: "36px 0 " }} />
-        <DemoChart name="月轉供量" />
+        <MonthlyTransferDegreeChart
+          name="月轉供量"
+          data={companyContract.monthlyTransferDegrees}
+        />
         <Divider sx={{ margin: "36px 0 " }} />
 
         <Box>

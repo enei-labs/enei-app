@@ -17,7 +17,6 @@ const EditTransferDocumentBtn = (props: EditTransferDocumentBtnProps) => {
   const [updateTransferDocument, { loading }] = useUpdateTransferDocument();
 
   const onUpdateTransferDocument = async (formData: FormData) => {
-    console.log({ formData });
     await updateTransferDocument({
       variables: {
         id: transferDocumentId,

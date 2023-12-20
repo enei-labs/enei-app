@@ -21,7 +21,6 @@ const useMutation = <
   return apolloMutation(mutation, {
     awaitRefetchQueries: true,
     onError: error => {
-      console.log({ error });
       toast.error(error.message)
     },
     ...options,

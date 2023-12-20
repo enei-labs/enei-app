@@ -176,6 +176,7 @@ export type CompanyContract = {
   endedAt: Scalars['DateTime'];
   id: Scalars['ID'];
   industryDoc: Scalars['String'];
+  monthlyTransferDegrees: Array<Array<TransferDegree>>;
   name: Scalars['String'];
   /** 合約編號 */
   number: Scalars['String'];
@@ -944,6 +945,7 @@ export type RemainingDemandFromCompanyContract = {
   endedAt: Scalars['DateTime'];
   id: Scalars['ID'];
   industryDoc: Scalars['String'];
+  monthlyTransferDegrees: Array<Array<TransferDegree>>;
   name: Scalars['String'];
   /** 合約編號 */
   number: Scalars['String'];
