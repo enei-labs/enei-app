@@ -2,6 +2,7 @@ import { Table } from "@components/Table";
 import { UserContract } from "@core/graphql/types";
 import { Config } from "../Table/Table";
 import { Paper, Typography } from "@mui/material";
+import { formatDateTime } from "@utils/format";
 
 interface UserContractExpiredPanelProps {
   userContracts: UserContract[];
@@ -23,10 +24,12 @@ const UserContractExpiredPanel = (props: UserContractExpiredPanelProps) => {
     {
       header: "契約生效日期",
       accessor: "salesAt",
+      render: (data) => <>{formatDateTime(data.salesAt)}</>,
     },
     {
       header: "契約失效日期",
       accessor: "salesTo",
+      render: (data) => <>{formatDateTime(data.salesTo)}</>,
     },
   ];
 
