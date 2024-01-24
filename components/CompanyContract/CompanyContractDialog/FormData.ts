@@ -4,9 +4,6 @@ export type FormData = {
   companyName: string;
   name: string;
   number: string;
-  contactName: string;
-  contactEmail: string;
-  contactPhone: string;
   price: string;
   contractTimeType: {
     label: string;

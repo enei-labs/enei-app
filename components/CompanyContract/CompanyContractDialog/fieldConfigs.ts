@@ -130,24 +130,24 @@ export const useDisplayFieldConfigs = (contractTimeType: ContractTimeType, varia
         return {
           ...baseConfigs,
           contract: [
-            ...fieldConfigs.slice(4, durationIndex),
-            ...fieldConfigs.slice(durationIndex, 14),
+            ...fieldConfigs.slice(1, durationIndex),
+            ...fieldConfigs.slice(durationIndex, 11),
           ],
         };
       case ContractTimeType.ContractStartTime:
         return {
           ...baseConfigs,
           contract: [
-            ...fieldConfigs.slice(4, endAtIndex),
-            ...fieldConfigs.slice(endAtIndex, 14),
+            ...fieldConfigs.slice(1, endAtIndex),
+            ...fieldConfigs.slice(endAtIndex, 11),
           ],
         };
       case ContractTimeType.TransferStartTime:
         return {
           ...baseConfigs,
           contract: [
-            ...fieldConfigs.slice(4, endAtIndex),
-            ...fieldConfigs.slice(endAtIndex, 14),
+            ...fieldConfigs.slice(1, endAtIndex),
+            ...fieldConfigs.slice(endAtIndex, 11),
           ],
         };
       default:

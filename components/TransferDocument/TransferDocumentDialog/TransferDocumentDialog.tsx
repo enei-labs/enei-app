@@ -377,7 +377,7 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
               return (
                 <Chip
                   key={item.id}
-                  label={`用戶${index + 1}`}
+                  label={`電號${index + 1}`}
                   handleClick={() => setUserIndex(index)}
                   handleDelete={() => setDeleteUserIndex(index)}
                 />

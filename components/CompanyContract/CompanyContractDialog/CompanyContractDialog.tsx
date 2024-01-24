@@ -67,7 +67,7 @@ const CompanyContractDialog = (props: CompanyContractProps) => {
         loading={loading}
         onClick={submitFn}
       >
-        {variant === "create" ? "新增" : "儲存"}
+        儲存
       </LoadingButton>
     </Dialog>
   );
