@@ -72,7 +72,9 @@ export function TableNumbersField(props: TableNumbersFieldProps) {
             sx={{ width: "74px" }}
             value={addTableNumber}
             onChange={(number: any) => {
-              setAddTableNumber(number);
+              if (number > 0) {
+                setAddTableNumber(number);
+              }
             }}
           ></InputNumber>
           <Typography variant="subtitle2">表號欄位</Typography>

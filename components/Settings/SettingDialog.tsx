@@ -333,7 +333,9 @@ function SettingDialog(props: SettingDialogProps) {
               <InputNumber
                 sx={{ width: "74px" }}
                 value={addRecipientAccountNumber}
-                onChange={(number: any) => setAddRecipientAccountNumber(number)}
+                onChange={(number: any) =>
+                  number > 0 && setAddRecipientAccountNumber(number)
+                }
               ></InputNumber>
               <Typography variant="subtitle2">收款帳戶欄位</Typography>
             </Grid>

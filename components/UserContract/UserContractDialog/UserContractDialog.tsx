@@ -389,7 +389,9 @@ function UserContractDialog(props: UserContractDialogProps) {
               sx={{ width: "74px" }}
               value={addElectricNumber}
               onChange={(number: any) => {
-                setAddElectricNumber(number);
+                if (number > 0) {
+                  setAddElectricNumber(number);
+                }
               }}
             ></InputNumber>
             <Typography variant="subtitle2">電號欄位</Typography>

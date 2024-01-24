@@ -245,8 +245,10 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                 <Chip
                   key={item.id}
                   label={`電廠${index + 1}`}
+                  aria-label={`電廠${index + 1}`}
                   handleClick={() => setPowerPlantIndex(index)}
                   handleDelete={() => setDeletePowerPlantIndex(index)}
+                  selected={powerPlantIndex === index}
                 />
               );
             })}
@@ -273,6 +275,7 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                       })) ?? []
                     }
                     label={`電廠${index + 1}名稱`}
+                    aria-label={`電廠${index + 1}名稱`}
                     placeholder={"請填入"}
                     required
                   />
@@ -300,6 +303,7 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                   <InputText
                     {...field}
                     label={`轉供比例（%）`}
+                    aria-label={`轉供比例（%）`}
                     placeholder={"請填入"}
                     required
                   />
@@ -313,6 +317,7 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                   <InputText
                     {...field}
                     label={`預計年供電度數（MWh）`}
+                    aria-label={`預計年供電度數（MWh）`}
                     placeholder={"請填入"}
                     required
                   />
@@ -337,7 +342,9 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
             <InputNumber
               sx={{ width: "74px" }}
               value={addPowerPlantNumber}
-              onChange={(number: any) => setAddPowerPlantNumber(number)}
+              onChange={(number: any) =>
+                number > 0 && setAddPowerPlantNumber(number)
+              }
             ></InputNumber>
             <Typography variant="subtitle2">電廠欄位</Typography>
           </Grid>
@@ -369,7 +376,7 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
 
         {/* 用戶 Block */}
         <Typography variant="h5" textAlign={"left"}>
-          用戶
+          用戶電號
         </Typography>
         <Box display={"flex"} flexDirection="column" rowGap="24px">
           <Box display={"flex"} gap="8px" flexWrap={"wrap"}>
@@ -378,8 +385,10 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                 <Chip
                   key={item.id}
                   label={`電號${index + 1}`}
+                  aria-label={`電號${index + 1}`}
                   handleClick={() => setUserIndex(index)}
                   handleDelete={() => setDeleteUserIndex(index)}
+                  selected={userIndex === index}
                 />
               );
             })}
@@ -414,6 +423,7 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                           })) ?? []
                         }
                         label={`用戶名稱`}
+                        aria-label={`用戶名稱`}
                         placeholder={"請填入"}
                         required
                       />
@@ -436,6 +446,7 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                         })) ?? []
                       }
                       label={`用戶契約編號`}
+                      aria-label={`用戶契約編號`}
                       placeholder={"請填入"}
                       required
                     />
@@ -461,6 +472,7 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                           })) ?? []
                       }
                       label={`電號`}
+                      aria-label={`電號`}
                       placeholder={"請填入"}
                       required
                     />
@@ -474,6 +486,7 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                   <InputText
                     {...field}
                     label={`預計年採購度數（MWh）`}
+                    aria-label={`預計年採購度數（MWh）`}
                     placeholder={"請填入"}
                     required
                   />
@@ -486,6 +499,7 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                   <InputText
                     {...field}
                     label={`每月轉供度數（MWh）`}
+                    aria-label={`每月轉供度數（MWh）`}
                     placeholder={"請填入"}
                     required
                   />
@@ -498,6 +512,7 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                   <InputText
                     {...field}
                     label={`年轉供度數（MWh）`}
+                    aria-label={`年轉供度數（MWh）`}
                     placeholder={"請填入"}
                     required
                   />
@@ -523,7 +538,9 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
               sx={{ width: "74px" }}
               value={addUserNumber}
               onChange={(number: any) => {
-                setAddUserNumber(number);
+                if (number > 0) {
+                  setAddUserNumber(number);
+                }
               }}
             ></InputNumber>
             <Typography variant="subtitle2">用戶欄位</Typography>
@@ -586,7 +603,7 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
         </Grid>
       </>
 
-      {/* 刪除付款帳號 Dialog */}
+      {/* 刪除 Dialog */}
       {deletePowerPlantIndex !== -1 ? (
         <DialogAlert
           open={deletePowerPlantIndex !== -1}
@@ -603,15 +620,15 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
       ) : null}
       {deleteUserIndex !== -1 ? (
         <DialogAlert
-          open={deletePowerPlantIndex !== -1}
+          open={deleteUserIndex !== -1}
           title={"刪除用戶"}
           content={"是否確認要刪除用戶？"}
           onConfirm={() => {
-            userRemove(deletePowerPlantIndex);
-            setDeletePowerPlantIndex(-1);
+            userRemove(deleteUserIndex);
+            setDeleteUserIndex(-1);
           }}
           onClose={() => {
-            setDeletePowerPlantIndex(-1);
+            setDeleteUserIndex(-1);
           }}
         />
       ) : null}

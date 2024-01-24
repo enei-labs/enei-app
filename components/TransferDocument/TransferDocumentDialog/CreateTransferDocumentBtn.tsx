@@ -60,7 +60,7 @@ const CreateTransferDocumentBtn = (props: CreateTransferDocumentBtnProps) => {
       startIcon={<AddIcon />}
       onClick={handleSubmit(onCreateTransferDocument)}
     >
-      新增
+      儲存
     </LoadingButton>
   );
 };

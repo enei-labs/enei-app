@@ -4,22 +4,24 @@ interface ChipProps {
   label: string;
   handleClick: VoidFunction;
   handleDelete?: VoidFunction;
+  selected?: boolean;
 }
 
 export default function Chip(props: ChipProps) {
-  const { handleClick, handleDelete, label } = props;
+  const { handleClick, handleDelete, label, selected } = props;
 
   return (
     <MuiChip
       sx={{
         height: "40px",
         borderRadius: "4px",
-        backgroundColor: "transparent",
-        color: "primary.dark",
-        border: "1px solid #004D40",
+        backgroundColor: selected ? "#009688" : "transparent",
+        color: selected ? "#FFF" : "primary.dark",
+        border: "1px solid",
+        borderColor: selected ? "#009688" : "#004D40",
         fontSize: "14px",
         "& svg": {
-          fill: "#009688",
+          fill: selected ? "#FFF" : "#009688",
         },
         "&:hover": {
           backgroundColor: "#004D40",

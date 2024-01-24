@@ -351,7 +351,9 @@ function UserDialog(props: UserDialogProps) {
               sx={{ width: "74px" }}
               value={addAccountNumber}
               onChange={(number: any) => {
-                setAddAccountNumber(number);
+                if (number > 0) {
+                  setAddAccountNumber(number);
+                }
               }}
             ></InputNumber>
             <Typography variant="subtitle2">付款欄位</Typography>
