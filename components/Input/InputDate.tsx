@@ -3,7 +3,7 @@ import type { DatePickerProps } from "@mui/x-date-pickers/DatePicker";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { formatDateTime } from "@utils/format";
-import React from "react";
+import React, { useState } from "react";
 import InputText from "./InputText";
 
 interface InputDateProps
@@ -22,7 +22,17 @@ const InputDate = React.forwardRef<HTMLDivElement, InputDateProps>(
     const { label, value, required, helperText, onChange } = props;
 
     const handleChange = (date: any) => {
-      const value = formatDateTime(date);
+      const datePattern = /^\d{4}-\d{1,2}-\d{1,2}$/;
+      let value;
+
+      // If the date is already in a complete date format, use the formatDateTime function to format the date
+      if (datePattern.test(date)) {
+        value = formatDateTime(date);
+      } else {
+        // If the date is not in a complete date format, use the user's input directly
+        value = date;
+      }
+
       onChange?.(value);
     };
 
