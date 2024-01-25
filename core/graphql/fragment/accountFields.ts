@@ -9,6 +9,10 @@ export const ACCOUNT_FIELDS = gql`
     name
     hasSetPassword
     companyName
+    company {
+      id
+      name
+    }
     recipientAccounts {
 			bankCode
       bankName

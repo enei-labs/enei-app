@@ -63,6 +63,8 @@ const basicConfigs: FieldConfig[] = [
 function AccountDialog(props: AccountDialogProps) {
   const { isOpenDialog, onClose, currentModifyAccount, variant } = props;
 
+  console.log({ currentModifyAccount });
+
   const {
     control,
     formState: { errors },
@@ -74,6 +76,12 @@ function AccountDialog(props: AccountDialogProps) {
           email: currentModifyAccount.email,
           name: currentModifyAccount.name,
           role: roleOptions.find((o) => o.value === currentModifyAccount.role),
+          companyId: currentModifyAccount.company
+            ? {
+                label: currentModifyAccount.company.name,
+                value: currentModifyAccount.company.id,
+              }
+            : undefined,
         }
       : {},
   });

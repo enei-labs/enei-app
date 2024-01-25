@@ -16,6 +16,7 @@ export type Scalars = {
 
 export type Account = {
   actions: Array<Action>;
+  company?: Maybe<Company>;
   companyName?: Maybe<Scalars['String']>;
   createdAt: Scalars['DateTime'];
   creator?: Maybe<Admin>;
@@ -97,6 +98,7 @@ export enum Action {
 export type Admin = Account & {
   __typename?: 'Admin';
   actions: Array<Action>;
+  company?: Maybe<Company>;
   companyName: Scalars['String'];
   createdAt: Scalars['DateTime'];
   creator?: Maybe<Admin>;

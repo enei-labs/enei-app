@@ -24,8 +24,6 @@ import RemainingDemandFromCompanyContractPanel from "@components/Dashboard/Remai
 function MainPage() {
   const { data, loading } = useDashboard();
 
-  console.log({ data });
-
   const dashboardData = useMemo(() => {
     const industryOverview: Pick<OverviewCardProps, "topic" | "basicInfos"> = {
       topic: "發電業資訊",

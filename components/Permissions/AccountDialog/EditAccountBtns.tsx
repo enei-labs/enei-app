@@ -30,7 +30,7 @@ const EditAccountBtns = (props: EditAccountBtnsProps) => {
       refetchQueries: [ACCOUNTS],
     });
 
-    if (data && data.modifyAccount.__typename === "Success") {
+    if (data) {
       toast.success("更新成功");
       onClose();
     }
