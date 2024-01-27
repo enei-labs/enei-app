@@ -13,6 +13,7 @@ import {
   useDisplayFieldConfigs,
 } from "@components/CompanyContract/CompanyContractDialog/fieldConfigs";
 import { FormData } from "@components/CompanyContract/CompanyContractDialog/FormData";
+import { toast } from "react-toastify";
 
 const EditConfirmDialog = dynamic(
   () => import("@components/EditConfirmDialog")
@@ -57,6 +58,7 @@ export const useCreateCompanyContractSubmitFn = (
     defaultValues: { companyName: company?.name },
   });
   const contractTimeType = watch("contractTimeType");
+  const rateType = watch("rateType");
 
   const onSubmit = async (formData: FormData) => {
     const { data } = await createCompanyContract({
@@ -65,7 +67,8 @@ export const useCreateCompanyContractSubmitFn = (
           companyId: company?.id ?? "",
           name: formData.name,
           number: formData.number,
-          price: formData.price,
+          rateType: formData.rateType,
+          price: formData.price || undefined,
           contractTimeType: formData.contractTimeType.value,
           duration: formData.duration,
           startedAt: formData.startedAt,
@@ -79,6 +82,7 @@ export const useCreateCompanyContractSubmitFn = (
         },
       },
       refetchQueries: [COMPANY_CONTRACTS],
+      onCompleted: () => toast.success("新增成功！"),
     });
 
     if (data?.createCompanyContract.__typename === "CompanyContract") {
@@ -87,7 +91,10 @@ export const useCreateCompanyContractSubmitFn = (
     }
   };
 
-  const displayFieldConfigs = useDisplayFieldConfigs(contractTimeType?.value);
+  const displayFieldConfigs = useDisplayFieldConfigs(
+    contractTimeType?.value,
+    rateType
+  );
 
   return {
     displayFieldConfigs,
@@ -116,9 +123,9 @@ const AddCompanyContractBtn = (props: CompanyContractProps) => {
   );
 
   const { displayFieldConfigs, submitFn, loading, form } =
-    useCreateCompanyContractSubmitFn(company, () =>
-      dispatch({ showFormDialog: false, showEditConfirmDialog: false })
-    );
+    useCreateCompanyContractSubmitFn(company, () => {
+      dispatch({ showFormDialog: false, showEditConfirmDialog: false });
+    });
 
   return (
     <>

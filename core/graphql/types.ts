@@ -183,8 +183,12 @@ export type CompanyContract = {
   /** 合約編號 */
   number: Scalars['String'];
   /** 合約價格 */
-  price: Scalars['String'];
+  price?: Maybe<Scalars['String']>;
+  /** 單一費率/個別費率 */
+  rateType: RateType;
   startedAt: Scalars['DateTime'];
+  /** 裝置量=該合約所有的電廠裡面的裝置量的加總 */
+  totalVolume: Scalars['Int'];
   transferAt?: Maybe<Scalars['DateTime']>;
   transferDoc: Scalars['String'];
   /** 轉供率要求（%） */
@@ -238,7 +242,8 @@ export type CreateCompanyContractInput = {
   industryDoc: Scalars['String'];
   name: Scalars['String'];
   number: Scalars['String'];
-  price: Scalars['String'];
+  price?: InputMaybe<Scalars['String']>;
+  rateType: RateType;
   startedAt: Scalars['DateTime'];
   transferDoc: Scalars['String'];
   transferRate: Scalars['Int'];
@@ -917,6 +922,11 @@ export type QueryUsersArgs = {
   roles?: Array<Role>;
 };
 
+export enum RateType {
+  Individual = 'INDIVIDUAL',
+  Single = 'SINGLE'
+}
+
 export type RecipientAccount = {
   __typename?: 'RecipientAccount';
   /** 帳號 */
@@ -952,8 +962,12 @@ export type RemainingDemandFromCompanyContract = {
   /** 合約編號 */
   number: Scalars['String'];
   /** 合約價格 */
-  price: Scalars['String'];
+  price?: Maybe<Scalars['String']>;
+  /** 單一費率/個別費率 */
+  rateType: RateType;
   startedAt: Scalars['DateTime'];
+  /** 裝置量=該合約所有的電廠裡面的裝置量的加總 */
+  totalVolume: Scalars['Int'];
   transferAt?: Maybe<Scalars['DateTime']>;
   transferDoc: Scalars['String'];
   /** 轉供率要求（%） */

@@ -1,10 +1,11 @@
-import { ContractTimeType } from "@core/graphql/types";
+import { ContractTimeType, RateType } from "@core/graphql/types";
 
 export type FormData = {
   companyName: string;
   name: string;
   number: string;
-  price: string;
+  rateType: RateType;
+  price?: string | null;
   contractTimeType: {
     label: string;
     value: ContractTimeType;

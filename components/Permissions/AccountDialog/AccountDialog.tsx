@@ -63,8 +63,6 @@ const basicConfigs: FieldConfig[] = [
 function AccountDialog(props: AccountDialogProps) {
   const { isOpenDialog, onClose, currentModifyAccount, variant } = props;
 
-  console.log({ currentModifyAccount });
-
   const {
     control,
     formState: { errors },

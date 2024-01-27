@@ -111,9 +111,9 @@ const AddCompanyBtn = () => {
     submitFn,
     loading: createCompanyContractLoading,
     form,
-  } = useCreateCompanyContractSubmitFn(company, () =>
-    dispatch({ showContractDialog: false })
-  );
+  } = useCreateCompanyContractSubmitFn(company, () => {
+    dispatch({ showContractDialog: false });
+  });
 
   return (
     <>

@@ -1,4 +1,4 @@
-import { ContractTimeType } from "@core/graphql/types";
+import { ContractTimeType, RateType } from "@core/graphql/types";
 import { FieldConfig } from "@core/types";
 import { numberValidated, textValidated } from "@core/types/fieldConfig";
 import { useMemo } from "react";
@@ -36,11 +36,26 @@ export const fieldConfigs: FieldConfig[] = [
     validated: textValidated,
   },
   {
+    type: "RADIO",
+    name: "rateType",
+    label: "費率計算方式",
+    radios: [
+      {
+        label: "單一費率",
+        value: RateType.Single,
+      },
+      {
+        label: "個別費率",
+        value: RateType.Individual,
+      },
+    ],
+    required: true,
+  },
+  {
     type: "TEXT",
     name: "price",
     label: "合約價格（元/kWh）",
-    required: true,
-    validated: textValidated,
+    required: false,
   },
   {
     type: "SINGLE_SELECT",
@@ -110,50 +125,41 @@ export const fieldConfigs: FieldConfig[] = [
   },
 ];
 
-export const useDisplayFieldConfigs = (contractTimeType: ContractTimeType, variant: 'edit' | 'create' = 'create') => {
+export const useDisplayFieldConfigs = (contractTimeType: ContractTimeType, rateType?: RateType, variant: 'edit' | 'create' = 'create') => {
   const displayFieldConfigs = useMemo(() => {
     const contractTimeTypeIndex = fieldConfigs.findIndex(
       (c) => c.name === "contractTimeType"
+      );
+      if (variant === 'edit') fieldConfigs[contractTimeTypeIndex].disabled = true;
+    const rateTypeIndex = fieldConfigs.findIndex(
+      (c) => c.name === "rateType"
     );
-    if (variant === 'edit') fieldConfigs[contractTimeTypeIndex].disabled = true;
+    if (variant === 'edit') fieldConfigs[rateTypeIndex].disabled = true;
 
     const baseConfigs = {
       name: fieldConfigs.slice(0, 1),
-      docs: fieldConfigs.slice(11),
+      docs: fieldConfigs.slice(12),
       contract: [fieldConfigs[contractTimeTypeIndex]],
     };
     const durationIndex = fieldConfigs.findIndex((c) => c.name === "duration");
     const endAtIndex = fieldConfigs.findIndex((c) => c.name === "endedAt");
     if (!contractTimeType) return baseConfigs;
-    switch (contractTimeType) {
-      case ContractTimeType.ContractEndTime:
-        return {
-          ...baseConfigs,
-          contract: [
-            ...fieldConfigs.slice(1, durationIndex),
-            ...fieldConfigs.slice(durationIndex, 11),
-          ],
-        };
-      case ContractTimeType.ContractStartTime:
-        return {
-          ...baseConfigs,
-          contract: [
-            ...fieldConfigs.slice(1, endAtIndex),
-            ...fieldConfigs.slice(endAtIndex, 11),
-          ],
-        };
-      case ContractTimeType.TransferStartTime:
-        return {
-          ...baseConfigs,
-          contract: [
-            ...fieldConfigs.slice(1, endAtIndex),
-            ...fieldConfigs.slice(endAtIndex, 11),
-          ],
-        };
-      default:
-        return baseConfigs;
+
+    const index = contractTimeType === ContractTimeType.ContractEndTime ? durationIndex : endAtIndex;
+    let contractFields = [
+      ...fieldConfigs.slice(1, index),
+      ...fieldConfigs.slice(index, 12),
+    ];
+
+    if (rateType === RateType.Individual) {
+      contractFields = contractFields.filter(field => field.name !== 'price');
     }
-  }, [variant, contractTimeType]);
+
+    return {
+      ...baseConfigs,
+      contract: contractFields,
+    };
+  }, [variant, contractTimeType, rateType]);
 
   return displayFieldConfigs;
 }

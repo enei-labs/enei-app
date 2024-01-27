@@ -6,6 +6,7 @@ import {
   InputText,
   InputTextarea,
 } from "@components/Input";
+import RadioGroup from "@components/RadioGroup";
 import { FieldConfig } from "@core/types";
 import { Form } from "@core/types/fieldController";
 import Box from "@mui/material/Box";
@@ -24,7 +25,8 @@ type FieldType =
   | "SINGLE_SELECT"
   | "MULTIPLE_SELECT"
   | "FILE"
-  | "COMPONENT";
+  | "COMPONENT"
+  | "RADIO";
 interface FieldsControllerProps {
   configs: FieldConfig[];
   form: Form;
@@ -85,6 +87,17 @@ const FieldsController: React.FC<FieldsControllerProps> = ({
       case "FILE":
         return (
           <UploadDocBox label={item.label} {...item} {...fieldProps.field} />
+        );
+
+      case "RADIO":
+        return (
+          <RadioGroup
+            {...item}
+            {...fieldProps.field}
+            row
+            label={item.label}
+            radios={item.radios}
+          />
         );
 
       default:

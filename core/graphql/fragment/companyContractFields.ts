@@ -6,6 +6,7 @@ export const COMPANY_CONTRACT_FIELDS = gql`
     contractTimeType
     name
     number
+    rateType
     price
     duration
     transferAt

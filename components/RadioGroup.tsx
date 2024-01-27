@@ -13,15 +13,17 @@ interface RadioGroupProps extends MuiRadioGroupProps {
     label: string;
     value: any;
   }[];
+  row?: boolean;
+  disabled?: boolean;
 }
 
 function RadioGroup(props: RadioGroupProps) {
-  const { label, radios, ...field } = props;
+  const { label, radios, row = false, ...field } = props;
 
   return (
     <FormControl size="small" sx={{ alignItems: "flex-start" }}>
       <FormLabel sx={{ fontSize: "14px" }}>{label}</FormLabel>
-      <MuiRadioGroup {...field}>
+      <MuiRadioGroup {...field} row={row}>
         {radios.map((radio) => (
           <FormControlLabel
             key={radio.value}
@@ -31,6 +33,7 @@ function RadioGroup(props: RadioGroupProps) {
             value={radio.value}
             control={<Radio size="small" />}
             label={radio.label}
+            disabled={field.disabled}
           />
         ))}
       </MuiRadioGroup>

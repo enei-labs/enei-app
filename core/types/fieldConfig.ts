@@ -59,6 +59,7 @@ interface FieldConfig {
   autoFocus?: boolean
   placeholder?: string
   hint?: React.ReactNode
+  radios?: { label: string, value: any }[]
   component?: React.ComponentType<FieldController>
 }
 

@@ -59,7 +59,7 @@ const CompanyPanel = (props: CompanyPanelProps) => {
       accessor: "contactEmail",
     },
     {
-      header: "裝置量",
+      header: "總裝置量",
       accessor: "totalVolume",
     },
     {

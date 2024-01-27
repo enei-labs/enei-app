@@ -42,6 +42,7 @@ const EditCompanyContractBtn = (props: CompanyContractProps) => {
       companyName: companyContract.company.name,
       name: companyContract.name,
       number: companyContract.number,
+      rateType: companyContract.rateType,
       price: companyContract.price,
       duration: companyContract.duration,
       startedAt: companyContract.startedAt,
@@ -63,7 +64,7 @@ const EditCompanyContractBtn = (props: CompanyContractProps) => {
           companyContractId: companyContract.id,
           name: formData.name,
           number: formData.number,
-          price: formData.price,
+          price: formData.price || undefined,
           contractTimeType: formData.contractTimeType.value,
           duration: formData.duration,
           startedAt: formData.startedAt,
@@ -87,6 +88,7 @@ const EditCompanyContractBtn = (props: CompanyContractProps) => {
 
   const displayFieldConfigs = useDisplayFieldConfigs(
     contractTimeType?.value,
+    companyContract.rateType,
     "edit"
   );
 
