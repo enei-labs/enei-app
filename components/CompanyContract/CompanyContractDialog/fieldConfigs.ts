@@ -1,7 +1,8 @@
 import { ContractTimeType, RateType } from "@core/graphql/types";
 import { FieldConfig } from "@core/types";
-import { numberValidated, textValidated } from "@core/types/fieldConfig";
-import { useMemo } from "react";
+import { textValidated } from "@core/types/fieldConfig";
+import { useEffect, useMemo } from "react";
+import { addYears } from 'date-fns';
 
 export const contractTimeTypeMap = {
   [ContractTimeType.ContractEndTime]: "固定日期(填入合約結束日期)",
@@ -62,13 +63,14 @@ export const fieldConfigs: FieldConfig[] = [
     name: "contractTimeType",
     label: "合約時間計算方式",
     required: true,
+    disabled: false,
     options: contractTimeTypeOptions,
   },
   {
     type: "TEXT",
     name: "duration",
     label: "合約年限（年）",
-    required: true,
+    required: false,
     validated: textValidated,
   },
   {
@@ -76,14 +78,12 @@ export const fieldConfigs: FieldConfig[] = [
     name: "startedAt",
     label: "合約起始日期",
     required: true,
-    validated: textValidated,
   },
   {
     type: "DATE",
     name: "endedAt",
     label: "合約結束日期",
-    required: true,
-    validated: textValidated,
+    required: false,
   },
   {
     type: "TEXT",
@@ -125,12 +125,22 @@ export const fieldConfigs: FieldConfig[] = [
   },
 ];
 
-export const useDisplayFieldConfigs = (contractTimeType: ContractTimeType, rateType?: RateType, variant: 'edit' | 'create' = 'create') => {
+export const useDisplayFieldConfigs = (
+  values: {
+    contractTimeType: ContractTimeType,
+    rateType?: RateType,
+    duration?: number,
+    startedAt?: Date,
+  },
+  variant: 'edit' | 'create' = 'create',
+  setEndedAt?: (value: Date) => void,
+  ) => {
+  const { contractTimeType, rateType, duration, startedAt } = values;
   const displayFieldConfigs = useMemo(() => {
     const contractTimeTypeIndex = fieldConfigs.findIndex(
       (c) => c.name === "contractTimeType"
-      );
-      if (variant === 'edit') fieldConfigs[contractTimeTypeIndex].disabled = true;
+    );
+    if (variant === 'edit') fieldConfigs[contractTimeTypeIndex].disabled = true;
     const rateTypeIndex = fieldConfigs.findIndex(
       (c) => c.name === "rateType"
     );
@@ -143,12 +153,23 @@ export const useDisplayFieldConfigs = (contractTimeType: ContractTimeType, rateT
     };
     const durationIndex = fieldConfigs.findIndex((c) => c.name === "duration");
     const endAtIndex = fieldConfigs.findIndex((c) => c.name === "endedAt");
+
     if (!contractTimeType) return baseConfigs;
+
+    if (contractTimeType === ContractTimeType.ContractStartTime) {
+      fieldConfigs[durationIndex].required = true;
+      fieldConfigs[endAtIndex].required = false;
+      fieldConfigs[endAtIndex].disabled = true;
+    } else if (contractTimeType === ContractTimeType.ContractEndTime) {
+      fieldConfigs[durationIndex].required = false;
+      fieldConfigs[endAtIndex].required = true;
+      fieldConfigs[endAtIndex].disabled = false;
+    }
 
     const index = contractTimeType === ContractTimeType.ContractEndTime ? durationIndex : endAtIndex;
     let contractFields = [
       ...fieldConfigs.slice(1, index),
-      ...fieldConfigs.slice(index, 12),
+      ...fieldConfigs.slice(index + 1, 12),
     ];
 
     if (rateType === RateType.Individual) {
@@ -160,6 +181,16 @@ export const useDisplayFieldConfigs = (contractTimeType: ContractTimeType, rateT
       contract: contractFields,
     };
   }, [variant, contractTimeType, rateType]);
+
+  // Add useEffect to update endedAt when startedAt or duration changes
+  useEffect(() => {
+    if (!setEndedAt) return;
+    if (contractTimeType === ContractTimeType.ContractStartTime && startedAt && duration) {
+      const endDate = addYears(new Date(startedAt), Number(duration));
+      setEndedAt(endDate);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [contractTimeType, startedAt, duration]);
 
   return displayFieldConfigs;
 }

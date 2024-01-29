@@ -56,6 +56,8 @@ const EditCompanyContractBtn = (props: CompanyContractProps) => {
     },
   });
   const contractTimeType = watch("contractTimeType");
+  const duration = watch("duration");
+  const startedAt = watch("startedAt");
 
   const onSubmit = async (formData: FormData) => {
     const { data } = await updateCompanyContract({
@@ -87,8 +89,12 @@ const EditCompanyContractBtn = (props: CompanyContractProps) => {
   };
 
   const displayFieldConfigs = useDisplayFieldConfigs(
-    contractTimeType?.value,
-    companyContract.rateType,
+    {
+      contractTimeType: contractTimeType?.value,
+      rateType: companyContract.rateType,
+      duration: Number(duration),
+      startedAt,
+    },
     "edit"
   );
 

@@ -1,7 +1,7 @@
 import { FieldsController } from "@components/Controller";
 import Dialog from "@components/Dialog";
 import { FieldConfig } from "@core/types";
-import { textValidated } from "@core/types/fieldConfig";
+import { taiwanUBNValidation, textValidated } from "@core/types/fieldConfig";
 import { LoadingButton } from "@mui/lab";
 import { Grid, Typography } from "@mui/material";
 import {
@@ -44,7 +44,7 @@ const configs: FieldConfig[] = [
     name: "taxId",
     label: "統一編號",
     required: true,
-    validated: textValidated,
+    validated: taiwanUBNValidation,
   },
   {
     type: "TEXT",
@@ -65,7 +65,7 @@ const configs: FieldConfig[] = [
     name: "contactEmail",
     label: "聯絡人信箱",
     required: true,
-    validated: textValidated.email(),
+    validated: textValidated.email("請輸入有效的電子郵件地址"),
   },
 ];
 

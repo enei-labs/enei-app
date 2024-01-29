@@ -1,11 +1,15 @@
 import Dialog from "@components/Dialog";
 import { Box, Button, Typography } from "@mui/material";
 import { useValidatedForm } from "@utils/hooks";
-import { useReducer } from "react";
+import { useCallback, useReducer } from "react";
 import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import CloseIcon from "@mui/icons-material/HighlightOff";
 import { useCreateCompanyContract } from "@utils/hooks/mutations/useCreateCompanyContract";
-import { Company, CompanyContract } from "@core/graphql/types";
+import {
+  Company,
+  CompanyContract,
+  ContractTimeType,
+} from "@core/graphql/types";
 import { COMPANY_CONTRACTS } from "@core/graphql/queries/companyContracts";
 import dynamic from "next/dynamic";
 import {
@@ -54,13 +58,23 @@ export const useCreateCompanyContractSubmitFn = (
     handleSubmit,
     formState: { errors },
     watch,
+    setValue,
   } = useValidatedForm<FormData>(fieldConfigs, {
     defaultValues: { companyName: company?.name },
   });
+
   const contractTimeType = watch("contractTimeType");
   const rateType = watch("rateType");
+  const duration = watch("duration");
+  const startedAt = watch("startedAt");
+  const setEndedAt = (value: Date) => setValue("endedAt", value);
 
   const onSubmit = async (formData: FormData) => {
+    if (
+      formData.contractTimeType.value === ContractTimeType.TransferStartTime
+    ) {
+      formData.endedAt = undefined;
+    }
     const { data } = await createCompanyContract({
       variables: {
         input: {
@@ -92,8 +106,14 @@ export const useCreateCompanyContractSubmitFn = (
   };
 
   const displayFieldConfigs = useDisplayFieldConfigs(
-    contractTimeType?.value,
-    rateType
+    {
+      contractTimeType: contractTimeType?.value,
+      rateType: rateType,
+      duration: Number(duration),
+      startedAt: startedAt,
+    },
+    "create",
+    setEndedAt
   );
 
   return {

@@ -64,7 +64,7 @@ function SettingDialog(props: SettingDialogProps) {
       type: "TEXT",
       name: "email",
       label: "用戶信箱",
-      validated: textValidated.email(),
+      validated: textValidated.email("請輸入有效的電子郵件地址"),
     },
   ];
 

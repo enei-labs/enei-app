@@ -20,7 +20,7 @@ const configs: FieldConfig[] = [
     name: "email",
     label: "信箱",
     required: true,
-    validated: textValidated.email(),
+    validated: textValidated.email("請輸入有效的電子郵件地址"),
     hint: (
       <>
         If the entered user account is valid, you will receive an email with
