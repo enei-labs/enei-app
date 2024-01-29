@@ -20,7 +20,7 @@ function CompanyContractBox(props: CompanyContractBoxProps) {
     {
       icon: MonetizationOnOutlinedIcon,
       name: "合約價格",
-      content: contract.price,
+      content: contract.price ?? "N/A",
       unit: "元/kW",
     },
     {
