@@ -1,7 +1,11 @@
 import { FieldsController } from "@components/Controller";
 import Dialog from "@components/Dialog";
-import { FieldConfig, Option } from "@core/types";
-import { numberValidated, textValidated } from "@core/types/fieldConfig";
+import { FieldConfig } from "@core/types";
+import {
+  numberRangeValidated,
+  numberValidated,
+  textValidated,
+} from "@core/types/fieldConfig";
 import { LoadingButton } from "@mui/lab";
 import { Grid, Typography } from "@mui/material";
 import {
@@ -62,11 +66,11 @@ const configs: FieldConfig[] = [
     validated: numberValidated,
   },
   {
-    type: "TEXT",
+    type: "NUMBER",
     name: "transferRate",
     label: "轉供比例（%）",
     required: true,
-    validated: textValidated,
+    validated: numberRangeValidated,
   },
   {
     type: "TEXT",
@@ -82,7 +86,7 @@ interface PowerPlantDialogProps {
   variant: "edit" | "create";
   companyContractId?: string;
   onClose: VoidFunction;
-  defaultValues?: Omit<PowerPlant, "annualPowerGeneration">;
+  defaultValues?: Partial<Omit<PowerPlant, "annualPowerGeneration">>;
 }
 
 const PowerPlantDialog = (props: PowerPlantDialogProps) => {

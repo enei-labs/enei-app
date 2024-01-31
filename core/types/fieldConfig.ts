@@ -67,6 +67,12 @@ const requiredMessage = '此為必填欄位'
 
 const numberValidated = yup.number().required('請輸入數字')
 
+const numberRangeValidated = yup
+  .number()
+  .required(requiredMessage)
+  .min(0, '數字不能小於0')
+  .max(100, '數字不能大於100');
+
 const textValidated = yup.string().required(requiredMessage)
 
 const arrayValidated = yup.array().required(requiredMessage).min(1, requiredMessage)
@@ -108,6 +114,6 @@ const taiwanUBNValidation = yup.string().test(
     }
   );
 
-export { numberValidated, textValidated, arrayValidated, objectValidated, passwordValidated, checkboxValidated, taiwanUBNValidation }
+export { numberRangeValidated, numberValidated, textValidated, arrayValidated, objectValidated, passwordValidated, checkboxValidated, taiwanUBNValidation }
 
 export default FieldConfig

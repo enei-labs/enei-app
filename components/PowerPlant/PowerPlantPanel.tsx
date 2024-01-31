@@ -34,8 +34,12 @@ const PowerPlantPanel = () => {
       // accessor: "contactName",
     },
     {
-      header: "裝置容量",
+      header: "電廠裝置容量(kWh)",
       accessor: "volume",
+    },
+    {
+      header: "供電裝置容量(kWh)",
+      accessor: "supplyVolume",
     },
     {
       header: "單位預估年發電量",
