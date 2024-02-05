@@ -18,7 +18,7 @@ import { IconBtn } from "../Button";
 import CloseIcon from "@mui/icons-material/HighlightOff";
 import { useCreatePowerPlant } from "@utils/hooks/mutations/useCreatePowerPlant";
 import { toast } from "react-toastify";
-import { PowerPlant } from "@core/graphql/types";
+import { EnergyType, GenerationType, PowerPlant } from "@core/graphql/types";
 
 type FormData = {
   name: string;
@@ -28,6 +28,18 @@ type FormData = {
   transferRate: number;
   address: string;
 };
+
+export enum EnergyLabel {
+  SOLAR = "太陽能",
+  WIND = "風力",
+  OTHER_RENEWABLE = "其他再生能源",
+}
+
+export enum GenerationLabel {
+  TYPE_I = "第一型",
+  TYPE_II = "第二型",
+  TYPE_III = "第三型",
+}
 
 const configs: FieldConfig[] = [
   {
@@ -71,6 +83,46 @@ const configs: FieldConfig[] = [
     label: "轉供比例（%）",
     required: true,
     validated: numberRangeValidated,
+  },
+  {
+    type: "RADIO",
+    name: "transferRate",
+    label: "能源類別",
+    radios: [
+      {
+        label: GenerationLabel.TYPE_I,
+        value: GenerationType.TypeI,
+      },
+      {
+        label: GenerationLabel.TYPE_II,
+        value: GenerationType.TypeIi,
+      },
+      {
+        label: GenerationLabel.TYPE_III,
+        value: GenerationType.TypeIii,
+      },
+    ],
+    required: true,
+  },
+  {
+    type: "RADIO",
+    name: "rateType",
+    label: "發電類型",
+    radios: [
+      {
+        label: EnergyLabel.SOLAR,
+        value: EnergyType.Solar,
+      },
+      {
+        label: EnergyLabel.WIND,
+        value: EnergyType.Wind,
+      },
+      {
+        label: EnergyLabel.OTHER_RENEWABLE,
+        value: EnergyType.OtherRenewable,
+      },
+    ],
+    required: true,
   },
   {
     type: "TEXT",

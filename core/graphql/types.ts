@@ -175,7 +175,7 @@ export type CompanyContract = {
   description?: Maybe<Scalars['String']>;
   /** 合約年限 */
   duration: Scalars['String'];
-  endedAt: Scalars['DateTime'];
+  endedAt?: Maybe<Scalars['DateTime']>;
   id: Scalars['ID'];
   industryDoc: Scalars['String'];
   monthlyTransferDegrees: Array<Array<TransferDegree>>;
@@ -444,6 +444,12 @@ export type ElectricNumberInfoInput = {
   tableNumbers: Array<Scalars['String']>;
 };
 
+export enum EnergyType {
+  OtherRenewable = 'OTHER_RENEWABLE',
+  Solar = 'SOLAR',
+  Wind = 'WIND'
+}
+
 export type Error = {
   id: Scalars['ID'];
   message: Scalars['String'];
@@ -460,6 +466,12 @@ export type Fee = {
   substitutionFee: Scalars['String'];
   updatedAt: Scalars['DateTime'];
 };
+
+export enum GenerationType {
+  TypeI = 'TYPE_I',
+  TypeIi = 'TYPE_II',
+  TypeIii = 'TYPE_III'
+}
 
 export type Guest = Account & {
   __typename?: 'Guest';
@@ -761,13 +773,18 @@ export type PowerPlant = {
   annualPowerGeneration: Scalars['String'];
   createdAt: Scalars['DateTime'];
   createdBy?: Maybe<Scalars['String']>;
+  energyType: EnergyType;
   estimatedAnnualPowerGeneration: Scalars['Int'];
   /** 電廠預計年供電量 */
   estimatedAnnualPowerSupply: Scalars['String'];
+  generationType: GenerationType;
   id: Scalars['ID'];
   name: Scalars['String'];
   number: Scalars['String'];
+  supplyVolume: Scalars['Int'];
+  /** 供電容量比例 */
   transferRate: Scalars['Int'];
+  /** 電廠裝置容量 */
   volume: Scalars['Int'];
 };
 
@@ -954,7 +971,7 @@ export type RemainingDemandFromCompanyContract = {
   description?: Maybe<Scalars['String']>;
   /** 合約年限 */
   duration: Scalars['String'];
-  endedAt: Scalars['DateTime'];
+  endedAt?: Maybe<Scalars['DateTime']>;
   id: Scalars['ID'];
   industryDoc: Scalars['String'];
   monthlyTransferDegrees: Array<Array<TransferDegree>>;
