@@ -38,6 +38,7 @@ import { toast } from "react-toastify";
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
 interface UserContractDialogProps {
+  userName: string;
   isOpenDialog: boolean;
   currentModifyTransferDocument?: TransferDocument;
   variant: "edit" | "create";
@@ -114,8 +115,13 @@ function UserContractDialog(props: UserContractDialogProps) {
   const router = useRouter();
   const userId = router.query.userId as string;
 
-  const { isOpenDialog, onClose, currentModifyTransferDocument, variant } =
-    props;
+  const {
+    isOpenDialog,
+    onClose,
+    currentModifyTransferDocument,
+    variant,
+    userName,
+  } = props;
 
   /** form-data */
   const {
@@ -195,6 +201,8 @@ function UserContractDialog(props: UserContractDialogProps) {
           </Typography>
           <IconBtn icon={<HighlightOffIcon />} onClick={onClose} />
         </Grid>
+
+        <InputText label="用戶名稱" value={userName} disabled />
 
         {/* 契約資訊 Block */}
         <Typography variant="h5" textAlign={"left"}>

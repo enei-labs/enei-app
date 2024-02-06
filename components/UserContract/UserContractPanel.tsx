@@ -32,7 +32,7 @@ function UserContractPanel(props: UserContractPanelProps) {
           <InputSearch />
           <BasicSelect state={state} setState={setState} items={[]} />
         </Box>
-        <AddUserContractBtn />
+        <AddUserContractBtn userName={user.name} />
       </Box>
       <Grid container spacing={2} sx={{ mt: "24px" }}>
         {loading ? (
