@@ -18,5 +18,6 @@ export type FormData = {
     bankBranchName: string;
     accountName: string;
     account: string;
+    taxId?: string;
   }[];
 };

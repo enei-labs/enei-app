@@ -34,6 +34,7 @@ const EditUserBtns = (props: EditUserBtnsProps) => {
             bankBranchCode: bankAccount.bankBranchCode.value,
             accountName: bankAccount.accountName,
             account: bankAccount.account,
+            taxId: bankAccount.taxId,
           })),
         },
       },

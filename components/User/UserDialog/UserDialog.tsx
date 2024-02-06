@@ -3,7 +3,6 @@ import { useMemo, useState } from "react";
 import { IconBtn } from "@components/Button";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import { User } from "@core/graphql/types";
 import { FieldsController } from "@components/Controller";
 import { FieldConfig } from "@core/types";
@@ -82,6 +81,7 @@ function UserDialog(props: UserDialogProps) {
               },
               accountName: bankAccount.accountName,
               account: bankAccount.account,
+              taxId: bankAccount.taxId,
             })
           ),
         }
@@ -257,7 +257,7 @@ function UserDialog(props: UserDialogProps) {
                   />
                 )}
               />
-              <Controller
+              {/* <Controller
                 control={control}
                 name={`bankAccounts.${index}.bankName`}
                 render={({ field }) => (
@@ -267,7 +267,7 @@ function UserDialog(props: UserDialogProps) {
                     label={`銀行名稱`}
                   />
                 )}
-              />
+              /> */}
               <Controller
                 control={control}
                 name={`bankAccounts.${index}.bankBranchCode`}
@@ -294,7 +294,7 @@ function UserDialog(props: UserDialogProps) {
                   />
                 )}
               />
-              <Controller
+              {/* <Controller
                 control={control}
                 name={`bankAccounts.${index}.bankBranchName`}
                 render={({ field }) => (
@@ -306,7 +306,7 @@ function UserDialog(props: UserDialogProps) {
                     required
                   />
                 )}
-              />
+              /> */}
               <Controller
                 control={control}
                 name={`bankAccounts.${index}.accountName`}
@@ -328,6 +328,17 @@ function UserDialog(props: UserDialogProps) {
                     label={`帳號`}
                     placeholder={"請填入"}
                     required
+                  />
+                )}
+              />
+              <Controller
+                control={control}
+                name={`bankAccounts.${index}.taxId`}
+                render={({ field }) => (
+                  <InputText
+                    {...field}
+                    label={`統一編號`}
+                    placeholder={"請填入"}
                   />
                 )}
               />

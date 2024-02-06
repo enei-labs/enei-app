@@ -136,6 +136,8 @@ export type BankAccount = {
   bankCode: Scalars['String'];
   /** 銀行名稱 */
   bankName: Scalars['String'];
+  /** 統一編號 */
+  taxId: Scalars['String'];
 };
 
 export type BankAccountInput = {
@@ -143,6 +145,7 @@ export type BankAccountInput = {
   accountName: Scalars['String'];
   bankBranchCode: Scalars['String'];
   bankCode: Scalars['String'];
+  taxId?: InputMaybe<Scalars['String']>;
 };
 
 export type ChangePasswordResponse = Admin | InvalidCurrentPasswordError;
