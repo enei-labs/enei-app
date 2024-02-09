@@ -14,8 +14,10 @@ import { IconBtn } from "@components/Button";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import {
+  ContractTimeType,
   ElectricNumberInfo,
   TransferDocument,
+  User,
   UserType,
 } from "@core/graphql/types";
 import { FieldsController } from "@components/Controller";
@@ -38,12 +40,23 @@ import { toast } from "react-toastify";
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
 interface UserContractDialogProps {
-  userName: string;
+  user: User;
   isOpenDialog: boolean;
   currentModifyTransferDocument?: TransferDocument;
   variant: "edit" | "create";
   onClose: VoidFunction;
 }
+
+const contractTimeTypeMap = {
+  [ContractTimeType.ContractEndTime]: "固定日期(填入契約結束日期)",
+  [ContractTimeType.ContractStartTime]: "契約年限從契約起始日期起算",
+  [ContractTimeType.TransferStartTime]: "契約年限從轉供起始日期起算",
+};
+
+const contractTimeTypeOptions = Object.values(ContractTimeType).map((o) => ({
+  label: contractTimeTypeMap[o],
+  value: o,
+}));
 
 const contractConfigs: FieldConfig[] = [
   {
@@ -83,10 +96,24 @@ const contractConfigs: FieldConfig[] = [
     label: "預計最低採購下限（契約）（kWh）",
   },
   {
+    type: "SINGLE_SELECT",
+    name: "contractTimeType",
+    label: "契約時間計算方式",
+    required: true,
+    disabled: false,
+    options: contractTimeTypeOptions,
+  },
+  {
     type: "DATE",
     name: "salesAt",
     required: true,
-    label: "契約生效日期",
+    label: "契約起始日期",
+  },
+  {
+    type: "DATE",
+    name: "salesTo",
+    label: "契約結束日期",
+    required: false,
   },
   {
     type: "NUMBER",
@@ -120,7 +147,7 @@ function UserContractDialog(props: UserContractDialogProps) {
     onClose,
     currentModifyTransferDocument,
     variant,
-    userName,
+    user,
   } = props;
 
   /** form-data */
@@ -202,7 +229,7 @@ function UserContractDialog(props: UserContractDialogProps) {
           <IconBtn icon={<HighlightOffIcon />} onClick={onClose} />
         </Grid>
 
-        <InputText label="用戶名稱" value={userName} disabled />
+        <InputText label="用戶名稱" value={user.name} disabled />
 
         {/* 契約資訊 Block */}
         <Typography variant="h5" textAlign={"left"}>
@@ -410,9 +437,18 @@ function UserContractDialog(props: UserContractDialogProps) {
               onClick={() => {
                 const emptyElectricNumberInput: ElectricNumberInfo = {
                   address: "",
-                  contactEmail: "",
-                  contactName: "",
-                  contactPhone: "",
+                  contactEmail: user.contactEmail ?? "",
+                  contactName: user.contactName ?? "",
+                  contactPhone: user.contactPhone ?? "",
+                  companyAddress: user.companyAddress ?? "",
+                  recipientAccount: {
+                    account: "",
+                    bankName: "",
+                    accountName: "",
+                    bankBranchCode: "",
+                    bankBranchName: "",
+                    bankCode: "",
+                  },
                   degree: 0,
                   number: "",
                   tableNumbers: [],

@@ -429,11 +429,13 @@ export type DashboardUserContract = {
 export type ElectricNumberInfo = {
   __typename?: 'ElectricNumberInfo';
   address: Scalars['String'];
+  companyAddress?: Maybe<Scalars['String']>;
   contactEmail: Scalars['String'];
   contactName: Scalars['String'];
   contactPhone: Scalars['String'];
   degree: Scalars['Int'];
   number: Scalars['String'];
+  recipientAccount?: Maybe<RecipientAccount>;
   tableNumbers: Array<Scalars['String']>;
 };
 
@@ -998,6 +1000,7 @@ export type RemainingDemandFromUserContract = {
   __typename?: 'RemainingDemandFromUserContract';
   capacity: Scalars['Int'];
   contractDoc: Scalars['String'];
+  contractTimeType: ContractTimeType;
   /** 電號資訊 */
   electricNumberInfos: Array<ElectricNumberInfo>;
   id: Scalars['ID'];
@@ -1007,7 +1010,7 @@ export type RemainingDemandFromUserContract = {
   purchaseDegree: Scalars['Int'];
   salesAt: Scalars['DateTime'];
   salesPeriod: Scalars['String'];
-  salesTo: Scalars['DateTime'];
+  salesTo?: Maybe<Scalars['DateTime']>;
   serialNumber: Scalars['String'];
   transferAt?: Maybe<Scalars['DateTime']>;
   upperLimit: Scalars['Int'];
@@ -1308,6 +1311,7 @@ export type UserBillRecipientAccountInput = {
 export type UserContract = {
   __typename?: 'UserContract';
   contractDoc: Scalars['String'];
+  contractTimeType: ContractTimeType;
   /** 電號資訊 */
   electricNumberInfos: Array<ElectricNumberInfo>;
   id: Scalars['ID'];
@@ -1317,7 +1321,7 @@ export type UserContract = {
   purchaseDegree: Scalars['Int'];
   salesAt: Scalars['DateTime'];
   salesPeriod: Scalars['String'];
-  salesTo: Scalars['DateTime'];
+  salesTo?: Maybe<Scalars['DateTime']>;
   serialNumber: Scalars['String'];
   transferAt?: Maybe<Scalars['DateTime']>;
   upperLimit: Scalars['Int'];

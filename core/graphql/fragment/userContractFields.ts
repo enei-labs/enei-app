@@ -13,6 +13,7 @@ export const USER_CONTRACT_FIELDS = gql`
     upperLimit
     lowerLimit
     salesPeriod
+    contractTimeType
     salesAt
     salesTo
     transferAt

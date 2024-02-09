@@ -22,12 +22,12 @@ const UserContractExpiredPanel = (props: UserContractExpiredPanelProps) => {
       accessor: "serialNumber",
     },
     {
-      header: "契約生效日期",
+      header: "契約起始日期",
       accessor: "salesAt",
       render: (data) => <>{formatDateTime(data.salesAt)}</>,
     },
     {
-      header: "契約失效日期",
+      header: "契約結束日期",
       accessor: "salesTo",
       render: (data) => <>{formatDateTime(data.salesTo)}</>,
     },
