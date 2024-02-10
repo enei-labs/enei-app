@@ -8,7 +8,7 @@ import {
   useFieldArray,
 } from "react-hook-form";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { IconBtn } from "@components/Button";
 import CloseIcon from "@mui/icons-material/HighlightOff";
 import DialogAlert from "@components/DialogAlert";
@@ -24,11 +24,9 @@ interface ElectricNumbersFieldProps {
 export function ElectricNumbersField(props: ElectricNumbersFieldProps) {
   const { field: rootField, control, userId } = props;
 
-  const { data, loading } = useUserContracts(
-    useUserContracts({
-      variables: { userId },
-    })
-  );
+  const { data, loading } = useUserContracts({
+    variables: { userId },
+  });
 
   const [addElectricNumber, setAddElectricNumber] = useState<number>(1);
   const [deleteElectricNumberIndex, setDeleteElectricNumberIndex] =

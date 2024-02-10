@@ -1,9 +1,9 @@
-import { isValid } from 'date-fns'
-import dateFnsFormat from 'date-fns/format'
+import { parseISO, format } from 'date-fns'
 
-export const formatDateTime = (value?: string | number | Date, format = 'yyyy-MM-dd') => {
+export const formatDateTime = (value?: string | number | Date, dateFormat = 'yyyy-MM-dd') => {
   if (!value) return ''
 
-  const number = Date.parse(value.toString())
-  return isValid(number) ? dateFnsFormat(new Date(value), format) : ''
+  const date = (typeof value === 'string' && !isNaN(Date.parse(value))) ? parseISO(value) : new Date(value)
+
+  return format(date, dateFormat)
 }

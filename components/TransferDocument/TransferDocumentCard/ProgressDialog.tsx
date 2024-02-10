@@ -27,7 +27,11 @@ function ProgressDialog(props: ProgressDialogProps) {
     <Dialog maxWidth="xs" key="confirm" open={open} onClose={onClose}>
       <Typography variant="h4">填入進展日期</Typography>
 
-      <InputDate value={date} onChange={setDate} label="進展日期" />
+      <InputDate
+        value={date}
+        onChange={(newValue) => setDate(newValue?.toString() || "")}
+        label="進展日期"
+      />
 
       {showContractInput ? (
         <InputText

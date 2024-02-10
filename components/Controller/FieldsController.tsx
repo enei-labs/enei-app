@@ -38,7 +38,7 @@ const FieldsController: React.FC<FieldsControllerProps> = ({
 }) => {
   const { control, errors } = form;
 
-  const renderInputField = (fieldProps: any, type: FieldType, item: any) => {
+  const slotsField = (fieldProps: any, type: FieldType, item: any) => {
     const { name } = fieldProps.field;
     const helperText = errors[name]?.message;
 
@@ -118,7 +118,7 @@ const FieldsController: React.FC<FieldsControllerProps> = ({
               name={name}
               control={control}
               render={(fieldProps) =>
-                renderInputField(fieldProps, type as FieldType, item)
+                slotsField(fieldProps, type as FieldType, item)
               }
             />
           );

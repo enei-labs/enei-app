@@ -410,11 +410,13 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                     <>
                       <InputAutocomplete
                         {...field}
-                        onChange={(e) => {
-                          field.onChange(e);
-                          getUserContracts({
-                            variables: { userId: e!.value as string },
-                          });
+                        onChange={(e, newValue) => {
+                          field.onChange(e, newValue);
+                          if (newValue) {
+                            getUserContracts({
+                              variables: { userId: newValue.value },
+                            });
+                          }
                         }}
                         options={
                           usersData?.users.list.map((o) => ({

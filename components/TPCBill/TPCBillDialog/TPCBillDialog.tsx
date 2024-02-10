@@ -112,11 +112,13 @@ export default function TPCBillDialog(props: TPCBillDialogProps) {
               <>
                 <InputAutocomplete
                   {...field}
-                  onChange={(e) => {
+                  onChange={(e, newValue) => {
                     field.onChange(e);
-                    getTransferDocument({
-                      variables: { id: e!.value as string },
-                    });
+                    if (newValue) {
+                      getTransferDocument({
+                        variables: { id: newValue.value },
+                      });
+                    }
                   }}
                   options={
                     transferDocumentsData?.transferDocuments.list.map((o) => ({

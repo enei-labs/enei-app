@@ -117,7 +117,7 @@ export default function DemoChart(props: DemoChartProps) {
           onChange={(newValue: any) => {
             setValue(newValue);
           }}
-          renderInput={(params: any) => (
+          slots={(params: any) => (
             <TextField {...params} helperText={null} />
           )}
         />

@@ -1,38 +1,32 @@
 import { FieldConfig } from '@core/types'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMemo } from 'react'
-import type { UseFormReturn } from 'react-hook-form'
-import { FieldValues, useForm, UseFormProps } from 'react-hook-form'
+import { useForm, UseFormProps, FieldValues } from 'react-hook-form'
 import * as yup from 'yup'
 
 interface Validations {
-  [key: string]: any;
+  [key: string]: yup.AnySchema;
 }
 
 const useValidatedForm = <TFieldValues extends FieldValues = FieldValues, TContext = any>(
   fieldConfigs: FieldConfig[] = [],
   useFormProps?: UseFormProps<TFieldValues, TContext>,
-): UseFormReturn<TFieldValues, TContext> => {
+) => {
+  const schema = useMemo(() => {
+    const schemaFields = fieldConfigs.reduce<Validations>((acc, fieldConfig) => {
+      if (fieldConfig.validated) {
+        acc[fieldConfig.name] = fieldConfig.validated;
+      }
+      return acc;
+    }, {});
 
-  // Create a validation schema using yup based on the field configurations passed
-  const schema = useMemo(
-    () =>
-      yup.object({
-        ...fieldConfigs.reduce((prev: Validations, curr: FieldConfig) => {
-          // If the current field has validation, add it to the schema
-          return curr && curr.validated
-            ? { ...prev, [curr.name]: curr.validated }
-            : prev
-        }, {}),
-      }),
-    [fieldConfigs],
-  )
+    return yup.object().shape(schemaFields);
+  }, [fieldConfigs]);
 
-  // If there is an issue in schema creation, you might want to handle it here.
-  // For example, you could log it or show a user-friendly message.
+  return useForm<TFieldValues, TContext>({
+    ...useFormProps,
+    resolver: yupResolver(schema) as any,
+  });
+};
 
-  // Return the form hooks with the resolver for schema validation
-  return useForm({ ...useFormProps, resolver: yupResolver(schema) })
-}
-
-export default useValidatedForm
+export default useValidatedForm;

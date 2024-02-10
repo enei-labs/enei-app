@@ -118,7 +118,7 @@ export default function TransferDegreeChart(props: TransferDegreeChartProps) {
           onChange={(newValue: any) => {
             setValue(newValue);
           }}
-          renderInput={(params: any) => (
+          slots={(params: any) => (
             <TextField {...params} helperText={null} />
           )}
         />

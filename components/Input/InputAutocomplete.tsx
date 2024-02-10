@@ -1,75 +1,53 @@
 import { Option } from "@core/types";
-import type {
-  AutocompleteProps,
+import Autocomplete, {
   AutocompleteRenderInputParams,
 } from "@mui/material/Autocomplete";
-import Autocomplete from "@mui/material/Autocomplete";
-import React from "react";
-import InputText from "./InputText";
+import TextField from "@mui/material/TextField";
+import { forwardRef } from "react";
 
-interface InputAutocompleteProps<
-  T = Option,
-  Multiple extends boolean | undefined = undefined,
-  FreeSolo extends boolean | undefined = undefined
-> extends Omit<
-    AutocompleteProps<T, Multiple, any, FreeSolo>,
-    "options" | "renderInput" | "onChange"
-  > {
+interface InputAutocompleteProps {
   label?: React.ReactNode;
-  options?: Option[];
+  options: Option[];
   required?: boolean;
+  placeholder?: string;
   helperText?: React.ReactNode;
-  renderInput?: (params: AutocompleteRenderInputParams) => React.ReactNode;
-  onChange?: (value: Option | null) => void;
+  onChange?: (event: React.SyntheticEvent, value: Option | null) => void;
+  disabled?: boolean;
 }
 
-const InputAutocomplete = React.forwardRef<
-  HTMLDivElement,
-  InputAutocompleteProps
->(function InputAutocomplete(props, ref) {
-  const {
-    label,
-    value,
-    options,
-    loading,
-    disabled,
-    required,
-    helperText,
-    placeholder,
-    renderInput,
-    renderOption,
-    onChange,
-    ...otherProps
-  } = props;
+const InputAutocomplete = forwardRef<HTMLDivElement, InputAutocompleteProps>(
+  (props, ref) => {
+    const {
+      label,
+      options,
+      required,
+      helperText,
+      placeholder,
+      onChange,
+      ...otherProps
+    } = props;
 
-  return (
-    <Autocomplete
-      {...otherProps}
-      fullWidth
-      ref={ref}
-      value={value || null}
-      options={options || []}
-      loading={loading}
-      disabled={disabled}
-      onChange={(event, value) => onChange?.(value)}
-      renderInput={(params) =>
-        renderInput?.(params) || (
-          <InputText
+    return (
+      <Autocomplete
+        {...otherProps}
+        options={options}
+        getOptionLabel={(option) => option.label}
+        onChange={onChange}
+        renderInput={(params: AutocompleteRenderInputParams) => (
+          <TextField
             {...params}
             label={label}
             required={required}
             helperText={helperText}
             placeholder={placeholder}
+            ref={ref}
           />
-        )
-      }
-      noOptionsText={<div style={{ fontSize: "16px" }}>沒有資料</div>}
-      renderOption={renderOption}
-      isOptionEqualToValue={(option, value) => option.label === value.label}
-    />
-  );
-});
+        )}
+        isOptionEqualToValue={(option, value) => option.value === value.value}
+      />
+    );
+  }
+);
 
-export type { InputAutocompleteProps };
-
+InputAutocomplete.displayName = "InputAutocomplete";
 export default InputAutocomplete;

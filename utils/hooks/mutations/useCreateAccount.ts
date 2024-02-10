@@ -10,15 +10,19 @@ export const useCreateAccount = () => {
         if (data && (data.createAccount.__typename === 'Admin' || data.createAccount.__typename === 'Guest')) {
           cache.modify({
             fields: {
-              accounts(accountPage: AccountPage) {
-                const newAccount = cache.writeFragment({
+              accounts(existingAccountsRef, { readField }) {
+                const newAccountRef = cache.writeFragment({
                   data: data.createAccount,
                   fragment: ACCOUNT_FIELDS
                 });
+                const existingAccounts = readField<AccountPage>('accounts', existingAccountsRef) ?? {
+                  total: 0,
+                  list: [],
+                };
 
                 return {
-                  total: accountPage.total + 1,
-                  list: [newAccount, ...accountPage.list],
+                  total: existingAccounts.total + 1,
+                  list: [newAccountRef, ...existingAccounts.list],
                 };
               }
             },

@@ -36,7 +36,7 @@ const configs: FieldConfig[] = [
     validated: yup
       .string()
       .required("This is required")
-      .oneOf([yup.ref("newPassword"), null], "密碼不正確"),
+      .oneOf([yup.ref("newPassword")], "密碼不正確"),
   },
 ];
 
