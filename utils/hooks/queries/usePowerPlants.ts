@@ -5,6 +5,7 @@ import { POWER_PLANTS } from '@core/graphql/queries';
 interface Variables {
   offset?: number;
   limit?: number;
+  companyContractId?: string;
 }
 
 export const usePowerPlants = ({ skip = false, variables }: {
@@ -14,7 +15,6 @@ export const usePowerPlants = ({ skip = false, variables }: {
   return useQuery<{ powerPlants: PowerPlantPage }>(POWER_PLANTS, {
     skip,
     notifyOnNetworkStatusChange: false,
-    fetchPolicy: 'cache-first',
     variables: variables,
   })
 }

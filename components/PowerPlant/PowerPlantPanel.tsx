@@ -13,8 +13,14 @@ import { toast } from "react-toastify";
 const PowerPlantDialog = dynamic(() => import("./PowerPlantDialog"));
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
-const PowerPlantPanel = () => {
-  const { data, loading, refetch } = usePowerPlants();
+const PowerPlantPanel = ({
+  companyContractId,
+}: {
+  companyContractId: string;
+}) => {
+  const { data, loading, refetch } = usePowerPlants({
+    variables: { companyContractId },
+  });
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [selectedData, selectData] = useState<PowerPlant | null>(null);

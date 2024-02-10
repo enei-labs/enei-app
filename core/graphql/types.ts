@@ -3,27 +3,29 @@ export type InputMaybe<T> = T | undefined;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
+export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
-  Boolean: boolean;
-  Int: number;
-  Float: number;
-  DateTime: any;
-  UUID: any;
+  ID: { input: string; output: string; }
+  String: { input: string; output: string; }
+  Boolean: { input: boolean; output: boolean; }
+  Int: { input: number; output: number; }
+  Float: { input: number; output: number; }
+  DateTime: { input: any; output: any; }
+  UUID: { input: any; output: any; }
 };
 
 export type Account = {
   actions: Array<Action>;
   company?: Maybe<Company>;
-  companyName?: Maybe<Scalars['String']>;
-  createdAt: Scalars['DateTime'];
+  companyName?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['DateTime']['output'];
   creator?: Maybe<Admin>;
-  email: Scalars['String'];
-  hasSetPassword: Scalars['Boolean'];
-  id: Scalars['ID'];
-  name: Scalars['String'];
+  email: Scalars['String']['output'];
+  hasSetPassword: Scalars['Boolean']['output'];
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
   recipientAccounts?: Maybe<Array<RecipientAccount>>;
   removeRecord?: Maybe<RemoveAccountRecord>;
   role: Role;
@@ -31,20 +33,20 @@ export type Account = {
 
 export type AccountAlreadyExistsError = Error & {
   __typename?: 'AccountAlreadyExistsError';
-  id: Scalars['ID'];
-  message: Scalars['String'];
+  id: Scalars['ID']['output'];
+  message: Scalars['String']['output'];
 };
 
 export type AccountNotFoundError = Error & {
   __typename?: 'AccountNotFoundError';
-  id: Scalars['ID'];
-  message: Scalars['String'];
+  id: Scalars['ID']['output'];
+  message: Scalars['String']['output'];
 };
 
 export type AccountPage = {
   __typename?: 'AccountPage';
   list: Array<Account>;
-  total: Scalars['Int'];
+  total: Scalars['Int']['output'];
 };
 
 export enum Action {
@@ -99,13 +101,13 @@ export type Admin = Account & {
   __typename?: 'Admin';
   actions: Array<Action>;
   company?: Maybe<Company>;
-  companyName: Scalars['String'];
-  createdAt: Scalars['DateTime'];
+  companyName: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
   creator?: Maybe<Admin>;
-  email: Scalars['String'];
-  hasSetPassword: Scalars['Boolean'];
-  id: Scalars['ID'];
-  name: Scalars['String'];
+  email: Scalars['String']['output'];
+  hasSetPassword: Scalars['Boolean']['output'];
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
   recipientAccounts?: Maybe<Array<RecipientAccount>>;
   removeRecord?: Maybe<RemoveAccountRecord>;
   role: Role;
@@ -114,7 +116,7 @@ export type Admin = Account & {
 export type AdminPage = {
   __typename?: 'AdminPage';
   list: Array<Admin>;
-  total: Scalars['Int'];
+  total: Scalars['Int']['output'];
 };
 
 export enum AdminRole {
@@ -125,27 +127,27 @@ export enum AdminRole {
 export type BankAccount = {
   __typename?: 'BankAccount';
   /** 帳號 */
-  account: Scalars['String'];
+  account: Scalars['String']['output'];
   /** 戶名 */
-  accountName: Scalars['String'];
+  accountName: Scalars['String']['output'];
   /** 分行代碼 */
-  bankBranchCode: Scalars['String'];
+  bankBranchCode: Scalars['String']['output'];
   /** 分行名稱 */
-  bankBranchName: Scalars['String'];
+  bankBranchName: Scalars['String']['output'];
   /** 銀行代碼 */
-  bankCode: Scalars['String'];
+  bankCode: Scalars['String']['output'];
   /** 銀行名稱 */
-  bankName: Scalars['String'];
+  bankName: Scalars['String']['output'];
   /** 統一編號 */
-  taxId: Scalars['String'];
+  taxId: Scalars['String']['output'];
 };
 
 export type BankAccountInput = {
-  account: Scalars['String'];
-  accountName: Scalars['String'];
-  bankBranchCode: Scalars['String'];
-  bankCode: Scalars['String'];
-  taxId?: InputMaybe<Scalars['String']>;
+  account: Scalars['String']['input'];
+  accountName: Scalars['String']['input'];
+  bankBranchCode: Scalars['String']['input'];
+  bankCode: Scalars['String']['input'];
+  taxId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type ChangePasswordResponse = Admin | InvalidCurrentPasswordError;
@@ -157,57 +159,57 @@ export enum ChargeType {
 
 export type Company = {
   __typename?: 'Company';
-  contactEmail: Scalars['String'];
-  contactName: Scalars['String'];
-  contactPhone: Scalars['String'];
-  id: Scalars['ID'];
-  name: Scalars['String'];
+  contactEmail: Scalars['String']['output'];
+  contactName: Scalars['String']['output'];
+  contactPhone: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
   recipientAccounts: Array<RecipientAccount>;
-  taxId: Scalars['String'];
+  taxId: Scalars['String']['output'];
   /** 裝置量=該發電業簽署的合約裡面，所有裝置量的加總 */
-  totalVolume: Scalars['Int'];
+  totalVolume: Scalars['Int']['output'];
 };
 
 export type CompanyContract = {
   __typename?: 'CompanyContract';
   company: Company;
-  contractDoc: Scalars['String'];
+  contractDoc: Scalars['String']['output'];
   contractTimeType: ContractTimeType;
   /** 轉供條件 */
-  daysToPay: Scalars['Int'];
-  description?: Maybe<Scalars['String']>;
+  daysToPay: Scalars['Int']['output'];
+  description?: Maybe<Scalars['String']['output']>;
   /** 合約年限 */
-  duration: Scalars['String'];
-  endedAt?: Maybe<Scalars['DateTime']>;
-  id: Scalars['ID'];
-  industryDoc: Scalars['String'];
+  duration: Scalars['String']['output'];
+  endedAt?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['ID']['output'];
+  industryDoc: Scalars['String']['output'];
   monthlyTransferDegrees: Array<Array<TransferDegree>>;
-  name: Scalars['String'];
+  name: Scalars['String']['output'];
   /** 合約編號 */
-  number: Scalars['String'];
+  number: Scalars['String']['output'];
   /** 合約價格 */
-  price?: Maybe<Scalars['String']>;
+  price?: Maybe<Scalars['String']['output']>;
   /** 單一費率/個別費率 */
   rateType: RateType;
-  startedAt: Scalars['DateTime'];
+  startedAt: Scalars['DateTime']['output'];
   /** 裝置量=該合約所有的電廠裡面的裝置量的加總 */
-  totalVolume: Scalars['Int'];
-  transferAt?: Maybe<Scalars['DateTime']>;
-  transferDoc: Scalars['String'];
+  totalVolume: Scalars['Int']['output'];
+  transferAt?: Maybe<Scalars['DateTime']['output']>;
+  transferDoc: Scalars['String']['output'];
   /** 轉供率要求（%） */
-  transferRate: Scalars['Int'];
+  transferRate: Scalars['Int']['output'];
 };
 
 export type CompanyContractPage = {
   __typename?: 'CompanyContractPage';
   list: Array<CompanyContract>;
-  total: Scalars['Int'];
+  total: Scalars['Int']['output'];
 };
 
 export type CompanyPage = {
   __typename?: 'CompanyPage';
   list: Array<Company>;
-  total: Scalars['Int'];
+  total: Scalars['Int']['output'];
 };
 
 export enum ContractTimeType {
@@ -217,146 +219,146 @@ export enum ContractTimeType {
 }
 
 export type CreateAccountInput = {
-  companyId?: InputMaybe<Scalars['String']>;
-  email: Scalars['String'];
-  name: Scalars['String'];
+  companyId?: InputMaybe<Scalars['String']['input']>;
+  email: Scalars['String']['input'];
+  name: Scalars['String']['input'];
   role: Role;
-  userId?: InputMaybe<Scalars['String']>;
+  userId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type CreateAccountResponse = AccountAlreadyExistsError | Admin | Guest;
 
 export type CreateAdminInput = {
-  email: Scalars['String'];
-  name: Scalars['String'];
+  email: Scalars['String']['input'];
+  name: Scalars['String']['input'];
   role: AdminRole;
 };
 
 export type CreateAdminResponse = AccountAlreadyExistsError | Admin;
 
 export type CreateCompanyContractInput = {
-  companyId: Scalars['ID'];
-  contractDoc: Scalars['String'];
+  companyId: Scalars['ID']['input'];
+  contractDoc: Scalars['String']['input'];
   contractTimeType: ContractTimeType;
-  daysToPay: Scalars['Int'];
-  description?: InputMaybe<Scalars['String']>;
-  duration?: InputMaybe<Scalars['String']>;
-  endedAt?: InputMaybe<Scalars['DateTime']>;
-  industryDoc: Scalars['String'];
-  name: Scalars['String'];
-  number: Scalars['String'];
-  price?: InputMaybe<Scalars['String']>;
+  daysToPay: Scalars['Int']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  duration?: InputMaybe<Scalars['String']['input']>;
+  endedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  industryDoc: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  number: Scalars['String']['input'];
+  price?: InputMaybe<Scalars['String']['input']>;
   rateType: RateType;
-  startedAt: Scalars['DateTime'];
-  transferDoc: Scalars['String'];
-  transferRate: Scalars['Int'];
+  startedAt: Scalars['DateTime']['input'];
+  transferDoc: Scalars['String']['input'];
+  transferRate: Scalars['Int']['input'];
 };
 
 export type CreateCompanyInput = {
-  contactEmail: Scalars['String'];
-  contactName: Scalars['String'];
-  contactPhone: Scalars['String'];
-  name: Scalars['String'];
-  taxId: Scalars['String'];
+  contactEmail: Scalars['String']['input'];
+  contactName: Scalars['String']['input'];
+  contactPhone: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  taxId: Scalars['String']['input'];
 };
 
 export type CreatePowerPlantInput = {
-  address: Scalars['String'];
-  companyContractId: Scalars['ID'];
-  estimatedAnnualPowerGeneration: Scalars['Int'];
-  name: Scalars['String'];
-  number: Scalars['String'];
-  transferRate: Scalars['Int'];
-  volume: Scalars['Int'];
+  address: Scalars['String']['input'];
+  companyContractId: Scalars['ID']['input'];
+  estimatedAnnualPowerGeneration: Scalars['Int']['input'];
+  name: Scalars['String']['input'];
+  number: Scalars['String']['input'];
+  transferRate: Scalars['Int']['input'];
+  volume: Scalars['Int']['input'];
 };
 
 export type CreateTpcBillInput = {
-  billDoc: Scalars['String'];
-  billReceivedDate: Scalars['DateTime'];
+  billDoc: Scalars['String']['input'];
+  billReceivedDate: Scalars['DateTime']['input'];
   transferDegrees: Array<CreateTransferDegreeInput>;
-  transferDocumentId: Scalars['ID'];
+  transferDocumentId: Scalars['ID']['input'];
 };
 
 export type CreateTransferDegreeInput = {
-  degree: Scalars['Int'];
-  powerPlantId: Scalars['ID'];
-  userContractId: Scalars['ID'];
-  userId: Scalars['ID'];
+  degree: Scalars['Int']['input'];
+  powerPlantId: Scalars['ID']['input'];
+  userContractId: Scalars['ID']['input'];
+  userId: Scalars['ID']['input'];
 };
 
 export type CreateTransferDocumentInput = {
-  expectedTime: Scalars['DateTime'];
-  formalDoc: Scalars['String'];
-  name: Scalars['String'];
-  number: Scalars['String'];
+  expectedTime: Scalars['DateTime']['input'];
+  formalDoc: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  number: Scalars['String']['input'];
   powerPlants: Array<CreateTransferDocumentPowerPlantInput>;
-  printingDoc: Scalars['String'];
-  receptionAreas: Scalars['String'];
-  replyDoc: Scalars['String'];
+  printingDoc: Scalars['String']['input'];
+  receptionAreas: Scalars['String']['input'];
+  replyDoc: Scalars['String']['input'];
   users: Array<CreateTransferDocumentUserInput>;
-  wordDoc: Scalars['String'];
+  wordDoc: Scalars['String']['input'];
 };
 
 export type CreateTransferDocumentPowerPlantInput = {
-  estimateAnnualSupply: Scalars['Int'];
-  powerPlantId: Scalars['ID'];
-  transferRate: Scalars['Int'];
+  estimateAnnualSupply: Scalars['Int']['input'];
+  powerPlantId: Scalars['ID']['input'];
+  transferRate: Scalars['Int']['input'];
 };
 
 export type CreateTransferDocumentUserInput = {
-  electricNumber: Scalars['String'];
+  electricNumber: Scalars['String']['input'];
   /** 要小於電號的電號年預計採購度數 */
-  expectedYearlyPurchaseDegree: Scalars['Int'];
-  monthlyTransferDegree: Scalars['Int'];
-  userContractId: Scalars['ID'];
-  userId: Scalars['ID'];
-  yearlyTransferDegree: Scalars['Int'];
+  expectedYearlyPurchaseDegree: Scalars['Int']['input'];
+  monthlyTransferDegree: Scalars['Int']['input'];
+  userContractId: Scalars['ID']['input'];
+  userId: Scalars['ID']['input'];
+  yearlyTransferDegree: Scalars['Int']['input'];
 };
 
 export type CreateUserBillInput = {
-  address: Scalars['String'];
-  contactEmail: Scalars['String'];
-  contactName: Scalars['String'];
-  contactPhone: Scalars['String'];
+  address: Scalars['String']['input'];
+  contactEmail: Scalars['String']['input'];
+  contactName: Scalars['String']['input'];
+  contactPhone: Scalars['String']['input'];
   credentialInspectionFee: ChargeType;
   credentialServiceFee: ChargeType;
-  electricNumbers: Array<Scalars['String']>;
+  electricNumbers: Array<Scalars['String']['input']>;
   /** 預計電費單寄出期限（收到繳費通知單後天數 */
-  estimatedBillDeliverDate: Scalars['Float'];
-  name: Scalars['String'];
-  noticeForTPCBill: Scalars['Boolean'];
-  noticeForTheBuilding: Scalars['Boolean'];
+  estimatedBillDeliverDate: Scalars['Float']['input'];
+  name: Scalars['String']['input'];
+  noticeForTPCBill: Scalars['Boolean']['input'];
+  noticeForTheBuilding: Scalars['Boolean']['input'];
   /** 用戶繳費期限（收到繳費通知單後天數） */
-  paymentDeadline: Scalars['Float'];
+  paymentDeadline: Scalars['Float']['input'];
   recipientAccount: UserBillRecipientAccountInput;
   transportationFee: ChargeType;
-  userId: Scalars['String'];
+  userId: Scalars['String']['input'];
 };
 
 export type CreateUserContractInput = {
-  contractDoc: Scalars['String'];
+  contractDoc: Scalars['String']['input'];
   electricNumberInfos: Array<ElectricNumberInfoInput>;
-  lowerLimit: Scalars['Int'];
-  name: Scalars['String'];
-  price: Scalars['Int'];
-  purchaseDegree: Scalars['Int'];
-  salesAt: Scalars['DateTime'];
-  salesPeriod: Scalars['String'];
-  serialNumber: Scalars['String'];
-  transferAt?: InputMaybe<Scalars['DateTime']>;
-  upperLimit: Scalars['Int'];
+  lowerLimit: Scalars['Int']['input'];
+  name: Scalars['String']['input'];
+  price: Scalars['Int']['input'];
+  purchaseDegree: Scalars['Int']['input'];
+  salesAt: Scalars['DateTime']['input'];
+  salesPeriod: Scalars['String']['input'];
+  serialNumber: Scalars['String']['input'];
+  transferAt?: InputMaybe<Scalars['DateTime']['input']>;
+  upperLimit: Scalars['Int']['input'];
   userType: UserType;
 };
 
 export type CreateUserInput = {
   bankAccounts: Array<BankAccountInput>;
-  companyAddress: Scalars['String'];
-  contactEmail: Scalars['String'];
-  contactName: Scalars['String'];
-  contactPhone: Scalars['String'];
-  name: Scalars['String'];
-  notes?: InputMaybe<Scalars['String']>;
-  warning?: InputMaybe<Scalars['String']>;
+  companyAddress: Scalars['String']['input'];
+  contactEmail: Scalars['String']['input'];
+  contactName: Scalars['String']['input'];
+  contactPhone: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  notes?: InputMaybe<Scalars['String']['input']>;
+  warning?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Dashboard = {
@@ -374,10 +376,10 @@ export type Dashboard = {
 export type DashboardCompany = {
   __typename?: 'DashboardCompany';
   /** 電廠數量 */
-  powerPlantCount: Scalars['Int'];
+  powerPlantCount: Scalars['Int']['output'];
   /** 總裝置量 */
-  totalDegree: Scalars['String'];
-  totalVolume: Scalars['String'];
+  totalDegree: Scalars['String']['output'];
+  totalVolume: Scalars['String']['output'];
 };
 
 export type DashboardCompanyContract = {
@@ -400,22 +402,22 @@ export type DashboardTpcBill = {
 export type DashboardTransferDegree = {
   __typename?: 'DashboardTransferDegree';
   /** 轉供度數 */
-  monthlyTransferDegree: Array<Scalars['Int']>;
+  monthlyTransferDegree: Array<Scalars['Int']['output']>;
 };
 
 export type DashboardUser = {
   __typename?: 'DashboardUser';
-  count: Scalars['Int'];
+  count: Scalars['Int']['output'];
   /** 總綠電需求度數 */
-  totalRequireDegree: Scalars['Int'];
+  totalRequireDegree: Scalars['Int']['output'];
   /** 年度用戶成長數 */
-  yearlyGrowth: Scalars['Int'];
+  yearlyGrowth: Scalars['Int']['output'];
 };
 
 export type DashboardUserBill = {
   __typename?: 'DashboardUserBill';
   /** 營業額 */
-  turnover: Array<Scalars['Int']>;
+  turnover: Array<Scalars['Int']['output']>;
 };
 
 export type DashboardUserContract = {
@@ -428,25 +430,25 @@ export type DashboardUserContract = {
 
 export type ElectricNumberInfo = {
   __typename?: 'ElectricNumberInfo';
-  address: Scalars['String'];
-  companyAddress?: Maybe<Scalars['String']>;
-  contactEmail: Scalars['String'];
-  contactName: Scalars['String'];
-  contactPhone: Scalars['String'];
-  degree: Scalars['Int'];
-  number: Scalars['String'];
+  address: Scalars['String']['output'];
+  companyAddress?: Maybe<Scalars['String']['output']>;
+  contactEmail: Scalars['String']['output'];
+  contactName: Scalars['String']['output'];
+  contactPhone: Scalars['String']['output'];
+  degree: Scalars['Int']['output'];
+  number: Scalars['String']['output'];
   recipientAccount?: Maybe<RecipientAccount>;
-  tableNumbers: Array<Scalars['String']>;
+  tableNumbers: Array<Scalars['String']['output']>;
 };
 
 export type ElectricNumberInfoInput = {
-  address: Scalars['String'];
-  contactEmail: Scalars['String'];
-  contactName: Scalars['String'];
-  contactPhone: Scalars['String'];
-  degree: Scalars['Int'];
-  number: Scalars['String'];
-  tableNumbers: Array<Scalars['String']>;
+  address: Scalars['String']['input'];
+  contactEmail: Scalars['String']['input'];
+  contactName: Scalars['String']['input'];
+  contactPhone: Scalars['String']['input'];
+  degree: Scalars['Int']['input'];
+  number: Scalars['String']['input'];
+  tableNumbers: Array<Scalars['String']['input']>;
 };
 
 export enum EnergyType {
@@ -456,20 +458,20 @@ export enum EnergyType {
 }
 
 export type Error = {
-  id: Scalars['ID'];
-  message: Scalars['String'];
+  id: Scalars['ID']['output'];
+  message: Scalars['String']['output'];
 };
 
 export type Fee = {
   __typename?: 'Fee';
   /** 憑證服務費 */
-  certificateServiceFee: Scalars['String'];
+  certificateServiceFee: Scalars['String']['output'];
   /** 憑證查驗費 */
-  certificateVerificationFee: Scalars['String'];
-  id: Scalars['ID'];
+  certificateVerificationFee: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
   /** 代輸費 */
-  substitutionFee: Scalars['String'];
-  updatedAt: Scalars['DateTime'];
+  substitutionFee: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
 };
 
 export enum GenerationType {
@@ -482,13 +484,13 @@ export type Guest = Account & {
   __typename?: 'Guest';
   actions: Array<Action>;
   company: Company;
-  companyName: Scalars['String'];
-  createdAt: Scalars['DateTime'];
+  companyName: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
   creator?: Maybe<Admin>;
-  email: Scalars['String'];
-  hasSetPassword: Scalars['Boolean'];
-  id: Scalars['ID'];
-  name: Scalars['String'];
+  email: Scalars['String']['output'];
+  hasSetPassword: Scalars['Boolean']['output'];
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
   recipientAccounts?: Maybe<Array<RecipientAccount>>;
   removeRecord?: Maybe<RemoveAccountRecord>;
   role: Role;
@@ -497,30 +499,30 @@ export type Guest = Account & {
 export type GuestPage = {
   __typename?: 'GuestPage';
   list: Array<Guest>;
-  total: Scalars['Int'];
+  total: Scalars['Int']['output'];
 };
 
 export type InvalidCurrentPasswordError = Error & {
   __typename?: 'InvalidCurrentPasswordError';
-  id: Scalars['ID'];
-  message: Scalars['String'];
+  id: Scalars['ID']['output'];
+  message: Scalars['String']['output'];
 };
 
 export type InvalidSignInInputError = Error & {
   __typename?: 'InvalidSignInInputError';
-  id: Scalars['ID'];
-  message: Scalars['String'];
+  id: Scalars['ID']['output'];
+  message: Scalars['String']['output'];
 };
 
 export type ModifyUserInput = {
   bankAccounts: Array<BankAccountInput>;
-  companyAddress: Scalars['String'];
-  contactEmail: Scalars['String'];
-  contactName: Scalars['String'];
-  contactPhone: Scalars['String'];
-  name: Scalars['String'];
-  notes?: InputMaybe<Scalars['String']>;
-  warning?: InputMaybe<Scalars['String']>;
+  companyAddress: Scalars['String']['input'];
+  contactEmail: Scalars['String']['input'];
+  contactName: Scalars['String']['input'];
+  contactPhone: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  notes?: InputMaybe<Scalars['String']['input']>;
+  warning?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type ModifyUserResponse = AccountAlreadyExistsError | User;
@@ -568,8 +570,8 @@ export type Mutation = {
 
 
 export type MutationChangePasswordArgs = {
-  currentPassword: Scalars['String'];
-  newPassword: Scalars['String'];
+  currentPassword: Scalars['String']['input'];
+  newPassword: Scalars['String']['input'];
 };
 
 
@@ -620,28 +622,28 @@ export type MutationCreateUserBillArgs = {
 
 export type MutationCreateUserContractArgs = {
   input: CreateUserContractInput;
-  userId: Scalars['String'];
+  userId: Scalars['String']['input'];
 };
 
 
 export type MutationModifyAccountArgs = {
-  companyId?: InputMaybe<Scalars['ID']>;
-  email?: InputMaybe<Scalars['String']>;
-  id: Scalars['ID'];
-  name?: InputMaybe<Scalars['String']>;
+  companyId?: InputMaybe<Scalars['ID']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+  name?: InputMaybe<Scalars['String']['input']>;
   recipientAccounts?: InputMaybe<Array<UpdateRecipientAccountInput>>;
 };
 
 
 export type MutationModifyProfileArgs = {
-  email?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
   recipientAccounts?: InputMaybe<Array<UpdateRecipientAccountInput>>;
 };
 
 
 export type MutationModifyUserArgs = {
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['input'];
   input: ModifyUserInput;
 };
 
@@ -657,12 +659,12 @@ export type MutationRemoveAdminArgs = {
 
 
 export type MutationRemoveCompanyArgs = {
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['input'];
 };
 
 
 export type MutationRemoveCompanyContractArgs = {
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['input'];
 };
 
 
@@ -672,7 +674,7 @@ export type MutationRemoveGuestArgs = {
 
 
 export type MutationRemovePowerPlantArgs = {
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['input'];
 };
 
 
@@ -682,7 +684,7 @@ export type MutationRemoveTpcBillArgs = {
 
 
 export type MutationRemoveTransferDocumentArgs = {
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['input'];
 };
 
 
@@ -697,30 +699,30 @@ export type MutationRemoveUserBillArgs = {
 
 
 export type MutationRequestResetPasswordArgs = {
-  id: Scalars['ID'];
-  oldPassword: Scalars['String'];
+  id: Scalars['ID']['input'];
+  oldPassword: Scalars['String']['input'];
 };
 
 
 export type MutationResetPasswordArgs = {
-  newPassword: Scalars['String'];
-  token: Scalars['ID'];
+  newPassword: Scalars['String']['input'];
+  token: Scalars['ID']['input'];
 };
 
 
 export type MutationSendResetPasswordEmailArgs = {
-  id: Scalars['ID'];
+  id: Scalars['ID']['input'];
 };
 
 
 export type MutationSetPasswordArgs = {
-  newPassword: Scalars['String'];
+  newPassword: Scalars['String']['input'];
 };
 
 
 export type MutationSignInArgs = {
-  email: Scalars['String'];
-  password: Scalars['String'];
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
 };
 
 
@@ -745,15 +747,15 @@ export type MutationUpdatePowerPlantArgs = {
 
 
 export type MutationUpdateTransferDocumentArgs = {
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['input'];
   input: UpdateTransferDocumentInput;
 };
 
 
 export type MutationUpdateTransferDocumentStageArgs = {
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['input'];
   input?: InputMaybe<UpdateTransferDocumentStageInput>;
-  moveNextStep: Scalars['Boolean'];
+  moveNextStep: Scalars['Boolean']['input'];
 };
 
 
@@ -763,40 +765,40 @@ export type MutationUpdateUserBillArgs = {
 
 export type PasswordReset = {
   __typename?: 'PasswordReset';
-  id: Scalars['ID'];
+  id: Scalars['ID']['output'];
 };
 
 export type PasswordResetExpiredError = Error & {
   __typename?: 'PasswordResetExpiredError';
-  id: Scalars['ID'];
-  message: Scalars['String'];
+  id: Scalars['ID']['output'];
+  message: Scalars['String']['output'];
 };
 
 export type PowerPlant = {
   __typename?: 'PowerPlant';
-  address: Scalars['String'];
-  annualPowerGeneration: Scalars['String'];
-  createdAt: Scalars['DateTime'];
-  createdBy?: Maybe<Scalars['String']>;
+  address: Scalars['String']['output'];
+  annualPowerGeneration: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  createdBy?: Maybe<Scalars['String']['output']>;
   energyType: EnergyType;
-  estimatedAnnualPowerGeneration: Scalars['Int'];
+  estimatedAnnualPowerGeneration: Scalars['Int']['output'];
   /** 電廠預計年供電量 */
-  estimatedAnnualPowerSupply: Scalars['String'];
+  estimatedAnnualPowerSupply: Scalars['String']['output'];
   generationType: GenerationType;
-  id: Scalars['ID'];
-  name: Scalars['String'];
-  number: Scalars['String'];
-  supplyVolume: Scalars['Int'];
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  number: Scalars['String']['output'];
+  supplyVolume: Scalars['Int']['output'];
   /** 供電容量比例 */
-  transferRate: Scalars['Int'];
+  transferRate: Scalars['Int']['output'];
   /** 電廠裝置容量 */
-  volume: Scalars['Int'];
+  volume: Scalars['Int']['output'];
 };
 
 export type PowerPlantPage = {
   __typename?: 'PowerPlantPage';
   list: Array<PowerPlant>;
-  total: Scalars['Int'];
+  total: Scalars['Int']['output'];
 };
 
 export type Query = {
@@ -829,118 +831,119 @@ export type Query = {
 
 
 export type QueryAccountsArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QueryAdminsArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   role?: InputMaybe<AdminRole>;
 };
 
 
 export type QueryCompaniesArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QueryCompanyArgs = {
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['input'];
 };
 
 
 export type QueryCompanyContractArgs = {
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['input'];
 };
 
 
 export type QueryCompanyContractsArgs = {
-  companyId: Scalars['ID'];
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  companyId: Scalars['ID']['input'];
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QueryGuestArgs = {
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['input'];
 };
 
 
 export type QueryGuestsArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   roles?: Array<Role>;
 };
 
 
 export type QueryPowerPlantArgs = {
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['input'];
 };
 
 
 export type QueryPowerPlantsArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  companyContractId?: InputMaybe<Scalars['UUID']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QueryTpcBillArgs = {
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['input'];
 };
 
 
 export type QueryTpcBillsArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  transferDocumentId?: InputMaybe<Scalars['UUID']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  transferDocumentId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 
 export type QueryTransferDocumentArgs = {
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['input'];
 };
 
 
 export type QueryTransferDocumentsArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QueryUserArgs = {
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['input'];
 };
 
 
 export type QueryUserBillArgs = {
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['input'];
 };
 
 
 export type QueryUserBillsArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QueryUserContractArgs = {
-  id: Scalars['UUID'];
+  id: Scalars['UUID']['input'];
 };
 
 
 export type QueryUserContractsArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  userId?: InputMaybe<Scalars['UUID']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  userId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 
 export type QueryUsersArgs = {
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
   roles?: Array<Role>;
 };
 
@@ -952,104 +955,104 @@ export enum RateType {
 export type RecipientAccount = {
   __typename?: 'RecipientAccount';
   /** 帳號 */
-  account: Scalars['String'];
+  account: Scalars['String']['output'];
   /** 戶名 */
-  accountName: Scalars['String'];
+  accountName: Scalars['String']['output'];
   /** 分行代碼 */
-  bankBranchCode: Scalars['String'];
+  bankBranchCode: Scalars['String']['output'];
   /** 分行名稱 */
-  bankBranchName: Scalars['String'];
+  bankBranchName: Scalars['String']['output'];
   /** 銀行代碼 */
-  bankCode: Scalars['String'];
+  bankCode: Scalars['String']['output'];
   /** 銀行名稱 */
-  bankName: Scalars['String'];
+  bankName: Scalars['String']['output'];
 };
 
 export type RemainingDemandFromCompanyContract = {
   __typename?: 'RemainingDemandFromCompanyContract';
-  capacity: Scalars['Int'];
+  capacity: Scalars['Int']['output'];
   company: Company;
-  contractDoc: Scalars['String'];
+  contractDoc: Scalars['String']['output'];
   contractTimeType: ContractTimeType;
   /** 轉供條件 */
-  daysToPay: Scalars['Int'];
-  description?: Maybe<Scalars['String']>;
+  daysToPay: Scalars['Int']['output'];
+  description?: Maybe<Scalars['String']['output']>;
   /** 合約年限 */
-  duration: Scalars['String'];
-  endedAt?: Maybe<Scalars['DateTime']>;
-  id: Scalars['ID'];
-  industryDoc: Scalars['String'];
+  duration: Scalars['String']['output'];
+  endedAt?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['ID']['output'];
+  industryDoc: Scalars['String']['output'];
   monthlyTransferDegrees: Array<Array<TransferDegree>>;
-  name: Scalars['String'];
+  name: Scalars['String']['output'];
   /** 合約編號 */
-  number: Scalars['String'];
+  number: Scalars['String']['output'];
   /** 合約價格 */
-  price?: Maybe<Scalars['String']>;
+  price?: Maybe<Scalars['String']['output']>;
   /** 單一費率/個別費率 */
   rateType: RateType;
-  startedAt: Scalars['DateTime'];
+  startedAt: Scalars['DateTime']['output'];
   /** 裝置量=該合約所有的電廠裡面的裝置量的加總 */
-  totalVolume: Scalars['Int'];
-  transferAt?: Maybe<Scalars['DateTime']>;
-  transferDoc: Scalars['String'];
+  totalVolume: Scalars['Int']['output'];
+  transferAt?: Maybe<Scalars['DateTime']['output']>;
+  transferDoc: Scalars['String']['output'];
   /** 轉供率要求（%） */
-  transferRate: Scalars['Int'];
+  transferRate: Scalars['Int']['output'];
 };
 
 export type RemainingDemandFromUserContract = {
   __typename?: 'RemainingDemandFromUserContract';
-  capacity: Scalars['Int'];
-  contractDoc: Scalars['String'];
+  capacity: Scalars['Int']['output'];
+  contractDoc: Scalars['String']['output'];
   contractTimeType: ContractTimeType;
   /** 電號資訊 */
   electricNumberInfos: Array<ElectricNumberInfo>;
-  id: Scalars['ID'];
-  lowerLimit: Scalars['Int'];
-  name: Scalars['String'];
-  price: Scalars['String'];
-  purchaseDegree: Scalars['Int'];
-  salesAt: Scalars['DateTime'];
-  salesPeriod: Scalars['String'];
-  salesTo?: Maybe<Scalars['DateTime']>;
-  serialNumber: Scalars['String'];
-  transferAt?: Maybe<Scalars['DateTime']>;
-  upperLimit: Scalars['Int'];
+  id: Scalars['ID']['output'];
+  lowerLimit: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+  price: Scalars['String']['output'];
+  purchaseDegree: Scalars['Int']['output'];
+  salesAt: Scalars['DateTime']['output'];
+  salesPeriod: Scalars['String']['output'];
+  salesTo?: Maybe<Scalars['DateTime']['output']>;
+  serialNumber: Scalars['String']['output'];
+  transferAt?: Maybe<Scalars['DateTime']['output']>;
+  upperLimit: Scalars['Int']['output'];
   userType: UserType;
 };
 
 export type RemoveAccountInput = {
-  accountId: Scalars['ID'];
-  reason?: InputMaybe<Scalars['String']>;
+  accountId: Scalars['ID']['input'];
+  reason?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type RemoveAccountRecord = {
   __typename?: 'RemoveAccountRecord';
   account: Account;
-  createdAt: Scalars['DateTime'];
+  createdAt: Scalars['DateTime']['output'];
   creator: Account;
-  reason: Scalars['String'];
+  reason: Scalars['String']['output'];
 };
 
 export type RemoveAdminInput = {
-  adminId: Scalars['ID'];
-  reason: Scalars['String'];
+  adminId: Scalars['ID']['input'];
+  reason: Scalars['String']['input'];
 };
 
 export type RemoveGuestInput = {
-  guestId: Scalars['UUID'];
-  reason: Scalars['String'];
+  guestId: Scalars['UUID']['input'];
+  reason: Scalars['String']['input'];
 };
 
 export type RemoveTpcBillInput = {
-  tpcBillId: Scalars['UUID'];
+  tpcBillId: Scalars['UUID']['input'];
 };
 
 export type RemoveUserBillInput = {
-  userBillId: Scalars['UUID'];
+  userBillId: Scalars['UUID']['input'];
 };
 
 export type RemoveUserInput = {
-  userId: Scalars['UUID'];
+  userId: Scalars['UUID']['input'];
 };
 
 export type RequestResetPasswordResponse = AccountNotFoundError | InvalidSignInInputError | PasswordReset;
@@ -1076,29 +1079,29 @@ export type SignInResponse = Admin | Guest | InvalidSignInInputError;
 
 export type Success = {
   __typename?: 'Success';
-  id: Scalars['ID'];
-  message: Scalars['String'];
+  id: Scalars['ID']['output'];
+  message: Scalars['String']['output'];
 };
 
 export type TpcBill = {
   __typename?: 'TPCBill';
-  billDoc: Scalars['String'];
-  billReceivedDate: Scalars['DateTime'];
-  id: Scalars['ID'];
+  billDoc: Scalars['String']['output'];
+  billReceivedDate: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
   transferDegrees: Array<TransferDegree>;
 };
 
 export type TpcBillPage = {
   __typename?: 'TPCBillPage';
   list: Array<TpcBill>;
-  total: Scalars['Int'];
+  total: Scalars['Int']['output'];
 };
 
 export type TransferDegree = {
   __typename?: 'TransferDegree';
-  createdAt: Scalars['DateTime'];
-  degree: Scalars['Int'];
-  id: Scalars['ID'];
+  createdAt: Scalars['DateTime']['output'];
+  degree: Scalars['Int']['output'];
+  id: Scalars['ID']['output'];
   powerPlant: PowerPlant;
   user: User;
   userContract: UserContract;
@@ -1106,173 +1109,173 @@ export type TransferDegree = {
 
 export type TransferDocument = {
   __typename?: 'TransferDocument';
-  contractCompletionDate?: Maybe<Scalars['DateTime']>;
-  contractReviewDate?: Maybe<Scalars['DateTime']>;
+  contractCompletionDate?: Maybe<Scalars['DateTime']['output']>;
+  contractReviewDate?: Maybe<Scalars['DateTime']['output']>;
   /** 期望完成日：這份轉供合約涵蓋的用戶契約，在契約中約定的約定轉供日 */
-  expectedTime: Scalars['DateTime'];
-  formalDoc: Scalars['String'];
-  id: Scalars['ID'];
-  name: Scalars['String'];
+  expectedTime: Scalars['DateTime']['output'];
+  formalDoc: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
   /** 轉供契約編號 */
-  number?: Maybe<Scalars['String']>;
-  officialTransferDate?: Maybe<Scalars['DateTime']>;
-  planSubmissionDate?: Maybe<Scalars['DateTime']>;
-  printingDoc: Scalars['String'];
-  receptionAreas: Scalars['String'];
-  replyDoc: Scalars['String'];
-  responseAcquisitionDate?: Maybe<Scalars['DateTime']>;
+  number?: Maybe<Scalars['String']['output']>;
+  officialTransferDate?: Maybe<Scalars['DateTime']['output']>;
+  planSubmissionDate?: Maybe<Scalars['DateTime']['output']>;
+  printingDoc: Scalars['String']['output'];
+  receptionAreas: Scalars['String']['output'];
+  replyDoc: Scalars['String']['output'];
+  responseAcquisitionDate?: Maybe<Scalars['DateTime']['output']>;
   transferDocumentPowerPlants: Array<TransferDocumentPowerPlant>;
   transferDocumentUsers: Array<TransferDocumentUser>;
-  wordDoc: Scalars['String'];
+  wordDoc: Scalars['String']['output'];
 };
 
 export type TransferDocumentPage = {
   __typename?: 'TransferDocumentPage';
   list: Array<TransferDocument>;
-  total: Scalars['Int'];
+  total: Scalars['Int']['output'];
 };
 
 export type TransferDocumentPowerPlant = {
   __typename?: 'TransferDocumentPowerPlant';
-  estimateAnnualSupply: Scalars['Int'];
+  estimateAnnualSupply: Scalars['Int']['output'];
   powerPlant: PowerPlant;
-  transferRate: Scalars['Int'];
+  transferRate: Scalars['Int']['output'];
 };
 
 export type TransferDocumentUser = {
   __typename?: 'TransferDocumentUser';
   electricNumberInfo: ElectricNumberInfo;
-  expectedYearlyPurchaseDegree: Scalars['Int'];
-  monthlyTransferDegree: Scalars['Int'];
+  expectedYearlyPurchaseDegree: Scalars['Int']['output'];
+  monthlyTransferDegree: Scalars['Int']['output'];
   user: User;
   userContract: UserContract;
-  yearlyTransferDegree: Scalars['Int'];
+  yearlyTransferDegree: Scalars['Int']['output'];
 };
 
 export type UpdateCompanyContractInput = {
-  companyContractId: Scalars['ID'];
-  contractDoc?: InputMaybe<Scalars['String']>;
+  companyContractId: Scalars['ID']['input'];
+  contractDoc?: InputMaybe<Scalars['String']['input']>;
   contractTimeType: ContractTimeType;
-  daysToPay?: InputMaybe<Scalars['Int']>;
-  description?: InputMaybe<Scalars['String']>;
-  duration?: InputMaybe<Scalars['String']>;
-  endedAt?: InputMaybe<Scalars['DateTime']>;
-  industryDoc?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  number?: InputMaybe<Scalars['String']>;
-  price?: InputMaybe<Scalars['String']>;
-  startedAt?: InputMaybe<Scalars['DateTime']>;
-  transferAt?: InputMaybe<Scalars['DateTime']>;
-  transferDoc?: InputMaybe<Scalars['String']>;
-  transferRate?: InputMaybe<Scalars['Int']>;
+  daysToPay?: InputMaybe<Scalars['Int']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  duration?: InputMaybe<Scalars['String']['input']>;
+  endedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  industryDoc?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  number?: InputMaybe<Scalars['String']['input']>;
+  price?: InputMaybe<Scalars['String']['input']>;
+  startedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  transferAt?: InputMaybe<Scalars['DateTime']['input']>;
+  transferDoc?: InputMaybe<Scalars['String']['input']>;
+  transferRate?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type UpdateCompanyInput = {
-  companyId: Scalars['ID'];
-  contactEmail?: InputMaybe<Scalars['String']>;
-  contactName?: InputMaybe<Scalars['String']>;
-  contactPhone?: InputMaybe<Scalars['String']>;
-  name?: InputMaybe<Scalars['String']>;
-  taxId?: InputMaybe<Scalars['String']>;
+  companyId: Scalars['ID']['input'];
+  contactEmail?: InputMaybe<Scalars['String']['input']>;
+  contactName?: InputMaybe<Scalars['String']['input']>;
+  contactPhone?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  taxId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateFeeInput = {
-  certificateServiceFee?: InputMaybe<Scalars['String']>;
-  certificateVerificationFee?: InputMaybe<Scalars['String']>;
-  substitutionFee?: InputMaybe<Scalars['String']>;
+  certificateServiceFee?: InputMaybe<Scalars['String']['input']>;
+  certificateVerificationFee?: InputMaybe<Scalars['String']['input']>;
+  substitutionFee?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdatePowerPlantInput = {
-  address: Scalars['String'];
-  estimatedAnnualPowerGeneration: Scalars['Int'];
-  id: Scalars['ID'];
-  name: Scalars['String'];
-  number: Scalars['String'];
-  transferRate: Scalars['Int'];
-  volume: Scalars['Int'];
+  address: Scalars['String']['input'];
+  estimatedAnnualPowerGeneration: Scalars['Int']['input'];
+  id: Scalars['ID']['input'];
+  name: Scalars['String']['input'];
+  number: Scalars['String']['input'];
+  transferRate: Scalars['Int']['input'];
+  volume: Scalars['Int']['input'];
 };
 
 export type UpdateRecipientAccountInput = {
-  account: Scalars['String'];
-  accountName: Scalars['String'];
-  bankBranchCode: Scalars['String'];
-  bankCode: Scalars['String'];
+  account: Scalars['String']['input'];
+  accountName: Scalars['String']['input'];
+  bankBranchCode: Scalars['String']['input'];
+  bankCode: Scalars['String']['input'];
 };
 
 export type UpdateTransferDocumentInput = {
-  expectedTime: Scalars['DateTime'];
-  formalDoc: Scalars['String'];
-  name: Scalars['String'];
+  expectedTime: Scalars['DateTime']['input'];
+  formalDoc: Scalars['String']['input'];
+  name: Scalars['String']['input'];
   powerPlants: Array<CreateTransferDocumentPowerPlantInput>;
-  printingDoc: Scalars['String'];
-  receptionAreas: Scalars['String'];
-  replyDoc: Scalars['String'];
+  printingDoc: Scalars['String']['input'];
+  receptionAreas: Scalars['String']['input'];
+  replyDoc: Scalars['String']['input'];
   users: Array<CreateTransferDocumentUserInput>;
-  wordDoc: Scalars['String'];
+  wordDoc: Scalars['String']['input'];
 };
 
 export type UpdateTransferDocumentStageInput = {
-  date: Scalars['DateTime'];
-  number?: InputMaybe<Scalars['String']>;
+  date: Scalars['DateTime']['input'];
+  number?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateUserBillInput = {
-  address: Scalars['String'];
-  contactEmail: Scalars['String'];
-  contactName: Scalars['String'];
-  contactPhone: Scalars['String'];
+  address: Scalars['String']['input'];
+  contactEmail: Scalars['String']['input'];
+  contactName: Scalars['String']['input'];
+  contactPhone: Scalars['String']['input'];
   credentialInspectionFee: ChargeType;
   credentialServiceFee: ChargeType;
-  electricNumbers: Array<Scalars['String']>;
+  electricNumbers: Array<Scalars['String']['input']>;
   /** 預計電費單寄出期限（收到繳費通知單後天數 */
-  estimatedBillDeliverDate: Scalars['Float'];
-  id: Scalars['ID'];
-  name: Scalars['String'];
-  noticeForTPCBill: Scalars['Boolean'];
-  noticeForTheBuilding: Scalars['Boolean'];
+  estimatedBillDeliverDate: Scalars['Float']['input'];
+  id: Scalars['ID']['input'];
+  name: Scalars['String']['input'];
+  noticeForTPCBill: Scalars['Boolean']['input'];
+  noticeForTheBuilding: Scalars['Boolean']['input'];
   /** 用戶繳費期限（收到繳費通知單後天數） */
-  paymentDeadline: Scalars['Float'];
+  paymentDeadline: Scalars['Float']['input'];
   recipientAccount: UserBillRecipientAccountInput;
   transportationFee: ChargeType;
-  userId: Scalars['String'];
+  userId: Scalars['String']['input'];
 };
 
 export type User = {
   __typename?: 'User';
   bankAccounts: Array<BankAccount>;
-  companyAddress: Scalars['String'];
-  contactEmail: Scalars['String'];
-  contactName: Scalars['String'];
-  contactPhone: Scalars['String'];
-  estimatedTransferDegree: Scalars['String'];
+  companyAddress: Scalars['String']['output'];
+  contactEmail: Scalars['String']['output'];
+  contactName: Scalars['String']['output'];
+  contactPhone: Scalars['String']['output'];
+  estimatedTransferDegree: Scalars['String']['output'];
   /** 用戶預計年採購度數 */
-  expectedYearlyPurchaseDegree: Scalars['String'];
-  id: Scalars['ID'];
+  expectedYearlyPurchaseDegree: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
   lastMonthTransferRecords: Array<TransferDegree>;
-  name: Scalars['String'];
-  notes?: Maybe<Scalars['String']>;
+  name: Scalars['String']['output'];
+  notes?: Maybe<Scalars['String']['output']>;
   thisYearTransferRecords: Array<TransferDegree>;
-  warning?: Maybe<Scalars['String']>;
+  warning?: Maybe<Scalars['String']['output']>;
 };
 
 export type UserBill = {
   __typename?: 'UserBill';
-  address: Scalars['String'];
-  contactEmail: Scalars['String'];
-  contactName: Scalars['String'];
-  contactPhone: Scalars['String'];
-  createdAt: Scalars['DateTime'];
+  address: Scalars['String']['output'];
+  contactEmail: Scalars['String']['output'];
+  contactName: Scalars['String']['output'];
+  contactPhone: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
   credentialInspectionFee: ChargeType;
   credentialServiceFee: ChargeType;
   electricNumberInfos: Array<UserBillElectricNumberInfo>;
   /** 預計電費單寄出期限（收到繳費通知單後天數 */
-  estimatedBillDeliverDate: Scalars['Int'];
-  id: Scalars['ID'];
-  name: Scalars['String'];
-  noticeForTPCBill: Scalars['Boolean'];
-  noticeForTheBuilding: Scalars['Boolean'];
+  estimatedBillDeliverDate: Scalars['Int']['output'];
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  noticeForTPCBill: Scalars['Boolean']['output'];
+  noticeForTheBuilding: Scalars['Boolean']['output'];
   /** 用戶繳費期限（收到繳費通知單後天數） */
-  paymentDeadline: Scalars['Int'];
+  paymentDeadline: Scalars['Int']['output'];
   recipientAccount: UserBillRecipientAccount;
   transportationFee: ChargeType;
   user: User;
@@ -1280,64 +1283,64 @@ export type UserBill = {
 
 export type UserBillElectricNumberInfo = {
   __typename?: 'UserBillElectricNumberInfo';
-  number: Scalars['String'];
+  number: Scalars['String']['output'];
   /** 採購電價（元/kWh） */
-  price: Scalars['String'];
+  price: Scalars['String']['output'];
 };
 
 export type UserBillPage = {
   __typename?: 'UserBillPage';
   list: Array<UserBill>;
-  total: Scalars['Int'];
+  total: Scalars['Int']['output'];
 };
 
 export type UserBillRecipientAccount = {
   __typename?: 'UserBillRecipientAccount';
   /** 帳號 */
-  account: Scalars['String'];
+  account: Scalars['String']['output'];
   /** 分行代碼 */
-  bankBranchCode: Scalars['String'];
+  bankBranchCode: Scalars['String']['output'];
   /** 銀行代碼 */
-  bankCode: Scalars['String'];
+  bankCode: Scalars['String']['output'];
 };
 
 export type UserBillRecipientAccountInput = {
   /** 帳號 */
-  account: Scalars['String'];
+  account: Scalars['String']['input'];
   /** 銀行代碼 */
-  bankCode: Scalars['String'];
+  bankCode: Scalars['String']['input'];
 };
 
 export type UserContract = {
   __typename?: 'UserContract';
-  contractDoc: Scalars['String'];
+  contractDoc: Scalars['String']['output'];
   contractTimeType: ContractTimeType;
   /** 電號資訊 */
   electricNumberInfos: Array<ElectricNumberInfo>;
-  id: Scalars['ID'];
-  lowerLimit: Scalars['Int'];
-  name: Scalars['String'];
-  price: Scalars['String'];
-  purchaseDegree: Scalars['Int'];
-  salesAt: Scalars['DateTime'];
-  salesPeriod: Scalars['String'];
-  salesTo?: Maybe<Scalars['DateTime']>;
-  serialNumber: Scalars['String'];
-  transferAt?: Maybe<Scalars['DateTime']>;
-  upperLimit: Scalars['Int'];
+  id: Scalars['ID']['output'];
+  lowerLimit: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+  price: Scalars['String']['output'];
+  purchaseDegree: Scalars['Int']['output'];
+  salesAt: Scalars['DateTime']['output'];
+  salesPeriod: Scalars['String']['output'];
+  salesTo?: Maybe<Scalars['DateTime']['output']>;
+  serialNumber: Scalars['String']['output'];
+  transferAt?: Maybe<Scalars['DateTime']['output']>;
+  upperLimit: Scalars['Int']['output'];
   userType: UserType;
 };
 
 export type UserContractPage = {
   __typename?: 'UserContractPage';
   list: Array<UserContract>;
-  total: Scalars['Int'];
+  total: Scalars['Int']['output'];
 };
 
 export type UserPage = {
   __typename?: 'UserPage';
   list: Array<User>;
-  total: Scalars['Int'];
+  total: Scalars['Int']['output'];
 };
 
 export enum UserType {

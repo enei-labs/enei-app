@@ -6,10 +6,12 @@ export const POWER_PLANTS = gql`
   query powerPlants(
     $limit: Int = 10
     $offset: Int = 0
+    $companyContractId: UUID
   ) {
     powerPlants(
       limit: $limit
       offset: $offset
+      companyContractId: $companyContractId
     ) {
       total
       list {

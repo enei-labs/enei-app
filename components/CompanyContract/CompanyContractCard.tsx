@@ -248,7 +248,7 @@ function CompanyContractCard(props: CompanyContractCardProps) {
             <InputSearch />
             <AddPowerPlantBtn companyContractId={companyContract.id} />
           </Box>
-          <PowerPlantPanel />
+          <PowerPlantPanel companyContractId={companyContract.id} />
         </Box>
       </Card>
       {openDeleteDialog ? (

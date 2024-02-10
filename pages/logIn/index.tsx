@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 import Logo from "public/logo-with-name.svg";
 import LoginIcon from "@mui/icons-material/Login";
 import dynamic from "next/dynamic";
-import { ME } from "@core/graphql/queries";
+import { useRouter } from "next/router";
 
 const LogInSetNewPwdDialog = dynamic(
   () => import("@components/LogIn/LogInSetNewPwdDialog")
@@ -44,6 +44,7 @@ const configs: FieldConfig[] = [
 
 const LogIn = () => {
   const { logIn } = useAuth();
+  const router = useRouter();
 
   const [open, setOpen] = useState(false);
 
@@ -61,7 +62,7 @@ const LogIn = () => {
         email: formData.email,
         password: formData.password,
       },
-      onCompleted: (data) => {
+      onCompleted: async (data) => {
         if (data.signIn.__typename === "InvalidSignInInputError") {
           toast.error("帳號或密碼不正確");
           return;
@@ -76,7 +77,8 @@ const LogIn = () => {
           return;
         } else {
           toast.success("登入成功");
-          logIn();
+          await logIn();
+          await router.push("/main");
         }
       },
     });
