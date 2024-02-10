@@ -3,8 +3,8 @@ import type { DatePickerProps } from "@mui/x-date-pickers/DatePicker";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { formatDateTime } from "@utils/format";
-import TextField from "@mui/material/TextField";
 import { forwardRef } from "react";
+import InputText from "@components/Input/InputText";
 
 interface InputDateProps
   extends Omit<DatePickerProps<Date>, "value" | "onChange"> {
@@ -30,9 +30,10 @@ const InputDate = forwardRef<HTMLDivElement, InputDateProps>((props, ref) => {
         value={value ? new Date(value) : null}
         onChange={(newValue) => handleChange(newValue)}
         slots={(params: any) => (
-          <TextField
+          <InputText
             {...params}
-            inputRef={ref}
+            ref={undefined}
+            label={label}
             required={required}
             helperText={helperText}
           />

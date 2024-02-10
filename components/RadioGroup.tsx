@@ -1,3 +1,4 @@
+import { forwardRef } from "react";
 import {
   FormControl,
   FormControlLabel,
@@ -17,11 +18,11 @@ interface RadioGroupProps extends MuiRadioGroupProps {
   disabled?: boolean;
 }
 
-function RadioGroup(props: RadioGroupProps) {
+const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>((props, ref) => {
   const { label, radios, row = false, ...field } = props;
 
   return (
-    <FormControl size="small" sx={{ alignItems: "flex-start" }}>
+    <FormControl ref={ref} size="small" sx={{ alignItems: "flex-start" }}>
       <FormLabel sx={{ fontSize: "14px" }}>{label}</FormLabel>
       <MuiRadioGroup {...field} row={row}>
         {radios.map((radio) => (
@@ -39,6 +40,7 @@ function RadioGroup(props: RadioGroupProps) {
       </MuiRadioGroup>
     </FormControl>
   );
-}
+});
 
+RadioGroup.displayName = "RadioGroup";
 export default RadioGroup;

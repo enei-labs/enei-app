@@ -1,25 +1,27 @@
-import { Option } from '@core/types'
-import Autocomplete, { AutocompleteRenderInputParams } from '@mui/material/Autocomplete'
-import Box from '@mui/material/Box'
-import Checkbox from '@mui/material/Checkbox'
-import TextField from '@mui/material/TextField'
-import React from 'react'
+import InputText from "@components/Input/InputText";
+import { Option } from "@core/types";
+import Autocomplete, {
+  AutocompleteRenderInputParams,
+} from "@mui/material/Autocomplete";
+import Box from "@mui/material/Box";
+import Checkbox from "@mui/material/Checkbox";
+import { ControllerRenderProps } from "react-hook-form";
 
 interface InputAutocompleteListProps {
-  label?: React.ReactNode
-  options: Option[]
-  required?: boolean
-  helperText?: React.ReactNode
-  placeholder?: string
-  onChange?: (value: Option[]) => void
+  label?: React.ReactNode;
+  options: Option[];
+  required?: boolean;
+  helperText?: React.ReactNode;
+  placeholder?: string;
+  onChange?: ControllerRenderProps["onChange"];
 }
 
 const style = {
   option: {
-    height: '33px',
-    padding: '0 !important',
+    height: "33px",
+    padding: "0 !important",
   },
-}
+};
 
 const InputAutocompleteList: React.FC<InputAutocompleteListProps> = ({
   label,
@@ -48,7 +50,7 @@ const InputAutocompleteList: React.FC<InputAutocompleteListProps> = ({
         </Box>
       )}
       renderInput={(params: AutocompleteRenderInputParams) => (
-        <TextField
+        <InputText
           {...params}
           label={label}
           required={required}
