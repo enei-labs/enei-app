@@ -220,7 +220,7 @@ const AddCompanyContractBtn = (props: CompanyContractProps) => {
             dispatch({ showPowerPlantDialog: false });
           }}
           variant="create"
-          companyContractId={state.companyContract.id}
+          companyContract={state.companyContract}
         />
       ) : null}
     </>
