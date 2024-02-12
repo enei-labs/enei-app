@@ -20,7 +20,7 @@ const options = {
   dataLabels: {
     enabled: true,
     formatter: function (val: any) {
-      return val + "%";
+      return val.toFixed(1) + "%";
     },
     offsetY: -20,
     style: {
@@ -76,7 +76,7 @@ const options = {
     labels: {
       show: true,
       formatter: function (val: any) {
-        return val + "%";
+        return val.toFixed(1) + "%";
       },
     },
   },
@@ -131,9 +131,7 @@ export default function UserTransferDegreeChart(props: DemoChartProps) {
           onChange={(newValue: any) => {
             setValue(newValue);
           }}
-          slots={(params: any) => (
-            <TextField {...params} helperText={null} />
-          )}
+          slots={(params: any) => <TextField {...params} helperText={null} />}
         />
       </Box>
       <Chart
