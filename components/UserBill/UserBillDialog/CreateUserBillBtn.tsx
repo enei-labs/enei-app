@@ -59,7 +59,7 @@ const CreateUserBillBtn = (props: CreateUserBillBtnProps) => {
       startIcon={<AddIcon />}
       onClick={handleSubmit(onCreateUserBill)}
     >
-      新增
+      儲存
     </LoadingButton>
   );
 };

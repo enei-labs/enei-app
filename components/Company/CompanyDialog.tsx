@@ -152,7 +152,7 @@ const CompanyDialog = (props: CompanyDialogProps) => {
         loading={loading}
         onClick={handleSubmit(onSubmit)}
       >
-        {variant === "edit" ? "更新" : "新增"}
+        儲存
       </LoadingButton>
     </Dialog>
   );

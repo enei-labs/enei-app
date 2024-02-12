@@ -191,7 +191,7 @@ export default function TPCBillDialog(props: TPCBillDialogProps) {
           startIcon={<AddIcon />}
           onClick={handleSubmit(onCreateTPCBill)}
         >
-          新增
+          儲存
         </LoadingButton>
       </>
     </Dialog>

@@ -50,7 +50,7 @@ const CreateUserBtn = (props: CreateUserBtnProps) => {
       startIcon={<AddIcon />}
       onClick={handleSubmit(onCreateUser)}
     >
-      新增
+      儲存
     </LoadingButton>
   );
 };

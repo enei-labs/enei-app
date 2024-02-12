@@ -479,7 +479,7 @@ function UserContractDialog(props: UserContractDialogProps) {
             loading={loading}
             onClick={handleSubmit(onSubmit)}
           >
-            新增
+            儲存
           </LoadingButton>
         </Grid>
       </>

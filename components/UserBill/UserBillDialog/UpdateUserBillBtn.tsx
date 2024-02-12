@@ -61,7 +61,7 @@ const UpdateUserBillBtn = (props: UpdateUserBillBtnProps) => {
       startIcon={<AddIcon />}
       onClick={handleSubmit(onUpdateUserBill)}
     >
-      更新
+      儲存
     </LoadingButton>
   );
 };

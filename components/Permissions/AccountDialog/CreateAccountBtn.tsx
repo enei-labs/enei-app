@@ -49,7 +49,7 @@ const CreateAccountBtn = (props: CreateAccountBtnProps) => {
       startIcon={<AddIcon />}
       onClick={handleSubmit(onCreateAccount)}
     >
-      新增
+      儲存
     </LoadingButton>
   );
 };
