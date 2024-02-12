@@ -246,7 +246,7 @@ function CompanyContractCard(props: CompanyContractCardProps) {
             }}
           >
             <InputSearch />
-            <AddPowerPlantBtn companyContractId={companyContract.id} />
+            <AddPowerPlantBtn companyContract={companyContract} />
           </Box>
           <PowerPlantPanel companyContractId={companyContract.id} />
         </Box>

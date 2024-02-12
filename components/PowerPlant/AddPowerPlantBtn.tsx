@@ -2,15 +2,16 @@ import { Button } from "@mui/material";
 import { useState } from "react";
 import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import dynamic from "next/dynamic";
+import { CompanyContract } from "@core/graphql/types";
 
 const PowerPlantDialog = dynamic(() => import("./PowerPlantDialog"));
 
 interface AddPowerPlantBtnProps {
-  companyContractId: string;
+  companyContract: CompanyContract;
 }
 
 const AddPowerPlantBtn = (props: AddPowerPlantBtnProps) => {
-  const { companyContractId } = props;
+  const { companyContract } = props;
   const [open, setOpen] = useState(false);
 
   return (
@@ -24,7 +25,7 @@ const AddPowerPlantBtn = (props: AddPowerPlantBtnProps) => {
           open={open}
           onClose={() => setOpen(false)}
           variant="create"
-          companyContractId={companyContractId}
+          companyContract={companyContract}
           defaultValues={{ transferRate: 100 }}
         />
       ) : null}

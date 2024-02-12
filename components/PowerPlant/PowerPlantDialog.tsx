@@ -1,11 +1,5 @@
 import { FieldsController } from "@components/Controller";
 import Dialog from "@components/Dialog";
-import { FieldConfig } from "@core/types";
-import {
-  numberRangeValidated,
-  numberValidated,
-  textValidated,
-} from "@core/types/fieldConfig";
 import { LoadingButton } from "@mui/lab";
 import { Grid, Typography } from "@mui/material";
 import {
@@ -18,137 +12,46 @@ import { IconBtn } from "../Button";
 import CloseIcon from "@mui/icons-material/HighlightOff";
 import { useCreatePowerPlant } from "@utils/hooks/mutations/useCreatePowerPlant";
 import { toast } from "react-toastify";
-import { EnergyType, GenerationType, PowerPlant } from "@core/graphql/types";
+import { CompanyContract, PowerPlant } from "@core/graphql/types";
+import { updateFormValues } from "@components/PowerPlant/useUpdateFormValues";
 
 type FormData = {
   name: string;
   number: string;
+  price: string;
   volume: number;
   estimatedAnnualPowerGeneration: number;
   transferRate: number;
   address: string;
 };
 
-export enum EnergyLabel {
-  SOLAR = "太陽能",
-  WIND = "風力",
-  OTHER_RENEWABLE = "其他再生能源",
-}
-
-export enum GenerationLabel {
-  TYPE_I = "第一型",
-  TYPE_II = "第二型",
-  TYPE_III = "第三型",
-}
-
-const configs: FieldConfig[] = [
-  {
-    type: "TEXT",
-    name: "name",
-    label: "電廠名稱",
-    required: true,
-    validated: textValidated,
-  },
-  {
-    type: "TEXT",
-    name: "number",
-    label: "電號",
-    required: true,
-    validated: textValidated,
-  },
-  {
-    type: "NUMBER",
-    name: "volume",
-    label: "裝置容量（kW）",
-    required: true,
-    validated: numberValidated,
-  },
-  {
-    type: "NUMBER",
-    name: "annualPowerGeneration",
-    label: "年發電量（MWh",
-    required: true,
-    validated: numberValidated,
-  },
-  {
-    type: "NUMBER",
-    name: "estimatedAnnualPowerGeneration",
-    label: "單位預估年發電量（度/kWh）",
-    required: true,
-    validated: numberValidated,
-  },
-  {
-    type: "NUMBER",
-    name: "transferRate",
-    label: "轉供比例（%）",
-    required: true,
-    validated: numberRangeValidated,
-  },
-  {
-    type: "RADIO",
-    name: "transferRate",
-    label: "能源類別",
-    radios: [
-      {
-        label: GenerationLabel.TYPE_I,
-        value: GenerationType.TypeI,
-      },
-      {
-        label: GenerationLabel.TYPE_II,
-        value: GenerationType.TypeIi,
-      },
-      {
-        label: GenerationLabel.TYPE_III,
-        value: GenerationType.TypeIii,
-      },
-    ],
-    required: true,
-  },
-  {
-    type: "RADIO",
-    name: "rateType",
-    label: "發電類型",
-    radios: [
-      {
-        label: EnergyLabel.SOLAR,
-        value: EnergyType.Solar,
-      },
-      {
-        label: EnergyLabel.WIND,
-        value: EnergyType.Wind,
-      },
-      {
-        label: EnergyLabel.OTHER_RENEWABLE,
-        value: EnergyType.OtherRenewable,
-      },
-    ],
-    required: true,
-  },
-  {
-    type: "TEXT",
-    name: "address",
-    label: "地址",
-    required: true,
-    validated: textValidated,
-  },
-];
-
 interface PowerPlantDialogProps {
   open: boolean;
   variant: "edit" | "create";
-  companyContractId?: string;
+  companyContract?: CompanyContract;
   onClose: VoidFunction;
   defaultValues?: Partial<Omit<PowerPlant, "annualPowerGeneration">>;
 }
 
 const PowerPlantDialog = (props: PowerPlantDialogProps) => {
-  const { open, companyContractId, onClose, variant, defaultValues } = props;
+  const {
+    open,
+    companyContract,
+    onClose,
+    variant,
+    defaultValues: initialDefaultValues,
+  } = props;
 
   const [createPowerPlant, updatePowerPlant, loading] = useCreateOrUpdate(
     variant,
     useCreatePowerPlant,
     useUpdatePowerPlant
   );
+
+  const { defaultValues, configs } = updateFormValues({
+    initialDefaultValues: initialDefaultValues || {},
+    companyContract,
+  });
 
   const {
     control,
@@ -159,7 +62,7 @@ const PowerPlantDialog = (props: PowerPlantDialogProps) => {
   });
 
   const onSubmit = async (formData: FormData) => {
-    if (variant === "create" && companyContractId) {
+    if (variant === "create" && companyContract) {
       await createPowerPlant({
         variables: {
           input: {
@@ -171,7 +74,7 @@ const PowerPlantDialog = (props: PowerPlantDialogProps) => {
             ),
             transferRate: Number(formData.transferRate),
             address: formData.address,
-            companyContractId,
+            companyContractId: companyContract.id,
           },
         },
         onCompleted: () => {
@@ -219,7 +122,7 @@ const PowerPlantDialog = (props: PowerPlantDialogProps) => {
         loading={loading}
         onClick={handleSubmit(onSubmit)}
       >
-        {variant === "edit" ? "更新" : "新增"}
+        儲存
       </LoadingButton>
     </Dialog>
   );
