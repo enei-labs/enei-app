@@ -788,6 +788,7 @@ export type PowerPlant = {
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
   number: Scalars['String']['output'];
+  price: Scalars['String']['output'];
   supplyVolume: Scalars['Int']['output'];
   /** 供電容量比例 */
   transferRate: Scalars['Int']['output'];
@@ -1191,6 +1192,7 @@ export type UpdatePowerPlantInput = {
   id: Scalars['ID']['input'];
   name: Scalars['String']['input'];
   number: Scalars['String']['input'];
+  price?: InputMaybe<Scalars['String']['input']>;
   transferRate: Scalars['Int']['input'];
   volume: Scalars['Int']['input'];
 };
