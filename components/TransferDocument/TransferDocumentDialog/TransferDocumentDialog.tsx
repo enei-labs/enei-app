@@ -15,6 +15,7 @@ import { Controller, useFieldArray } from "react-hook-form";
 import { InputAutocomplete, InputNumber, InputText } from "@components/Input";
 import Chip from "@components/Chip";
 import {
+  useFetchCompaniesAllData,
   useLazyUserContracts,
   usePowerPlants,
   useUsers,
@@ -189,10 +190,27 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
 
   /** apis */
   const { data: usersData } = useUsers({ onlyBasicInformation: true });
-  const { data: powerPlantsData } = usePowerPlants();
+  const { data: companiesData } = useFetchCompaniesAllData();
+
+  const powerPlants = useMemo(() => {
+    return (
+      (companiesData?.companies.list ?? [])
+        .map((c) => c.companyContracts.map((cc) => cc.powerPlants))
+        .flat()
+        .flat() ?? []
+    );
+  }, [companiesData]);
 
   const [getUserContracts, { data: userContractsData }] =
     useLazyUserContracts();
+
+  const currentCompany = watch(
+    `transferDocumentPowerPlants.${powerPlantIndex}.company`
+  );
+
+  const currentCompanyContract = watch(
+    `transferDocumentPowerPlants.${powerPlantIndex}.companyContract`
+  );
 
   const currentPowerPlant = watch(
     `transferDocumentPowerPlants.${powerPlantIndex}.powerPlant`
@@ -202,8 +220,24 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
     `transferDocumentUsers.${userIndex}.userContract`
   );
 
+  const currentCompanyInfo = useMemo(() => {
+    const company = companiesData?.companies.list.find(
+      (c) => c.id === currentCompany?.value
+    );
+
+    return company ?? null;
+  }, [companiesData, currentCompany]);
+
+  const currentCompanyContractInfo = useMemo(() => {
+    return (
+      currentCompanyInfo?.companyContracts.find(
+        (cc) => cc.id === currentCompanyContract?.value
+      ) ?? null
+    );
+  }, [currentCompanyInfo, currentCompanyContract]);
+
   const currentPowerPlantInfo = useMemo(() => {
-    const powerPlant = powerPlantsData?.powerPlants.list.find(
+    const powerPlant = powerPlants.find(
       (p) => p.id === currentPowerPlant?.value
     );
 
@@ -213,7 +247,7 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
       estimatedAnnualPowerSupply:
         powerPlant?.estimatedAnnualPowerSupply ?? "N/A",
     };
-  }, [powerPlantsData, currentPowerPlant]);
+  }, [powerPlants, currentPowerPlant]);
 
   return (
     <Dialog open={isOpenDialog} onClose={onClose}>
@@ -263,13 +297,55 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
             >
               <Controller
                 control={control}
-                name={`transferDocumentPowerPlants.${index}.powerPlant`}
+                name={`transferDocumentPowerPlants.${index}.company`}
                 render={({ field }) => (
                   <InputAutocomplete
                     {...field}
                     onChange={(e) => field.onChange(e)}
                     options={
-                      powerPlantsData?.powerPlants.list.map((o) => ({
+                      companiesData?.companies.list.map((o) => ({
+                        label: o.name,
+                        value: o.id,
+                      })) ?? []
+                    }
+                    label={`公司${index + 1}名稱`}
+                    aria-label={`公司${index + 1}名稱`}
+                    placeholder={"請填入"}
+                    required
+                  />
+                )}
+              />
+              <Controller
+                control={control}
+                name={`transferDocumentPowerPlants.${index}.companyContract`}
+                render={({ field }) => (
+                  <InputAutocomplete
+                    {...field}
+                    disabled={!currentCompanyInfo}
+                    onChange={(e) => field.onChange(e)}
+                    options={
+                      currentCompanyInfo?.companyContracts?.map((o) => ({
+                        label: `${o.name}(${o.number})`,
+                        value: o.id,
+                      })) ?? []
+                    }
+                    label={`公司合約${index + 1}名稱`}
+                    aria-label={`公司合約${index + 1}名稱`}
+                    placeholder={"請填入"}
+                    required
+                  />
+                )}
+              />
+              <Controller
+                control={control}
+                name={`transferDocumentPowerPlants.${index}.powerPlant`}
+                render={({ field }) => (
+                  <InputAutocomplete
+                    {...field}
+                    disabled={!currentCompanyContractInfo}
+                    onChange={(e) => field.onChange(e)}
+                    options={
+                      currentCompanyContractInfo?.powerPlants?.map((o) => ({
                         label: o.name,
                         value: o.id,
                       })) ?? []
@@ -354,6 +430,14 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
               onClick={() => {
                 const emptyPowerPlantInput = {
                   estimateAnnualSupply: 0,
+                  company: {
+                    label: "",
+                    value: "",
+                  },
+                  companyContract: {
+                    label: "",
+                    value: "",
+                  },
                   powerPlant: {
                     label: "",
                     value: "",

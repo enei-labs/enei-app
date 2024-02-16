@@ -9,6 +9,14 @@ export type FormData = {
   formalDoc: { id: string; file: File };
   transferDocumentPowerPlants: {
     estimateAnnualSupply: number;
+    company: {
+      label: string;
+      value: string;
+    };
+    companyContract: {
+      label: string;
+      value: string;
+    };
     powerPlant: {
       label: string;
       value: string;

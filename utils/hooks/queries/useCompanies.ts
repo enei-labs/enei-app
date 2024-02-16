@@ -1,5 +1,5 @@
-import { CompanyPage } from '@core/graphql/types'
-import { COMPANIES } from '@core/graphql/queries/companies'
+import { CompanyPage, PowerPlant } from '@core/graphql/types'
+import { COMPANIES, COMPANIES_WITH_POWER_PLANTS } from '@core/graphql/queries/companies'
 import useQuery from '../useQuery'
 
 interface Variables {
@@ -15,4 +15,22 @@ export const useCompanies = ({ skip = false, variables }: {
     variables: variables,
     skip,
   })
+}
+
+type CompanyAllData = {
+  total: number;
+  list: {
+    id: string;
+    name: string;
+    companyContracts: {
+      id: string;
+      name: string;
+      number: string;
+      powerPlants: PowerPlant[]
+    }[]
+  }[]
+}
+
+export const useFetchCompaniesAllData = () => {
+  return useQuery<{ companies: CompanyAllData }>(COMPANIES_WITH_POWER_PLANTS)
 }
