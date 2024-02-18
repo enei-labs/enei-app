@@ -71,7 +71,6 @@ export const fieldConfigs: FieldConfig[] = [
     name: "duration",
     label: "合約年限（年）",
     required: false,
-    validated: textValidated,
   },
   {
     type: "DATE",
@@ -90,7 +89,6 @@ export const fieldConfigs: FieldConfig[] = [
     name: "transferRate",
     label: "轉供率要求（%）",
     required: true,
-    validated: textValidated,
   },
   {
     type: "TEXT",
@@ -136,6 +134,7 @@ export const useDisplayFieldConfigs = (
   setEndedAt?: (value: Date) => void,
   ) => {
   const { contractTimeType, rateType, duration, startedAt } = values;
+
   const displayFieldConfigs = useMemo(() => {
     const contractTimeTypeIndex = fieldConfigs.findIndex(
       (c) => c.name === "contractTimeType"

@@ -1,7 +1,7 @@
 import Dialog from "@components/Dialog";
 import { Box, Button, Typography } from "@mui/material";
 import { useValidatedForm } from "@utils/hooks";
-import { useCallback, useReducer } from "react";
+import { useReducer } from "react";
 import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import CloseIcon from "@mui/icons-material/HighlightOff";
 import { useCreateCompanyContract } from "@utils/hooks/mutations/useCreateCompanyContract";
