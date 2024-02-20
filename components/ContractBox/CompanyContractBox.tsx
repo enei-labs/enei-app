@@ -53,7 +53,7 @@ function CompanyContractBox(props: CompanyContractBoxProps) {
     {
       icon: AccessTimeOutlinedIcon,
       name: "合約年限",
-      content: contract.duration,
+      content: contract.duration ?? "N/A",
       unit: "年",
     },
   ];
