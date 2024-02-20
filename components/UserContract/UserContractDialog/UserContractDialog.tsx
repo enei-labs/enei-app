@@ -15,7 +15,7 @@ import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import {
   ContractTimeType,
-  ElectricNumberInfo,
+  ElectricNumberInfoInput,
   TransferDocument,
   User,
   UserType,
@@ -27,7 +27,7 @@ import dynamic from "next/dynamic";
 import Dialog from "@components/Dialog";
 import { FormData } from "./FormData";
 import { Controller, useFieldArray } from "react-hook-form";
-import { InputNumber, InputText } from "@components/Input";
+import { InputAutocomplete, InputNumber, InputText } from "@components/Input";
 import Chip from "@components/Chip";
 import { useUsers } from "@utils/hooks/queries";
 import { useCreateUserContract } from "@utils/hooks/mutations/useCreateUserContract";
@@ -186,11 +186,11 @@ function UserContractDialog(props: UserContractDialogProps) {
 
   /** submit */
   const onSubmit = async (formData: FormData) => {
-    if (!formData.contractDoc) {
+    if (!formData.contractDoc?.id) {
       toast.error("尚未上傳用戶契約");
     }
 
-    const { data } = await createUserContract({
+    await createUserContract({
       variables: {
         userId,
         input: {
@@ -206,17 +206,31 @@ function UserContractDialog(props: UserContractDialogProps) {
           transferAt: formData.transferAt,
           contractDoc: formData.contractDoc.id,
           electricNumberInfos: formData.electricNumberInfos.map((info) => ({
-            ...info,
+            companyAddress: info.companyAddress,
+            address: info.address,
+            contactName: info.contactName,
+            contactPhone: info.contactPhone,
+            contactEmail: info.contactEmail,
+            number: info.number,
+            tableNumbers: info.tableNumbers,
+            recipientAccount: {
+              bankCode: (
+                info.recipientAccount as unknown as Record<string, string>
+              ).value.split("|")[0],
+              account: (
+                info.recipientAccount as unknown as Record<string, string>
+              ).value.split("|")[1],
+            },
             degree: Number(info.degree),
           })),
         },
       },
+      onCompleted: () => {
+        toast.success("新增用戶契約成功");
+        reset();
+        onClose();
+      },
     });
-
-    if (data?.createUserContract.__typename === "UserContract") {
-      reset();
-      onClose();
-    }
   };
 
   return (
@@ -335,6 +349,43 @@ function UserContractDialog(props: UserContractDialogProps) {
               />
               <Controller
                 control={control}
+                name={`electricNumberInfos.${index}.recipientAccount`}
+                render={({ field }) => (
+                  <InputAutocomplete
+                    {...field}
+                    onChange={(e) => field.onChange(e)}
+                    options={
+                      user.bankAccounts?.map((bankAccount) => ({
+                        label: `(${bankAccount.bankCode}) ${bankAccount.account}`,
+                        value: `${bankAccount.bankBranchCode}|${bankAccount.account}`,
+                      })) ?? []
+                    }
+                    label={`銀行帳號`}
+                    aria-label={`銀行帳號`}
+                    placeholder={"請填入"}
+                    required
+                  />
+                )}
+              />
+              <Controller
+                control={control}
+                name={`electricNumberInfos.${index}.companyAddress`}
+                render={({ field }) => {
+                  return (
+                    <>
+                      <InputText
+                        {...field}
+                        type="text"
+                        label="發票寄送地址"
+                        placeholder={"請填入"}
+                        required
+                      />
+                    </>
+                  );
+                }}
+              />
+              <Controller
+                control={control}
                 name={`electricNumberInfos.${index}.tableNumbers`}
                 render={({ field }) => (
                   <TableNumbersField field={field} control={control} />
@@ -435,20 +486,18 @@ function UserContractDialog(props: UserContractDialogProps) {
             <Button
               startIcon={<AddCircleOutlineOutlinedIcon />}
               onClick={() => {
-                const emptyElectricNumberInput: ElectricNumberInfo = {
+                const emptyElectricNumberInput: Omit<
+                  ElectricNumberInfoInput,
+                  "recipientAccount"
+                > & {
+                  recipientAccount: string;
+                } = {
                   address: "",
                   contactEmail: user.contactEmail ?? "",
                   contactName: user.contactName ?? "",
                   contactPhone: user.contactPhone ?? "",
                   companyAddress: user.companyAddress ?? "",
-                  recipientAccount: {
-                    account: "",
-                    bankName: "",
-                    accountName: "",
-                    bankBranchCode: "",
-                    bankBranchName: "",
-                    bankCode: "",
-                  },
+                  recipientAccount: "",
                   degree: 0,
                   number: "",
                   tableNumbers: [],
@@ -457,7 +506,7 @@ function UserContractDialog(props: UserContractDialogProps) {
                 for (let i = 1; i <= addElectricNumber; i++) {
                   emptyArray.push(emptyElectricNumberInput);
                 }
-                append(emptyArray);
+                append(emptyArray as unknown as ElectricNumberInfoInput);
                 if (!fields.length) setElectricNumberIndex(0);
               }}
             >

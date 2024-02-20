@@ -159,6 +159,7 @@ export enum ChargeType {
 
 export type Company = {
   __typename?: 'Company';
+  companyContracts: Array<CompanyContract>;
   contactEmail: Scalars['String']['output'];
   contactName: Scalars['String']['output'];
   contactPhone: Scalars['String']['output'];
@@ -179,7 +180,7 @@ export type CompanyContract = {
   daysToPay: Scalars['Int']['output'];
   description?: Maybe<Scalars['String']['output']>;
   /** 合約年限 */
-  duration: Scalars['String']['output'];
+  duration?: Maybe<Scalars['String']['output']>;
   endedAt?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['ID']['output'];
   industryDoc: Scalars['String']['output'];
@@ -187,6 +188,7 @@ export type CompanyContract = {
   name: Scalars['String']['output'];
   /** 合約編號 */
   number: Scalars['String']['output'];
+  powerPlants: Array<PowerPlant>;
   /** 合約價格 */
   price?: Maybe<Scalars['String']['output']>;
   /** 單一費率/個別費率 */
@@ -443,11 +445,13 @@ export type ElectricNumberInfo = {
 
 export type ElectricNumberInfoInput = {
   address: Scalars['String']['input'];
+  companyAddress: Scalars['String']['input'];
   contactEmail: Scalars['String']['input'];
   contactName: Scalars['String']['input'];
   contactPhone: Scalars['String']['input'];
   degree: Scalars['Int']['input'];
   number: Scalars['String']['input'];
+  recipientAccount: RecipientAccountInput;
   tableNumbers: Array<Scalars['String']['input']>;
 };
 
@@ -958,15 +962,22 @@ export type RecipientAccount = {
   /** 帳號 */
   account: Scalars['String']['output'];
   /** 戶名 */
-  accountName: Scalars['String']['output'];
+  accountName?: Maybe<Scalars['String']['output']>;
   /** 分行代碼 */
-  bankBranchCode: Scalars['String']['output'];
+  bankBranchCode?: Maybe<Scalars['String']['output']>;
   /** 分行名稱 */
-  bankBranchName: Scalars['String']['output'];
+  bankBranchName?: Maybe<Scalars['String']['output']>;
   /** 銀行代碼 */
   bankCode: Scalars['String']['output'];
   /** 銀行名稱 */
-  bankName: Scalars['String']['output'];
+  bankName?: Maybe<Scalars['String']['output']>;
+};
+
+export type RecipientAccountInput = {
+  /** 帳號 */
+  account: Scalars['String']['input'];
+  /** 銀行代碼 */
+  bankCode: Scalars['String']['input'];
 };
 
 export type RemainingDemandFromCompanyContract = {
@@ -979,7 +990,7 @@ export type RemainingDemandFromCompanyContract = {
   daysToPay: Scalars['Int']['output'];
   description?: Maybe<Scalars['String']['output']>;
   /** 合約年限 */
-  duration: Scalars['String']['output'];
+  duration?: Maybe<Scalars['String']['output']>;
   endedAt?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['ID']['output'];
   industryDoc: Scalars['String']['output'];
@@ -987,6 +998,7 @@ export type RemainingDemandFromCompanyContract = {
   name: Scalars['String']['output'];
   /** 合約編號 */
   number: Scalars['String']['output'];
+  powerPlants: Array<PowerPlant>;
   /** 合約價格 */
   price?: Maybe<Scalars['String']['output']>;
   /** 單一費率/個別費率 */
@@ -1301,7 +1313,7 @@ export type UserBillRecipientAccount = {
   /** 帳號 */
   account: Scalars['String']['output'];
   /** 分行代碼 */
-  bankBranchCode: Scalars['String']['output'];
+  bankBranchCode?: Maybe<Scalars['String']['output']>;
   /** 銀行代碼 */
   bankCode: Scalars['String']['output'];
 };

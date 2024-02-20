@@ -9,5 +9,10 @@ export const ELECTRIC_NUMBER_INFO_FIELDS = gql`
     contactPhone
     contactEmail
     address
+    companyAddress
+    recipientAccount {
+      bankCode
+      account
+    }
   }
 `
