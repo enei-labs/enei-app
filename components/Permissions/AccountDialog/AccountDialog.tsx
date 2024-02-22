@@ -1,5 +1,5 @@
 import { CircularProgress, Grid, Tooltip, Typography } from "@mui/material";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { IconBtn } from "@components/Button";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { Account, Role } from "@core/graphql/types";
@@ -25,7 +25,7 @@ interface AccountDialogProps {
 }
 
 const roleMap = {
-  [Role.User]: "使用者",
+  [Role.User]: "綠電用戶",
   [Role.Company]: "發電業",
   [Role.Admin]: "管理員",
   [Role.SuperAdmin]: "超級管理員",
@@ -37,6 +37,13 @@ const roleOptions = Object.values(Role).map((o) => ({
 }));
 
 const basicConfigs: FieldConfig[] = [
+  {
+    type: "SINGLE_SELECT",
+    name: "role",
+    placeholder: "請選擇",
+    label: "權限",
+    options: roleOptions,
+  },
   {
     type: "TEXT",
     name: "email",
@@ -51,13 +58,6 @@ const basicConfigs: FieldConfig[] = [
     placeholder: "請填入",
     validated: textValidated,
   },
-  {
-    type: "SINGLE_SELECT",
-    name: "role",
-    placeholder: "請選擇",
-    label: "權限",
-    options: roleOptions,
-  },
 ];
 
 function AccountDialog(props: AccountDialogProps) {
@@ -68,6 +68,7 @@ function AccountDialog(props: AccountDialogProps) {
     formState: { errors },
     watch,
     handleSubmit,
+    setValue,
   } = useValidatedForm<FormData>(basicConfigs, {
     defaultValues: currentModifyAccount
       ? {
@@ -84,6 +85,7 @@ function AccountDialog(props: AccountDialogProps) {
       : {},
   });
   const role = watch("role");
+  const company = watch("companyId");
 
   const { data: usersData } = useUsers({
     onlyBasicInformation: true,
@@ -116,7 +118,7 @@ function AccountDialog(props: AccountDialogProps) {
           type: "SINGLE_SELECT",
           name: "userId",
           placeholder: "請填入 (Auto Complete)",
-          label: "使用者 email",
+          label: "綠電用戶 email",
           options:
             usersData?.users.list.map((user) => ({
               label: `${user.contactEmail}(${user.name})`,
@@ -127,7 +129,7 @@ function AccountDialog(props: AccountDialogProps) {
     }
 
     return [
-      ...basicConfigs,
+      basicConfigs[0],
       {
         type: "SINGLE_SELECT",
         name: "companyId",
@@ -140,8 +142,20 @@ function AccountDialog(props: AccountDialogProps) {
           })) ?? [],
         helperText: "若查無此公司，需先至發電業頁面新增公司",
       },
+      basicConfigs[1],
+      basicConfigs[2],
     ];
   }, [companiesData, usersData, role]);
+
+  useEffect(() => {
+    if (role?.value === Role.Company && company?.value) {
+      const companyData = companiesData?.companies.list.find(
+        (o) => o.id === company.value
+      );
+      setValue("email", companyData?.contactEmail ?? "");
+      setValue("name", companyData?.contactName ?? "");
+    }
+  }, [role, company, companiesData, setValue]);
 
   return (
     <Dialog open={isOpenDialog} onClose={onClose}>
@@ -168,7 +182,9 @@ function AccountDialog(props: AccountDialogProps) {
           />
           <HelperText>
             <ul style={{ textAlign: "left" }}>
-              <li>若查無此公司，請先前往『發電業管理』頁面新增公司</li>
+              <li>
+                若查無此公司，請先前往『發電業管理』或『用戶管理』頁面新增公司
+              </li>
               <li>
                 在權限管理面板中，需點擊『發送密碼設定信件』按鈕，用戶將會收到一封包含重設帳戶密碼連結的信件。用戶需要透過該連結來重設他們的帳戶密碼，並在完成重設後方能繼續使用該帳戶
               </li>
