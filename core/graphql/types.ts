@@ -1189,6 +1189,7 @@ export type UpdateCompanyInput = {
   contactName?: InputMaybe<Scalars['String']['input']>;
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  recipientAccounts: Array<RecipientAccountInput>;
   taxId?: InputMaybe<Scalars['String']['input']>;
 };
 
