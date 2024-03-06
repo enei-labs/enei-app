@@ -117,7 +117,7 @@ const CompanyDialog = (props: CompanyDialogProps) => {
           },
           bankName: bankAccount.bankName,
           bankBranchCode: {
-            label: `${bankAccount.bankBranchCode} ${bankAccount.bankBranchName}`,
+            label: `${bankAccount.bankBranchCode}`,
             value: bankAccount.bankBranchCode,
           },
           accountName: bankAccount.accountName,
@@ -305,7 +305,7 @@ const CompanyDialog = (props: CompanyDialogProps) => {
                         )
                       : []
                   }
-                  label="分行名稱"
+                  label="分行代碼"
                   placeholder={"請填入"}
                   required
                   disabled={!currentBankCode}

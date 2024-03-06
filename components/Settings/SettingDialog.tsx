@@ -266,7 +266,7 @@ function SettingDialog(props: SettingDialogProps) {
                             )
                           : []
                       }
-                      label="分行名稱"
+                      label="分行代碼"
                       placeholder={"請填入"}
                       required
                       disabled={!currentBankCode}

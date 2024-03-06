@@ -76,7 +76,7 @@ function UserDialog(props: UserDialogProps) {
               },
               bankName: bankAccount.bankName,
               bankBranchCode: {
-                label: `${bankAccount.bankBranchCode} ${bankAccount.bankBranchName}`,
+                label: `${bankAccount.bankBranchCode}`,
                 value: bankAccount.bankBranchCode,
               },
               accountName: bankAccount.accountName,

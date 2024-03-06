@@ -9,5 +9,11 @@ export const COMPANY_FIELDS = gql`
     contactEmail
     contactPhone
     totalVolume
+    recipientAccounts {
+      bankCode
+      bankBranchCode
+      accountName
+      account
+    }
   }
 `
