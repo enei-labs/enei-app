@@ -105,6 +105,7 @@ const PowerPlantPanel = ({
           onClose={() => setOpenUpdateDialog(false)}
           variant="edit"
           defaultValues={selectedData}
+          companyContractId={companyContractId}
         />
       ) : null}
       {openDeleteDialog && selectedData ? (

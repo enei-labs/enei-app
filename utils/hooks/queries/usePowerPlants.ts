@@ -14,7 +14,6 @@ export const usePowerPlants = ({ skip = false, variables }: {
 } = {} ) => {
   return useQuery<{ powerPlants: PowerPlantPage }>(POWER_PLANTS, {
     skip,
-    notifyOnNetworkStatusChange: false,
     variables: variables,
   })
 }

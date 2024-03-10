@@ -7,7 +7,7 @@ interface PowerPlantUpdateQuery {
   powerPlants: PowerPlantPage;
 }
 
-export const useUpdatePowerPlant = () => {
+export const useUpdatePowerPlant = (companyContractId: string) => {
   return useMutation<{ updatePowerPlant: PowerPlant }, { input: UpdatePowerPlantInput }>(
     UPDATE_POWER_PLANT, {
       update(cache, { data }) {

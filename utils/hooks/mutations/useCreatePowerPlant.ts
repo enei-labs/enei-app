@@ -3,25 +3,36 @@ import useMutation from '../useMutation';
 import { CREATE_POWER_PLANT } from '@core/graphql/mutations';
 import { POWER_PLANTS } from '@core/graphql/queries';
 
-export const useCreatePowerPlant = () => {
+export const useCreatePowerPlant = (companyContractId: string) => {
   return useMutation<{ createPowerPlant: PowerPlant }, { input: CreatePowerPlantInput }>(
     CREATE_POWER_PLANT, {
       update(cache, { data }) {
-        if (data?.createPowerPlant?.__typename === 'PowerPlant') {
-          const existingPowerPlants = cache.readQuery<{ powerPlants: PowerPlantPage }>({ query: POWER_PLANTS });
-
-          if (existingPowerPlants) {
-            cache.writeQuery({
+        try {
+          if (data?.createPowerPlant?.__typename === 'PowerPlant') {
+            const existingPowerPlantsData = cache.readQuery<{ powerPlants: PowerPlantPage }>({
               query: POWER_PLANTS,
-              data: {
-                powerPlants: {
-                  ...existingPowerPlants.powerPlants,
-                  total: existingPowerPlants.powerPlants.total + 1,
-                  list: [data.createPowerPlant, ...existingPowerPlants.powerPlants.list],
-                },
+              variables: {
+                limit: 10,
+                offset: 0,
+                companyContractId: companyContractId,
               },
             });
+            console.log({ existingPowerPlantsData });
+
+            const updatedPowerPlants = {
+              total: (existingPowerPlantsData?.powerPlants?.total ?? 0) + 1,
+              list: [data.createPowerPlant, ...(existingPowerPlantsData?.powerPlants?.list ?? [])],
+            };
+
+            console.log({ updatedPowerPlants });
+
+            cache.writeQuery({
+              query: POWER_PLANTS,
+              data: { powerPlants: updatedPowerPlants },
+            });
           }
+        } catch (error) {
+          console.error("Error updating cache for createPowerPlant", error);
         }
       },
     }

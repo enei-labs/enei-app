@@ -43,9 +43,22 @@ export const initialConfigs: FieldConfig[] = [
   {
     type: "NUMBER",
     name: "volume",
-    label: "裝置容量（kW）",
+    label: "電廠裝置容量(kWh)",
     required: true,
     validated: numberValidated,
+  },
+  {
+    type: "NUMBER",
+    name: "transferRate",
+    label: "供電容量比例(%)",
+    required: true,
+    validated: numberRangeValidated,
+  },
+  {
+    type: "NUMBER",
+    name: "supplyVolume",
+    label: "供電裝置容量(kWh)",
+    disabled: true,
   },
   {
     type: "TEXT",
@@ -69,15 +82,8 @@ export const initialConfigs: FieldConfig[] = [
     validated: numberValidated,
   },
   {
-    type: "NUMBER",
-    name: "transferRate",
-    label: "轉供比例（%）",
-    required: true,
-    validated: numberRangeValidated,
-  },
-  {
     type: "RADIO",
-    name: "transferRate",
+    name: "energyType",
     label: "能源類別",
     radios: [
       {
@@ -97,7 +103,7 @@ export const initialConfigs: FieldConfig[] = [
   },
   {
     type: "RADIO",
-    name: "rateType",
+    name: "generationType",
     label: "發電類型",
     radios: [
       {
@@ -126,7 +132,7 @@ export const initialConfigs: FieldConfig[] = [
 
 
 export function updateFormValues({ initialDefaultValues, companyContract }: UpdateFormValuesParams): UpdateFormValuesReturns {
-  let newDefaultValues = { ...initialDefaultValues };
+  let newDefaultValues = { transferRate: 100, ...initialDefaultValues };
   let newConfigs = [...initialConfigs]; // 使用初始配置的副本
 
   if (companyContract && companyContract.rateType === RateType.Single) {

@@ -490,14 +490,14 @@ function UserContractDialog(props: UserContractDialogProps) {
                   ElectricNumberInfoInput,
                   "recipientAccount"
                 > & {
-                  recipientAccount: string;
+                  recipientAccount: string | null;
                 } = {
                   address: "",
                   contactEmail: user.contactEmail ?? "",
                   contactName: user.contactName ?? "",
                   contactPhone: user.contactPhone ?? "",
                   companyAddress: user.companyAddress ?? "",
-                  recipientAccount: "",
+                  recipientAccount: null,
                   degree: 0,
                   number: "",
                   tableNumbers: [],
