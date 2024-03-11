@@ -114,9 +114,9 @@ export default function TPCBillDialog(props: TPCBillDialogProps) {
                   {...field}
                   onChange={(e, newValue) => {
                     field.onChange(e);
-                    if (newValue) {
+                    if (e.value) {
                       getTransferDocument({
-                        variables: { id: newValue.value },
+                        variables: { id: e.value },
                       });
                     }
                   }}
