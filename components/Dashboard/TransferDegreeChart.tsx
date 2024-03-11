@@ -75,7 +75,7 @@ const options = {
     labels: {
       show: true,
       formatter: function (val: any) {
-        return val.toFixed(1) + "萬";
+        return val.toFixed(1) + "度";
       },
     },
   },

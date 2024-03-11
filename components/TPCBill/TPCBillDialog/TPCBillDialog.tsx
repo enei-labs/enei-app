@@ -167,6 +167,7 @@ export default function TPCBillDialog(props: TPCBillDialogProps) {
           {transferDocumentData && selectedPowerPlant
             ? transferDocumentData.transferDocument.transferDocumentUsers.map(
                 (item, index) => {
+                  console.log({ item });
                   return (
                     <Controller
                       key={`transferDegrees.${item.user.id}_${item.userContract.id}_${selectedPowerPlant}_${index}`}
@@ -176,7 +177,7 @@ export default function TPCBillDialog(props: TPCBillDialogProps) {
                         <InputText
                           {...field}
                           type="number"
-                          label={`${item.user.contactName}(kWh)`}
+                          label={`${item.user.name}(kWh)`}
                         />
                       )}
                       rules={{ min: 0 }}

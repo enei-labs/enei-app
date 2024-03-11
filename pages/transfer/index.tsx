@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import IconBreadcrumbs from "@components/BreadCrumbs";
-import { Button, Card, Divider } from "@mui/material";
+import { Button, Card, CircularProgress, Divider } from "@mui/material";
 import { AuthLayout } from "@components/Layout";
 import { ReactElement, useState } from "react";
 import Head from "next/head";
@@ -13,6 +13,8 @@ import dynamic from "next/dynamic";
 import { useTransferDocuments } from "@utils/hooks/queries";
 import DemoChart from "@components/LineChart";
 import TransferDocumentPanel from "@components/TransferDocument/TransferDocumentPanel";
+import TransferDegreeChart from "@components/Dashboard/TransferDegreeChart";
+import { useMonthlyTransferDegrees } from "@utils/hooks/queries/useMonthlyTransferDegrees";
 
 const TPCBillDialog = dynamic(
   () => import("@components/TPCBill/TPCBillDialog/TPCBillDialog"),
@@ -26,6 +28,10 @@ function TransferDataManagementPage() {
     loading,
     refetch,
   } = useTransferDocuments();
+
+  const { data: monthlyTpcTransferDegreeData, loading: tpcBillLoading } =
+    useMonthlyTransferDegrees();
+
   return (
     <>
       <Head>
@@ -44,7 +50,17 @@ function TransferDataManagementPage() {
       <Box sx={{ paddingTop: "12px" }}>
         <AuthGuard roles={[Role.Admin, Role.SuperAdmin]}>
           <Card sx={{ p: "36px" }}>
-            <DemoChart name="每月轉供度數" />
+            {tpcBillLoading ? (
+              <CircularProgress size="24px" />
+            ) : (
+              <TransferDegreeChart
+                name="每月轉供度數"
+                data={
+                  monthlyTpcTransferDegreeData?.dashboard.tpcBillInfo
+                    .monthlyTPCBillTransferDegrees
+                }
+              />
+            )}
 
             {/* 轉供資料管理表格 */}
           </Card>

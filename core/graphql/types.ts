@@ -398,7 +398,7 @@ export type DashboardPowerPlant = {
 
 export type DashboardTpcBill = {
   __typename?: 'DashboardTPCBill';
-  tpcBills: Array<TpcBill>;
+  monthlyTPCBillTransferDegrees: Array<Scalars['Int']['output']>;
 };
 
 export type DashboardTransferDegree = {
