@@ -19,7 +19,7 @@ const options = {
   dataLabels: {
     enabled: true,
     formatter: function (val: any) {
-      return val.toFixed(1) + "度";
+      return Math.round(val) + "度";
     },
     offsetY: -20,
     style: {
@@ -75,7 +75,7 @@ const options = {
     labels: {
       show: true,
       formatter: function (val: any) {
-        return val.toFixed(1) + "度";
+        return Math.round(val) + "度";
       },
     },
   },
