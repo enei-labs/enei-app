@@ -13,7 +13,6 @@ import { formatDateTime } from "@utils/format";
 import InfoBox from "../InfoBox";
 import { IconBtn } from "@components/Button";
 import DownloadDocBox from "@components/DownloadDocBox";
-import DemoChart from "@components/LineChart";
 import { useRemoveCompanyContract } from "@utils/hooks";
 import dynamic from "next/dynamic";
 import { useState } from "react";

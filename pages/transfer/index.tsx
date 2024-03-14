@@ -11,7 +11,6 @@ import ChartIcon from "@mui/icons-material/InsertChartOutlinedSharp";
 
 import dynamic from "next/dynamic";
 import { useTransferDocuments } from "@utils/hooks/queries";
-import DemoChart from "@components/LineChart";
 import TransferDocumentPanel from "@components/TransferDocument/TransferDocumentPanel";
 import TransferDegreeChart from "@components/Dashboard/TransferDegreeChart";
 import { useMonthlyTransferDegrees } from "@utils/hooks/queries/useMonthlyTransferDegrees";

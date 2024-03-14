@@ -37,7 +37,14 @@ const PowerPlantPanel = ({
     },
     {
       header: "尚未銷售度數",
-      // accessor: "contactName",
+      // render: (data) => {
+      //   const f = data.annualPowerGeneration;
+      //   return <div>test</div>;
+      // },
+    },
+    {
+      header: "年發電量（MWh）",
+      accessor: "annualPowerGeneration",
     },
     {
       header: "電廠裝置容量(kWh)",

@@ -70,7 +70,7 @@ export const initialConfigs: FieldConfig[] = [
   {
     type: "NUMBER",
     name: "annualPowerGeneration",
-    label: "年發電量（MWh",
+    label: "年發電量（MWh）",
     required: true,
     validated: numberValidated,
   },
