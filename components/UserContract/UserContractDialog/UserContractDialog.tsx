@@ -188,6 +188,7 @@ function UserContractDialog(props: UserContractDialogProps) {
   const onSubmit = async (formData: FormData) => {
     if (!formData.contractDoc?.id) {
       toast.error("尚未上傳用戶契約");
+      return;
     }
 
     await createUserContract({

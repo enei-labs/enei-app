@@ -75,15 +75,19 @@ export const useCreateCompanyContractSubmitFn = (
     ) {
       formData.endedAt = undefined;
     }
+    console.log({ formData });
 
-    if (formData.contractDoc) {
+    if (!formData.contractDoc?.id) {
       toast.error("購電合約文件未上傳");
+      return;
     }
-    if (formData.transferDoc) {
+    if (!formData.transferDoc?.id) {
       toast.error("轉供所需資料文件未上傳");
+      return;
     }
-    if (formData.industryDoc) {
+    if (!formData.industryDoc?.id) {
       toast.error("電業佐證資料文件未上傳");
+      return;
     }
 
     const { data } = await createCompanyContract({
