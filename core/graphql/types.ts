@@ -377,10 +377,12 @@ export type Dashboard = {
 
 export type DashboardCompany = {
   __typename?: 'DashboardCompany';
-  /** 電廠數量 */
-  powerPlantCount: Scalars['Int']['output'];
+  /** 發電業數量 */
+  totalCompanies: Scalars['Int']['output'];
   /** 總裝置量 */
   totalDegree: Scalars['String']['output'];
+  /** 電廠數量 */
+  totalPowerPlants: Scalars['Int']['output'];
   totalVolume: Scalars['String']['output'];
 };
 

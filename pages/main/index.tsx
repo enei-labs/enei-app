@@ -31,8 +31,14 @@ function MainPage() {
         ? [
             {
               icon: BoltIcon,
+              name: "發電業數量",
+              count: data.dashboard.companyInfo.totalCompanies,
+              unit: "家",
+            },
+            {
+              icon: BoltIcon,
               name: "電廠數量",
-              count: data.dashboard.companyInfo.powerPlantCount,
+              count: data.dashboard.companyInfo.totalPowerPlants,
               unit: "座",
             },
             {
