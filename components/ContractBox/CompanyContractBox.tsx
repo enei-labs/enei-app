@@ -62,6 +62,7 @@ function CompanyContractBox(props: CompanyContractBoxProps) {
     <ContractBox
       onClickFn={() => router.push(`/industry/${contract.id}`)}
       title={`${contract.number}(${contract.name})`}
+      totalVolume={contract.totalVolume}
       contractInfos={contractInfos}
     />
   );
