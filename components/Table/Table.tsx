@@ -9,7 +9,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import TableRowExpansion from "./TableRowExpansion";
 
 enum Alignment {
@@ -85,6 +85,16 @@ const Table: React.FC<TableProps> = ({
     if (total) setCount(total);
   }, [total]);
 
+  const displayList = useMemo(() => {
+    // If the list data has already been fetched in its entirety,
+    // display it based on the page index and rows.
+    if (list.length > rows) {
+      return list.slice(rows * page, rows * (page + 1));
+    }
+
+    return list;
+  }, [list, rows, page]);
+
   return (
     <Box>
       <TableContainer>
@@ -128,7 +138,7 @@ const Table: React.FC<TableProps> = ({
               </TableRow>
             ) : (
               <>
-                {list.map((rowData, index) => (
+                {displayList.map((rowData, index) => (
                   <TableRowExpansion
                     key={index}
                     configs={configs}
