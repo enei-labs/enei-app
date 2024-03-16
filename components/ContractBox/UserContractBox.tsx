@@ -3,7 +3,6 @@ import EventOutlinedIcon from "@mui/icons-material/EventOutlined";
 import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined";
 import CreditCardOutlinedIcon from "@mui/icons-material/CreditCardOutlined";
 import { UserContract } from "@core/graphql/types";
-import { useRouter } from "next/router";
 import ContractBox, { ContractInfo } from "@components/ContractBox/ContractBox";
 
 interface UserContractBoxProps {
@@ -12,7 +11,6 @@ interface UserContractBoxProps {
 
 function UserContractBox(props: UserContractBoxProps) {
   const { contract } = props;
-  const router = useRouter();
 
   const contractInfos: ContractInfo[] = [
     {

@@ -12,7 +12,7 @@ interface ContractBoxProps {
   onClickFn: VoidFunction;
   title: string;
   contractInfos: ContractInfo[];
-  totalVolume: number;
+  totalVolume?: number;
 }
 
 const styles = {
@@ -34,7 +34,10 @@ function ContractBox(props: ContractBoxProps) {
   return (
     <Box sx={styles.box} onClick={onClickFn}>
       <Typography variant="h5">{title}</Typography>
-      <Typography variant="subtitle2">{`${new Intl.NumberFormat().format(totalVolume)}MWh`}</Typography>
+      {/* @TODO check the logic here */}
+      {totalVolume ? (
+        <Typography variant="subtitle2">{`${new Intl.NumberFormat().format(totalVolume)}MWh`}</Typography>
+      ) : null}
       <Grid container>
         {contractInfos.map((info) => {
           const { icon: Icon, name, content, unit } = info;
