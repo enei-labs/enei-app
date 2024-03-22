@@ -1,10 +1,9 @@
 import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
 import BoltIcon from "@mui/icons-material/BoltOutlined";
 import IconBreadcrumbs from "@components/BreadCrumbs";
 import { Card, CircularProgress, Divider } from "@mui/material";
 import { AuthLayout } from "@components/Layout";
-import { ReactElement, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import Head from "next/head";
 import { InputSearch } from "@components/Input";
 import AddCompanyBtn from "@components/Company/AddCompanyBtn";
@@ -22,6 +21,16 @@ const CompanyContractPanel = dynamic(
 
 function IndustryPage() {
   const [company, setCompany] = useState<Company | null>(null);
+
+  useEffect(() => {
+    const element = document.getElementById("company-contract-panel");
+    if (company && element) {
+      window.scrollTo({
+        top: element.offsetTop,
+        behavior: "smooth",
+      });
+    }
+  }, [company]);
 
   return (
     <>
@@ -57,7 +66,9 @@ function IndustryPage() {
           </Card>
           <Divider sx={{ my: "24px" }} />
         </AuthGuard>
-        {company ? <CompanyContractPanel company={company} /> : null}
+        <Box id="company-contract-panel">
+          {company ? <CompanyContractPanel company={company} /> : null}
+        </Box>
       </Box>
     </>
   );
