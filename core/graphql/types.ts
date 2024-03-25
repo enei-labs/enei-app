@@ -183,7 +183,7 @@ export type CompanyContract = {
   duration?: Maybe<Scalars['String']['output']>;
   endedAt?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['ID']['output'];
-  industryDoc: Scalars['String']['output'];
+  industryDoc?: Maybe<Scalars['String']['output']>;
   monthlyTransferDegrees: Array<Array<TransferDegree>>;
   name: Scalars['String']['output'];
   /** 合約編號 */
@@ -197,7 +197,7 @@ export type CompanyContract = {
   /** 裝置量=該合約所有的電廠裡面的裝置量的加總 */
   totalVolume: Scalars['Int']['output'];
   transferAt?: Maybe<Scalars['DateTime']['output']>;
-  transferDoc: Scalars['String']['output'];
+  transferDoc?: Maybe<Scalars['String']['output']>;
   /** 轉供率要求（%） */
   transferRate: Scalars['Int']['output'];
 };
@@ -246,13 +246,13 @@ export type CreateCompanyContractInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   duration?: InputMaybe<Scalars['String']['input']>;
   endedAt?: InputMaybe<Scalars['DateTime']['input']>;
-  industryDoc: Scalars['String']['input'];
+  industryDoc?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
   number: Scalars['String']['input'];
   price?: InputMaybe<Scalars['String']['input']>;
   rateType: RateType;
   startedAt: Scalars['DateTime']['input'];
-  transferDoc: Scalars['String']['input'];
+  transferDoc?: InputMaybe<Scalars['String']['input']>;
   transferRate: Scalars['Int']['input'];
 };
 
@@ -995,7 +995,7 @@ export type RemainingDemandFromCompanyContract = {
   duration?: Maybe<Scalars['String']['output']>;
   endedAt?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['ID']['output'];
-  industryDoc: Scalars['String']['output'];
+  industryDoc?: Maybe<Scalars['String']['output']>;
   monthlyTransferDegrees: Array<Array<TransferDegree>>;
   name: Scalars['String']['output'];
   /** 合約編號 */
@@ -1009,7 +1009,7 @@ export type RemainingDemandFromCompanyContract = {
   /** 裝置量=該合約所有的電廠裡面的裝置量的加總 */
   totalVolume: Scalars['Int']['output'];
   transferAt?: Maybe<Scalars['DateTime']['output']>;
-  transferDoc: Scalars['String']['output'];
+  transferDoc?: Maybe<Scalars['String']['output']>;
   /** 轉供率要求（%） */
   transferRate: Scalars['Int']['output'];
 };

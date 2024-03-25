@@ -25,7 +25,7 @@ const styles = {
 };
 
 interface DownloadDocBoxProps {
-  fileId: string;
+  fileId?: string | null;
   label: React.ReactNode;
 }
 
@@ -37,8 +37,13 @@ const DownloadDocBox = (props: DownloadDocBoxProps) => {
       <Typography variant="h6">{label}</Typography>
       <Box sx={styles.container}>
         <IconBtn
+          tooltipText={fileId ? "下載檔案" : "檔案未上傳"}
+          disabled={!fileId}
           icon={<FileDownloadOutlinedIcon />}
-          onClick={() => handleDownload(fileId)}
+          onClick={() => {
+            if (!fileId) return;
+            handleDownload(fileId);
+          }}
         />
       </Box>
     </Box>

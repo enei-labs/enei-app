@@ -81,14 +81,6 @@ export const useCreateCompanyContractSubmitFn = (
       toast.error("購電合約文件未上傳");
       return;
     }
-    if (!formData.transferDoc?.id) {
-      toast.error("轉供所需資料文件未上傳");
-      return;
-    }
-    if (!formData.industryDoc?.id) {
-      toast.error("電業佐證資料文件未上傳");
-      return;
-    }
 
     const { data } = await createCompanyContract({
       variables: {
@@ -106,8 +98,8 @@ export const useCreateCompanyContractSubmitFn = (
           daysToPay: Number(formData.daysToPay),
           description: formData.description,
           contractDoc: formData.contractDoc.id,
-          transferDoc: formData.transferDoc.id,
-          industryDoc: formData.industryDoc.id,
+          transferDoc: formData.transferDoc?.id,
+          industryDoc: formData.industryDoc?.id,
         },
       },
       refetchQueries: [COMPANY_CONTRACTS],
