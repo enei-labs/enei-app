@@ -12,12 +12,10 @@ import {
 } from "@core/graphql/types";
 import { COMPANY_CONTRACTS } from "@core/graphql/queries/companyContracts";
 import dynamic from "next/dynamic";
-import {
-  fieldConfigs,
-  useDisplayFieldConfigs,
-} from "@components/CompanyContract/CompanyContractDialog/fieldConfigs";
+import { fieldConfigs } from "@components/CompanyContract/CompanyContractDialog/fieldConfig/fieldConfigs";
 import { FormData } from "@components/CompanyContract/CompanyContractDialog/FormData";
 import { toast } from "react-toastify";
+import { useCreateDisplayFieldConfigs } from "@components/CompanyContract/CompanyContractDialog/fieldConfig/useCreateDisplayFieldConfigs";
 
 const EditConfirmDialog = dynamic(
   () => import("@components/EditConfirmDialog")
@@ -112,14 +110,13 @@ export const useCreateCompanyContractSubmitFn = (
     }
   };
 
-  const displayFieldConfigs = useDisplayFieldConfigs(
+  const displayFieldConfigs = useCreateDisplayFieldConfigs(
     {
       contractTimeType: contractTimeType?.value,
       rateType: rateType,
       duration: Number(duration),
       startedAt: startedAt,
     },
-    "create",
     setEndedAt
   );
 

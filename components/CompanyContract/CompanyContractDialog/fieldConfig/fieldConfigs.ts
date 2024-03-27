@@ -3,17 +3,7 @@ import { FieldConfig } from "@core/types";
 import { textValidated } from "@core/types/fieldConfig";
 import { useEffect, useMemo } from "react";
 import { addYears } from 'date-fns';
-
-export const contractTimeTypeMap = {
-  [ContractTimeType.ContractEndTime]: "固定日期(填入合約結束日期)",
-  [ContractTimeType.ContractStartTime]: "合約年限從合約起始日期起算",
-  [ContractTimeType.TransferStartTime]: "合約年限從轉供起始日期起算",
-};
-
-const contractTimeTypeOptions = Object.values(ContractTimeType).map((o) => ({
-  label: contractTimeTypeMap[o],
-  value: o,
-}));
+import { contractTimeTypeOptions } from "@components/CompanyContract/CompanyContractDialog/fieldConfig/contractTimeType";
 
 export const fieldConfigs: FieldConfig[] = [
   {

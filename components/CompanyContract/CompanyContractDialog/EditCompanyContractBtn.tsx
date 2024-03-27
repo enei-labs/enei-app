@@ -3,15 +3,13 @@ import { useState } from "react";
 import BorderColorOutlined from "@mui/icons-material/BorderColorOutlined";
 import { CompanyContract } from "@core/graphql/types";
 import dynamic from "next/dynamic";
-import {
-  contractTimeTypeMap,
-  fieldConfigs,
-  useDisplayFieldConfigs,
-} from "@components/CompanyContract/CompanyContractDialog/fieldConfigs";
+import { fieldConfigs } from "@components/CompanyContract/CompanyContractDialog/fieldConfig/fieldConfigs";
 import { FormData } from "@components/CompanyContract/CompanyContractDialog/FormData";
 import CompanyContractDialog from "@components/CompanyContract/CompanyContractDialog/CompanyContractDialog";
 import { IconBtn } from "@components/Button";
 import { toast } from "react-toastify";
+import { useEditDisplayFieldConfigs } from "@components/CompanyContract/CompanyContractDialog/fieldConfig/useEditDisplayFieldConfigs";
+import { contractTimeTypeMap } from "@components/CompanyContract/CompanyContractDialog/fieldConfig/contractTimeType";
 
 const EditConfirmDialog = dynamic(
   () => import("@components/EditConfirmDialog")
@@ -64,14 +62,6 @@ const EditCompanyContractBtn = (props: CompanyContractProps) => {
       toast.error("購電合約文件未上傳");
       return;
     }
-    if (!formData.transferDoc?.id) {
-      toast.error("轉供所需資料文件未上傳");
-      return;
-    }
-    if (!formData.industryDoc?.id) {
-      toast.error("電業佐證資料文件未上傳");
-      return;
-    }
 
     const { data } = await updateCompanyContract({
       variables: {
@@ -101,15 +91,12 @@ const EditCompanyContractBtn = (props: CompanyContractProps) => {
     }
   };
 
-  const displayFieldConfigs = useDisplayFieldConfigs(
-    {
-      contractTimeType: contractTimeType?.value,
-      rateType: companyContract.rateType,
-      duration: Number(duration),
-      startedAt,
-    },
-    "edit"
-  );
+  const displayFieldConfigs = useEditDisplayFieldConfigs({
+    contractTimeType: contractTimeType?.value,
+    rateType: companyContract.rateType,
+    duration: Number(duration),
+    startedAt,
+  });
 
   return (
     <>
