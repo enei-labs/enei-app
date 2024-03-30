@@ -5,7 +5,6 @@ export const DASHBOARD_FIELDS = gql`
     companyInfo {
       totalCompanies
       totalPowerPlants
-      totalDegree
       totalVolume
     }
     userInfo {

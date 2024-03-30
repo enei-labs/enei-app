@@ -43,15 +43,11 @@ const PowerPlantPanel = ({
       // },
     },
     {
-      header: "年發電量（MWh）",
-      accessor: "annualPowerGeneration",
-    },
-    {
-      header: "電廠裝置容量(kWh)",
+      header: "電廠裝置容量(kW)",
       accessor: "volume",
     },
     {
-      header: "供電裝置容量(kWh)",
+      header: "供電裝置容量(kW)",
       accessor: "supplyVolume",
     },
     {

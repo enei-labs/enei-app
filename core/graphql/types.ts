@@ -379,8 +379,6 @@ export type DashboardCompany = {
   __typename?: 'DashboardCompany';
   /** 發電業數量 */
   totalCompanies: Scalars['Int']['output'];
-  /** 總裝置量 */
-  totalDegree: Scalars['String']['output'];
   /** 電廠數量 */
   totalPowerPlants: Scalars['Int']['output'];
   totalVolume: Scalars['String']['output'];
@@ -783,7 +781,6 @@ export type PasswordResetExpiredError = Error & {
 export type PowerPlant = {
   __typename?: 'PowerPlant';
   address: Scalars['String']['output'];
-  annualPowerGeneration: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
   createdBy?: Maybe<Scalars['String']['output']>;
   energyType: EnergyType;

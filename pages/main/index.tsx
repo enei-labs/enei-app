@@ -47,12 +47,6 @@ function MainPage() {
               count: Number(data.dashboard.companyInfo.totalVolume),
               unit: "MW",
             },
-            {
-              icon: BoltIcon,
-              name: "平均每kW發電度數",
-              count: Number(data.dashboard.companyInfo.totalDegree),
-              unit: "kWh",
-            },
           ]
         : [],
     };

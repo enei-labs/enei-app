@@ -8,7 +8,6 @@ export const POWER_PLANT_FIELDS = gql`
     volume
     transferRate
     supplyVolume
-    annualPowerGeneration
     estimatedAnnualPowerGeneration
     estimatedAnnualPowerSupply
     address
