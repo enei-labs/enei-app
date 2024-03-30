@@ -14,7 +14,6 @@ import { IconBtn } from "@components/Button";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import {
-  ContractTimeType,
   ElectricNumberInfoInput,
   TransferDocument,
   User,
@@ -36,6 +35,7 @@ import { LoadingButton } from "@mui/lab";
 import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
+import { useCreateDisplayFieldConfigs } from "@components/UserContract/UserContractDialog/fieldConfig/useCreateDisplayFieldConfigs";
 
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
@@ -46,88 +46,6 @@ interface UserContractDialogProps {
   variant: "edit" | "create";
   onClose: VoidFunction;
 }
-
-const contractTimeTypeMap = {
-  [ContractTimeType.ContractEndTime]: "固定日期(填入契約結束日期)",
-  [ContractTimeType.ContractStartTime]: "契約年限從契約起始日期起算",
-  [ContractTimeType.TransferStartTime]: "契約年限從轉供起始日期起算",
-};
-
-const contractTimeTypeOptions = Object.values(ContractTimeType).map((o) => ({
-  label: contractTimeTypeMap[o],
-  value: o,
-}));
-
-const contractConfigs: FieldConfig[] = [
-  {
-    type: "TEXT",
-    name: "name",
-    required: true,
-    label: "契約名稱",
-  },
-  {
-    type: "TEXT",
-    name: "serialNumber",
-    required: true,
-    label: "契約編號",
-  },
-  {
-    type: "NUMBER",
-    name: "price",
-    required: true,
-    label: "採購電價（元/kWh）",
-  },
-  {
-    type: "NUMBER",
-    name: "purchaseDegree",
-    required: true,
-    label: "契約總預計年採購度數（kWh）",
-  },
-  {
-    type: "NUMBER",
-    name: "upperLimit",
-    required: true,
-    label: "預計最高採購上限（契約）（kWh）",
-  },
-  {
-    type: "NUMBER",
-    name: "lowerLimit",
-    required: true,
-    label: "預計最低採購下限（契約）（kWh）",
-  },
-  {
-    type: "SINGLE_SELECT",
-    name: "contractTimeType",
-    label: "契約時間計算方式",
-    required: true,
-    disabled: false,
-    options: contractTimeTypeOptions,
-  },
-  {
-    type: "DATE",
-    name: "salesAt",
-    required: true,
-    label: "契約起始日期",
-  },
-  {
-    type: "DATE",
-    name: "salesTo",
-    label: "契約結束日期",
-    required: false,
-  },
-  {
-    type: "NUMBER",
-    name: "salesPeriod",
-    required: true,
-    label: "賣電年限",
-  },
-  {
-    type: "DATE",
-    name: "transferAt",
-    required: true,
-    label: "預計開始轉供綠電日期",
-  },
-];
 
 const docConfigs: FieldConfig[] = [
   {
@@ -156,9 +74,25 @@ function UserContractDialog(props: UserContractDialogProps) {
     formState: { errors },
     handleSubmit,
     reset,
+    watch,
+    setValue,
   } = useValidatedForm<FormData>(undefined, {
     defaultValues: {},
   });
+  const contractTimeType = watch("contractTimeType");
+  const salesPeriod = watch("salesPeriod");
+  const salesAt = watch("salesAt");
+  const setEndedAt = (value: Date) => setValue("salesTo", value);
+
+  const displayFieldConfigs = useCreateDisplayFieldConfigs(
+    {
+      contractTimeType: contractTimeType?.value,
+      salesPeriod: Number(salesPeriod),
+      salesAt: salesAt,
+    },
+    setEndedAt
+  );
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: "electricNumberInfos",
@@ -280,7 +214,7 @@ function UserContractDialog(props: UserContractDialogProps) {
           }}
         />
         <FieldsController
-          configs={contractConfigs}
+          configs={displayFieldConfigs}
           form={{ control, errors }}
         />
 

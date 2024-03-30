@@ -17,14 +17,11 @@ export const useCreatePowerPlant = (companyContractId: string) => {
                 companyContractId: companyContractId,
               },
             });
-            console.log({ existingPowerPlantsData });
 
             const updatedPowerPlants = {
               total: (existingPowerPlantsData?.powerPlants?.total ?? 0) + 1,
               list: [data.createPowerPlant, ...(existingPowerPlantsData?.powerPlants?.list ?? [])],
             };
-
-            console.log({ updatedPowerPlants });
 
             cache.writeQuery({
               query: POWER_PLANTS,

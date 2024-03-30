@@ -1,4 +1,4 @@
-import { ElectricNumberInfoInput, UserType } from "@core/graphql/types";
+import { ContractTimeType, ElectricNumberInfoInput, UserType } from "@core/graphql/types";
 
 export type FormData = {
   name: string;
@@ -9,11 +9,16 @@ export type FormData = {
   upperLimit: number;
   lowerLimit: number;
   salesAt: Date;
+  salesTo: Date;
   salesPeriod: string;
   transferAt: Date;
   contractDoc: {
     file: File;
     id: string;
+  };
+  contractTimeType: {
+    label: string;
+    value: ContractTimeType;
   };
   electricNumberInfos: ElectricNumberInfoInput[];
 };
