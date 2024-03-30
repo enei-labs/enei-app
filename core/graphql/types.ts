@@ -188,6 +188,8 @@ export type CompanyContract = {
   name: Scalars['String']['output'];
   /** 合約編號 */
   number: Scalars['String']['output'];
+  /** 正式轉供日：合約裡面有複數電廠，每個電廠歸屬於不同的轉供合約，造成有多個不同的正式轉供日，那以最早取得正式轉供日的為主 */
+  officialTransferDate?: Maybe<Scalars['DateTime']['output']>;
   powerPlants: Array<PowerPlant>;
   /** 合約價格 */
   price?: Maybe<Scalars['String']['output']>;
@@ -781,6 +783,7 @@ export type PasswordResetExpiredError = Error & {
 export type PowerPlant = {
   __typename?: 'PowerPlant';
   address: Scalars['String']['output'];
+  companyContractId: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
   createdBy?: Maybe<Scalars['String']['output']>;
   energyType: EnergyType;
@@ -997,6 +1000,8 @@ export type RemainingDemandFromCompanyContract = {
   name: Scalars['String']['output'];
   /** 合約編號 */
   number: Scalars['String']['output'];
+  /** 正式轉供日：合約裡面有複數電廠，每個電廠歸屬於不同的轉供合約，造成有多個不同的正式轉供日，那以最早取得正式轉供日的為主 */
+  officialTransferDate?: Maybe<Scalars['DateTime']['output']>;
   powerPlants: Array<PowerPlant>;
   /** 合約價格 */
   price?: Maybe<Scalars['String']['output']>;
@@ -1229,6 +1234,7 @@ export type UpdateTransferDocumentInput = {
 };
 
 export type UpdateTransferDocumentStageInput = {
+  companyContractId?: InputMaybe<Scalars['String']['input']>;
   date: Scalars['DateTime']['input'];
   number?: InputMaybe<Scalars['String']['input']>;
 };

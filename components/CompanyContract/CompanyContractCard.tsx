@@ -1,5 +1,5 @@
 import { Box, Card, Divider, Grid, Typography } from "@mui/material";
-import { CompanyContract } from "@core/graphql/types";
+import { CompanyContract, RateType } from "@core/graphql/types";
 import FlagIcon from "@mui/icons-material/OutlinedFlag";
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
 import EventOutlinedIcon from "@mui/icons-material/EventOutlined";
@@ -43,12 +43,14 @@ const styles = {
 } as const;
 
 const companyContractCardInfo = (companyContract: CompanyContract) => {
+  console.log({ companyContract });
+  const isSingleRate = companyContract.rateType === RateType.Single;
   const companyContractInfo = [
     {
       icon: MonetizationOnOutlinedIcon,
       label: "合約價格",
-      content: companyContract.price,
-      unit: "元/kWh",
+      content: isSingleRate ? companyContract.price : "各別費率",
+      unit: isSingleRate ? "" : "元/kWh",
     },
     {
       icon: EventOutlinedIcon,
@@ -64,8 +66,8 @@ const companyContractCardInfo = (companyContract: CompanyContract) => {
     {
       icon: TrendingUpOutlinedIcon,
       label: "正式轉供日",
-      content: companyContract.transferAt
-        ? formatDateTime(companyContract.transferAt)
+      content: companyContract.officialTransferDate
+        ? formatDateTime(companyContract.officialTransferDate)
         : "N/A",
     },
     {

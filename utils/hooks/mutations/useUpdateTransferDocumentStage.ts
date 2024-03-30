@@ -11,7 +11,7 @@ export const useUpdateTransferDocumentStage = () => {
 export const useForwardTransferDocumentStage = (id: string) => {
   const [forward, { loading }] = useUpdateTransferDocumentStage();
 
-  return [(date: Date, number?: string) => forward({ variables: { id, moveNextStep: true, input: { date, number }, }}), loading] as const;
+  return [(date: Date, number?: string, companyContractId?: string) => forward({ variables: { id, moveNextStep: true, input: { date, number, companyContractId }, }}), loading] as const;
 }
 
 export const useBackwardTransferDocumentStage = (id: string) => {

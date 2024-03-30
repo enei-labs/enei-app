@@ -13,5 +13,6 @@ export const POWER_PLANT_FIELDS = gql`
     address
     createdBy
     createdAt
+    companyContractId
   }
 `

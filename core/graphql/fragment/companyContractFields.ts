@@ -10,6 +10,7 @@ export const COMPANY_CONTRACT_FIELDS = gql`
     price
     duration
     transferAt
+    officialTransferDate
     startedAt
     endedAt
     transferRate

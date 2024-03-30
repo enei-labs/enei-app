@@ -13,11 +13,18 @@ interface ProgressDialogProps {
   onClose: VoidFunction;
   showContractInput: boolean;
   transferDocumentId: string;
+  companyContractId: string;
 }
 
 function ProgressDialog(props: ProgressDialogProps) {
-  const { open, onClose, showContractInput, handleNextFn, transferDocumentId } =
-    props;
+  const {
+    open,
+    onClose,
+    showContractInput,
+    handleNextFn,
+    transferDocumentId,
+    companyContractId,
+  } = props;
   const [updateStage, loading] =
     useForwardTransferDocumentStage(transferDocumentId);
   const [date, setDate] = useState(new Date().toString());
@@ -53,7 +60,7 @@ function ProgressDialog(props: ProgressDialogProps) {
           startIcon={<CheckCircleOutlineIcon />}
           variant="contained"
           onClick={async () => {
-            await updateStage(new Date(date), number);
+            await updateStage(new Date(date), number, companyContractId);
             handleNextFn();
             onClose();
           }}

@@ -65,7 +65,9 @@ const ProgressBar = ({ transferDocument }: ProgressBarProps) => {
   );
 
   const handleNext = () => {
-    setActiveStep((prevActiveStep) => Math.min(prevActiveStep + 1, steps.length));
+    setActiveStep((prevActiveStep) =>
+      Math.min(prevActiveStep + 1, steps.length)
+    );
   };
 
   const handleBack = async () => {
@@ -154,6 +156,10 @@ const ProgressBar = ({ transferDocument }: ProgressBarProps) => {
       {shownDialog ? (
         <ProgressDialog
           transferDocumentId={transferDocument.id}
+          companyContractId={
+            transferDocument.transferDocumentPowerPlants[0].powerPlant
+              .companyContractId
+          }
           handleNextFn={handleNext}
           onClose={() => showDialog(false)}
           open={shownDialog}

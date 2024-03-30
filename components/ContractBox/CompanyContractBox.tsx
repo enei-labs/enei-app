@@ -3,7 +3,7 @@ import EventOutlinedIcon from "@mui/icons-material/EventOutlined";
 import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined";
 import CreditCardOutlinedIcon from "@mui/icons-material/CreditCardOutlined";
 import AccessTimeOutlinedIcon from "@mui/icons-material/AccessTimeOutlined";
-import { CompanyContract } from "@core/graphql/types";
+import { CompanyContract, RateType } from "@core/graphql/types";
 import { formatDateTime } from "@utils/format";
 import { useRouter } from "next/router";
 import ContractBox, { ContractInfo } from "@components/ContractBox/ContractBox";
@@ -15,13 +15,15 @@ interface CompanyContractBoxProps {
 function CompanyContractBox(props: CompanyContractBoxProps) {
   const { contract } = props;
   const router = useRouter();
+  const isSingleRate = contract.rateType === RateType.Single;
+  // const contractPowerPlants = contract.powerPlants.sort((a, b) => a.supplyVolume);
 
   const contractInfos: ContractInfo[] = [
     {
       icon: MonetizationOnOutlinedIcon,
       name: "合約價格",
-      content: contract.price ?? "N/A",
-      unit: "元/kW",
+      content: isSingleRate ? "各別費率" : contract.price ?? "N/A",
+      unit: isSingleRate ? "" : "元/kW",
     },
     {
       icon: EventOutlinedIcon,
@@ -37,7 +39,9 @@ function CompanyContractBox(props: CompanyContractBoxProps) {
     {
       icon: TrendingUpOutlinedIcon,
       name: "正式轉供日",
-      content: formatDateTime(contract.transferAt),
+      content: contract.officialTransferDate
+        ? formatDateTime(contract.officialTransferDate)
+        : "N/A",
     },
     {
       icon: CreditCardOutlinedIcon,
