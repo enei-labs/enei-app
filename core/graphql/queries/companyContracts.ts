@@ -16,6 +16,11 @@ export const COMPANY_CONTRACTS = gql`
       total
       list {
         ...companyContractFields
+        powerPlants {
+          id
+          name
+          supplyVolume
+        }
       }
     }
   }

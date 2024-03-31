@@ -7,6 +7,8 @@ import { CompanyContract, RateType } from "@core/graphql/types";
 import { formatDateTime } from "@utils/format";
 import { useRouter } from "next/router";
 import ContractBox, { ContractInfo } from "@components/ContractBox/ContractBox";
+import { useMemo } from "react";
+import BoltIcon from "@mui/icons-material/BoltOutlined";
 
 interface CompanyContractBoxProps {
   contract: CompanyContract;
@@ -16,9 +18,21 @@ function CompanyContractBox(props: CompanyContractBoxProps) {
   const { contract } = props;
   const router = useRouter();
   const isSingleRate = contract.rateType === RateType.Single;
-  // const contractPowerPlants = contract.powerPlants.sort((a, b) => a.supplyVolume);
+  const totalSupplyVolume = useMemo(
+    () =>
+      (contract.powerPlants ?? []).reduce((acc, cur) => {
+        return acc + cur.supplyVolume;
+      }, 0),
+    [contract.powerPlants]
+  );
 
   const contractInfos: ContractInfo[] = [
+    {
+      icon: BoltIcon,
+      name: "裝置量",
+      content: totalSupplyVolume,
+      unit: " MW",
+    },
     {
       icon: MonetizationOnOutlinedIcon,
       name: "合約價格",

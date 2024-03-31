@@ -43,7 +43,6 @@ const styles = {
 } as const;
 
 const companyContractCardInfo = (companyContract: CompanyContract) => {
-  console.log({ companyContract });
   const isSingleRate = companyContract.rateType === RateType.Single;
   const companyContractInfo = [
     {
