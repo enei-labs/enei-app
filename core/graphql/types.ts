@@ -379,6 +379,8 @@ export type Dashboard = {
 
 export type DashboardCompany = {
   __typename?: 'DashboardCompany';
+  /** 平均購買價格 */
+  averagePurchasePrice: Scalars['String']['output'];
   /** 發電業數量 */
   totalCompanies: Scalars['Int']['output'];
   /** 電廠數量 */
@@ -426,6 +428,8 @@ export type DashboardUserBill = {
 
 export type DashboardUserContract = {
   __typename?: 'DashboardUserContract';
+  /** 平均售電價格 */
+  averageSellingPrice: Scalars['String']['output'];
   /** 容量不足用戶名單 */
   remainingDemandFromUserContracts: Array<RemainingDemandFromUserContract>;
   /** 未來一年用戶合約到期名單 */

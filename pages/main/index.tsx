@@ -119,7 +119,14 @@ function MainPage() {
           <Grid item sm={5}>
             <Card sx={{ p: "36px" }}>
               {/* @TODO calculate the price */}
-              <AnnualPrice annualBuyPrice="N/A" annualSellPrice="N/A" />
+              <AnnualPrice
+                averagePurchasePrice={
+                  data?.dashboard.companyInfo.averagePurchasePrice ?? "N/A"
+                }
+                averageSellingPrice={
+                  data?.dashboard.userContractInfo.averageSellingPrice ?? "N/A"
+                }
+              />
             </Card>
           </Grid>
           <Grid item sm={6}>

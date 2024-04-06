@@ -6,6 +6,7 @@ export const DASHBOARD_FIELDS = gql`
       totalCompanies
       totalPowerPlants
       totalVolume
+      averagePurchasePrice
     }
     userInfo {
       count
@@ -16,6 +17,7 @@ export const DASHBOARD_FIELDS = gql`
       turnover
     }
     userContractInfo {
+      averageSellingPrice
       userContractsExpiringSoon {
         id
         name
