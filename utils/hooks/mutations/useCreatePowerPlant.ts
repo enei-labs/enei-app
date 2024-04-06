@@ -18,15 +18,23 @@ export const useCreatePowerPlant = (companyContractId: string) => {
               },
             });
 
-            const updatedPowerPlants = {
-              total: (existingPowerPlantsData?.powerPlants?.total ?? 0) + 1,
-              list: [data.createPowerPlant, ...(existingPowerPlantsData?.powerPlants?.list ?? [])],
-            };
+            if (existingPowerPlantsData) {
+              const updatedPowerPlants = {
+                ...existingPowerPlantsData,
+                total: (existingPowerPlantsData?.powerPlants?.total ?? 0) + 1,
+                list: [data.createPowerPlant, ...(existingPowerPlantsData?.powerPlants?.list ?? [])],
+              };
 
-            cache.writeQuery({
-              query: POWER_PLANTS,
-              data: { powerPlants: updatedPowerPlants },
-            });
+              cache.writeQuery({
+                query: POWER_PLANTS,
+                variables: {
+                  limit: 10,
+                  offset: 0,
+                  companyContractId: companyContractId,
+                },
+                data: { powerPlants: updatedPowerPlants },
+              });
+            }
           }
         } catch (error) {
           console.error("Error updating cache for createPowerPlant", error);

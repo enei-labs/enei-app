@@ -11,11 +11,12 @@ export const useCreateTransferDocument = () => {
   >(CREATE_TRANSFER_DOCUMENT, {
     update(cache, { data }) {
       if (data?.createTransferDocument?.__typename === 'TransferDocument') {
-        const existingTransferDocuments = cache.readQuery<{ transferDocuments: TransferDocumentPage }>({ query: TRANSFER_DOCUMENTS });
+        const existingTransferDocuments = cache.readQuery<{ transferDocuments: TransferDocumentPage }>({ query: TRANSFER_DOCUMENTS, variables: { limit: 10, offset: 0 } });
 
         if (existingTransferDocuments) {
           cache.writeQuery({
             query: TRANSFER_DOCUMENTS,
+            variables: { limit: 10, offset: 0 },
             data: {
               transferDocuments: {
                 ...existingTransferDocuments.transferDocuments,

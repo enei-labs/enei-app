@@ -105,7 +105,7 @@ function UserContractDialog(props: UserContractDialogProps) {
   const [electricNumberIndex, setElectricNumberIndex] = useState<number>(-1);
 
   /** apis */
-  const [createUserContract, { loading }] = useCreateUserContract();
+  const [createUserContract, { loading }] = useCreateUserContract(user.id);
   const { data: usersData } = useUsers({ onlyBasicInformation: true });
 
   /** selected user/power-plant info */

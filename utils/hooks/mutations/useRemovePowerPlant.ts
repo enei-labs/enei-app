@@ -3,16 +3,17 @@ import useMutation from '../useMutation';
 import { REMOVE_POWER_PLANT } from '@core/graphql/mutations/removePowerPlant';
 import { POWER_PLANTS } from '@core/graphql/queries';
 
-export const useRemovePowerPlant = () => {
+export const useRemovePowerPlant = (companyContractId: string) => {
   return useMutation<{ removePowerPlant: PowerPlant }, { id: string }>(
     REMOVE_POWER_PLANT, {
       update(cache, { data }) {
         if (data?.removePowerPlant?.__typename === 'PowerPlant') {
-          const existingPowerPlants = cache.readQuery<{ powerPlants: PowerPlantPage }>({ query: POWER_PLANTS });
+          const existingPowerPlants = cache.readQuery<{ powerPlants: PowerPlantPage }>({ query: POWER_PLANTS, variables: { limit: 10, offset: 0, companyContractId } });
 
           if (existingPowerPlants) {
             cache.writeQuery({
               query: POWER_PLANTS,
+              variables: { limit: 10, offset: 0, companyContractId },
               data: {
                 powerPlants: {
                   ...existingPowerPlants.powerPlants,

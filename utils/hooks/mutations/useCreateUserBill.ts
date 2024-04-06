@@ -10,11 +10,12 @@ export const useCreateUserBill = () => {
   >(CREATE_USER_BILL, {
     update(cache, { data }) {
       if (data?.createUserBill?.__typename === 'UserBill') {
-        const existingUserBills = cache.readQuery<{ userBills: UserBillPage }>({ query: USER_BILLS });
+        const existingUserBills = cache.readQuery<{ userBills: UserBillPage }>({ query: USER_BILLS, variables: { limit: 10, offset: 0 } });
 
         if (existingUserBills) {
           cache.writeQuery({
             query: USER_BILLS,
+            variables: { limit: 10, offset: 0 },
             data: {
               userBills: {
                 ...existingUserBills.userBills,

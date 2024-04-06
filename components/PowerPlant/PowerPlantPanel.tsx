@@ -24,7 +24,7 @@ const PowerPlantPanel = ({
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [selectedData, selectData] = useState<PowerPlant | null>(null);
-  const [removePowerPlant] = useRemovePowerPlant();
+  const [removePowerPlant] = useRemovePowerPlant(companyContractId);
 
   const configs: Config<PowerPlant>[] = [
     {

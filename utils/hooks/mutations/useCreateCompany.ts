@@ -13,6 +13,10 @@ export const useCreateCompany = () => {
           if (existingCompanies) {
             cache.writeQuery({
               query: COMPANIES,
+              variables: {
+                limit: 10,
+                offset: 0,
+              },
               data: {
                 companies: {
                   ...existingCompanies.companies,
