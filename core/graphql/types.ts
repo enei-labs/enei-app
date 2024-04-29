@@ -857,6 +857,7 @@ export type QueryAdminsArgs = {
 export type QueryCompaniesArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
 };
 
 
