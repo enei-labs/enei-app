@@ -1,5 +1,6 @@
 import InputText from "@components/Input/InputText";
 import { Option } from "@core/types";
+import { CircularProgress } from "@mui/material";
 import Autocomplete, {
   AutocompleteRenderInputParams,
 } from "@mui/material/Autocomplete";
@@ -14,6 +15,7 @@ interface InputAutocompleteProps {
   helperText?: React.ReactNode;
   disabled?: boolean;
   onChange?: ControllerRenderProps["onChange"];
+  loading?: boolean;
 }
 
 const InputAutocomplete = forwardRef<HTMLDivElement, InputAutocompleteProps>(
@@ -25,6 +27,7 @@ const InputAutocomplete = forwardRef<HTMLDivElement, InputAutocompleteProps>(
       helperText,
       placeholder,
       onChange,
+      loading,
       ...otherProps
     } = props;
 
@@ -32,6 +35,8 @@ const InputAutocomplete = forwardRef<HTMLDivElement, InputAutocompleteProps>(
       <Autocomplete
         {...otherProps}
         options={options}
+        loading
+        loadingText={<CircularProgress size="16px" />}
         getOptionLabel={(option) => option.label}
         onChange={(e, value) => {
           onChange?.(value);

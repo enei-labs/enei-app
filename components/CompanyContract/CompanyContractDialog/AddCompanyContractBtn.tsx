@@ -73,7 +73,6 @@ export const useCreateCompanyContractSubmitFn = (
     ) {
       formData.endedAt = undefined;
     }
-    console.log({ formData });
 
     if (!formData.contractDoc?.id) {
       toast.error("購電合約文件未上傳");
