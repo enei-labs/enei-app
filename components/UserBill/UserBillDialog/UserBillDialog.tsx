@@ -115,6 +115,7 @@ function UserBillDialog(props: UserBillDialogProps) {
           value: user.id,
         })) ?? [],
       validated: textValidated,
+      loading: loading,
     },
     {
       type: "SINGLE_SELECT",
@@ -132,6 +133,7 @@ function UserBillDialog(props: UserBillDialogProps) {
               account: b.account,
             },
           })) ?? [],
+      loading: loading,
     },
     {
       type: "NUMBER",

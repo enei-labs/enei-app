@@ -118,7 +118,6 @@ function MainPage() {
           </Grid>
           <Grid item sm={5}>
             <Card sx={{ p: "36px" }}>
-              {/* @TODO calculate the price */}
               <AnnualPrice
                 averagePurchasePrice={
                   data?.dashboard.companyInfo.averagePurchasePrice ?? "N/A"

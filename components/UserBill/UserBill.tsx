@@ -48,7 +48,6 @@ interface UserBillProps {
 /** @TODO check details */
 const UserBill = forwardRef((props: UserBillProps, ref) => {
   const { userBill, fee } = props;
-  console.log({ userBill });
 
   const electricNumberInfos = useMemo(() => {
     // const f = userBill.electricNumberInfos.map((x) => x.number === );

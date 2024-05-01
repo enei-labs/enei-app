@@ -50,8 +50,6 @@ export const useCreateDisplayFieldConfigs = (
     };
   }, [contractTimeType, rateType]);
 
-  console.log({ displayFieldConfigs });
-
   // Add useEffect to update endedAt when startedAt or duration changes
   useEffect(() => {
     if (!setEndedAt) return;
