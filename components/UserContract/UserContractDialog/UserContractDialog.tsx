@@ -140,6 +140,7 @@ function UserContractDialog(props: UserContractDialogProps) {
           salesPeriod: formData.salesPeriod,
           transferAt: formData.transferAt,
           contractDoc: formData.contractDoc.id,
+          contractDocName: formData.contractDoc.file.name,
           electricNumberInfos: formData.electricNumberInfos.map((info) => ({
             companyAddress: info.companyAddress,
             address: info.address,

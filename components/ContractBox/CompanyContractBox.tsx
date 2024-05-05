@@ -36,8 +36,8 @@ function CompanyContractBox(props: CompanyContractBoxProps) {
     {
       icon: MonetizationOnOutlinedIcon,
       name: "合約價格",
-      content: isSingleRate ? "各別費率" : contract.price ?? "N/A",
-      unit: isSingleRate ? "" : "元/kW",
+      content: isSingleRate ? contract.price ?? "N/A" : "各別費率",
+      unit: isSingleRate ? "" : "元/kWh",
     },
     {
       icon: EventOutlinedIcon,

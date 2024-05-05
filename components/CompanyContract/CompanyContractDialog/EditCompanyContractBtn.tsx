@@ -48,9 +48,18 @@ const EditCompanyContractBtn = (props: CompanyContractProps) => {
       transferRate: companyContract.transferRate,
       daysToPay: companyContract.daysToPay,
       description: companyContract.description,
-      contractDoc: { id: companyContract.contractDoc, file: undefined },
-      transferDoc: { id: companyContract.transferDoc, file: undefined },
-      industryDoc: { id: companyContract.industryDoc, file: undefined },
+      contractDoc: {
+        id: companyContract.contractDoc,
+        file: { name: companyContract.contractDocName },
+      },
+      transferDoc: {
+        id: companyContract.transferDoc,
+        file: { name: companyContract.transferDocName },
+      },
+      industryDoc: {
+        id: companyContract.industryDoc,
+        file: { name: companyContract.industryDocName },
+      },
     },
   });
   const contractTimeType = watch("contractTimeType");
@@ -78,8 +87,11 @@ const EditCompanyContractBtn = (props: CompanyContractProps) => {
           daysToPay: Number(formData.daysToPay),
           description: formData.description,
           contractDoc: formData.contractDoc?.id,
+          contractDocName: formData.contractDoc?.file?.name,
           transferDoc: formData.transferDoc?.id,
+          transferDocName: formData.transferDoc?.file?.name,
           industryDoc: formData.industryDoc?.id,
+          industryDocName: formData.industryDoc?.file?.name,
         },
       },
       onCompleted: () => toast.success("更新成功！"),

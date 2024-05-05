@@ -26,15 +26,17 @@ const styles = {
 
 interface DownloadDocBoxProps {
   fileId?: string | null;
+  fileName?: string | null;
   label: React.ReactNode;
 }
 
 const DownloadDocBox = (props: DownloadDocBoxProps) => {
-  const { label, fileId } = props;
+  const { label, fileId, fileName } = props;
 
   return (
     <Box sx={styles.box}>
       <Typography variant="h6">{label}</Typography>
+      <Typography variant="body2">{fileName}</Typography>
       <Box sx={styles.container}>
         <IconBtn
           tooltipText={fileId ? "下載檔案" : "檔案未上傳"}

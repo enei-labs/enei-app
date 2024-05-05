@@ -16,7 +16,7 @@ export type FormData = {
   transferRate: number;
   daysToPay: number;
   description: string;
-  contractDoc: { id: string; file: File };
-  transferDoc: { id: string; file: File };
-  industryDoc: { id: string; file: File };
+  contractDoc: { id: string; file: Partial<File> };
+  transferDoc: { id: string; file: Partial<File> };
+  industryDoc: { id: string; file: Partial<File> };
 };

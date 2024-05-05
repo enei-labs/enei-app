@@ -175,6 +175,7 @@ export type CompanyContract = {
   __typename?: 'CompanyContract';
   company: Company;
   contractDoc: Scalars['String']['output'];
+  contractDocName: Scalars['String']['output'];
   contractTimeType: ContractTimeType;
   /** 轉供條件 */
   daysToPay: Scalars['Int']['output'];
@@ -184,6 +185,7 @@ export type CompanyContract = {
   endedAt?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['ID']['output'];
   industryDoc?: Maybe<Scalars['String']['output']>;
+  industryDocName?: Maybe<Scalars['String']['output']>;
   monthlyTransferDegrees: Array<Array<TransferDegree>>;
   name: Scalars['String']['output'];
   /** 合約編號 */
@@ -200,6 +202,7 @@ export type CompanyContract = {
   totalVolume: Scalars['Int']['output'];
   transferAt?: Maybe<Scalars['DateTime']['output']>;
   transferDoc?: Maybe<Scalars['String']['output']>;
+  transferDocName?: Maybe<Scalars['String']['output']>;
   /** 轉供率要求（%） */
   transferRate: Scalars['Int']['output'];
 };
@@ -243,18 +246,21 @@ export type CreateAdminResponse = AccountAlreadyExistsError | Admin;
 export type CreateCompanyContractInput = {
   companyId: Scalars['ID']['input'];
   contractDoc: Scalars['String']['input'];
+  contractDocName: Scalars['String']['input'];
   contractTimeType: ContractTimeType;
   daysToPay: Scalars['Int']['input'];
   description?: InputMaybe<Scalars['String']['input']>;
   duration?: InputMaybe<Scalars['String']['input']>;
   endedAt?: InputMaybe<Scalars['DateTime']['input']>;
   industryDoc?: InputMaybe<Scalars['String']['input']>;
+  industryDocName?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
   number: Scalars['String']['input'];
   price?: InputMaybe<Scalars['String']['input']>;
   rateType: RateType;
   startedAt: Scalars['DateTime']['input'];
   transferDoc?: InputMaybe<Scalars['String']['input']>;
+  transferDocName?: InputMaybe<Scalars['String']['input']>;
   transferRate: Scalars['Int']['input'];
 };
 
@@ -341,6 +347,7 @@ export type CreateUserBillInput = {
 
 export type CreateUserContractInput = {
   contractDoc: Scalars['String']['input'];
+  contractDocName: Scalars['String']['input'];
   electricNumberInfos: Array<ElectricNumberInfoInput>;
   lowerLimit: Scalars['Int']['input'];
   name: Scalars['String']['input'];
@@ -992,6 +999,7 @@ export type RemainingDemandFromCompanyContract = {
   capacity: Scalars['Int']['output'];
   company: Company;
   contractDoc: Scalars['String']['output'];
+  contractDocName: Scalars['String']['output'];
   contractTimeType: ContractTimeType;
   /** 轉供條件 */
   daysToPay: Scalars['Int']['output'];
@@ -1001,6 +1009,7 @@ export type RemainingDemandFromCompanyContract = {
   endedAt?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['ID']['output'];
   industryDoc?: Maybe<Scalars['String']['output']>;
+  industryDocName?: Maybe<Scalars['String']['output']>;
   monthlyTransferDegrees: Array<Array<TransferDegree>>;
   name: Scalars['String']['output'];
   /** 合約編號 */
@@ -1017,6 +1026,7 @@ export type RemainingDemandFromCompanyContract = {
   totalVolume: Scalars['Int']['output'];
   transferAt?: Maybe<Scalars['DateTime']['output']>;
   transferDoc?: Maybe<Scalars['String']['output']>;
+  transferDocName?: Maybe<Scalars['String']['output']>;
   /** 轉供率要求（%） */
   transferRate: Scalars['Int']['output'];
 };
@@ -1025,6 +1035,7 @@ export type RemainingDemandFromUserContract = {
   __typename?: 'RemainingDemandFromUserContract';
   capacity: Scalars['Int']['output'];
   contractDoc: Scalars['String']['output'];
+  contractDocName: Scalars['String']['output'];
   contractTimeType: ContractTimeType;
   /** 電號資訊 */
   electricNumberInfos: Array<ElectricNumberInfo>;
@@ -1177,18 +1188,21 @@ export type TransferDocumentUser = {
 export type UpdateCompanyContractInput = {
   companyContractId: Scalars['ID']['input'];
   contractDoc?: InputMaybe<Scalars['String']['input']>;
+  contractDocName?: InputMaybe<Scalars['String']['input']>;
   contractTimeType: ContractTimeType;
   daysToPay?: InputMaybe<Scalars['Int']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   duration?: InputMaybe<Scalars['String']['input']>;
   endedAt?: InputMaybe<Scalars['DateTime']['input']>;
   industryDoc?: InputMaybe<Scalars['String']['input']>;
+  industryDocName?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   number?: InputMaybe<Scalars['String']['input']>;
   price?: InputMaybe<Scalars['String']['input']>;
   startedAt?: InputMaybe<Scalars['DateTime']['input']>;
   transferAt?: InputMaybe<Scalars['DateTime']['input']>;
   transferDoc?: InputMaybe<Scalars['String']['input']>;
+  transferDocName?: InputMaybe<Scalars['String']['input']>;
   transferRate?: InputMaybe<Scalars['Int']['input']>;
 };
 
@@ -1339,6 +1353,7 @@ export type UserBillRecipientAccountInput = {
 export type UserContract = {
   __typename?: 'UserContract';
   contractDoc: Scalars['String']['output'];
+  contractDocName: Scalars['String']['output'];
   contractTimeType: ContractTimeType;
   /** 電號資訊 */
   electricNumberInfos: Array<ElectricNumberInfo>;

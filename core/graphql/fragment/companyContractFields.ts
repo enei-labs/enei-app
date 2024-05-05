@@ -16,8 +16,11 @@ export const COMPANY_CONTRACT_FIELDS = gql`
     transferRate
     daysToPay
     contractDoc
+    contractDocName
     industryDoc
+    industryDocName
     transferDoc
+    transferDocName
     description
   }
 `

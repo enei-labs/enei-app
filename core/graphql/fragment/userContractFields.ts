@@ -18,6 +18,7 @@ export const USER_CONTRACT_FIELDS = gql`
     salesTo
     transferAt
     contractDoc
+    contractDocName
 		electricNumberInfos {
       ...electricNumberInfoFields
 		}

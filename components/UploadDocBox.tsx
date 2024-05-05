@@ -128,7 +128,7 @@ const UploadDocBox = React.forwardRef<HTMLInputElement, UploadDocBoxProps>(
       }
     );
 
-    const [fileName, setFileName] = useState<any>(value);
+    const [fileName, setFileName] = useState<string | null>(null);
 
     const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
       const files = event.target.files;
@@ -137,7 +137,7 @@ const UploadDocBox = React.forwardRef<HTMLInputElement, UploadDocBoxProps>(
       if (file) {
         const data = await runAsync(file);
         onChange({ id: data.fileId, file: file });
-        setFileName({ id: file.name });
+        setFileName(file.name);
       }
     };
 
@@ -145,7 +145,7 @@ const UploadDocBox = React.forwardRef<HTMLInputElement, UploadDocBoxProps>(
       <Box sx={styles.box}>
         <Typography variant="h6">{label}</Typography>
         <Box sx={styles.container}>
-          <Typography variant="body2">{fileName?.id || ""}</Typography>
+          <Typography variant="body2">{fileName || ""}</Typography>
           <label htmlFor={name}>
             <input
               hidden

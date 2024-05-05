@@ -189,14 +189,17 @@ function CompanyContractCard(props: CompanyContractCardProps) {
             <DownloadDocBox
               fileId={companyContract.contractDoc}
               label="購電合約"
+              fileName={companyContract.contractDocName}
             />
             <DownloadDocBox
               fileId={companyContract.industryDoc}
               label="電業佐證資料"
+              fileName={companyContract.industryDocName}
             />
             <DownloadDocBox
               fileId={companyContract.transferDoc}
               label="轉供所需資料"
+              fileName={companyContract.transferDocName}
             />
           </Box>
           <Box
