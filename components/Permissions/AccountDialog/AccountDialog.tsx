@@ -1,5 +1,5 @@
 import { CircularProgress, Grid, Tooltip, Typography } from "@mui/material";
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { IconBtn } from "@components/Button";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { Account, Role } from "@core/graphql/types";
@@ -92,9 +92,35 @@ function AccountDialog(props: AccountDialogProps) {
     skip: !role || role.value !== Role.User,
   });
 
-  const { data: companiesData, loading } = useCompanies({
+  const {
+    data: companiesData,
+    loading,
+    fetchMore,
+  } = useCompanies({
     skip: !role || [Role.Admin, Role.SuperAdmin].includes(role.value),
   });
+
+  const companiesLoadMore = useCallback(
+    () =>
+      fetchMore({
+        variables: {
+          offset: companiesData?.companies.list.length,
+        },
+        updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult) return prev;
+          return {
+            companies: {
+              total: fetchMoreResult.companies.total,
+              list: [
+                ...(prev?.companies?.list ?? []),
+                ...fetchMoreResult.companies.list,
+              ],
+            },
+          };
+        },
+      }),
+    [companiesData, fetchMore]
+  );
 
   const displayFieldConfigs: FieldConfig[] = useMemo(() => {
     if ([Role.Admin, Role.SuperAdmin].includes(role?.value))
@@ -113,6 +139,7 @@ function AccountDialog(props: AccountDialogProps) {
               label: o.name,
               value: o.id,
             })) ?? [],
+          fetchMoreData: companiesLoadMore,
         },
         {
           type: "SINGLE_SELECT",
@@ -141,11 +168,12 @@ function AccountDialog(props: AccountDialogProps) {
             value: o.id,
           })) ?? [],
         helperText: "若查無此公司，需先至發電業頁面新增公司",
+        fetchMoreData: companiesLoadMore,
       },
       basicConfigs[1],
       basicConfigs[2],
     ];
-  }, [companiesData, usersData, role]);
+  }, [companiesData, usersData, role, companiesLoadMore]);
 
   useEffect(() => {
     if (role?.value === Role.Company && company?.value) {

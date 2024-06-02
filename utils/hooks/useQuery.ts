@@ -5,7 +5,7 @@ const useQuery = <TData = any, TVariables extends OperationVariables = Operation
   query: DocumentNode | TypedDocumentNode<TData, TVariables>,
   options?: QueryHookOptions<TData, TVariables>
 ) => {
-  const { loading, error, data, refetch } = useApolloQuery<TData, TVariables>(query, {
+  const { loading, error, data, refetch, fetchMore } = useApolloQuery<TData, TVariables>(query, {
     ...options,
     onError: (err) => {
       toast.error(err.message)
@@ -13,7 +13,7 @@ const useQuery = <TData = any, TVariables extends OperationVariables = Operation
     },
   })
 
-  return { loading, error, data, refetch }
+  return { loading, error, data, refetch, fetchMore }
 }
 
 export default useQuery

@@ -1,6 +1,7 @@
 import * as yup from 'yup'
 import { FieldController } from '.'
 import Option from './option'
+import { ApolloQueryResult } from '@apollo/client'
 
 
 export enum FieldType {
@@ -61,6 +62,7 @@ interface FieldConfig {
   hint?: React.ReactNode
   radios?: { label: string, value: any }[]
   component?: React.ComponentType<FieldController>
+  fetchMoreData?: () => Promise<ApolloQueryResult<any>>
 }
 
 const requiredMessage = '此為必填欄位'

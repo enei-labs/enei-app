@@ -117,9 +117,9 @@ const FieldsController: React.FC<FieldsControllerProps> = ({
             <Controller
               name={name}
               control={control}
-              render={(fieldProps) =>
-                slotsField(fieldProps, type as FieldType, item)
-              }
+              render={(fieldProps) => {
+                return slotsField(fieldProps, type as FieldType, item);
+              }}
             />
           );
 
