@@ -43,7 +43,7 @@ export const initialConfigs: FieldConfig[] = [
   {
     type: "NUMBER",
     name: "volume",
-    label: "電廠裝置容量(kWh)",
+    label: "電廠裝置容量(kW)",
     required: true,
     validated: numberValidated,
   },
@@ -57,7 +57,7 @@ export const initialConfigs: FieldConfig[] = [
   {
     type: "NUMBER",
     name: "supplyVolume",
-    label: "供電裝置容量(kWh)",
+    label: "供電裝置容量(kW)",
     disabled: true,
   },
   {
