@@ -18,6 +18,7 @@ export const USER_FIELDS = gql`
       bankBranchName
       accountName
       account
+      taxId
     }
     thisYearTransferRecords {
       ...transferDegreeFields
