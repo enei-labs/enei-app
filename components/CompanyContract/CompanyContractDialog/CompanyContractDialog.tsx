@@ -16,7 +16,6 @@ interface CompanyContractProps {
   closeFn: VoidFunction;
   submitFn: any;
   displayFieldConfigs: {
-    name: FieldConfig[];
     docs: FieldConfig[];
     contract: FieldConfig[];
   };

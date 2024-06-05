@@ -20,7 +20,7 @@ export const useCreateDisplayFieldConfigs = (
   const displayFieldConfigs = useMemo(() => {
     let fieldConfigs = baseFieldConfigs;
     const baseConfigs = {
-      // name: [baseFieldConfigs[0]],
+      name: [baseFieldConfigs[0]],
       contract: [baseFieldConfigs[1]],
       docs: baseFieldConfigs.slice(2),
     };
