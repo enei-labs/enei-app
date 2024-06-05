@@ -6,12 +6,6 @@ import { textValidated } from "@core/types/fieldConfig";
 export const contractTransferStartTimeFieldConfigs: FieldConfig[] = [
   {
     type: "TEXT",
-    name: "companyName",
-    label: "公司名稱",
-    disabled: true,
-  },
-  {
-    type: "TEXT",
     name: "name",
     label: "合約名稱",
     required: true,
