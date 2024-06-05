@@ -175,7 +175,7 @@ export type CompanyContract = {
   __typename?: 'CompanyContract';
   company: Company;
   contractDoc: Scalars['String']['output'];
-  contractDocName: Scalars['String']['output'];
+  contractDocName?: Maybe<Scalars['String']['output']>;
   contractTimeType: ContractTimeType;
   /** 轉供條件 */
   daysToPay: Scalars['Int']['output'];
@@ -999,7 +999,7 @@ export type RemainingDemandFromCompanyContract = {
   capacity: Scalars['Int']['output'];
   company: Company;
   contractDoc: Scalars['String']['output'];
-  contractDocName: Scalars['String']['output'];
+  contractDocName?: Maybe<Scalars['String']['output']>;
   contractTimeType: ContractTimeType;
   /** 轉供條件 */
   daysToPay: Scalars['Int']['output'];
@@ -1050,6 +1050,7 @@ export type RemainingDemandFromUserContract = {
   serialNumber: Scalars['String']['output'];
   transferAt?: Maybe<Scalars['DateTime']['output']>;
   upperLimit: Scalars['Int']['output'];
+  user?: Maybe<User>;
   userType: UserType;
 };
 
@@ -1368,6 +1369,7 @@ export type UserContract = {
   serialNumber: Scalars['String']['output'];
   transferAt?: Maybe<Scalars['DateTime']['output']>;
   upperLimit: Scalars['Int']['output'];
+  user?: Maybe<User>;
   userType: UserType;
 };
 

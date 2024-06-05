@@ -14,8 +14,8 @@ const UserContractExpiredPanel = (props: UserContractExpiredPanelProps) => {
 
   const configs: Config<UserContract>[] = [
     {
-      header: "契約名稱",
-      accessor: "name",
+      header: "用戶名稱",
+      render: (data) => <>{data.user?.name ?? ""}</>,
     },
     {
       header: "契約編號",

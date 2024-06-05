@@ -24,6 +24,10 @@ export const DASHBOARD_FIELDS = gql`
         serialNumber
         salesAt
         salesTo
+        user {
+          id
+          name
+        }
       }
       remainingDemandFromUserContracts {
         id
