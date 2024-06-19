@@ -194,6 +194,8 @@ const CompanyDialog = (props: CompanyDialogProps) => {
               (bankAccount) => ({
                 bankCode: bankAccount.bankCode.value,
                 account: bankAccount.account,
+                accountName: bankAccount.accountName,
+                bankBranchCode: bankAccount.bankBranchCode.value,
               })
             ),
           },
