@@ -156,6 +156,8 @@ function UserContractDialog(props: UserContractDialogProps) {
               account: (
                 info.recipientAccount as unknown as Record<string, string>
               ).value.split("|")[1],
+              bankBranchCode: "",
+              accountName: "",
             },
             degree: Number(info.degree),
           })),
