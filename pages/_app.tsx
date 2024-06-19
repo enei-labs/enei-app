@@ -23,6 +23,8 @@ type AppPropsWithLayout = AppProps & {
 };
 
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
+  console.log("Current Commit Hash:", process.env.NEXT_PUBLIC_COMMIT_HASH);
+  console.log("Build Time:", process.env.NEXT_PUBLIC_BUILD_TIME);
   const getLayout = Component.getLayout ?? ((page) => page);
   const component = getLayout(<Component {...pageProps} />);
 
