@@ -34,6 +34,7 @@ const userInformationConfig: FieldConfig[] = [
     label: "用戶名稱",
     placeholder: "請填入",
     validated: textValidated,
+    required: true,
   },
   {
     type: "TEXT",
@@ -41,6 +42,7 @@ const userInformationConfig: FieldConfig[] = [
     label: "發票寄送地址",
     placeholder: "請填入",
     validated: textValidated,
+    required: true,
   },
   {
     type: "TEXT",
