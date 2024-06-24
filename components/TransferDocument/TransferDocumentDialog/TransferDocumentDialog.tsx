@@ -17,7 +17,6 @@ import Chip from "@components/Chip";
 import {
   useFetchCompaniesAllData,
   useLazyUserContracts,
-  usePowerPlants,
   useUsers,
 } from "@utils/hooks/queries";
 import EditTransferDocumentBtn from "@components/TransferDocument/TransferDocumentDialog/EditTransferDocumentBtn";

@@ -6,6 +6,7 @@ export const POWER_PLANT_FIELDS = gql`
     name
     number
     volume
+    price
     transferRate
     supplyVolume
     estimatedAnnualPowerGeneration

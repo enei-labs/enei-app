@@ -45,10 +45,16 @@ const PowerPlantPanel = ({
     {
       header: "電廠裝置容量(kW)",
       accessor: "volume",
+      render: (data) => {
+        return <div>{data.volume / 1000}</div>;
+      },
     },
     {
       header: "供電裝置容量(kW)",
       accessor: "supplyVolume",
+      render: (data) => {
+        return <div>{data.supplyVolume / 1000}</div>;
+      },
     },
     {
       header: "單位預估年發電量",
@@ -107,7 +113,10 @@ const PowerPlantPanel = ({
           open={openUpdateDialog}
           onClose={() => setOpenUpdateDialog(false)}
           variant="edit"
-          defaultValues={selectedData}
+          defaultValues={{
+            ...selectedData,
+            volume: selectedData.volume / 1000,
+          }}
           companyContractId={companyContractId}
         />
       ) : null}
