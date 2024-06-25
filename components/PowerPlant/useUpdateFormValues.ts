@@ -76,7 +76,7 @@ export const initialConfigs: FieldConfig[] = [
   },
   {
     type: "RADIO",
-    name: "energyType",
+    name: "generationType",
     label: "能源類別",
     radios: [
       {
@@ -96,7 +96,7 @@ export const initialConfigs: FieldConfig[] = [
   },
   {
     type: "RADIO",
-    name: "generationType",
+    name: "energyType",
     label: "發電類型",
     radios: [
       {

@@ -8,7 +8,12 @@ import { IconBtn } from "../Button";
 import CloseIcon from "@mui/icons-material/HighlightOff";
 import { useCreatePowerPlant } from "@utils/hooks/mutations/useCreatePowerPlant";
 import { toast } from "react-toastify";
-import { CompanyContract, PowerPlant } from "@core/graphql/types";
+import {
+  CompanyContract,
+  EnergyType,
+  GenerationType,
+  PowerPlant,
+} from "@core/graphql/types";
 import { updateFormValues } from "@components/PowerPlant/useUpdateFormValues";
 import { useEffect } from "react";
 
@@ -19,6 +24,8 @@ type FormData = {
   volume: number;
   estimatedAnnualPowerGeneration: number;
   transferRate: number;
+  energyType: EnergyType;
+  generationType: GenerationType;
   address: string;
   supplyVolume: number;
 };
@@ -70,6 +77,8 @@ const PowerPlantDialog = (props: PowerPlantDialogProps) => {
             name: formData.name,
             number: formData.number,
             volume: Number(formData.volume * 1000),
+            energyType: formData.energyType,
+            generationType: formData.generationType,
             estimatedAnnualPowerGeneration: Number(
               formData.estimatedAnnualPowerGeneration
             ),
@@ -92,6 +101,8 @@ const PowerPlantDialog = (props: PowerPlantDialogProps) => {
             id: defaultValues.id,
             name: formData.name,
             number: formData.number,
+            generationType: formData.generationType,
+            energyType: formData.energyType,
             volume: Number(formData.volume * 1000),
             estimatedAnnualPowerGeneration: Number(
               formData.estimatedAnnualPowerGeneration

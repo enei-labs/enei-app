@@ -275,9 +275,12 @@ export type CreateCompanyInput = {
 export type CreatePowerPlantInput = {
   address: Scalars['String']['input'];
   companyContractId: Scalars['ID']['input'];
+  energyType: EnergyType;
   estimatedAnnualPowerGeneration: Scalars['Int']['input'];
+  generationType: GenerationType;
   name: Scalars['String']['input'];
   number: Scalars['String']['input'];
+  price?: InputMaybe<Scalars['String']['input']>;
   transferRate: Scalars['Int']['input'];
   volume: Scalars['Int']['input'];
 };
@@ -1229,7 +1232,9 @@ export type UpdateFeeInput = {
 
 export type UpdatePowerPlantInput = {
   address: Scalars['String']['input'];
+  energyType?: InputMaybe<EnergyType>;
   estimatedAnnualPowerGeneration: Scalars['Int']['input'];
+  generationType?: InputMaybe<GenerationType>;
   id: Scalars['ID']['input'];
   name: Scalars['String']['input'];
   number: Scalars['String']['input'];
