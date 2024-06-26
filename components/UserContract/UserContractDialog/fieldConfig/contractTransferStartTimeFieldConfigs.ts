@@ -63,7 +63,7 @@ export const contractTransferStartTimeFieldConfigs: FieldConfig[] = [
     type: "NUMBER",
     name: "salesPeriod",
     required: true,
-    label: "false",
+    label: "賣電年限",
   },
   {
     type: "DATE",
