@@ -7,11 +7,10 @@ import { TransferDocument } from "@core/graphql/types";
 import { FieldsController } from "@components/Controller";
 import { FieldConfig } from "@core/types";
 import { textValidated } from "@core/types/fieldConfig";
-import { useValidatedForm } from "@utils/hooks";
 import dynamic from "next/dynamic";
 import Dialog from "@components/Dialog";
 import { FormData } from "./FormData";
-import { Controller, useFieldArray } from "react-hook-form";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { InputAutocomplete, InputNumber, InputText } from "@components/Input";
 import Chip from "@components/Chip";
 import {
@@ -105,7 +104,7 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
     control,
     formState: { errors },
     handleSubmit,
-  } = useValidatedForm<FormData>(undefined, {
+  } = useForm<FormData>({
     defaultValues: currentModifyTransferDocument
       ? {
           name: currentModifyTransferDocument.name,

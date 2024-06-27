@@ -5,10 +5,9 @@ import { UserBill } from "@core/graphql/types";
 import { FieldsController } from "@components/Controller";
 import { FieldConfig } from "@core/types";
 import { textValidated } from "@core/types/fieldConfig";
-import { useValidatedForm } from "@utils/hooks";
 import Dialog from "@components/Dialog";
 import { FormData } from "./FormData";
-import { Controller } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { InputText } from "@components/Input";
 import RadioGroup from "@components/RadioGroup";
 import { ChargeType } from "@core/graphql/types";
@@ -56,7 +55,7 @@ function UserBillDialog(props: UserBillDialogProps) {
     formState: { errors },
     handleSubmit,
     watch,
-  } = useValidatedForm<FormData>(undefined, {
+  } = useForm<FormData>({
     defaultValues: currentModifyUserBill
       ? {
           name: currentModifyUserBill.name,

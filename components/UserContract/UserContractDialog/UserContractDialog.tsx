@@ -21,11 +21,10 @@ import {
 } from "@core/graphql/types";
 import { FieldsController } from "@components/Controller";
 import { FieldConfig } from "@core/types";
-import { useValidatedForm } from "@utils/hooks";
 import dynamic from "next/dynamic";
 import Dialog from "@components/Dialog";
 import { FormData } from "./FormData";
-import { Controller, useFieldArray } from "react-hook-form";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { InputAutocomplete, InputNumber, InputText } from "@components/Input";
 import Chip from "@components/Chip";
 import { useUsers } from "@utils/hooks/queries";
@@ -76,7 +75,7 @@ function UserContractDialog(props: UserContractDialogProps) {
     reset,
     watch,
     setValue,
-  } = useValidatedForm<FormData>(undefined, {
+  } = useForm<FormData>({
     defaultValues: {},
   });
   const contractTimeType = watch("contractTimeType");
