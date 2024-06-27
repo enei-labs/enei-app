@@ -6,12 +6,11 @@ import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOu
 import { User } from "@core/graphql/types";
 import { FieldsController } from "@components/Controller";
 import { FieldConfig } from "@core/types";
-import { textValidated } from "@core/types/fieldConfig";
-import { useValidatedForm } from "@utils/hooks";
+import { taiwanUBNValidation, textValidated } from "@core/types/fieldConfig";
 import dynamic from "next/dynamic";
 import Dialog from "@components/Dialog";
 import { FormData } from "./FormData";
-import { Controller, useFieldArray } from "react-hook-form";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { InputAutocomplete, InputNumber, InputText } from "@components/Input";
 import CreateUserBtn from "@components/User/UserDialog/CreateUserBtn";
 import EditUserBtns from "@components/User/UserDialog/EditUserBtns";
@@ -61,7 +60,7 @@ function UserDialog(props: UserDialogProps) {
     formState: { errors },
     handleSubmit,
     watch,
-  } = useValidatedForm<FormData>(undefined, {
+  } = useForm<FormData>({
     defaultValues: currentModifyUser
       ? {
           name: currentModifyUser.name,
@@ -88,6 +87,7 @@ function UserDialog(props: UserDialogProps) {
           ),
         }
       : {},
+    mode: "onChange",
   });
   const {
     fields: bankAccountsFields,
@@ -123,6 +123,12 @@ function UserDialog(props: UserDialogProps) {
       (x: { branch_code: string }) => x.branch_code === currentBankBranchCode
     );
   }, [currentBank, currentBankBranchCode]);
+
+  const validate = (value: string) => {
+    if (value.length > 10) {
+      return true;
+    }
+  };
 
   return (
     <Dialog open={isOpenDialog} onClose={onClose}>
@@ -335,14 +341,26 @@ function UserDialog(props: UserDialogProps) {
               />
               <Controller
                 control={control}
+                rules={{
+                  maxLength: {
+                    value: 10,
+                    message: "統一編號最多10碼",
+                  },
+                  validate: (value) =>
+                    taiwanUBNValidation.isValidSync(value) ||
+                    "請輸入有效的台灣統一編號",
+                }}
                 name={`bankAccounts.${index}.taxId`}
-                render={({ field }) => (
-                  <InputText
-                    {...field}
-                    label={`統一編號`}
-                    placeholder={"請填入"}
-                  />
-                )}
+                render={({ field, fieldState }) => {
+                  return (
+                    <InputText
+                      {...field}
+                      label={`統一編號`}
+                      placeholder={"請填入"}
+                      helperText={fieldState.error?.message}
+                    />
+                  );
+                }}
               />
             </Box>
           ))}
