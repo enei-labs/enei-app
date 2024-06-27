@@ -18,6 +18,7 @@ function CompanyContractBox(props: CompanyContractBoxProps) {
   const { contract } = props;
   const router = useRouter();
   const isSingleRate = contract.rateType === RateType.Single;
+
   const totalSupplyVolume = useMemo(
     () =>
       (contract.powerPlants ?? []).reduce((acc, cur) => {
