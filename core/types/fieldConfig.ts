@@ -77,9 +77,11 @@ const numberRangeValidated = yup
 
 const priceValidated = yup
   .number()
+  .transform((value, originalValue) => (originalValue.trim() === '' ? null : value))
+  .nullable()
   .required(requiredMessage)
   .min(0, '價格不能小於0')
-  .test('is-decimal', '小數點最多後三位', value => /^\d+(\.\d{1,3})?$/.test(value.toString()));
+  .test('is-decimal', '小數點最多後三位', value => value === null || /^\d+(\.\d{1,3})?$/.test(value.toString()));
 
 const textValidated = yup.string().required(requiredMessage)
 
