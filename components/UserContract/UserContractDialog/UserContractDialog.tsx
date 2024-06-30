@@ -35,6 +35,9 @@ import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import { useCreateDisplayFieldConfigs } from "@components/UserContract/UserContractDialog/fieldConfig/useCreateDisplayFieldConfigs";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { priceValidated } from "@core/types/fieldConfig";
 
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
@@ -68,16 +71,24 @@ function UserContractDialog(props: UserContractDialogProps) {
   } = props;
 
   /** form-data */
-  const {
-    control,
-    formState: { errors },
-    handleSubmit,
-    reset,
-    watch,
-    setValue,
-  } = useForm<FormData>({
-    defaultValues: {},
-  });
+  const { control, formState, handleSubmit, reset, watch, setValue } =
+    useForm<FormData>({
+      defaultValues: {},
+      resolver: (data, context, options) => {
+        const resolver: any = yupResolver(
+          yup.object().shape({
+            name: yup.string().required("請填入用戶名稱"),
+            price: priceValidated,
+          })
+        );
+
+        return resolver(data, context, options);
+      },
+      mode: "onChange",
+    });
+
+  const { errors } = formState;
+
   const contractTimeType = watch("contractTimeType");
   const salesPeriod = watch("salesPeriod");
   const salesAt = watch("salesAt");

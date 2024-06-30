@@ -1,11 +1,11 @@
 import { ContractTimeType, RateType } from "@core/graphql/types";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { addYears } from 'date-fns';
 import { baseFieldConfigs } from "@components/UserContract/UserContractDialog/fieldConfig/baseFieldConfigs";
 import { contractStartTimeFieldConfigs } from "@components/UserContract/UserContractDialog/fieldConfig/contractStartTimeFieldConfigs";
 import { contractEndTimeFieldConfigs } from "@components/UserContract/UserContractDialog/fieldConfig/contractEndTimeFieldConfigs";
 import { contractTransferStartTimeFieldConfigs } from "@components/UserContract/UserContractDialog/fieldConfig/contractTransferStartTimeFieldConfigs";
-
+import { FieldConfig } from '@core/types';
 
 export const useCreateDisplayFieldConfigs = (
   values: {
@@ -14,28 +14,31 @@ export const useCreateDisplayFieldConfigs = (
     salesAt?: Date,
   },
   setEndedAt?: (value: Date) => void,
-  ) => {
+) => {
   const { contractTimeType, salesPeriod, salesAt } = values;
+  const [fieldConfigs, setFieldConfigs] = useState<FieldConfig[]>(baseFieldConfigs);
 
-  const displayFieldConfigs = useMemo(() => {
-    let fieldConfigs = baseFieldConfigs;
+  useEffect(() => {
+    let newFieldConfigs = baseFieldConfigs;
 
-    if (!contractTimeType) return baseFieldConfigs;
+    if (!contractTimeType) {
+      setFieldConfigs(baseFieldConfigs);
+      return;
+    }
 
     switch (contractTimeType) {
       case ContractTimeType.ContractStartTime:
-        fieldConfigs = contractStartTimeFieldConfigs;
+        newFieldConfigs = contractStartTimeFieldConfigs;
         break;
       case ContractTimeType.ContractEndTime:
-        fieldConfigs = contractEndTimeFieldConfigs;
+        newFieldConfigs = contractEndTimeFieldConfigs;
         break;
       case ContractTimeType.TransferStartTime:
-        fieldConfigs = contractTransferStartTimeFieldConfigs;
+        newFieldConfigs = contractTransferStartTimeFieldConfigs;
         break;
     }
 
-
-    return fieldConfigs;
+    setFieldConfigs(newFieldConfigs);
   }, [contractTimeType]);
 
   // Add useEffect to update endedAt when salesAt or duration changes
@@ -48,5 +51,5 @@ export const useCreateDisplayFieldConfigs = (
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contractTimeType, salesAt, salesPeriod]);
 
-  return displayFieldConfigs;
+  return fieldConfigs;
 }

@@ -1,5 +1,6 @@
 import { contractTimeTypeOptions } from "@components/UserContract/UserContractDialog/fieldConfig/contractTimeType";
 import { FieldConfig } from "@core/types";
+import { priceValidated } from "@core/types/fieldConfig";
 
 export const contractStartTimeFieldConfigs: FieldConfig[] = [
   {
@@ -19,6 +20,7 @@ export const contractStartTimeFieldConfigs: FieldConfig[] = [
     name: "price",
     required: true,
     label: "採購電價（元/kWh）",
+    validated: priceValidated,
   },
   {
     type: "NUMBER",

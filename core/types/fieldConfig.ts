@@ -75,6 +75,12 @@ const numberRangeValidated = yup
   .min(0, '數字不能小於0')
   .max(100, '數字不能大於100');
 
+const priceValidated = yup
+  .number()
+  .required(requiredMessage)
+  .min(0, '價格不能小於0')
+  .test('is-decimal', '小數點最多後三位', value => /^\d+(\.\d{1,3})?$/.test(value.toString()));
+
 const textValidated = yup.string().required(requiredMessage)
 
 const arrayValidated = yup.array().required(requiredMessage).min(1, requiredMessage)
@@ -116,6 +122,16 @@ const taiwanUBNValidation = yup.string().test(
     }
   );
 
-export { numberRangeValidated, numberValidated, textValidated, arrayValidated, objectValidated, passwordValidated, checkboxValidated, taiwanUBNValidation }
+export {
+  numberRangeValidated,
+  numberValidated,
+  textValidated,
+  priceValidated,
+  arrayValidated,
+  objectValidated,
+  passwordValidated,
+  checkboxValidated,
+  taiwanUBNValidation,
+}
 
 export default FieldConfig
