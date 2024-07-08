@@ -281,8 +281,20 @@ export type CreatePowerPlantInput = {
   name: Scalars['String']['input'];
   number: Scalars['String']['input'];
   price?: InputMaybe<Scalars['String']['input']>;
+  recipientAccount: RecipientAccountInput;
   transferRate: Scalars['Int']['input'];
   volume: Scalars['Int']['input'];
+};
+
+export type CreateRecipientAccountInput = {
+  /** 帳號 */
+  account: Scalars['String']['input'];
+  /** 戶名 */
+  accountName: Scalars['String']['input'];
+  /** 分行代碼 */
+  bankBranchCode?: Scalars['String']['input'];
+  /** 銀行代碼 */
+  bankCode: Scalars['String']['input'];
 };
 
 export type CreateTpcBillInput = {
@@ -343,7 +355,7 @@ export type CreateUserBillInput = {
   noticeForTheBuilding: Scalars['Boolean']['input'];
   /** 用戶繳費期限（收到繳費通知單後天數） */
   paymentDeadline: Scalars['Float']['input'];
-  recipientAccount: UserBillRecipientAccountInput;
+  recipientAccount: RecipientAccountInput;
   transportationFee: ChargeType;
   userId: Scalars['String']['input'];
 };
@@ -354,7 +366,7 @@ export type CreateUserContractInput = {
   electricNumberInfos: Array<ElectricNumberInfoInput>;
   lowerLimit: Scalars['Int']['input'];
   name: Scalars['String']['input'];
-  price: Scalars['Int']['input'];
+  price: Scalars['Float']['input'];
   purchaseDegree: Scalars['Int']['input'];
   salesAt: Scalars['DateTime']['input'];
   salesPeriod: Scalars['String']['input'];
@@ -467,7 +479,7 @@ export type ElectricNumberInfoInput = {
   contactPhone: Scalars['String']['input'];
   degree: Scalars['Int']['input'];
   number: Scalars['String']['input'];
-  recipientAccount: RecipientAccountInput;
+  recipientAccount: CreateRecipientAccountInput;
   tableNumbers: Array<Scalars['String']['input']>;
 };
 
@@ -651,14 +663,14 @@ export type MutationModifyAccountArgs = {
   email?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
-  recipientAccounts?: InputMaybe<Array<UpdateRecipientAccountInput>>;
+  recipientAccounts?: InputMaybe<Array<CreateRecipientAccountInput>>;
 };
 
 
 export type MutationModifyProfileArgs = {
   email?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  recipientAccounts?: InputMaybe<Array<UpdateRecipientAccountInput>>;
+  recipientAccounts?: InputMaybe<Array<CreateRecipientAccountInput>>;
 };
 
 
@@ -809,6 +821,7 @@ export type PowerPlant = {
   name: Scalars['String']['output'];
   number: Scalars['String']['output'];
   price: Scalars['String']['output'];
+  recipientAccount: PowerPlantRecipientAccount;
   supplyVolume: Scalars['Int']['output'];
   /** 供電容量比例 */
   transferRate: Scalars['Int']['output'];
@@ -820,6 +833,16 @@ export type PowerPlantPage = {
   __typename?: 'PowerPlantPage';
   list: Array<PowerPlant>;
   total: Scalars['Int']['output'];
+};
+
+export type PowerPlantRecipientAccount = {
+  __typename?: 'PowerPlantRecipientAccount';
+  /** 帳號 */
+  account: Scalars['String']['output'];
+  /** 分行代碼 */
+  bankBranchCode?: Maybe<Scalars['String']['output']>;
+  /** 銀行代碼 */
+  bankCode: Scalars['String']['output'];
 };
 
 export type Query = {
@@ -993,10 +1016,6 @@ export type RecipientAccount = {
 export type RecipientAccountInput = {
   /** 帳號 */
   account: Scalars['String']['input'];
-  /** 戶名 */
-  accountName: Scalars['String']['input'];
-  /** 分行代碼 */
-  bankBranchCode?: Scalars['String']['input'];
   /** 銀行代碼 */
   bankCode: Scalars['String']['input'];
 };
@@ -1220,7 +1239,7 @@ export type UpdateCompanyInput = {
   contactName?: InputMaybe<Scalars['String']['input']>;
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  recipientAccounts: Array<RecipientAccountInput>;
+  recipientAccounts: Array<CreateRecipientAccountInput>;
   taxId?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -1232,6 +1251,7 @@ export type UpdateFeeInput = {
 
 export type UpdatePowerPlantInput = {
   address: Scalars['String']['input'];
+  bankAccounts?: InputMaybe<Array<BankAccountInput>>;
   energyType?: InputMaybe<EnergyType>;
   estimatedAnnualPowerGeneration: Scalars['Int']['input'];
   generationType?: InputMaybe<GenerationType>;
@@ -1241,13 +1261,6 @@ export type UpdatePowerPlantInput = {
   price?: InputMaybe<Scalars['String']['input']>;
   transferRate: Scalars['Int']['input'];
   volume: Scalars['Int']['input'];
-};
-
-export type UpdateRecipientAccountInput = {
-  account: Scalars['String']['input'];
-  accountName: Scalars['String']['input'];
-  bankBranchCode: Scalars['String']['input'];
-  bankCode: Scalars['String']['input'];
 };
 
 export type UpdateTransferDocumentInput = {
@@ -1284,7 +1297,7 @@ export type UpdateUserBillInput = {
   noticeForTheBuilding: Scalars['Boolean']['input'];
   /** 用戶繳費期限（收到繳費通知單後天數） */
   paymentDeadline: Scalars['Float']['input'];
-  recipientAccount: UserBillRecipientAccountInput;
+  recipientAccount: RecipientAccountInput;
   transportationFee: ChargeType;
   userId: Scalars['String']['input'];
 };
@@ -1351,13 +1364,6 @@ export type UserBillRecipientAccount = {
   bankBranchCode?: Maybe<Scalars['String']['output']>;
   /** 銀行代碼 */
   bankCode: Scalars['String']['output'];
-};
-
-export type UserBillRecipientAccountInput = {
-  /** 帳號 */
-  account: Scalars['String']['input'];
-  /** 銀行代碼 */
-  bankCode: Scalars['String']['input'];
 };
 
 export type UserContract = {

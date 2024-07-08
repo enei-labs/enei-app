@@ -126,7 +126,17 @@ export const initialConfigs: FieldConfig[] = [
 
 export function updateFormValues({ initialDefaultValues, companyContract }: UpdateFormValuesParams): UpdateFormValuesReturns {
   let newDefaultValues = { transferRate: 100, ...initialDefaultValues };
-  let newConfigs = [...initialConfigs]; // 使用初始配置的副本
+  let newConfigs: FieldConfig[] = [...initialConfigs,   {
+    type: "SINGLE_SELECT",
+    name: "recipientAccount",
+    label: "銀行帳號",
+    required: true,
+    options: companyContract?.company.recipientAccounts?.map((bankAccount) => ({
+        label: `(${bankAccount.bankCode}) ${bankAccount.account}`,
+        value: `${bankAccount.bankBranchCode}|${bankAccount.account}`,
+      })) ?? []
+    },
+  ]; // 使用初始配置的副本
 
   if (companyContract && companyContract.rateType === RateType.Single) {
     const priceIndex = newConfigs.findIndex((config) => config.name === "price");
