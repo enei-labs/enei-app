@@ -28,6 +28,13 @@ type FormData = {
   generationType: GenerationType;
   address: string;
   supplyVolume: number;
+  recipientAccount?: {
+    label: string;
+    value: {
+      bankCode: string;
+      account: string;
+    };
+  };
 };
 
 interface PowerPlantDialogProps {
@@ -66,7 +73,18 @@ const PowerPlantDialog = (props: PowerPlantDialogProps) => {
     setValue,
     watch,
   } = useValidatedForm<FormData>(configs, {
-    defaultValues,
+    defaultValues: {
+      ...defaultValues,
+      recipientAccount: defaultValues.recipientAccount
+        ? {
+            label: `(${defaultValues.recipientAccount.bankCode}) ${defaultValues.recipientAccount.account}`,
+            value: {
+              bankCode: defaultValues.recipientAccount.bankCode,
+              account: defaultValues.recipientAccount.account,
+            },
+          }
+        : undefined,
+    },
   });
 
   const onSubmit = async (formData: FormData) => {
@@ -84,7 +102,12 @@ const PowerPlantDialog = (props: PowerPlantDialogProps) => {
             ),
             transferRate: Number(formData.transferRate),
             address: formData.address,
+            price: formData.price,
             companyContractId: companyContract.id,
+            recipientAccount: {
+              bankCode: formData.recipientAccount!.value.bankCode,
+              account: formData.recipientAccount!.value.account,
+            },
           },
         },
         onCompleted: () => {
@@ -107,6 +130,7 @@ const PowerPlantDialog = (props: PowerPlantDialogProps) => {
             estimatedAnnualPowerGeneration: Number(
               formData.estimatedAnnualPowerGeneration
             ),
+            price: formData.price,
             transferRate: Number(formData.transferRate),
             address: formData.address,
           },
