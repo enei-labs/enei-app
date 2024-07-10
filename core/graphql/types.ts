@@ -821,7 +821,7 @@ export type PowerPlant = {
   name: Scalars['String']['output'];
   number: Scalars['String']['output'];
   price: Scalars['String']['output'];
-  recipientAccount: PowerPlantRecipientAccount;
+  recipientAccount?: Maybe<PowerPlantRecipientAccount>;
   supplyVolume: Scalars['Int']['output'];
   /** 供電容量比例 */
   transferRate: Scalars['Int']['output'];
@@ -839,8 +839,6 @@ export type PowerPlantRecipientAccount = {
   __typename?: 'PowerPlantRecipientAccount';
   /** 帳號 */
   account: Scalars['String']['output'];
-  /** 分行代碼 */
-  bankBranchCode?: Maybe<Scalars['String']['output']>;
   /** 銀行代碼 */
   bankCode: Scalars['String']['output'];
 };
@@ -1251,7 +1249,6 @@ export type UpdateFeeInput = {
 
 export type UpdatePowerPlantInput = {
   address: Scalars['String']['input'];
-  bankAccounts?: InputMaybe<Array<BankAccountInput>>;
   energyType?: InputMaybe<EnergyType>;
   estimatedAnnualPowerGeneration: Scalars['Int']['input'];
   generationType?: InputMaybe<GenerationType>;
@@ -1259,6 +1256,7 @@ export type UpdatePowerPlantInput = {
   name: Scalars['String']['input'];
   number: Scalars['String']['input'];
   price?: InputMaybe<Scalars['String']['input']>;
+  recipientAccount: RecipientAccountInput;
   transferRate: Scalars['Int']['input'];
   volume: Scalars['Int']['input'];
 };

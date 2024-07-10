@@ -17,5 +17,9 @@ export const POWER_PLANT_FIELDS = gql`
     createdBy
     createdAt
     companyContractId
+    recipientAccount {
+      bankCode
+      account
+    }
   }
 `

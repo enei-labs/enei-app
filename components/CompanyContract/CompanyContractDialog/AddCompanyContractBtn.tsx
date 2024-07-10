@@ -227,7 +227,6 @@ const AddCompanyContractBtn = (props: CompanyContractProps) => {
           }}
           variant="create"
           companyContract={state.companyContract}
-          companyContractId={state.companyContract.id}
         />
       ) : null}
     </>

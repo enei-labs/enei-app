@@ -26,7 +26,6 @@ const AddPowerPlantBtn = (props: AddPowerPlantBtnProps) => {
           onClose={() => setOpen(false)}
           variant="create"
           companyContract={companyContract}
-          companyContractId={companyContract.id}
           defaultValues={{ transferRate: 100 }}
         />
       ) : null}

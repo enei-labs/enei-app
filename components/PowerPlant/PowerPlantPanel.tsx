@@ -1,6 +1,6 @@
 import { Table } from "@components/Table";
 import { usePowerPlants } from "@utils/hooks/queries";
-import { PowerPlant } from "@core/graphql/types";
+import { CompanyContract, PowerPlant } from "@core/graphql/types";
 import { Config } from "../Table/Table";
 import { IconBtn } from "@components/Button";
 import BorderColorOutlined from "@mui/icons-material/BorderColorOutlined";
@@ -14,17 +14,17 @@ const PowerPlantDialog = dynamic(() => import("./PowerPlantDialog"));
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
 const PowerPlantPanel = ({
-  companyContractId,
+  companyContract,
 }: {
-  companyContractId: string;
+  companyContract: CompanyContract;
 }) => {
   const { data, loading, refetch } = usePowerPlants({
-    variables: { companyContractId },
+    variables: { companyContractId: companyContract.id },
   });
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [selectedData, selectData] = useState<PowerPlant | null>(null);
-  const [removePowerPlant] = useRemovePowerPlant(companyContractId);
+  const [removePowerPlant] = useRemovePowerPlant(companyContract.id);
 
   const configs: Config<PowerPlant>[] = [
     {
@@ -117,7 +117,7 @@ const PowerPlantPanel = ({
             ...selectedData,
             volume: selectedData.volume / 1000,
           }}
-          companyContractId={companyContractId}
+          companyContract={companyContract}
         />
       ) : null}
       {openDeleteDialog && selectedData ? (

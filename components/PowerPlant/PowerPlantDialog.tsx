@@ -30,18 +30,14 @@ type FormData = {
   supplyVolume: number;
   recipientAccount?: {
     label: string;
-    value: {
-      bankCode: string;
-      account: string;
-    };
+    value: string;
   };
 };
 
 interface PowerPlantDialogProps {
   open: boolean;
   variant: "edit" | "create";
-  companyContract?: CompanyContract;
-  companyContractId: string;
+  companyContract: CompanyContract;
   onClose: VoidFunction;
   defaultValues?: Partial<Omit<PowerPlant, "annualPowerGeneration">>;
 }
@@ -53,13 +49,14 @@ const PowerPlantDialog = (props: PowerPlantDialogProps) => {
     onClose,
     variant,
     defaultValues: initialDefaultValues,
-    companyContractId,
   } = props;
 
-  const [createPowerPlant, { loading }] =
-    useCreatePowerPlant(companyContractId);
-  const [updatePowerPlant, { loading: updateLoading }] =
-    useUpdatePowerPlant(companyContractId);
+  const [createPowerPlant, { loading }] = useCreatePowerPlant(
+    companyContract.id
+  );
+  const [updatePowerPlant, { loading: updateLoading }] = useUpdatePowerPlant(
+    companyContract.id
+  );
 
   const { defaultValues, configs } = updateFormValues({
     initialDefaultValues: initialDefaultValues || {},
@@ -78,10 +75,7 @@ const PowerPlantDialog = (props: PowerPlantDialogProps) => {
       recipientAccount: defaultValues.recipientAccount
         ? {
             label: `(${defaultValues.recipientAccount.bankCode}) ${defaultValues.recipientAccount.account}`,
-            value: {
-              bankCode: defaultValues.recipientAccount.bankCode,
-              account: defaultValues.recipientAccount.account,
-            },
+            value: `${defaultValues.recipientAccount.bankCode}|${defaultValues.recipientAccount.account}`,
           }
         : undefined,
     },
@@ -105,8 +99,8 @@ const PowerPlantDialog = (props: PowerPlantDialogProps) => {
             price: formData.price,
             companyContractId: companyContract.id,
             recipientAccount: {
-              bankCode: formData.recipientAccount!.value.bankCode,
-              account: formData.recipientAccount!.value.account,
+              bankCode: formData.recipientAccount!.value.split("|")[0],
+              account: formData.recipientAccount!.value.split("|")[1],
             },
           },
         },
@@ -133,6 +127,10 @@ const PowerPlantDialog = (props: PowerPlantDialogProps) => {
             price: formData.price,
             transferRate: Number(formData.transferRate),
             address: formData.address,
+            recipientAccount: {
+              bankCode: formData.recipientAccount!.value.split("|")[0],
+              account: formData.recipientAccount!.value.split("|")[1],
+            },
           },
         },
         onCompleted: () => {

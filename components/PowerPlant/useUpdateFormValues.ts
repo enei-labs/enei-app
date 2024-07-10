@@ -136,7 +136,9 @@ export function updateFormValues({ initialDefaultValues, companyContract }: Upda
         value: `${bankAccount.bankBranchCode}|${bankAccount.account}`,
       })) ?? []
     },
-  ]; // 使用初始配置的副本
+  ];
+
+  console.log('companyContract', companyContract)
 
   if (companyContract && companyContract.rateType === RateType.Single) {
     const priceIndex = newConfigs.findIndex((config) => config.name === "price");
