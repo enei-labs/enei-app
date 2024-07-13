@@ -138,8 +138,6 @@ export function updateFormValues({ initialDefaultValues, companyContract }: Upda
     },
   ];
 
-  console.log('companyContract', companyContract)
-
   if (companyContract && companyContract.rateType === RateType.Single) {
     const priceIndex = newConfigs.findIndex((config) => config.name === "price");
     if (priceIndex !== -1) {

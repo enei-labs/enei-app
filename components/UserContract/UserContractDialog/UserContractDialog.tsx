@@ -151,26 +151,33 @@ function UserContractDialog(props: UserContractDialogProps) {
           transferAt: formData.transferAt,
           contractDoc: formData.contractDoc.id,
           contractDocName: formData.contractDoc.file.name,
-          electricNumberInfos: formData.electricNumberInfos.map((info) => ({
-            companyAddress: info.companyAddress,
-            address: info.address,
-            contactName: info.contactName,
-            contactPhone: info.contactPhone,
-            contactEmail: info.contactEmail,
-            number: info.number,
-            tableNumbers: info.tableNumbers,
-            recipientAccount: {
-              bankCode: (
-                info.recipientAccount as unknown as Record<string, string>
-              ).value.split("|")[0],
-              account: (
-                info.recipientAccount as unknown as Record<string, string>
-              ).value.split("|")[1],
-              bankBranchCode: "",
-              accountName: "",
-            },
-            degree: Number(info.degree),
-          })),
+          electricNumberInfos: formData.electricNumberInfos.map((info) => {
+            const electricNumberInfo: ElectricNumberInfoInput = {
+              companyAddress: info.companyAddress,
+              address: info.address,
+              contactName: info.contactName,
+              contactPhone: info.contactPhone,
+              contactEmail: info.contactEmail,
+              number: info.number,
+              tableNumbers: info.tableNumbers,
+              degree: Number(info.degree),
+            };
+
+            if (info.recipientAccount) {
+              electricNumberInfo.recipientAccount = {
+                bankCode: (
+                  info.recipientAccount as unknown as Record<string, string>
+                ).value.split("|")[0],
+                account: (
+                  info.recipientAccount as unknown as Record<string, string>
+                ).value.split("|")[1],
+                bankBranchCode: "",
+                accountName: "",
+              };
+            }
+
+            return electricNumberInfo;
+          }),
         },
       },
       onCompleted: () => {
@@ -311,7 +318,6 @@ function UserContractDialog(props: UserContractDialogProps) {
                     label={`銀行帳號`}
                     aria-label={`銀行帳號`}
                     placeholder={"請填入"}
-                    required
                   />
                 )}
               />

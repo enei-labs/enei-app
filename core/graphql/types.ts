@@ -479,7 +479,7 @@ export type ElectricNumberInfoInput = {
   contactPhone: Scalars['String']['input'];
   degree: Scalars['Int']['input'];
   number: Scalars['String']['input'];
-  recipientAccount: CreateRecipientAccountInput;
+  recipientAccount?: InputMaybe<CreateRecipientAccountInput>;
   tableNumbers: Array<Scalars['String']['input']>;
 };
 
