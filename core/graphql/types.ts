@@ -281,7 +281,7 @@ export type CreatePowerPlantInput = {
   name: Scalars['String']['input'];
   number: Scalars['String']['input'];
   price?: InputMaybe<Scalars['String']['input']>;
-  recipientAccount: RecipientAccountInput;
+  recipientAccount?: InputMaybe<RecipientAccountInput>;
   transferRate: Scalars['Int']['input'];
   volume: Scalars['Int']['input'];
 };
@@ -1256,7 +1256,7 @@ export type UpdatePowerPlantInput = {
   name: Scalars['String']['input'];
   number: Scalars['String']['input'];
   price?: InputMaybe<Scalars['String']['input']>;
-  recipientAccount: RecipientAccountInput;
+  recipientAccount?: InputMaybe<RecipientAccountInput>;
   transferRate: Scalars['Int']['input'];
   volume: Scalars['Int']['input'];
 };
