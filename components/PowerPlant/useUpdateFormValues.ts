@@ -130,7 +130,6 @@ export function updateFormValues({ initialDefaultValues, companyContract }: Upda
     type: "SINGLE_SELECT",
     name: "recipientAccount",
     label: "銀行帳號",
-    required: true,
     options: companyContract?.company.recipientAccounts?.map((bankAccount) => ({
         label: `(${bankAccount.bankCode}) ${bankAccount.account}`,
         value: `${bankAccount.bankBranchCode}|${bankAccount.account}`,

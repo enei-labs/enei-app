@@ -98,10 +98,12 @@ const PowerPlantDialog = (props: PowerPlantDialogProps) => {
             address: formData.address,
             price: formData.price,
             companyContractId: companyContract.id,
-            recipientAccount: {
-              bankCode: formData.recipientAccount!.value.split("|")[0],
-              account: formData.recipientAccount!.value.split("|")[1],
-            },
+            recipientAccount: formData.recipientAccount
+              ? {
+                  bankCode: formData.recipientAccount.value.split("|")[0],
+                  account: formData.recipientAccount.value.split("|")[1],
+                }
+              : undefined,
           },
         },
         onCompleted: () => {
@@ -127,10 +129,12 @@ const PowerPlantDialog = (props: PowerPlantDialogProps) => {
             price: formData.price,
             transferRate: Number(formData.transferRate),
             address: formData.address,
-            recipientAccount: {
-              bankCode: formData.recipientAccount!.value.split("|")[0],
-              account: formData.recipientAccount!.value.split("|")[1],
-            },
+            recipientAccount: formData.recipientAccount
+              ? {
+                  bankCode: formData.recipientAccount.value.split("|")[0],
+                  account: formData.recipientAccount.value.split("|")[1],
+                }
+              : undefined,
           },
         },
         onCompleted: () => {
