@@ -27,7 +27,7 @@ function UserContractBox(props: UserContractBoxProps) {
     {
       icon: TrendingUpOutlinedIcon,
       name: "預計最高採購上限（契約）",
-      content: contract.upperLimit,
+      content: contract.upperLimit ?? "",
       unit: "kWh",
     },
     {
@@ -38,7 +38,7 @@ function UserContractBox(props: UserContractBoxProps) {
     {
       icon: CreditCardOutlinedIcon,
       name: "預計最低採購下限（契約）",
-      content: contract.lowerLimit,
+      content: contract.lowerLimit ?? "",
       unit: "kWh",
     },
   ];

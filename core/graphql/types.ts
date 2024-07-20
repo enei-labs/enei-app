@@ -364,7 +364,7 @@ export type CreateUserContractInput = {
   contractDoc: Scalars['String']['input'];
   contractDocName: Scalars['String']['input'];
   electricNumberInfos: Array<ElectricNumberInfoInput>;
-  lowerLimit: Scalars['Int']['input'];
+  lowerLimit?: InputMaybe<Scalars['Int']['input']>;
   name: Scalars['String']['input'];
   price: Scalars['Float']['input'];
   purchaseDegree: Scalars['Int']['input'];
@@ -372,7 +372,7 @@ export type CreateUserContractInput = {
   salesPeriod: Scalars['String']['input'];
   serialNumber: Scalars['String']['input'];
   transferAt?: InputMaybe<Scalars['DateTime']['input']>;
-  upperLimit: Scalars['Int']['input'];
+  upperLimit?: InputMaybe<Scalars['Int']['input']>;
   userType: UserType;
 };
 
@@ -1064,7 +1064,7 @@ export type RemainingDemandFromUserContract = {
   /** 電號資訊 */
   electricNumberInfos: Array<ElectricNumberInfo>;
   id: Scalars['ID']['output'];
-  lowerLimit: Scalars['Int']['output'];
+  lowerLimit?: Maybe<Scalars['Int']['output']>;
   name: Scalars['String']['output'];
   price: Scalars['String']['output'];
   purchaseDegree: Scalars['Int']['output'];
@@ -1073,7 +1073,7 @@ export type RemainingDemandFromUserContract = {
   salesTo?: Maybe<Scalars['DateTime']['output']>;
   serialNumber: Scalars['String']['output'];
   transferAt?: Maybe<Scalars['DateTime']['output']>;
-  upperLimit: Scalars['Int']['output'];
+  upperLimit?: Maybe<Scalars['Int']['output']>;
   user?: Maybe<User>;
   userType: UserType;
 };
@@ -1372,7 +1372,7 @@ export type UserContract = {
   /** 電號資訊 */
   electricNumberInfos: Array<ElectricNumberInfo>;
   id: Scalars['ID']['output'];
-  lowerLimit: Scalars['Int']['output'];
+  lowerLimit?: Maybe<Scalars['Int']['output']>;
   name: Scalars['String']['output'];
   price: Scalars['String']['output'];
   purchaseDegree: Scalars['Int']['output'];
@@ -1381,7 +1381,7 @@ export type UserContract = {
   salesTo?: Maybe<Scalars['DateTime']['output']>;
   serialNumber: Scalars['String']['output'];
   transferAt?: Maybe<Scalars['DateTime']['output']>;
-  upperLimit: Scalars['Int']['output'];
+  upperLimit?: Maybe<Scalars['Int']['output']>;
   user?: Maybe<User>;
   userType: UserType;
 };

@@ -32,13 +32,11 @@ export const baseFieldConfigs: FieldConfig[] = [
   {
     type: "NUMBER",
     name: "upperLimit",
-    required: true,
     label: "預計最高採購上限（契約）（kWh）",
   },
   {
     type: "NUMBER",
     name: "lowerLimit",
-    required: true,
     label: "預計最低採購下限（契約）（kWh）",
   },
   {
