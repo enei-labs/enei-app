@@ -21,7 +21,10 @@ export type FormData = {
   noticeForTheBuilding: boolean;
   noticeForTPCBill: boolean;
   electricNumberInfos: {
-    number: string;
+    number: {
+      label: string;
+      value: string;
+    };
     price: string;
   }[];
   contactName: string;

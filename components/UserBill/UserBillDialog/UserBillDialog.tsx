@@ -82,7 +82,10 @@ function UserBillDialog(props: UserBillDialogProps) {
           electricNumberInfos: (
             currentModifyUserBill.electricNumberInfos ?? []
           ).map((info) => ({
-            number: info.number,
+            number: {
+              label: info.number,
+              value: info.number,
+            },
             price: info.price,
           })),
           contactName: currentModifyUserBill.contactName,

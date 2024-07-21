@@ -6,6 +6,7 @@ import {
   Controller,
   ControllerRenderProps,
   useFieldArray,
+  useWatch,
 } from "react-hook-form";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { useState } from "react";
@@ -37,12 +38,18 @@ export function ElectricNumbersField(props: ElectricNumbersFieldProps) {
     name: rootField.name,
   });
 
+  const formData = useWatch({ control, name: rootField?.name });
+
   if (loading) return <CircularProgress size="24px" />;
 
+  const priceMap = new Map();
   const flattenElectricNumberOptions =
     data?.userContracts.list.reduce((agg: ElectricNumberInfo[], curr) => {
       if (!curr.electricNumberInfos || !curr.electricNumberInfos.length)
         return agg;
+      curr.electricNumberInfos.forEach((info) => {
+        priceMap.set(info.number, curr.price);
+      });
       return [...agg, ...curr.electricNumberInfos];
     }, [] as ElectricNumberInfo[]) ?? [];
 
@@ -76,7 +83,12 @@ export function ElectricNumbersField(props: ElectricNumbersFieldProps) {
             name={`${rootField.name}.${fieldIndex}.price`}
             render={({ field }) => {
               return (
-                <InputText disabled {...field} label={`採購電價（元/kWh）`} />
+                <InputText
+                  disabled
+                  {...field}
+                  label={`採購電價（元/kWh）`}
+                  value={priceMap.get(formData[fieldIndex]?.number?.value) ?? 0}
+                />
               );
             }}
           />
