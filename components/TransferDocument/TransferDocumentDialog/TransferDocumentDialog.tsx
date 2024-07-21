@@ -240,12 +240,14 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
     );
 
     return {
-      number: powerPlant?.number ?? "N/A",
-      volume: powerPlant?.volume ?? "N/A",
-      estimatedAnnualPowerSupply:
-        powerPlant?.estimatedAnnualPowerSupply ?? "N/A",
+      number: powerPlant?.number ?? 0,
+      volume: powerPlant?.volume ?? 0,
+      estimatedAnnualPowerGeneration:
+        powerPlant?.estimatedAnnualPowerGeneration ?? 0,
     };
   }, [powerPlants, currentPowerPlant]);
+
+  const transferDocumentPowerPlants = watch("transferDocumentPowerPlants");
 
   return (
     <Dialog open={isOpenDialog} onClose={onClose}>
@@ -357,17 +359,20 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
               />
               <InputText
                 label="電號"
-                value={currentPowerPlantInfo.number}
+                value={currentPowerPlantInfo.number ?? "N/A"}
                 disabled
               />
               <InputText
-                label="裝置容量（kWh）"
-                value={currentPowerPlantInfo.volume}
+                label="裝置容量（kW）"
+                value={currentPowerPlantInfo.volume ?? "N/A"}
                 disabled
               />
               <InputText
-                label="預計年發電量（MWh）"
-                value={currentPowerPlantInfo.estimatedAnnualPowerSupply}
+                label="預計年發電量（kWh）"
+                value={
+                  currentPowerPlantInfo.volume *
+                  currentPowerPlantInfo.estimatedAnnualPowerGeneration
+                }
                 disabled
               />
               <Controller
@@ -390,10 +395,15 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                 render={({ field }) => (
                   <InputText
                     {...field}
-                    label={`預計年供電度數（MWh）`}
-                    aria-label={`預計年供電度數（MWh）`}
+                    label={`預計年供電度數（kWh）`}
+                    aria-label={`預計年供電度數（kWh）`}
                     placeholder={"請填入"}
-                    required
+                    disabled
+                    value={
+                      currentPowerPlantInfo.volume *
+                      currentPowerPlantInfo.estimatedAnnualPowerGeneration *
+                      transferDocumentPowerPlants[index].transferRate
+                    }
                   />
                 )}
               />
@@ -582,8 +592,8 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                 render={({ field }) => (
                   <InputText
                     {...field}
-                    label={`每月轉供度數（MWh）`}
-                    aria-label={`每月轉供度數（MWh）`}
+                    label={`每月轉供度數（kWh）`}
+                    aria-label={`每月轉供度數（kWh）`}
                     placeholder={"請填入"}
                     required
                   />
@@ -595,8 +605,8 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                 render={({ field }) => (
                   <InputText
                     {...field}
-                    label={`年轉供度數（MWh）`}
-                    aria-label={`年轉供度數（MWh）`}
+                    label={`年轉供度數（kWh）`}
+                    aria-label={`年轉供度數（kWh）`}
                     placeholder={"請填入"}
                     required
                   />
