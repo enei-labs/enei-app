@@ -296,7 +296,6 @@ function UserContractDialog(props: UserContractDialogProps) {
                         type="number"
                         label="年預計採購度數（kWh）"
                         placeholder={"請填入"}
-                        required
                       />
                     </>
                   );
