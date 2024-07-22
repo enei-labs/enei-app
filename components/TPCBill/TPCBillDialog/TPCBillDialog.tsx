@@ -31,6 +31,7 @@ const basicInfoConfigs: FieldConfig[] = [
     label: "收到台電繳費單日期",
     placeholder: "請填入",
     validated: textValidated,
+    required: true,
   },
 ];
 
