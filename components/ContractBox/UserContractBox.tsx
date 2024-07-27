@@ -2,15 +2,16 @@ import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlin
 import EventOutlinedIcon from "@mui/icons-material/EventOutlined";
 import TrendingUpOutlinedIcon from "@mui/icons-material/TrendingUpOutlined";
 import CreditCardOutlinedIcon from "@mui/icons-material/CreditCardOutlined";
-import { UserContract } from "@core/graphql/types";
+import { User, UserContract } from "@core/graphql/types";
 import ContractBox, { ContractInfo } from "@components/ContractBox/ContractBox";
 
 interface UserContractBoxProps {
   contract: UserContract;
+  user: User;
 }
 
 function UserContractBox(props: UserContractBoxProps) {
-  const { contract } = props;
+  const { contract, user } = props;
 
   const contractInfos: ContractInfo[] = [
     {
@@ -46,8 +47,10 @@ function UserContractBox(props: UserContractBoxProps) {
   return (
     <ContractBox
       onClickFn={() => {}}
+      userContract={contract}
       title={`${contract.name}`}
       contractInfos={contractInfos}
+      user={user}
     />
   );
 }

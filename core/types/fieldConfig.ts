@@ -77,7 +77,12 @@ const numberRangeValidated = yup
 
 const priceValidated = yup
   .number()
-  .transform((value, originalValue) => (originalValue.trim() === '' ? null : value))
+  .transform((value, originalValue) => {
+    if (typeof originalValue === 'number') {
+      return originalValue;
+    }
+    return (typeof originalValue === 'string' && originalValue.trim() === '') ? null : value;
+  })
   .nullable()
   .required(requiredMessage)
   .min(0, '價格不能小於0')

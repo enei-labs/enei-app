@@ -40,7 +40,7 @@ function UserContractPanel(props: UserContractPanelProps) {
         ) : data && data.userContracts.list.length !== 0 ? (
           data.userContracts.list.map((contract) => (
             <Grid item sm={4} key={contract.id}>
-              <UserContractBox contract={contract} />
+              <UserContractBox contract={contract} user={user} />
             </Grid>
           ))
         ) : (

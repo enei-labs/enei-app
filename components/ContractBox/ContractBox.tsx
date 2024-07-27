@@ -1,5 +1,7 @@
 import { Box, Grid, Typography } from "@mui/material";
 import { SvgIconComponent } from "@mui/icons-material";
+import EditUserContractBtn from "@components/UserContract/UserContractDialog/EditUserContractBtn";
+import { User, UserContract } from "@core/graphql/types";
 
 export type ContractInfo = {
   icon: SvgIconComponent;
@@ -9,6 +11,8 @@ export type ContractInfo = {
 };
 
 interface ContractBoxProps {
+  userContract?: UserContract;
+  user?: User;
   onClickFn: VoidFunction;
   title: string;
   contractInfos: ContractInfo[];
@@ -29,11 +33,19 @@ const styles = {
 } as const;
 
 function ContractBox(props: ContractBoxProps) {
-  const { onClickFn, title, contractInfos, totalVolume } = props;
+  const { user, userContract, onClickFn, title, contractInfos, totalVolume } =
+    props;
 
   return (
     <Box sx={styles.box} onClick={onClickFn}>
-      <Typography variant="h5">{title}</Typography>
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Typography variant="h5">{title}</Typography>
+        {userContract ? (
+          <Box>
+            <EditUserContractBtn userContract={userContract} user={user!} />
+          </Box>
+        ) : null}
+      </Box>
       {/* @TODO check the logic here */}
       {totalVolume ? (
         <Typography variant="subtitle2">{`${new Intl.NumberFormat().format(totalVolume)}MWh`}</Typography>

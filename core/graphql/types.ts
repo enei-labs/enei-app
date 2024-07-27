@@ -598,6 +598,7 @@ export type Mutation = {
   updateTransferDocument: TransferDocument;
   updateTransferDocumentStage: TransferDocument;
   updateUserBill: UserBill;
+  updateUserContract: UserContract;
 };
 
 
@@ -793,6 +794,11 @@ export type MutationUpdateTransferDocumentStageArgs = {
 
 export type MutationUpdateUserBillArgs = {
   input: UpdateUserBillInput;
+};
+
+
+export type MutationUpdateUserContractArgs = {
+  input: UpdateUserContractInput;
 };
 
 export type PasswordReset = {
@@ -1298,6 +1304,23 @@ export type UpdateUserBillInput = {
   recipientAccount: RecipientAccountInput;
   transportationFee: ChargeType;
   userId: Scalars['String']['input'];
+};
+
+export type UpdateUserContractInput = {
+  contractDoc?: InputMaybe<Scalars['String']['input']>;
+  contractDocName?: InputMaybe<Scalars['String']['input']>;
+  electricNumberInfos: Array<ElectricNumberInfoInput>;
+  lowerLimit?: InputMaybe<Scalars['Int']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  price?: InputMaybe<Scalars['Float']['input']>;
+  purchaseDegree?: InputMaybe<Scalars['Int']['input']>;
+  salesAt?: InputMaybe<Scalars['DateTime']['input']>;
+  salesPeriod?: InputMaybe<Scalars['String']['input']>;
+  serialNumber?: InputMaybe<Scalars['String']['input']>;
+  transferAt?: InputMaybe<Scalars['DateTime']['input']>;
+  upperLimit?: InputMaybe<Scalars['Int']['input']>;
+  userContractId: Scalars['ID']['input'];
+  userType?: InputMaybe<UserType>;
 };
 
 export type User = {

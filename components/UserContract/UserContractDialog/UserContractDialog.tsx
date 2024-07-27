@@ -15,8 +15,8 @@ import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import {
   ElectricNumberInfoInput,
-  TransferDocument,
   User,
+  UserContract,
   UserType,
 } from "@core/graphql/types";
 import { FieldsController } from "@components/Controller";
@@ -29,6 +29,7 @@ import { InputAutocomplete, InputNumber, InputText } from "@components/Input";
 import Chip from "@components/Chip";
 import { useUsers } from "@utils/hooks/queries";
 import { useCreateUserContract } from "@utils/hooks/mutations/useCreateUserContract";
+import { useUpdateUserContract } from "@utils/hooks/mutations/useUpdateUserContract";
 import { TableNumbersField } from "@components/UserContract/UserContractDialog/TableNumbersField";
 import { LoadingButton } from "@mui/lab";
 import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
@@ -38,13 +39,14 @@ import { useCreateDisplayFieldConfigs } from "@components/UserContract/UserContr
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { priceValidated } from "@core/types/fieldConfig";
+import { contractTimeTypeMap } from "@components/CompanyContract/CompanyContractDialog/fieldConfig/contractTimeType";
 
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
 interface UserContractDialogProps {
   user: User;
   isOpenDialog: boolean;
-  currentModifyTransferDocument?: TransferDocument;
+  userContract?: UserContract;
   variant: "edit" | "create";
   onClose: VoidFunction;
 }
@@ -62,18 +64,51 @@ function UserContractDialog(props: UserContractDialogProps) {
   const router = useRouter();
   const userId = router.query.userId as string;
 
-  const {
-    isOpenDialog,
-    onClose,
-    currentModifyTransferDocument,
-    variant,
-    user,
-  } = props;
+  const { isOpenDialog, onClose, userContract, variant, user } = props;
+
+  console.log({ userContract });
 
   /** form-data */
   const { control, formState, handleSubmit, reset, watch, setValue } =
     useForm<FormData>({
-      defaultValues: {},
+      defaultValues:
+        variant === "edit"
+          ? {
+              name: userContract?.name,
+              userType: userContract?.userType,
+              serialNumber: userContract?.serialNumber,
+              purchaseDegree: userContract?.purchaseDegree,
+              price: Number(userContract?.price),
+              upperLimit: Number(userContract?.upperLimit),
+              lowerLimit: Number(userContract?.lowerLimit),
+              salesAt: new Date(userContract?.salesAt),
+              salesPeriod: userContract?.salesPeriod,
+              transferAt: new Date(userContract?.transferAt),
+              contractDoc: userContract?.contractDoc
+                ? {
+                    id: userContract.contractDoc,
+                    file: undefined,
+                  }
+                : undefined,
+              contractTimeType: userContract?.contractTimeType && {
+                value: userContract.contractTimeType,
+                label: contractTimeTypeMap[userContract.contractTimeType],
+              },
+              electricNumberInfos: userContract?.electricNumberInfos.map(
+                (info) => ({
+                  address: info.address,
+                  contactEmail: info.contactEmail,
+                  contactName: info.contactName,
+                  contactPhone: info.contactPhone,
+                  companyAddress: info.companyAddress ?? "",
+                  recipientAccount: info.recipientAccount,
+                  degree: info.degree,
+                  number: info.number,
+                  tableNumbers: info.tableNumbers,
+                })
+              ),
+            }
+          : {},
       resolver: (data, context, options) => {
         const resolver: any = yupResolver(
           yup.object().shape({
@@ -116,6 +151,8 @@ function UserContractDialog(props: UserContractDialogProps) {
 
   /** apis */
   const [createUserContract, { loading }] = useCreateUserContract(user.id);
+  const [updateUserContract, { loading: updateUserContractLoading }] =
+    useUpdateUserContract();
   const { data: usersData } = useUsers({ onlyBasicInformation: true });
 
   /** selected user/power-plant info */
@@ -135,57 +172,113 @@ function UserContractDialog(props: UserContractDialogProps) {
       return;
     }
 
-    await createUserContract({
-      variables: {
-        userId,
-        input: {
-          name: formData.name,
-          userType: formData.userType,
-          serialNumber: formData.serialNumber,
-          purchaseDegree: Number(formData.purchaseDegree),
-          price: Number(formData.price),
-          upperLimit: Number(formData.upperLimit),
-          lowerLimit: Number(formData.lowerLimit),
-          salesAt: formData.salesAt,
-          salesPeriod: formData.salesPeriod,
-          transferAt: formData.transferAt,
-          contractDoc: formData.contractDoc.id,
-          contractDocName: formData.contractDoc.file.name,
-          electricNumberInfos: formData.electricNumberInfos.map((info) => {
-            const electricNumberInfo: ElectricNumberInfoInput = {
-              companyAddress: info.companyAddress,
-              address: info.address,
-              contactName: info.contactName,
-              contactPhone: info.contactPhone,
-              contactEmail: info.contactEmail,
-              number: info.number,
-              tableNumbers: info.tableNumbers,
-              degree: Number(info.degree),
-            };
-
-            if (info.recipientAccount) {
-              electricNumberInfo.recipientAccount = {
-                bankCode: (
-                  info.recipientAccount as unknown as Record<string, string>
-                ).value.split("|")[0],
-                account: (
-                  info.recipientAccount as unknown as Record<string, string>
-                ).value.split("|")[1],
-                bankBranchCode: "",
-                accountName: "",
+    if (variant === "create") {
+      await createUserContract({
+        variables: {
+          userId,
+          input: {
+            name: formData.name,
+            userType: formData.userType,
+            serialNumber: formData.serialNumber,
+            purchaseDegree: Number(formData.purchaseDegree),
+            price: Number(formData.price),
+            upperLimit: Number(formData.upperLimit),
+            lowerLimit: Number(formData.lowerLimit),
+            salesAt: formData.salesAt,
+            salesPeriod: formData.salesPeriod,
+            transferAt: formData.transferAt,
+            contractDoc: formData.contractDoc.id,
+            contractDocName: formData.contractDoc.file.name,
+            electricNumberInfos: formData.electricNumberInfos.map((info) => {
+              const electricNumberInfo: ElectricNumberInfoInput = {
+                companyAddress: info.companyAddress,
+                address: info.address,
+                contactName: info.contactName,
+                contactPhone: info.contactPhone,
+                contactEmail: info.contactEmail,
+                number: info.number,
+                tableNumbers: info.tableNumbers,
+                degree: Number(info.degree),
               };
-            }
 
-            return electricNumberInfo;
-          }),
+              if (info.recipientAccount) {
+                electricNumberInfo.recipientAccount = {
+                  bankCode: (
+                    info.recipientAccount as unknown as Record<string, string>
+                  ).value.split("|")[0],
+                  account: (
+                    info.recipientAccount as unknown as Record<string, string>
+                  ).value.split("|")[1],
+                  bankBranchCode: "",
+                  accountName: "",
+                };
+              }
+
+              return electricNumberInfo;
+            }),
+          },
         },
-      },
-      onCompleted: () => {
-        toast.success("新增用戶契約成功");
-        reset();
-        onClose();
-      },
-    });
+        onCompleted: () => {
+          toast.success("新增用戶契約成功");
+          reset();
+          onClose();
+        },
+      });
+    }
+
+    if (variant === "edit") {
+      await updateUserContract({
+        variables: {
+          input: {
+            userContractId: userContract?.id ?? "",
+            name: formData.name,
+            userType: formData.userType,
+            serialNumber: formData.serialNumber,
+            purchaseDegree: Number(formData.purchaseDegree),
+            price: Number(formData.price),
+            upperLimit: Number(formData.upperLimit),
+            lowerLimit: Number(formData.lowerLimit),
+            salesAt: formData.salesAt,
+            salesPeriod: formData.salesPeriod,
+            transferAt: formData.transferAt,
+            contractDoc: formData.contractDoc.id,
+            contractDocName: formData.contractDoc.file.name,
+            electricNumberInfos: formData.electricNumberInfos.map((info) => {
+              const electricNumberInfo: ElectricNumberInfoInput = {
+                companyAddress: info.companyAddress,
+                address: info.address,
+                contactName: info.contactName,
+                contactPhone: info.contactPhone,
+                contactEmail: info.contactEmail,
+                number: info.number,
+                tableNumbers: info.tableNumbers,
+                degree: Number(info.degree),
+              };
+
+              if (info.recipientAccount) {
+                electricNumberInfo.recipientAccount = {
+                  bankCode: (
+                    info.recipientAccount as unknown as Record<string, string>
+                  ).value.split("|")[0],
+                  account: (
+                    info.recipientAccount as unknown as Record<string, string>
+                  ).value.split("|")[1],
+                  bankBranchCode: "",
+                  accountName: "",
+                };
+              }
+
+              return electricNumberInfo;
+            }),
+          },
+        },
+        onCompleted: () => {
+          toast.success("修改用戶契約成功");
+          reset();
+          onClose();
+        },
+      });
+    }
   };
 
   return (
