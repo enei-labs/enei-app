@@ -16,6 +16,7 @@ export type FormData = {
     file: File;
     id: string;
   };
+  contractDocName: string;
   contractTimeType: {
     label: string;
     value: ContractTimeType;

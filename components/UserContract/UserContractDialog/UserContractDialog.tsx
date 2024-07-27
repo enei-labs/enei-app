@@ -14,6 +14,7 @@ import { IconBtn } from "@components/Button";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import {
+  CreateRecipientAccountInput,
   ElectricNumberInfoInput,
   User,
   UserContract,
@@ -66,8 +67,6 @@ function UserContractDialog(props: UserContractDialogProps) {
 
   const { isOpenDialog, onClose, userContract, variant, user } = props;
 
-  console.log({ userContract });
-
   /** form-data */
   const { control, formState, handleSubmit, reset, watch, setValue } =
     useForm<FormData>({
@@ -87,13 +86,17 @@ function UserContractDialog(props: UserContractDialogProps) {
               contractDoc: userContract?.contractDoc
                 ? {
                     id: userContract.contractDoc,
-                    file: undefined,
+                    file: { name: userContract?.contractDocName } as File,
                   }
                 : undefined,
-              contractTimeType: userContract?.contractTimeType && {
-                value: userContract.contractTimeType,
-                label: contractTimeTypeMap[userContract.contractTimeType],
-              },
+              contractDocName: userContract?.contractDocName,
+              contractTimeType: userContract?.contractTimeType
+                ? {
+                    value: userContract.contractTimeType,
+                    label:
+                      contractTimeTypeMap[userContract.contractTimeType] ?? "",
+                  }
+                : undefined,
               electricNumberInfos: userContract?.electricNumberInfos.map(
                 (info) => ({
                   address: info.address,
@@ -101,7 +104,12 @@ function UserContractDialog(props: UserContractDialogProps) {
                   contactName: info.contactName,
                   contactPhone: info.contactPhone,
                   companyAddress: info.companyAddress ?? "",
-                  recipientAccount: info.recipientAccount,
+                  recipientAccount: info.recipientAccount
+                    ? ({
+                        label: `(${info.recipientAccount.bankCode}) ${info.recipientAccount.account}`,
+                        value: `${info.recipientAccount.bankCode}|${info.recipientAccount.account}`,
+                      } as unknown as CreateRecipientAccountInput)
+                    : undefined,
                   degree: info.degree,
                   number: info.number,
                   tableNumbers: info.tableNumbers,
