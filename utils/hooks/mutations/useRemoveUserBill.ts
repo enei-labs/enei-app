@@ -9,13 +9,14 @@ export const useRemoveUserBill = () => {
     REMOVE_USER_BILL, {
       update(cache, { data }) {
         if (data?.removeUserBill?.__typename === 'UserBill') {
-          const existingUserBills = cache.readQuery<{ userBills: UserBillPage }>({ query: USER_BILLS });
+          const existingUserBills = cache.readQuery<{ userBills: UserBillPage }>({ query: USER_BILLS, variables: { offset: 0, limit: 10 } });
 
           if (existingUserBills) {
             cache.writeQuery({
               query: USER_BILLS,
+              variables: { offset: 0, limit: 10 },
               data: {
-                usersBills: {
+                userBills: {
                   ...existingUserBills.userBills,
                   total: existingUserBills.userBills.total - 1,
                   list: existingUserBills.userBills.list.filter(user => user.id !== data.removeUserBill.id),

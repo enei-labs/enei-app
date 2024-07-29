@@ -582,7 +582,6 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                     label={`預計年採購度數（MWh）`}
                     aria-label={`預計年採購度數（MWh）`}
                     placeholder={"請填入"}
-                    required
                   />
                 )}
               />

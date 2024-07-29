@@ -333,7 +333,7 @@ export type CreateTransferDocumentPowerPlantInput = {
 export type CreateTransferDocumentUserInput = {
   electricNumber: Scalars['String']['input'];
   /** 要小於電號的電號年預計採購度數 */
-  expectedYearlyPurchaseDegree: Scalars['Int']['input'];
+  expectedYearlyPurchaseDegree?: InputMaybe<Scalars['Int']['input']>;
   monthlyTransferDegree: Scalars['Int']['input'];
   userContractId: Scalars['ID']['input'];
   userId: Scalars['ID']['input'];
@@ -585,6 +585,7 @@ export type Mutation = {
   removeTransferDocument: TransferDocument;
   removeUser: User;
   removeUserBill: UserBill;
+  removeUserContract: UserContract;
   requestResetPassword: RequestResetPasswordResponse;
   resetPassword: ResetPasswordResponse;
   sendResetPasswordEmail: SendResetPasswordEmailResponse;
@@ -728,6 +729,11 @@ export type MutationRemoveUserArgs = {
 
 export type MutationRemoveUserBillArgs = {
   input: RemoveUserBillInput;
+};
+
+
+export type MutationRemoveUserContractArgs = {
+  id: Scalars['UUID']['input'];
 };
 
 
@@ -1209,7 +1215,7 @@ export type TransferDocumentPowerPlant = {
 export type TransferDocumentUser = {
   __typename?: 'TransferDocumentUser';
   electricNumberInfo: ElectricNumberInfo;
-  expectedYearlyPurchaseDegree: Scalars['Int']['output'];
+  expectedYearlyPurchaseDegree?: Maybe<Scalars['Int']['output']>;
   monthlyTransferDegree: Scalars['Int']['output'];
   user: User;
   userContract: UserContract;
@@ -1332,7 +1338,7 @@ export type User = {
   contactPhone: Scalars['String']['output'];
   estimatedTransferDegree: Scalars['String']['output'];
   /** 用戶預計年採購度數 */
-  expectedYearlyPurchaseDegree: Scalars['String']['output'];
+  expectedYearlyPurchaseDegree?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   lastMonthTransferRecords: Array<TransferDegree>;
   name: Scalars['String']['output'];

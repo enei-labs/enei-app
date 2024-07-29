@@ -2,6 +2,7 @@ import { Box, Grid, Typography } from "@mui/material";
 import { SvgIconComponent } from "@mui/icons-material";
 import EditUserContractBtn from "@components/UserContract/UserContractDialog/EditUserContractBtn";
 import { User, UserContract } from "@core/graphql/types";
+import RemoveUserContractBtn from "@components/UserContract/UserContractDialog/RemoveUserContractBtn";
 
 export type ContractInfo = {
   icon: SvgIconComponent;
@@ -41,8 +42,12 @@ function ContractBox(props: ContractBoxProps) {
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <Typography variant="h5">{title}</Typography>
         {userContract ? (
-          <Box>
+          <Box sx={{ display: "flex", gap: "8px" }}>
             <EditUserContractBtn userContract={userContract} user={user!} />
+            <RemoveUserContractBtn
+              userContract={userContract}
+              userId={user!.id}
+            />
           </Box>
         ) : null}
       </Box>
