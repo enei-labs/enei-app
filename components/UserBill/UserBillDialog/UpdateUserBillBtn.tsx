@@ -16,7 +16,7 @@ const UpdateUserBillBtn = (props: UpdateUserBillBtnProps) => {
 
   const [updateUserBill, { loading }] = useUpdateUserBill();
 
-  /** 新增用戶 mutation */
+  /** 更新用戶電費單 mutation */
   const onUpdateUserBill = async (formData: FormData) => {
     await updateUserBill({
       variables: {

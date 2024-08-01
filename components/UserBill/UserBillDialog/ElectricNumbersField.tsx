@@ -43,6 +43,7 @@ export function ElectricNumbersField(props: ElectricNumbersFieldProps) {
   if (loading) return <CircularProgress size="24px" />;
 
   const priceMap = new Map();
+
   const flattenElectricNumberOptions =
     data?.userContracts.list.reduce((agg: ElectricNumberInfo[], curr) => {
       if (!curr.electricNumberInfos || !curr.electricNumberInfos.length)
@@ -63,6 +64,7 @@ export function ElectricNumbersField(props: ElectricNumbersFieldProps) {
             render={({ field }) => {
               return (
                 <InputAutocomplete
+                  sx={{ width: "600px" }}
                   {...field}
                   onChange={(e) => field.onChange(e)}
                   options={
@@ -128,10 +130,7 @@ export function ElectricNumbersField(props: ElectricNumbersFieldProps) {
             onClick={() => {
               const emptyArray = [];
               for (let i = 1; i <= addElectricNumber; i++) {
-                emptyArray.push({
-                  number: "",
-                  price: 0,
-                });
+                emptyArray.push({});
               }
 
               append(emptyArray);

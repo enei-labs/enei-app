@@ -4,7 +4,7 @@ import { CircularProgress } from "@mui/material";
 import Autocomplete, {
   AutocompleteRenderInputParams,
 } from "@mui/material/Autocomplete";
-import { forwardRef, UIEventHandler } from "react";
+import { CSSProperties, forwardRef, UIEventHandler } from "react";
 import { ControllerRenderProps } from "react-hook-form";
 
 interface InputAutocompleteProps {
@@ -17,6 +17,7 @@ interface InputAutocompleteProps {
   onChange?: ControllerRenderProps["onChange"];
   loading?: boolean;
   fetchMoreData?: () => void;
+  sx?: CSSProperties;
 }
 
 const InputAutocomplete = forwardRef<HTMLDivElement, InputAutocompleteProps>(
