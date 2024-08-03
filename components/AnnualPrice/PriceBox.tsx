@@ -37,7 +37,7 @@ export function PriceBox(props: PriceBoxProps) {
           }}
         >
           <Typography variant="h3" sx={{ whiteSpace: "nowrap" }}>
-            {price}
+            {new Intl.NumberFormat().format(Number(price))}
           </Typography>
           <Typography variant="body3" sx={{ whiteSpace: "nowrap" }}>
             {unit}

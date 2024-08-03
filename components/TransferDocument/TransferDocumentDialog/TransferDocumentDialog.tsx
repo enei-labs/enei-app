@@ -241,7 +241,7 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
 
     return {
       number: powerPlant?.number ?? 0,
-      volume: powerPlant?.volume ?? 0,
+      volume: (powerPlant?.volume ?? 0) / 1000,
       estimatedAnnualPowerGeneration:
         powerPlant?.estimatedAnnualPowerGeneration ?? 0,
     };
@@ -369,10 +369,10 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
               />
               <InputText
                 label="預計年發電量（kWh）"
-                value={
+                value={new Intl.NumberFormat().format(
                   currentPowerPlantInfo.volume *
-                  currentPowerPlantInfo.estimatedAnnualPowerGeneration
-                }
+                    currentPowerPlantInfo.estimatedAnnualPowerGeneration
+                )}
                 disabled
               />
               <Controller
@@ -399,11 +399,11 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                     aria-label={`預計年供電度數（kWh）`}
                     placeholder={"請填入"}
                     disabled
-                    value={
+                    value={new Intl.NumberFormat().format(
                       currentPowerPlantInfo.volume *
-                      currentPowerPlantInfo.estimatedAnnualPowerGeneration *
-                      transferDocumentPowerPlants[index].transferRate
-                    }
+                        currentPowerPlantInfo.estimatedAnnualPowerGeneration *
+                        transferDocumentPowerPlants[index].transferRate
+                    )}
                   />
                 )}
               />

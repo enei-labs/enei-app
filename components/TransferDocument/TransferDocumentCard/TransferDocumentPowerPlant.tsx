@@ -73,7 +73,8 @@ function TransferDocumentPowerPlant(props: TransferDocumentPowerPlantProps) {
       ),
       volumeNode: (
         <Typography variant="body1">
-          {el.powerPlant.volume} <Typography variant="body4">kWh</Typography>
+          {el.powerPlant.volume / 1000}{" "}
+          <Typography variant="body4">kWh</Typography>
         </Typography>
       ),
       estimateAnnualSupplyNode: (
