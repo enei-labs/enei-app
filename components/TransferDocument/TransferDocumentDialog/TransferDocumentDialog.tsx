@@ -370,8 +370,9 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
               <InputText
                 label="預計年發電量（kWh）"
                 value={new Intl.NumberFormat().format(
-                  currentPowerPlantInfo.volume *
-                    currentPowerPlantInfo.estimatedAnnualPowerGeneration
+                  (currentPowerPlantInfo.volume *
+                    currentPowerPlantInfo.estimatedAnnualPowerGeneration) /
+                    100
                 )}
                 disabled
               />
