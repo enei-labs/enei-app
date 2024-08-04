@@ -23,6 +23,7 @@ const CreateAccountBtn = (props: CreateAccountBtnProps) => {
           name: formData.name,
           email: formData.email,
           companyId: formData.companyId?.value || undefined,
+          userId: formData.userId?.value || undefined,
           role: formData.role.value,
         },
       },

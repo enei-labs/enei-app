@@ -17,8 +17,6 @@ function CompanyContractPage() {
 
   if (loading) return <CircularProgress size="24px" />;
 
-  console.log({ data });
-
   return (
     <>
       <Head>

@@ -1,4 +1,4 @@
-import { CircularProgress, Grid, Tooltip, Typography } from "@mui/material";
+import { CircularProgress, Grid, Typography } from "@mui/material";
 import { useCallback, useEffect, useMemo } from "react";
 import { IconBtn } from "@components/Button";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
@@ -81,28 +81,39 @@ function AccountDialog(props: AccountDialogProps) {
                 value: currentModifyAccount.company.id,
               }
             : undefined,
+          userId: currentModifyAccount.user
+            ? {
+                label: `${currentModifyAccount.user.contactEmail}(${currentModifyAccount.user.name})`,
+                value: currentModifyAccount.user.id,
+              }
+            : undefined,
         }
       : {},
   });
   const role = watch("role");
   const company = watch("companyId");
+  const user = watch("userId");
 
-  const { data: usersData } = useUsers({
+  const {
+    data: usersData,
+    fetchMore: usersFetchMore,
+    loading: usersLoading,
+  } = useUsers({
     onlyBasicInformation: true,
     skip: !role || role.value !== Role.User,
   });
 
   const {
     data: companiesData,
-    loading,
-    fetchMore,
+    loading: companiesLoading,
+    fetchMore: companiesFetchMore,
   } = useCompanies({
     skip: !role || [Role.Admin, Role.SuperAdmin].includes(role.value),
   });
 
   const companiesLoadMore = useCallback(
     () =>
-      fetchMore({
+      companiesFetchMore({
         variables: {
           offset: companiesData?.companies.list.length,
         },
@@ -119,7 +130,30 @@ function AccountDialog(props: AccountDialogProps) {
           };
         },
       }),
-    [companiesData, fetchMore]
+    [companiesData, companiesFetchMore]
+  );
+
+  const usersLoadMore = useCallback(
+    () =>
+      usersFetchMore({
+        variables: {
+          onlyBasicInformation: true,
+          offset: usersData?.users.list.length,
+        },
+        updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult) return prev;
+          return {
+            users: {
+              total: fetchMoreResult.users.total,
+              list: [
+                ...(prev?.users?.list ?? []),
+                ...fetchMoreResult.users.list,
+              ],
+            },
+          };
+        },
+      }),
+    [usersData, usersFetchMore]
   );
 
   const displayFieldConfigs: FieldConfig[] = useMemo(() => {
@@ -127,32 +161,24 @@ function AccountDialog(props: AccountDialogProps) {
       return basicConfigs;
 
     if (role?.value === Role.User) {
-      return [
-        ...basicConfigs,
-        {
-          type: "SINGLE_SELECT",
-          name: "companyId",
-          placeholder: "請填入 (Auto Complete)",
-          label: "公司名稱",
-          options:
-            companiesData?.companies.list.map((o) => ({
-              label: o.name,
-              value: o.id,
-            })) ?? [],
-          fetchMoreData: companiesLoadMore,
-        },
+      const userConfigs = [
+        basicConfigs[0],
         {
           type: "SINGLE_SELECT",
           name: "userId",
           placeholder: "請填入 (Auto Complete)",
-          label: "綠電用戶 email",
+          label: "綠電用戶",
           options:
             usersData?.users.list.map((user) => ({
               label: `${user.contactEmail}(${user.name})`,
               value: user.id,
             })) ?? [],
-        },
+          fetchMoreData: usersLoadMore,
+        } as FieldConfig,
+        basicConfigs[1],
+        basicConfigs[2],
       ];
+      return userConfigs;
     }
 
     return [
@@ -169,25 +195,50 @@ function AccountDialog(props: AccountDialogProps) {
           })) ?? [],
         helperText: "若查無此公司，需先至發電業頁面新增公司",
         fetchMoreData: companiesLoadMore,
-      },
+      } as FieldConfig,
       basicConfigs[1],
       basicConfigs[2],
     ];
-  }, [companiesData, usersData, role, companiesLoadMore]);
+  }, [companiesData, usersData, role, companiesLoadMore, usersLoadMore]);
 
   useEffect(() => {
-    if (role?.value === Role.Company && company?.value) {
+    if (!usersLoading && !companiesLoading) return;
+    if (role?.value === Role.Company && company?.value && companiesData) {
       const companyData = companiesData?.companies.list.find(
         (o) => o.id === company.value
       );
-      setValue("email", companyData?.contactEmail ?? "");
-      setValue("name", companyData?.contactName ?? "");
+      if (currentModifyAccount?.email !== companyData?.contactEmail) {
+        setValue("email", companyData?.contactEmail ?? "");
+      }
+      if (currentModifyAccount?.name !== companyData?.contactName) {
+        setValue("name", companyData?.contactName ?? "");
+      }
     }
-  }, [role, company, companiesData, setValue]);
+
+    if (role?.value === Role.User && user?.value && usersData) {
+      const userData = usersData?.users.list.find((o) => o.id === user.value);
+      if (currentModifyAccount?.email !== userData?.contactEmail) {
+        setValue("email", userData?.contactEmail ?? "");
+      }
+      if (currentModifyAccount?.name !== userData?.name) {
+        setValue("name", userData?.name ?? "");
+      }
+    }
+  }, [
+    role,
+    company,
+    user,
+    usersData,
+    companiesData,
+    setValue,
+    currentModifyAccount,
+    usersLoading,
+    companiesLoading,
+  ]);
 
   return (
     <Dialog open={isOpenDialog} onClose={onClose}>
-      {loading ? (
+      {companiesLoading || usersLoading ? (
         <CircularProgress size="24px" />
       ) : (
         <>

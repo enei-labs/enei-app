@@ -9,5 +9,10 @@ export const GUEST_FIELDS = gql`
     name
     hasSetPassword
     companyName
+    user {
+      id
+      name
+      contactEmail
+    }
   }
 `

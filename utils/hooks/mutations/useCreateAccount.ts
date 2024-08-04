@@ -8,28 +8,26 @@ export const useCreateAccount = () => {
     CREATE_ACCOUNT, {
       update(cache, { data }) {
         if (data && (data.createAccount.__typename === 'Admin' || data.createAccount.__typename === 'Guest')) {
-          cache.modify({
-            fields: {
-              accounts(existingAccountsRef, { readField }) {
-                const newAccountRef = cache.writeFragment({
-                  data: data.createAccount,
-                  fragment: ACCOUNT_FIELDS
-                });
-                const existingAccounts = readField<AccountPage>('accounts', existingAccountsRef) ?? {
-                  total: 0,
-                  list: [],
-                };
+          const existingAccounts = cache.readQuery<{ accounts: AccountPage }>({ query: ACCOUNT_FIELDS });
 
-                return {
-                  total: existingAccounts.total + 1,
-                  list: [newAccountRef, ...existingAccounts.list],
-                };
-              }
-            },
-            broadcast: false,
-          });
+          if (existingAccounts) {
+            cache.writeQuery({
+              query: ACCOUNT_FIELDS,
+              variables: {
+                limit: 10,
+                offset: 0,
+              },
+              data: {
+                accounts: {
+                  ...existingAccounts.accounts,
+                  total: existingAccounts.accounts.total + 1,
+                  list: [data.createAccount, ...existingAccounts.accounts.list],
+                },
+              },
+            });
+          }
         }
-      }
+      },
     }
   );
 };

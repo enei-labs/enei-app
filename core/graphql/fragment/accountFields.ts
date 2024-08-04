@@ -13,6 +13,11 @@ export const ACCOUNT_FIELDS = gql`
       id
       name
     }
+    user {
+      id
+      name
+      contactEmail
+    }
     recipientAccounts {
 			bankCode
       bankName

@@ -29,6 +29,7 @@ export type Account = {
   recipientAccounts?: Maybe<Array<RecipientAccount>>;
   removeRecord?: Maybe<RemoveAccountRecord>;
   role: Role;
+  user?: Maybe<User>;
 };
 
 export type AccountAlreadyExistsError = Error & {
@@ -111,6 +112,7 @@ export type Admin = Account & {
   recipientAccounts?: Maybe<Array<RecipientAccount>>;
   removeRecord?: Maybe<RemoveAccountRecord>;
   role: Role;
+  user?: Maybe<User>;
 };
 
 export type AdminPage = {
@@ -515,8 +517,8 @@ export enum GenerationType {
 export type Guest = Account & {
   __typename?: 'Guest';
   actions: Array<Action>;
-  company: Company;
-  companyName: Scalars['String']['output'];
+  company?: Maybe<Company>;
+  companyName?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   creator?: Maybe<Admin>;
   email: Scalars['String']['output'];
@@ -526,6 +528,7 @@ export type Guest = Account & {
   recipientAccounts?: Maybe<Array<RecipientAccount>>;
   removeRecord?: Maybe<RemoveAccountRecord>;
   role: Role;
+  user?: Maybe<User>;
 };
 
 export type GuestPage = {
@@ -666,6 +669,7 @@ export type MutationModifyAccountArgs = {
   id: Scalars['ID']['input'];
   name?: InputMaybe<Scalars['String']['input']>;
   recipientAccounts?: InputMaybe<Array<CreateRecipientAccountInput>>;
+  userId?: InputMaybe<Scalars['ID']['input']>;
 };
 
 
@@ -1174,7 +1178,7 @@ export type TransferDegree = {
   id: Scalars['ID']['output'];
   powerPlant: PowerPlant;
   user: User;
-  userContract: UserContract;
+  userContract?: Maybe<UserContract>;
 };
 
 export type TransferDocument = {

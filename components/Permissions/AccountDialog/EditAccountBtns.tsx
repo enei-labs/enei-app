@@ -25,6 +25,7 @@ const EditAccountBtns = (props: EditAccountBtnsProps) => {
         name: name,
         email: email,
         companyId: companyId?.value || undefined,
+        userId: formData.userId?.value || undefined,
         id,
       },
       refetchQueries: [ACCOUNTS],
