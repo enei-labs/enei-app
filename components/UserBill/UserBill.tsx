@@ -222,7 +222,7 @@ const UserBill = forwardRef((props: UserBillProps, ref) => {
 
             <TableRow>
               <TableCell align="center" colSpan={1} sx={styles.contentText}>
-                憑證查驗費
+                憑證審查費
               </TableCell>
               <TableCell align="center" colSpan={1} sx={styles.contentText}>
                 {Number(fee.certificateVerificationFee)}

@@ -193,7 +193,7 @@ function UserBillDialog(props: UserBillDialogProps) {
             return (
               <RadioGroup
                 {...field}
-                label="憑證查驗費"
+                label="憑證審查費"
                 radios={ChargeTypeRadios}
               />
             );

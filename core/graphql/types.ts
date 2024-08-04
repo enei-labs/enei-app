@@ -500,7 +500,7 @@ export type Fee = {
   __typename?: 'Fee';
   /** 憑證服務費 */
   certificateServiceFee: Scalars['String']['output'];
-  /** 憑證查驗費 */
+  /** 憑證審查費 */
   certificateVerificationFee: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   /** 代輸費 */

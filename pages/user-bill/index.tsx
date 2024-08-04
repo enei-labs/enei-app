@@ -113,7 +113,7 @@ function ExportElectricBillPage() {
                 <Grid item sm={4} sx={{ padding: "36px 36px 36px 0" }}>
                   <Box sx={{ display: "flex", columnGap: "12px" }}>
                     <LaptopOutlinedIcon width="20px" />
-                    <Typography variant="body2">憑證查驗費</Typography>
+                    <Typography variant="body2">憑證審查費</Typography>
                   </Box>
                   <Box sx={styles.box}>
                     <Box
