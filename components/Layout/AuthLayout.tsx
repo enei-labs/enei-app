@@ -83,13 +83,6 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
 
   useEffect(() => {
     if (status === "unauthenticated") router.push("/logIn");
-
-    // if (isSafari()) {
-    //   document.requestStorageAccess().catch((err) => {
-    //     // Storage access is denied.
-    //     console.error("Storage access was denied", err);
-    //   });
-    // }
   }, [router, status]);
 
   if (status === "loading" || status === "unauthenticated") {

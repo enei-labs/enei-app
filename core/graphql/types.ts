@@ -102,7 +102,7 @@ export type Admin = Account & {
   __typename?: 'Admin';
   actions: Array<Action>;
   company?: Maybe<Company>;
-  companyName: Scalars['String']['output'];
+  companyName?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   creator?: Maybe<Admin>;
   email: Scalars['String']['output'];

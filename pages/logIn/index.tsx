@@ -76,9 +76,10 @@ const LogIn = () => {
           setOpen(true);
           return;
         } else {
-          toast.success("登入成功");
-          await logIn();
-          await router.push("/main");
+          logIn().then(() => {
+            router.push("/main");
+            toast.success("登入成功");
+          });
         }
       },
     });

@@ -17,7 +17,6 @@ const CreateUserBillBtn = (props: CreateUserBillBtnProps) => {
 
   /** 新增用戶電費單 mutation */
   const onCreateUserBill = async (formData: FormData) => {
-    console.log({ formData });
     await createUserBill({
       variables: {
         input: {
