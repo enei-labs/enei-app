@@ -4,6 +4,7 @@ export const TPC_BILL_FIELDS = gql`
   fragment tpcBillFields on TPCBill {
     id
     billReceivedDate
+    billingDate
     billDoc
     transferDegrees {
       id

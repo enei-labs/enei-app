@@ -22,6 +22,7 @@ type FieldType =
   | "TEXTAREA"
   | "DATE"
   | "DATE_TEXTFILE"
+  | "DATE_MONTH"
   | "SINGLE_SELECT"
   | "MULTIPLE_SELECT"
   | "FILE"
@@ -64,6 +65,17 @@ const FieldsController: React.FC<FieldsControllerProps> = ({
       case "DATE_TEXTFILE":
         return (
           <InputDate {...item} {...fieldProps.field} helperText={helperText} />
+        );
+
+      case "DATE_MONTH":
+        return (
+          <InputDate
+            {...item}
+            {...fieldProps.field}
+            openTo="month"
+            views={["year", "month"]}
+            helperText={helperText}
+          />
         );
 
       case "SINGLE_SELECT":

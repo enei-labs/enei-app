@@ -302,6 +302,7 @@ export type CreateRecipientAccountInput = {
 export type CreateTpcBillInput = {
   billDoc: Scalars['String']['input'];
   billReceivedDate: Scalars['DateTime']['input'];
+  billingDate: Scalars['DateTime']['input'];
   transferDegrees: Array<CreateTransferDegreeInput>;
   transferDocumentId: Scalars['ID']['input'];
 };
@@ -1161,6 +1162,7 @@ export type TpcBill = {
   __typename?: 'TPCBill';
   billDoc: Scalars['String']['output'];
   billReceivedDate: Scalars['DateTime']['output'];
+  billingDate: Scalars['DateTime']['output'];
   id: Scalars['ID']['output'];
   transferDegrees: Array<TransferDegree>;
 };

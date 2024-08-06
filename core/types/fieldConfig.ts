@@ -10,6 +10,7 @@ export enum FieldType {
   PASSWORD = 'PASSWORD',
   DATE = 'DATE',
   DATE_TEXTFILE = 'DATE_TEXTFILE',
+  DATE_MONTH = 'DATE_MONTH',
   FILE = 'FILE',
   NUMBER = 'NUMBER',
   NUMBER_TEXTFILE = 'NUMBER_TEXTFILE',
@@ -34,6 +35,7 @@ interface FieldConfig {
     | 'PASSWORD'
     | 'DATE'
     | 'DATE_TEXTFILE'
+    | 'DATE_MONTH'
     | 'FILE'
     | 'NUMBER'
     | 'NUMBER_TEXTFILE'

@@ -33,6 +33,14 @@ const basicInfoConfigs: FieldConfig[] = [
     validated: textValidated,
     required: true,
   },
+  {
+    type: "DATE_MONTH",
+    name: "billingDate",
+    label: "計費年月",
+    placeholder: "請填入",
+    validated: textValidated,
+    required: true,
+  },
 ];
 
 const docConfigs: FieldConfig[] = [
@@ -80,6 +88,7 @@ export default function TPCBillDialog(props: TPCBillDialogProps) {
         input: {
           billDoc: formData.billDoc.id,
           billReceivedDate: formData.billReceivedDate,
+          billingDate: formData.billingDate,
           transferDocumentId: formData.transferDocument.value,
           transferDegrees,
         },
