@@ -3,7 +3,7 @@ const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "";
 
 const handleDownload = async (fileId: string) => {
   try {
-    const { data } = await axios.get(`${apiBaseUrl}/s3/getSignedUrl`, {
+    const { data } = await axios.get(`${apiBaseUrl}/s3/getSignedUrl/download`, {
       params: { fileId },
       withCredentials: true,
     });
