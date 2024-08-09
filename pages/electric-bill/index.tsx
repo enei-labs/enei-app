@@ -69,7 +69,7 @@ function ExportElectricBillPage() {
           {
             name: "電費單匯出",
             icon: ChartIcon,
-            href: "/user-bill",
+            href: "/electric-bill",
           },
         ]}
       />

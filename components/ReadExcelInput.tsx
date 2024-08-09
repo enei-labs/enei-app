@@ -1,9 +1,9 @@
 import CompanyBillTemplate, {
   CompanyBillTemplateData,
-} from "@components/Bill/CompanyBillTemplate";
+} from "@components/ElectricBill/CompanyBillTemplate";
 import UserBillTemplate, {
   UserBillTemplateData,
-} from "@components/Bill/UserBillTemplate";
+} from "@components/ElectricBill/UserBillTemplate";
 import { Button, Divider, Paper, Typography } from "@mui/material";
 import { formatDateTime } from "@utils/format";
 import { readExcelFile } from "@utils/readExcelFile";
@@ -50,8 +50,6 @@ export function ReadExcelInput() {
 
     const userBillData = data["用戶"];
     const companyBillData = data["發電"];
-
-    console.log({ companyBillData });
 
     const userBillTemplateData: UserBillTemplateData = {
       billingMonth: userBillData[1][7],
@@ -127,6 +125,8 @@ export function ReadExcelInput() {
       },
     };
 
+    console.log({ companyBillData });
+    console.log({ userBillData });
     console.log({ companyBillTemplateData });
     setUserBillTemplateData(userBillTemplateData);
     setCompanyBillTemplateData(companyBillTemplateData);
