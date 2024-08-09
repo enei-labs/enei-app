@@ -190,7 +190,7 @@ function ExportElectricBillPage() {
                 fee={data.fee}
                 userBills={userBillsData?.userBills}
                 loading={userBillLoading}
-                refetchFn={(page) =>
+                refetchFn={(page: any) =>
                   refetch({
                     limit: page.rows,
                     offset: page.rows * page.index,

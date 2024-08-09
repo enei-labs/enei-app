@@ -13,7 +13,6 @@ import PeopleOutlineOutlinedIcon from "@mui/icons-material/PeopleOutlineOutlined
 import ChartIcon from "@mui/icons-material/InsertChartOutlinedSharp";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import Head from "next/head";
-import { BasicTable } from "@components/Table";
 import { useDashboard } from "@utils/hooks/queries/useDashboard";
 import TurnoverChart from "@components/Dashboard/TurnoverChart";
 import UserContractExpiredPanel from "@components/Dashboard/UserContractExpiredPanel";

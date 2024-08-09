@@ -1,4 +1,4 @@
-import { Fee, UserBill } from "@core/graphql/types";
+import { Fee, UserBill as UserBillType } from "@core/graphql/types";
 import {
   Box,
   Grid,
@@ -41,7 +41,7 @@ const styles = {
 } as const;
 
 interface UserBillProps {
-  userBill: UserBill;
+  userBill: UserBillType;
   fee: Fee;
 }
 
