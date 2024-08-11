@@ -401,9 +401,10 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                     placeholder={"請填入"}
                     disabled
                     value={new Intl.NumberFormat().format(
-                      currentPowerPlantInfo.volume *
+                      (currentPowerPlantInfo.volume *
                         currentPowerPlantInfo.estimatedAnnualPowerGeneration *
-                        transferDocumentPowerPlants[index].transferRate
+                        transferDocumentPowerPlants[index].transferRate) /
+                        100
                     )}
                   />
                 )}
