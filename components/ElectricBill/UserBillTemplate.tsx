@@ -55,17 +55,16 @@ export interface UserBillTemplateData {
 }
 
 import { Box, Grid, Typography } from "@mui/material";
-import { forwardRef, useMemo } from "react";
+import { forwardRef } from "react";
 import Logo from "public/logo-with-name.svg";
 
 const styles = {
   container: {
-    // width: 595,
     backgroundColor: "#FFF",
     padding: "32px 24px",
   },
   boxTitle: {
-    fontSize: "12px",
+    fontSize: "16px",
     fontWeight: 700,
   },
   box: {
@@ -121,17 +120,8 @@ interface UserBillProps {
   data: UserBillTemplateData;
 }
 
-const splitTransferNumber = (fullNumber: string) => {
-  const [prefix, number] = fullNumber.split("：");
-  return { prefix, number };
-};
-
-/** @TODO check details */
 const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
   const { data } = props;
-
-  const { prefix: customerNumberPrefix, number: customerNumber } =
-    splitTransferNumber(data.customerNumber);
 
   return (
     <Box sx={styles.container} ref={ref}>
@@ -157,7 +147,7 @@ const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
           </Typography>
         </Box>
       </Box>
-      <Box sx={{ margin: "46px 84px" }}>
+      <Box sx={{ margin: "46px 84px 0 84px" }}>
         <Box sx={{ display: "flex", columnGap: "12px" }}>
           <Typography variant="h5" sx={{ fontWeight: 700, color: "#000" }}>
             {data.companyName}
@@ -169,6 +159,9 @@ const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
         <Typography variant="h6" sx={{ fontWeight: 500, color: "#000" }}>
           {data.address}
         </Typography>
+      </Box>
+      <Box display="flex" justifyContent="flex-end" marginY="24px">
+        <Typography fontSize="14px">{data.customerNumber}</Typography>
       </Box>
       <Grid container spacing={"8px"}>
         <Grid item sm={4}>
@@ -211,10 +204,14 @@ const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
                   flex: "1 4",
                 }}
               >
-                <Typography variant="h6" sx={{ color: "#000" }}>
+                <Typography
+                  sx={{ fontSize: "12px", fontWeight: 500, color: "#000" }}
+                >
                   銀行
                 </Typography>
-                <Typography variant="h6" sx={{ color: "#009688" }}>
+                <Typography
+                  sx={{ fontSize: "12px", fontWeight: 500, color: "#009688" }}
+                >
                   {data.bank.bankName}
                 </Typography>
               </Box>
@@ -225,10 +222,14 @@ const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
                   flex: "1 4",
                 }}
               >
-                <Typography variant="h6" sx={{ color: "#000" }}>
+                <Typography
+                  sx={{ fontSize: "12px", fontWeight: 500, color: "#000" }}
+                >
                   戶名
                 </Typography>
-                <Typography variant="h6" sx={{ color: "#009688" }}>
+                <Typography
+                  sx={{ fontSize: "12px", fontWeight: 500, color: "#009688" }}
+                >
                   {data.bank.accountName}
                 </Typography>
               </Box>
@@ -239,10 +240,14 @@ const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
                   flex: "1 4",
                 }}
               >
-                <Typography variant="h6" sx={{ color: "#000" }}>
+                <Typography
+                  sx={{ fontSize: "12px", fontWeight: 500, color: "#000" }}
+                >
                   帳號
                 </Typography>
-                <Typography variant="h6" sx={{ color: "#009688" }}>
+                <Typography
+                  sx={{ fontSize: "12px", fontWeight: 500, color: "#009688" }}
+                >
                   {data.bank.accountNumber}
                 </Typography>
               </Box>
@@ -252,7 +257,7 @@ const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
       </Grid>
       <Box marginTop={"12px"}>
         <Typography
-          sx={{ fontSize: "12px", fontWeight: 700 }}
+          sx={{ fontSize: "16px", fontWeight: 700 }}
           textAlign={"center"}
         >
           轉供資料與明細

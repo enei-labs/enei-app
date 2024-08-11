@@ -4,10 +4,10 @@ import CompanyBillTemplate, {
 import UserBillTemplate, {
   UserBillTemplateData,
 } from "@components/ElectricBill/UserBillTemplate";
-import { Button, Divider, Paper, Typography } from "@mui/material";
+import { Button, Divider } from "@mui/material";
 import { formatDateTime } from "@utils/format";
 import { readExcelFile } from "@utils/readExcelFile";
-import { useRef, useState } from "react";
+import { forwardRef, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 
 export const excelDateToJSDate = (serial: number) => {
@@ -35,17 +35,41 @@ export const excelDateToJSDate = (serial: number) => {
   );
 };
 
+const PrintWrapper = forwardRef<
+  HTMLDivElement,
+  {
+    userBillTemplateData: UserBillTemplateData | null;
+    companyBillTemplateData: CompanyBillTemplateData | null;
+  }
+>((props, ref) => (
+  <div ref={ref}>
+    {props.userBillTemplateData && (
+      <div style={{ pageBreakAfter: "always" }}>
+        <UserBillTemplate data={props.userBillTemplateData} />
+      </div>
+    )}
+    {props.companyBillTemplateData && (
+      <CompanyBillTemplate data={props.companyBillTemplateData} />
+    )}
+  </div>
+));
+
+PrintWrapper.displayName = "PrintWrapper";
+
 export function ReadExcelInput() {
   const [userBillTemplateData, setUserBillTemplateData] =
     useState<UserBillTemplateData | null>(null);
   const [companyBillTemplateData, setCompanyBillTemplateData] =
     useState<CompanyBillTemplateData | null>(null);
+  const [fileName, setFileName] = useState<string>("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = event.target.files?.[0];
     if (!file) return;
+    setFileName(file.name);
     const data = await readExcelFile(file);
 
     const userBillData = data["用戶"];
@@ -125,9 +149,9 @@ export function ReadExcelInput() {
       },
     };
 
-    console.log({ companyBillData });
-    console.log({ userBillData });
-    console.log({ companyBillTemplateData });
+    console.info({ companyBillData });
+    console.info({ userBillData });
+    console.info({ companyBillTemplateData });
     setUserBillTemplateData(userBillTemplateData);
     setCompanyBillTemplateData(companyBillTemplateData);
   };
@@ -135,32 +159,34 @@ export function ReadExcelInput() {
   const componentRef = useRef(null);
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
+    documentTitle: fileName.replace(/\.[^/.]+$/, ""), // Remove file extension
   });
+
+  const handleClear = () => {
+    setUserBillTemplateData(null);
+    setCompanyBillTemplateData(null);
+    setFileName("");
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
 
   return (
     <>
-      <input type="file" onChange={handleFileUpload} />
-      {userBillTemplateData && (
+      <input type="file" onChange={handleFileUpload} ref={fileInputRef} />
+
+      {(userBillTemplateData || companyBillTemplateData) && (
         <>
+          <Button onClick={handlePrint} sx={{ marginRight: "6px" }}>
+            列印
+          </Button>
+          <Button onClick={handleClear}>清空</Button>
           <Divider sx={{ margin: 2 }} />
-          <Typography variant="h4" color="#000">
-            用戶電費單
-          </Typography>
-          <Paper sx={{ padding: 2 }}>
-            <UserBillTemplate data={userBillTemplateData} ref={componentRef} />
-          </Paper>
-          <Button onClick={handlePrint}>Print</Button>
-        </>
-      )}
-      {companyBillTemplateData && (
-        <>
-          <Divider sx={{ margin: 2 }} />
-          <Typography variant="h4" color="#000">
-            發電電費單
-          </Typography>
-          <Paper sx={{ padding: 2 }}>
-            <CompanyBillTemplate data={companyBillTemplateData} />
-          </Paper>
+          <PrintWrapper
+            ref={componentRef}
+            userBillTemplateData={userBillTemplateData}
+            companyBillTemplateData={companyBillTemplateData}
+          />
         </>
       )}
     </>

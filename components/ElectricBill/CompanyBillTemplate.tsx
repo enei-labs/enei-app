@@ -50,7 +50,7 @@ const styles = {
     padding: "32px 24px",
   },
   boxTitle: {
-    fontSize: "12px",
+    fontSize: "16px",
     fontWeight: 700,
   },
   box: {
@@ -108,7 +108,7 @@ const styles = {
   },
   sectionTitle: {
     fontWeight: 700,
-    fontSize: "14px",
+    fontSize: "16px",
     marginBottom: "4px",
   },
 } as const;
@@ -145,7 +145,7 @@ const CompanyBillTemplate = forwardRef((props: CompanyBillProps, ref) => {
           </Typography>
         </Box>
       </Box>
-      <Box sx={{ margin: "46px 84px" }}>
+      <Box sx={{ margin: "46px 84px 0 84px" }}>
         <Box sx={{ display: "flex", columnGap: "12px" }}>
           <Typography variant="h5" sx={{ fontWeight: 700, color: "#000" }}>
             {data.companyName}
@@ -157,6 +157,9 @@ const CompanyBillTemplate = forwardRef((props: CompanyBillProps, ref) => {
         <Typography variant="h6" sx={{ fontWeight: 500, color: "#000" }}>
           {data.address}
         </Typography>
+      </Box>
+      <Box display="flex" justifyContent="flex-end" marginY="24px">
+        <Typography fontSize="14px">{data.transferNumber}</Typography>
       </Box>
       <Grid container spacing={"8px"}>
         <Grid item sm={4}>
@@ -197,77 +200,88 @@ const CompanyBillTemplate = forwardRef((props: CompanyBillProps, ref) => {
             display: "flex",
             mt: "12px",
             justifyContent: "space-between",
-            flex: "5 5",
             columnGap: "12px",
           }}
         >
-          <Box>
+          <Box sx={{ flex: "3 3 0%" }}>
             <Paper elevation={0} sx={styles.section}>
               <Typography sx={styles.sectionTitle}>基本資訊</Typography>
               <Grid container>
                 <Grid item xs={6}>
-                  <Typography>併聯容量：</Typography>
+                  <Typography fontSize="12px">併聯容量：</Typography>
                 </Grid>
                 <Grid item xs={6}>
-                  <Typography>{data.basicInfo.totalCapacity}</Typography>
+                  <Typography fontSize="12px">
+                    {data.basicInfo.totalCapacity}
+                  </Typography>
                 </Grid>
                 <Grid item xs={6}>
-                  <Typography>轉供容量：</Typography>
+                  <Typography fontSize="12px">轉供容量：</Typography>
                 </Grid>
                 <Grid item xs={6}>
-                  <Typography>{data.basicInfo.transferCapacity}</Typography>
+                  <Typography fontSize="12px">
+                    {data.basicInfo.transferCapacity}
+                  </Typography>
                 </Grid>
               </Grid>
             </Paper>
             <Paper elevation={0} sx={styles.section}>
               <Typography sx={styles.sectionTitle}>廠址</Typography>
-              <Typography>{data.address}</Typography>
+              <Typography fontSize="14px">{data.address}</Typography>
             </Paper>
           </Box>
-          <Paper elevation={0} sx={styles.section}>
-            <Typography sx={styles.sectionTitle}>電費計算</Typography>
-            <Grid container spacing={1}>
-              <Grid item xs={6}>
-                <Typography>轉供度數：</Typography>
+          <Box sx={{ flex: "7 7 0%" }}>
+            <Paper elevation={0} sx={styles.section}>
+              <Typography sx={styles.sectionTitle}>電費計算</Typography>
+              <Grid container spacing={1}>
+                <Grid item xs={6}>
+                  <Typography fontSize="14px">轉供度數：</Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography fontSize="14px">
+                    {data.billing.transferKwh.toLocaleString()} kWh
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography fontSize="14px">費率：</Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography fontSize="14px">
+                    {data.billing.price.toFixed(2)} 元/kWh
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography fontSize="14px">電費（未稅）：</Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography fontSize="14px">
+                    {data.billing.amount.toLocaleString()} 元
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography fontSize="14px">營業稅：</Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography fontSize="14px">
+                    {data.billing.tax.toLocaleString()} 元
+                  </Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Divider sx={{ my: 1 }} />
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography fontSize="14px" sx={{ fontWeight: "bold" }}>
+                    總金額：
+                  </Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography fontSize="14px" sx={{ fontWeight: "bold" }}>
+                    {data.billing.totalIncludeTax.toLocaleString()} 元
+                  </Typography>
+                </Grid>
               </Grid>
-              <Grid item xs={6}>
-                <Typography>
-                  {data.billing.transferKwh.toLocaleString()} kWh
-                </Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography>費率：</Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography>{data.billing.price.toFixed(2)} 元/kWh</Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography>電費（未稅）：</Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography>
-                  {data.billing.amount.toLocaleString()} 元
-                </Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography>營業稅：</Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography>{data.billing.tax.toLocaleString()} 元</Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <Divider sx={{ my: 1 }} />
-              </Grid>
-              <Grid item xs={6}>
-                <Typography sx={{ fontWeight: "bold" }}>總金額：</Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography sx={{ fontWeight: "bold" }}>
-                  {data.billing.totalIncludeTax.toLocaleString()} 元
-                </Typography>
-              </Grid>
-            </Grid>
-          </Paper>
+            </Paper>
+          </Box>
         </Box>
       </Grid>
       <Box

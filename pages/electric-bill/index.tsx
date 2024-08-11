@@ -25,6 +25,7 @@ import AnalyticsOutlinedIcon from "@mui/icons-material/AnalyticsOutlined";
 import UserBillPanel from "@components/UserBill/UserBillPanel";
 import BorderColorOutlined from "@mui/icons-material/BorderColorOutlined";
 import { IconBtn } from "@components/Button";
+import Link from "next/link";
 
 const TransferDocumentDialog = dynamic(
   () =>
@@ -176,12 +177,22 @@ function ExportElectricBillPage() {
               <InputSearch onChange={() => {}} />
 
               {/* 新增電費單 */}
-              <Button
-                startIcon={<AddIcon />}
-                onClick={() => setShowUserBillDialog(true)}
-              >
-                新增電費單組合
-              </Button>
+              <Box sx={{ display: "flex", columnGap: "12px" }}>
+                <Link href="/electric-bill/import">
+                  <Button
+                    startIcon={<AddIcon />}
+                    onClick={() => setShowUserBillDialog(true)}
+                  >
+                    匯入電費單
+                  </Button>
+                </Link>
+                <Button
+                  startIcon={<AddIcon />}
+                  onClick={() => setShowUserBillDialog(true)}
+                >
+                  新增電費單組合
+                </Button>
+              </Box>
             </Box>
 
             {/* 電費單表格 */}
