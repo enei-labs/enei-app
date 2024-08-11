@@ -202,7 +202,8 @@ function AccountDialog(props: AccountDialogProps) {
   }, [companiesData, usersData, role, companiesLoadMore, usersLoadMore]);
 
   useEffect(() => {
-    if (!usersLoading && !companiesLoading) return;
+    if (usersLoading || companiesLoading) return;
+
     if (role?.value === Role.Company && company?.value && companiesData) {
       const companyData = companiesData?.companies.list.find(
         (o) => o.id === company.value
