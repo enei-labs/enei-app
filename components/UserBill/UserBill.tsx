@@ -267,7 +267,7 @@ const UserBill = forwardRef((props: UserBillProps, ref) => {
             <TableRow>
               <TableCell colSpan={5} sx={{ padding: "3px" }}>
                 <Box sx={styles.contentText}>
-                  本期計費期間：2022.03.01-2022.03.31 1. 1.
+                  1.
                   轉供度數以台電公司寄給艾涅爾電力之「台灣電力股份有限公司繳費通知單」所載之代輸電力度數為準。
                   2. 電費奉准以元為單位，不及一元者四捨五入計算。 3.
                   憑證每達一千度累積電量，憑證中心核發一張，憑證之數量以憑證中心每個月核發之數量為準。

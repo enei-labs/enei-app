@@ -7,3 +7,7 @@ export const formatDateTime = (value?: string | number | Date, dateFormat = 'yyy
 
   return format(date, dateFormat)
 }
+
+export function formatNumber(value: number): string {
+  return Math.round(value).toLocaleString('en-US');
+}

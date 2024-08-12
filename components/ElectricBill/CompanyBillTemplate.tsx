@@ -22,6 +22,8 @@ export interface CompanyBillTemplateData {
     // 轉供容量
     transferCapacity: number;
   };
+  // 城市
+  city: string;
   // 廠址
   address: string;
   // 電費計算
@@ -42,6 +44,7 @@ export interface CompanyBillTemplateData {
 import { Box, Divider, Grid, Paper, Typography } from "@mui/material";
 import { forwardRef } from "react";
 import Logo from "public/logo-with-name.svg";
+import { formatNumber } from "@utils/format";
 
 const styles = {
   container: {
@@ -121,6 +124,16 @@ interface CompanyBillProps {
 const CompanyBillTemplate = forwardRef((props: CompanyBillProps, ref) => {
   const { data } = props;
 
+  const formatValue = (
+    value: number,
+    isRateOrPriceOrCapacity: boolean = false
+  ) => {
+    if (isRateOrPriceOrCapacity) {
+      return value.toString();
+    }
+    return formatNumber(Math.round(value));
+  };
+
   return (
     <Box sx={styles.container} ref={ref}>
       <Box display="flex" justifyContent="space-between">
@@ -154,9 +167,6 @@ const CompanyBillTemplate = forwardRef((props: CompanyBillProps, ref) => {
             {data.responsibleName}
           </Typography>
         </Box>
-        <Typography variant="h6" sx={{ fontWeight: 500, color: "#000" }}>
-          {data.address}
-        </Typography>
       </Box>
       <Box display="flex" justifyContent="flex-end" marginY="24px">
         <Typography fontSize="14px">{data.transferNumber}</Typography>
@@ -212,7 +222,7 @@ const CompanyBillTemplate = forwardRef((props: CompanyBillProps, ref) => {
                 </Grid>
                 <Grid item xs={6}>
                   <Typography fontSize="12px">
-                    {data.basicInfo.totalCapacity}
+                    {formatValue(data.basicInfo.totalCapacity, true)}
                   </Typography>
                 </Grid>
                 <Grid item xs={6}>
@@ -220,13 +230,14 @@ const CompanyBillTemplate = forwardRef((props: CompanyBillProps, ref) => {
                 </Grid>
                 <Grid item xs={6}>
                   <Typography fontSize="12px">
-                    {data.basicInfo.transferCapacity}
+                    {formatValue(data.basicInfo.transferCapacity, true)}
                   </Typography>
                 </Grid>
               </Grid>
             </Paper>
             <Paper elevation={0} sx={styles.section}>
               <Typography sx={styles.sectionTitle}>廠址</Typography>
+              <Typography fontSize="14px">{data.city}</Typography>
               <Typography fontSize="14px">{data.address}</Typography>
             </Paper>
           </Box>
@@ -239,7 +250,7 @@ const CompanyBillTemplate = forwardRef((props: CompanyBillProps, ref) => {
                 </Grid>
                 <Grid item xs={6}>
                   <Typography fontSize="14px">
-                    {data.billing.transferKwh.toLocaleString()} kWh
+                    {formatValue(data.billing.transferKwh)} kWh
                   </Typography>
                 </Grid>
                 <Grid item xs={6}>
@@ -247,7 +258,7 @@ const CompanyBillTemplate = forwardRef((props: CompanyBillProps, ref) => {
                 </Grid>
                 <Grid item xs={6}>
                   <Typography fontSize="14px">
-                    {data.billing.price.toFixed(2)} 元/kWh
+                    {formatValue(data.billing.price, true)} 元/kWh
                   </Typography>
                 </Grid>
                 <Grid item xs={6}>
@@ -255,7 +266,7 @@ const CompanyBillTemplate = forwardRef((props: CompanyBillProps, ref) => {
                 </Grid>
                 <Grid item xs={6}>
                   <Typography fontSize="14px">
-                    {data.billing.amount.toLocaleString()} 元
+                    {formatValue(data.billing.amount)} 元
                   </Typography>
                 </Grid>
                 <Grid item xs={6}>
@@ -263,7 +274,7 @@ const CompanyBillTemplate = forwardRef((props: CompanyBillProps, ref) => {
                 </Grid>
                 <Grid item xs={6}>
                   <Typography fontSize="14px">
-                    {data.billing.tax.toLocaleString()} 元
+                    {formatValue(data.billing.tax)} 元
                   </Typography>
                 </Grid>
                 <Grid item xs={12}>
@@ -276,7 +287,7 @@ const CompanyBillTemplate = forwardRef((props: CompanyBillProps, ref) => {
                 </Grid>
                 <Grid item xs={6}>
                   <Typography fontSize="14px" sx={{ fontWeight: "bold" }}>
-                    {data.billing.totalIncludeTax.toLocaleString()} 元
+                    {formatValue(data.billing.totalIncludeTax)} 元
                   </Typography>
                 </Grid>
               </Grid>
@@ -292,7 +303,7 @@ const CompanyBillTemplate = forwardRef((props: CompanyBillProps, ref) => {
           padding: "3px 5px",
         }}
       >
-        本期計費期間：2022.03.01-2022.03.31 1. 1.
+        1.
         轉供度數以台電公司寄給艾涅爾電力之「台灣電力股份有限公司繳費通知單」所載之代輸電力度數為準。
         2. 電費奉准以元為單位，不及一元者四捨五入計算。 3.
         憑證每達一千度累積電量，憑證中心核發一張，憑證之數量以憑證中心每個月核發之數量為準。

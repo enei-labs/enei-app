@@ -57,6 +57,7 @@ export interface UserBillTemplateData {
 import { Box, Grid, Typography } from "@mui/material";
 import { forwardRef } from "react";
 import Logo from "public/logo-with-name.svg";
+import { formatNumber } from "@utils/format";
 
 const styles = {
   container: {
@@ -123,6 +124,14 @@ interface UserBillProps {
 const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
   const { data } = props;
 
+  const formatValue = (value: number, isRateOrPrice: boolean = false) => {
+    if (!value) return "";
+    if (isRateOrPrice) {
+      return value.toString();
+    }
+    return formatNumber(value);
+  };
+
   return (
     <Box sx={styles.container} ref={ref}>
       <Box display="flex" justifyContent="space-between">
@@ -170,7 +179,7 @@ const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
           </Box>
           <Box sx={styles.box}>
             <Typography variant="h4" sx={{ color: "#009688" }}>
-              {data.amount}
+              {formatValue(data.amount)}
             </Typography>
           </Box>
         </Grid>
@@ -286,13 +295,13 @@ const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
                 {usage.serialNumber}
               </Grid>
               <Grid item xs={3} sx={styles.tableCell}>
-                {usage.kwh}
+                {formatValue(usage.kwh)}
               </Grid>
               <Grid item xs={3} sx={styles.tableCell}>
-                {usage.price}
+                {formatValue(usage.price, true)}
               </Grid>
               <Grid item xs={3} sx={styles.tableCell}>
-                {usage.amount}
+                {formatValue(usage.amount)}
               </Grid>
             </Grid>
           ))}
@@ -317,7 +326,7 @@ const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
                 fontSize: "16px",
               }}
             >
-              {data.totalKwh}度
+              {formatValue(data.totalKwh)}度
             </Grid>
             <Grid
               item
@@ -337,7 +346,7 @@ const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
                 fontSize: "16px",
               }}
             >
-              {data.totalAmount}元
+              {formatValue(data.totalAmount)}元
             </Grid>
           </Grid>
 
@@ -356,7 +365,7 @@ const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
                   代輸費
                 </Grid>
                 <Grid item xs={6} sx={styles.tableCell}>
-                  {data.substitutionFee}
+                  {formatValue(data.substitutionFee)}
                 </Grid>
               </Grid>
               <Grid container>
@@ -364,7 +373,7 @@ const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
                   憑證審查費
                 </Grid>
                 <Grid item xs={6} sx={styles.tableCell}>
-                  {data.certificationFee}
+                  {formatValue(data.certificationFee)}
                 </Grid>
               </Grid>
               <Grid container>
@@ -372,7 +381,7 @@ const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
                   憑證服務費
                 </Grid>
                 <Grid item xs={6} sx={styles.tableCell}>
-                  {data.certificationServiceFee}
+                  {formatValue(data.certificationServiceFee)}
                 </Grid>
               </Grid>
             </Grid>
@@ -432,7 +441,7 @@ const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
                 fontSize: "16px",
               }}
             >
-              {data.total}
+              {formatValue(data.total)}
             </Grid>
             <Grid
               item
@@ -453,7 +462,7 @@ const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
                 fontSize: "16px",
               }}
             >
-              {data.tax}
+              {formatValue(data.tax)}
             </Grid>
           </Grid>
           <Grid container sx={styles.tableRow}>
@@ -476,7 +485,7 @@ const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
                 fontSize: "16px",
               }}
             >
-              {data.totalIncludeTax} 元
+              {formatValue(data.totalIncludeTax)} 元
             </Grid>
           </Grid>
         </Box>
@@ -489,7 +498,7 @@ const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
           padding: "3px 5px",
         }}
       >
-        本期計費期間：2022.03.01-2022.03.31 1. 1.
+        1.
         轉供度數以台電公司寄給艾涅爾電力之「台灣電力股份有限公司繳費通知單」所載之代輸電力度數為準。
         2. 電費奉准以元為單位，不及一元者四捨五入計算。 3.
         憑證每達一千度累積電量，憑證中心核發一張，憑證之數量以憑證中心每個月核發之數量為準。

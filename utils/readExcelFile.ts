@@ -6,8 +6,8 @@ export const readExcelFile = async (file: File) => {
 
   const result: { [sheetName: string]: any[] } = {};
 
-  // 讀取前兩個工作表
-  for (let i = 0; i < Math.min(2, workbook.SheetNames.length); i++) {
+  // 讀取前二十個工作表
+  for (let i = 0; i < Math.min(20, workbook.SheetNames.length); i++) {
     const sheetName = workbook.SheetNames[i];
     const sheet = workbook.Sheets[sheetName];
     result[sheetName] = XLSX.utils.sheet_to_json(sheet, { header: 1 });
