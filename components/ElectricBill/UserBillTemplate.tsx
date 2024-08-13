@@ -203,7 +203,7 @@ const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
                 display: "flex",
                 flexDirection: "column",
                 columnGap: "4px",
-                width: "70%",
+                width: "90%",
               }}
             >
               <Box
@@ -373,7 +373,9 @@ const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
                   憑證審查費
                 </Grid>
                 <Grid item xs={6} sx={styles.tableCell}>
-                  {formatValue(data.certificationFee)}
+                  {data.certificationFee
+                    ? formatValue(data.certificationFee)
+                    : "-"}
                 </Grid>
               </Grid>
               <Grid container>
@@ -381,7 +383,9 @@ const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
                   憑證服務費
                 </Grid>
                 <Grid item xs={6} sx={styles.tableCell}>
-                  {formatValue(data.certificationServiceFee)}
+                  {data.certificationServiceFee
+                    ? formatValue(data.certificationServiceFee)
+                    : "-"}
                 </Grid>
               </Grid>
             </Grid>

@@ -55,7 +55,7 @@ export const getUserBillTemplateData = (data: any) => {
     substitutionFee: data[baseIndex + 3][2],
     certificationFee: data[baseIndex + 4][2],
     certificationServiceFee: data[baseIndex + 5][2],
-    totalFee: data[baseIndex + 4][6],
+    totalFee: data[baseIndex + 3][6],
     total: data[baseIndex + 7][2],
     tax: data[baseIndex + 7][6],
     totalIncludeTax: data[baseIndex + 9][2],

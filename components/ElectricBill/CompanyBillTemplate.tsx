@@ -177,7 +177,7 @@ const CompanyBillTemplate = forwardRef((props: CompanyBillProps, ref) => {
             <Typography sx={styles.boxTitle}>電號</Typography>
           </Box>
           <Box sx={styles.box}>
-            <Typography variant="h4" sx={{ color: "#009688" }}>
+            <Typography variant="h5" sx={{ color: "#009688" }}>
               {data.serialNumber}
             </Typography>
           </Box>
@@ -187,7 +187,7 @@ const CompanyBillTemplate = forwardRef((props: CompanyBillProps, ref) => {
             <Typography sx={styles.boxTitle}>電廠名稱</Typography>
           </Box>
           <Box sx={styles.box}>
-            <Typography variant="h4" sx={{ color: "#009688" }}>
+            <Typography variant="h5" sx={{ color: "#009688" }}>
               {data.powerPlantName}
             </Typography>
           </Box>
@@ -197,7 +197,7 @@ const CompanyBillTemplate = forwardRef((props: CompanyBillProps, ref) => {
             <Typography sx={styles.boxTitle}>契約編號</Typography>
           </Box>
           <Box sx={styles.box}>
-            <Typography variant="h4" sx={{ color: "#009688" }}>
+            <Typography variant="h5" sx={{ color: "#009688" }}>
               {data.contractNumber}
             </Typography>
           </Box>
