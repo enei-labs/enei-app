@@ -209,7 +209,7 @@ const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
               <Box
                 sx={{
                   display: "flex",
-                  justifyContent: "space-between",
+                  columnGap: "8px",
                   flex: "1 4",
                 }}
               >
@@ -227,7 +227,7 @@ const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
               <Box
                 sx={{
                   display: "flex",
-                  justifyContent: "space-between",
+                  columnGap: "8px",
                   flex: "1 4",
                 }}
               >
@@ -245,7 +245,7 @@ const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
               <Box
                 sx={{
                   display: "flex",
-                  justifyContent: "space-between",
+                  columnGap: "8px",
                   flex: "1 4",
                 }}
               >
@@ -418,7 +418,7 @@ const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
                   alignItems: "center",
                 }}
               >
-                {data.totalFee}
+                {formatValue(data.totalFee)}
               </Grid>
             </Grid>
           </Grid>
