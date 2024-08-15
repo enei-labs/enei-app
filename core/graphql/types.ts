@@ -170,7 +170,7 @@ export type Company = {
   recipientAccounts: Array<RecipientAccount>;
   taxId: Scalars['String']['output'];
   /** 裝置量=該發電業簽署的合約裡面，所有裝置量的加總 */
-  totalVolume: Scalars['Int']['output'];
+  totalVolume: Scalars['Float']['output'];
 };
 
 export type CompanyContract = {
@@ -201,7 +201,7 @@ export type CompanyContract = {
   rateType: RateType;
   startedAt: Scalars['DateTime']['output'];
   /** 裝置量=該合約所有的電廠裡面的裝置量的加總 */
-  totalVolume: Scalars['Int']['output'];
+  totalVolume: Scalars['Float']['output'];
   transferAt?: Maybe<Scalars['DateTime']['output']>;
   transferDoc?: Maybe<Scalars['String']['output']>;
   transferDocName?: Maybe<Scalars['String']['output']>;
@@ -405,12 +405,12 @@ export type Dashboard = {
 export type DashboardCompany = {
   __typename?: 'DashboardCompany';
   /** 平均購買價格 */
-  averagePurchasePrice: Scalars['String']['output'];
+  averagePurchasePrice: Scalars['Float']['output'];
   /** 發電業數量 */
   totalCompanies: Scalars['Int']['output'];
   /** 電廠數量 */
   totalPowerPlants: Scalars['Int']['output'];
-  totalVolume: Scalars['String']['output'];
+  totalVolume: Scalars['Float']['output'];
 };
 
 export type DashboardCompanyContract = {
@@ -1064,7 +1064,7 @@ export type RemainingDemandFromCompanyContract = {
   rateType: RateType;
   startedAt: Scalars['DateTime']['output'];
   /** 裝置量=該合約所有的電廠裡面的裝置量的加總 */
-  totalVolume: Scalars['Int']['output'];
+  totalVolume: Scalars['Float']['output'];
   transferAt?: Maybe<Scalars['DateTime']['output']>;
   transferDoc?: Maybe<Scalars['String']['output']>;
   transferDocName?: Maybe<Scalars['String']['output']>;
@@ -1074,7 +1074,7 @@ export type RemainingDemandFromCompanyContract = {
 
 export type RemainingDemandFromUserContract = {
   __typename?: 'RemainingDemandFromUserContract';
-  capacity: Scalars['Int']['output'];
+  capacity: Scalars['Float']['output'];
   contractDoc: Scalars['String']['output'];
   contractDocName: Scalars['String']['output'];
   contractTimeType: ContractTimeType;
