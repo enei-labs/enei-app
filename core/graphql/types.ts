@@ -440,7 +440,7 @@ export type DashboardUser = {
   __typename?: 'DashboardUser';
   count: Scalars['Int']['output'];
   /** 總綠電需求度數 */
-  totalRequireDegree: Scalars['Int']['output'];
+  totalRequireDegree: Scalars['Float']['output'];
   /** 年度用戶成長數 */
   yearlyGrowth: Scalars['Int']['output'];
 };
@@ -830,20 +830,20 @@ export type PowerPlant = {
   createdAt: Scalars['DateTime']['output'];
   createdBy?: Maybe<Scalars['String']['output']>;
   energyType: EnergyType;
-  estimatedAnnualPowerGeneration: Scalars['Int']['output'];
+  estimatedAnnualPowerGeneration: Scalars['Float']['output'];
   /** 電廠預計年供電量 */
-  estimatedAnnualPowerSupply: Scalars['String']['output'];
+  estimatedAnnualPowerSupply: Scalars['Float']['output'];
   generationType: GenerationType;
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
   number: Scalars['String']['output'];
   price: Scalars['String']['output'];
   recipientAccount?: Maybe<PowerPlantRecipientAccount>;
-  supplyVolume: Scalars['Int']['output'];
+  supplyVolume: Scalars['Float']['output'];
   /** 供電容量比例 */
-  transferRate: Scalars['Int']['output'];
+  transferRate: Scalars['Float']['output'];
   /** 電廠裝置容量 */
-  volume: Scalars['Int']['output'];
+  volume: Scalars['Float']['output'];
 };
 
 export type PowerPlantPage = {
