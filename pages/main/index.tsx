@@ -119,10 +119,12 @@ function MainPage() {
             <Card sx={{ p: "36px" }}>
               <AnnualPrice
                 averagePurchasePrice={
-                  data?.dashboard.companyInfo.averagePurchasePrice ?? "N/A"
+                  data?.dashboard.companyInfo.averagePurchasePrice.toString() ??
+                  "N/A"
                 }
                 averageSellingPrice={
-                  data?.dashboard.userContractInfo.averageSellingPrice ?? "N/A"
+                  data?.dashboard.userContractInfo.averageSellingPrice.toString() ??
+                  "N/A"
                 }
               />
             </Card>

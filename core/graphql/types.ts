@@ -454,7 +454,7 @@ export type DashboardUserBill = {
 export type DashboardUserContract = {
   __typename?: 'DashboardUserContract';
   /** 平均售電價格 */
-  averageSellingPrice: Scalars['String']['output'];
+  averageSellingPrice: Scalars['Float']['output'];
   /** 容量不足用戶名單 */
   remainingDemandFromUserContracts: Array<RemainingDemandFromUserContract>;
   /** 未來一年用戶合約到期名單 */
