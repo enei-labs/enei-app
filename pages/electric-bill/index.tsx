@@ -18,11 +18,13 @@ import ChartIcon from "@mui/icons-material/InsertChartOutlinedSharp";
 import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import dynamic from "next/dynamic";
 import UserBillDialog from "@components/UserBill/UserBillDialog/UserBillDialog";
+import IndustryBillDialog from "@components/IndustryBill/IndustryBillDialog/IndustryBillDialog";
 import { useFee, useUserBills } from "@utils/hooks/queries";
 import InboxOutlinedIcon from "@mui/icons-material/InboxOutlined";
 import LaptopOutlinedIcon from "@mui/icons-material/LaptopOutlined";
 import AnalyticsOutlinedIcon from "@mui/icons-material/AnalyticsOutlined";
 import UserBillPanel from "@components/UserBill/UserBillPanel";
+import IndustryBillPanel from "@components/IndustryBill/IndustryBillPanel";
 import BorderColorOutlined from "@mui/icons-material/BorderColorOutlined";
 import { IconBtn } from "@components/Button";
 import Link from "next/link";
@@ -51,6 +53,7 @@ const styles = {
 function ExportElectricBillPage() {
   const [open, setOpen] = useState(false);
   const [showUserBillDialog, setShowUserBillDialog] = useState(false);
+  const [showIndustryBillDialog, setShowIndustryBillDialog] = useState(false);
   const [showFeeDialog, setShowFeeDialog] = useState(false);
   const { data, loading } = useFee();
   const {
@@ -211,6 +214,47 @@ function ExportElectricBillPage() {
               />
             ) : null}
           </Card>
+
+          <Divider sx={{ my: "24px" }} />
+
+          <Card sx={{ p: "36px" }}>
+            <Typography variant="h4">發電業電費單</Typography>
+
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                my: "16px",
+              }}
+            >
+              {/* 搜尋 */}
+              <InputSearch onChange={() => {}} />
+
+              {/* 新增電費單 */}
+              <Button
+                startIcon={<AddIcon />}
+                onClick={() => setShowIndustryBillDialog(true)}
+              >
+                新增電費單組合
+              </Button>
+            </Box>
+
+            {/* 電費單表格 */}
+            {data?.fee ? (
+              <IndustryBillPanel
+                fee={data.fee}
+                userBills={userBillsData?.userBills}
+                loading={userBillLoading}
+                refetchFn={(page: any) =>
+                  refetch({
+                    limit: page.rows,
+                    offset: page.rows * page.index,
+                  })
+                }
+                onAction={() => {}}
+              />
+            ) : null}
+          </Card>
           <Divider sx={{ my: "24px" }} />
         </AuthGuard>
       </Box>
@@ -226,6 +270,13 @@ function ExportElectricBillPage() {
           isOpenDialog={showUserBillDialog}
           variant="create"
           onClose={() => setShowUserBillDialog(false)}
+        />
+      ) : null}
+      {showIndustryBillDialog ? (
+        <IndustryBillDialog
+          isOpenDialog={showIndustryBillDialog}
+          variant="create"
+          onClose={() => setShowIndustryBillDialog(false)}
         />
       ) : null}
 
