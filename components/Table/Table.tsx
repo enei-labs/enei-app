@@ -162,6 +162,10 @@ const Table: React.FC<TableProps> = ({
           rowsPerPage={rows}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
+          labelDisplayedRows={({ from, to, count }) =>
+            `${from}-${to} 共 ${count} 筆`
+          }
+          labelRowsPerPage="每頁顯示筆數："
         />
       )}
     </Box>
