@@ -6,6 +6,7 @@ import Autocomplete, {
 } from "@mui/material/Autocomplete";
 import { CSSProperties, forwardRef, UIEventHandler } from "react";
 import { ControllerRenderProps } from "react-hook-form";
+import { createTheme, ThemeProvider } from "@mui/material";
 
 interface InputAutocompleteProps {
   label?: React.ReactNode;
@@ -19,6 +20,22 @@ interface InputAutocompleteProps {
   fetchMoreData?: () => void;
   sx?: CSSProperties;
 }
+
+const theme = createTheme({
+  components: {
+    MuiAutocomplete: {
+      styleOverrides: {
+        noOptions: {
+          fontSize: "16px",
+        },
+        listbox: {
+          maxHeight: "250px", 
+          overflow: "auto",
+        }
+      },
+    },
+  },
+});
 
 const InputAutocomplete = forwardRef<HTMLDivElement, InputAutocompleteProps>(
   (props, ref) => {
@@ -48,32 +65,33 @@ const InputAutocomplete = forwardRef<HTMLDivElement, InputAutocompleteProps>(
     };
 
     return (
-      <Autocomplete
-        {...otherProps}
-        options={options}
-        loading={loading}
-        loadingText={<CircularProgress size="16px" />}
-        getOptionLabel={(option) => option.label}
-        onChange={(e, value) => {
-          onChange?.(value);
-        }}
-        renderInput={(params: AutocompleteRenderInputParams) => (
-          <InputText
-            {...params}
-            label={label}
-            required={required}
-            helperText={helperText}
-            placeholder={placeholder}
-          />
-        )}
-        ListboxProps={{
-          onScroll: handleScroll,
-          style: { maxHeight: "100px", overflow: "auto" },
-        }}
-        noOptionsText={<div style={{ fontSize: "16px" }}>沒有資料</div>}
-        isOptionEqualToValue={(option, value) => option.value === value.value}
-        ref={ref}
-      />
+      <ThemeProvider theme={theme}>
+        <Autocomplete
+          {...otherProps}
+          options={options}
+          loading={loading}
+          loadingText={<CircularProgress size="16px" />}
+          getOptionLabel={(option) => option.label}
+          onChange={(e, value) => {
+            onChange?.(value);
+          }}
+          renderInput={(params: AutocompleteRenderInputParams) => (
+            <InputText
+              {...params}
+              label={label}
+              required={required}
+              helperText={helperText}
+              placeholder={placeholder}
+            />
+          )}
+          ListboxProps={{
+            onScroll: handleScroll,
+          }}
+          noOptionsText={ "沒有資料" }
+          isOptionEqualToValue={(option, value) => option.value === value.value}
+          ref={ref}
+        />
+      </ThemeProvider>
     );
   }
 );
