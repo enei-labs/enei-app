@@ -33,6 +33,7 @@ export const BASE_USERS = gql`
         id
         name
         contactEmail
+        contactName
       }
     }
   }
