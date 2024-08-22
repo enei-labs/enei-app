@@ -221,8 +221,8 @@ function AccountDialog(props: AccountDialogProps) {
       if (currentModifyAccount?.email !== userData?.contactEmail) {
         setValue("email", userData?.contactEmail ?? "");
       }
-      if (currentModifyAccount?.name !== userData?.name) {
-        setValue("name", userData?.name ?? "");
+      if (currentModifyAccount?.name !== userData?.contactName) {
+        setValue("name", userData?.contactName ?? "");
       }
     }
   }, [
