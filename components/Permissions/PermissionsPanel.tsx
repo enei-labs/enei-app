@@ -13,6 +13,7 @@ import { toast } from "react-toastify";
 import dynamic from "next/dynamic";
 import { CircularProgress } from "@mui/material";
 import { Action, State } from "@core/context/account-dialog/reducer";
+import { roleMap } from "@components/Permissions/AccountDialog/roleMap";
 
 const AccountDialog = dynamic(
   () => import("@components/Permissions/AccountDialog/AccountDialog"),
@@ -73,6 +74,7 @@ const PermissionsPanel = (props: {
     {
       header: "權限",
       accessor: "role",
+      render: (data) => <>{roleMap[data.role] ?? ""}</>,
     },
     {
       header: "修改 / 刪除",

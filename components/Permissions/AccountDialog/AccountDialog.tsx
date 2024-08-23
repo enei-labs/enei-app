@@ -16,6 +16,7 @@ const EditAccountBtns = dynamic(() => import("./EditAccountBtns"));
 const CreateAccountBtn = dynamic(() => import("./CreateAccountBtn"));
 import { FormData } from "./FormData";
 import HelperText from "@components/HelperText";
+import { roleMap } from "@components/Permissions/AccountDialog/roleMap";
 
 interface AccountDialogProps {
   isOpenDialog: boolean;
@@ -23,13 +24,6 @@ interface AccountDialogProps {
   variant: "edit" | "create";
   onClose: VoidFunction;
 }
-
-const roleMap = {
-  [Role.User]: "綠電用戶",
-  [Role.Company]: "發電業",
-  [Role.Admin]: "管理員",
-  [Role.SuperAdmin]: "超級管理員",
-};
 
 const roleOptions = Object.values(Role).map((o) => ({
   label: roleMap[o],
