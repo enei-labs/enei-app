@@ -65,7 +65,9 @@ const UserPanel = (props: UserPanelProps) => {
     },
     {
       header: "今年預估轉供度數",
-      accessor: "estimatedTransferDegree",
+      render: (rowData) => {
+        return <Box>{Number(rowData.estimatedTransferDegree).toFixed(2)}</Box>;
+      },
     },
     {
       header: "平均購電價格",
