@@ -33,6 +33,10 @@ export const DASHBOARD_FIELDS = gql`
         id
         name
         capacity
+        user {
+          id
+          name
+        }
       }
     }
     transferDegreeInfo {

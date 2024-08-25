@@ -21,7 +21,7 @@ const RemainingDemandFromUserContractPanel = (
     },
     {
       header: "用戶",
-      // accessor: "serialNumber",
+      accessor: "user.name",
     },
     {
       header: "不足容量",
