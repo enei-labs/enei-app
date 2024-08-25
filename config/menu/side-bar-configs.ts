@@ -1,3 +1,4 @@
+import MailIcon from '@mui/icons-material/MailOutlineOutlined';
 import BoltIcon from "@mui/icons-material/BoltOutlined";
 import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
 import UserIcon from "@mui/icons-material/PersonAddAlt";
@@ -7,7 +8,6 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 import VpnKeyOutlinedIcon from '@mui/icons-material/VpnKeyOutlined';
 import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
-import InboxOutlinedIcon from '@mui/icons-material/InboxOutlined';
 
 export const sideBarConfigs = {
   top: [
@@ -39,7 +39,7 @@ export const sideBarConfigs = {
     },
     {
       name: "電費單匯出",
-      icon: InboxOutlinedIcon,
+      icon: MailIcon,
       path: '/electric-bill'
     },
   ],

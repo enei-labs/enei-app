@@ -8,20 +8,22 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
-import InboxOutlinedIcon from "@mui/icons-material/InboxOutlined";
-import BorderColorOutlined from "@mui/icons-material/BorderColorOutlined";
 import { AuthLayout } from "@components/Layout";
 import { ReactElement, useState } from "react";
 import Head from "next/head";
 import { InputSearch } from "@components/Input";
 import { AuthGuard } from "@components/AuthGuard";
 import { Role } from "@core/graphql/types";
+import ChartIcon from "@mui/icons-material/InsertChartOutlinedSharp";
+import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import dynamic from "next/dynamic";
 import UserBillDialog from "@components/UserBill/UserBillDialog/UserBillDialog";
 import { useFee, useUserBills } from "@utils/hooks/queries";
+import InboxOutlinedIcon from "@mui/icons-material/InboxOutlined";
+import LaptopOutlinedIcon from "@mui/icons-material/LaptopOutlined";
+import AnalyticsOutlinedIcon from "@mui/icons-material/AnalyticsOutlined";
 import UserBillPanel from "@components/UserBill/UserBillPanel";
+import BorderColorOutlined from "@mui/icons-material/BorderColorOutlined";
 import { IconBtn } from "@components/Button";
 import Link from "next/link";
 
@@ -67,7 +69,7 @@ function ExportElectricBillPage() {
         items={[
           {
             name: "電費單匯出",
-            icon: InboxOutlinedIcon,
+            icon: ChartIcon,
             href: "/electric-bill",
           },
         ]}
@@ -88,7 +90,7 @@ function ExportElectricBillPage() {
               <Grid container>
                 <Grid item sm={4} sx={{ padding: "36px 36px 36px 0" }}>
                   <Box sx={{ display: "flex", columnGap: "12px" }}>
-                    <AccountBalanceWalletOutlinedIcon width="20px" />
+                    <InboxOutlinedIcon width="20px" />
                     <Typography variant="body2">代輸費</Typography>
                   </Box>
                   <Box sx={styles.box}>
@@ -111,7 +113,7 @@ function ExportElectricBillPage() {
                 </Grid>
                 <Grid item sm={4} sx={{ padding: "36px 36px 36px 0" }}>
                   <Box sx={{ display: "flex", columnGap: "12px" }}>
-                    <AccountBalanceWalletOutlinedIcon width="20px" />
+                    <LaptopOutlinedIcon width="20px" />
                     <Typography variant="body2">憑證審查費</Typography>
                   </Box>
                   <Box sx={styles.box}>
@@ -134,7 +136,7 @@ function ExportElectricBillPage() {
                 </Grid>
                 <Grid item sm={4} sx={{ padding: "36px 36px 36px 0" }}>
                   <Box sx={{ display: "flex", columnGap: "12px" }}>
-                    <AccountBalanceWalletOutlinedIcon width="20px" />
+                    <AnalyticsOutlinedIcon width="20px" />
                     <Typography variant="body2">憑證服務費</Typography>
                   </Box>
                   <Box sx={styles.box}>
