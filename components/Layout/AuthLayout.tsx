@@ -83,6 +83,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
 
   useEffect(() => {
     if (status === "unauthenticated") router.push("/logIn");
+    if (router.pathname === "/") router.push("/main");
   }, [router, status]);
 
   if (status === "loading" || status === "unauthenticated") {

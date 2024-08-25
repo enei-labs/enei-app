@@ -121,7 +121,11 @@ export default function MonthlyTransferDegreeChart(
           onChange={(newValue: any) => {
             setValue(newValue);
           }}
-          slots={(params: any) => <TextField {...params} helperText={null} />}
+          slots={{
+            textField: (params: any) => (
+              <TextField {...params} helperText={null} />
+            ),
+          }}
         />
       </Box>
       <Chart

@@ -29,15 +29,17 @@ const InputDate = forwardRef<HTMLDivElement, InputDateProps>((props, ref) => {
         label={label}
         value={value ? new Date(value) : null}
         onChange={(newValue) => handleChange(newValue)}
-        slots={(params: any) => (
-          <InputText
-            {...params}
-            ref={undefined}
-            label={label}
-            required={required}
-            helperText={helperText}
-          />
-        )}
+        slots={{
+          textField: (params: any) => (
+            <InputText
+              {...params}
+              ref={undefined}
+              label={label}
+              required={required}
+              helperText={helperText}
+            />
+          ),
+        }}
       />
     </LocalizationProvider>
   );
