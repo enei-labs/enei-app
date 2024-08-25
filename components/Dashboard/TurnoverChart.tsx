@@ -128,7 +128,7 @@ export default function TurnoverChart(props: TurnoverChartProps) {
       <Chart
         series={[
           {
-            name: "Inflation",
+            name: "營業額",
             data: data ?? Array(12).fill(0),
           },
         ]}

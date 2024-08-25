@@ -131,7 +131,7 @@ export default function MonthlyTransferDegreeChart(
       <Chart
         series={[
           {
-            name: "Inflation",
+            name: "轉供量",
             data:
               data?.map((x) => x.reduce((acc, curr) => acc + curr.degree, 0)) ??
               Array(12).fill(0),

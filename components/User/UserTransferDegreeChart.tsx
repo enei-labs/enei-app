@@ -141,7 +141,7 @@ export default function UserTransferDegreeChart(props: DemoChartProps) {
       <Chart
         series={[
           {
-            name: "Inflation",
+            name: "轉供量",
             data: mapDegreesByMonth(thisYearTransferRecords),
           },
         ]}

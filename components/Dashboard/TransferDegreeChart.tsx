@@ -128,7 +128,7 @@ export default function TransferDegreeChart(props: TransferDegreeChartProps) {
       <Chart
         series={[
           {
-            name: "Inflation",
+            name: "轉供度數",
             data: data ?? Array(12).fill(0),
           },
         ]}
