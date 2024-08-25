@@ -34,8 +34,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [signOut] = useSignOut();
 
   const logIn = async () => {
-    await refetch().then(() => {
-      dispatch({ type: "authenticated", payload: data?.me });
+    await refetch().then(({ data: { me } }) => {
+      dispatch({ type: "authenticated", payload: me });
     });
   };
 
