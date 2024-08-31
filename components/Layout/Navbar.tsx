@@ -1,7 +1,7 @@
 import { AppBar, Badge, IconButton } from "@mui/material";
 import Toolbar from "@mui/material/Toolbar";
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import NotificationsIcon from '@mui/icons-material/Notifications';
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import { useRouter } from "next/router";
 
 const style = {
@@ -33,7 +33,7 @@ const Navbar = () => {
           color="inherit"
         >
           <Badge badgeContent={17} color="error">
-            <NotificationsIcon />
+            <NotificationsOutlinedIcon />
           </Badge>
         </IconButton>
         <IconButton
@@ -44,7 +44,7 @@ const Navbar = () => {
           onClick={() => router.push('/settings')}
           color="inherit"
         >
-          <AccountCircle />
+          <AccountCircleOutlinedIcon />
         </IconButton>
       </Toolbar>
     </AppBar>

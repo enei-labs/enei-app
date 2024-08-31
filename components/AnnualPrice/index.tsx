@@ -1,6 +1,7 @@
 import { Grid } from "@mui/material";
 import { PriceBox } from "./PriceBox";
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
+import PaymentOutlinedIcon from '@mui/icons-material/PaymentOutlined';
 
 export interface AnnualPriceProps {
   averagePurchasePrice: string;
@@ -21,7 +22,7 @@ export default function AnnualPrice(props: AnnualPriceProps) {
       </Grid>
       <Grid item sm={6}>
         <PriceBox
-          icon={MonetizationOnOutlinedIcon}
+          icon={PaymentOutlinedIcon}
           name="平均售電價格"
           price={averageSellingPrice}
           unit="元/kWh"

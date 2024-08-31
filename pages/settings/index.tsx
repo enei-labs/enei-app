@@ -43,7 +43,7 @@ const ProfileWithIcons = (props: {
     <Grid item>
       <Grid container direction={"row"} spacing={1} alignItems={"center"}>
         <Grid item>
-          <Icon />
+          <Icon sx={{ color: "#009688" }}/>
         </Grid>
         <Grid item>
           <Grid container direction={"column"} spacing={0.5}>
