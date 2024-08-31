@@ -24,7 +24,7 @@ export function PriceBox(props: PriceBoxProps) {
   return (
     <Box>
       <Box sx={{ display: "flex", marginBottom: "10px" }}>
-        <Icon />
+        <Icon sx={{ color: "#009688" }}/>
         <Typography variant="body2">{name}</Typography>
       </Box>
       <Box sx={styles.box}>

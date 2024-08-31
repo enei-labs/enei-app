@@ -17,7 +17,7 @@ export function BasicInfo(props: BasicInfoProps) {
         height="48px"
         sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
       >
-        <Icon />
+        <Icon sx={{ color: "#009688" }} />
       </Box>
       <Box sx={{ flexGrow: 1 }}>
         <Typography variant="body3">{name}</Typography>

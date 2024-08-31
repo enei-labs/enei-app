@@ -1,17 +1,18 @@
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
-import MailIcon from "@mui/icons-material/Mail";
+import LocalMallOutlinedIcon from '@mui/icons-material/LocalMallOutlined';
 import BoltIcon from "@mui/icons-material/BoltOutlined";
 import OutlinedFlagIcon from "@mui/icons-material/OutlinedFlag";
+import PieChartOutlineOutlinedIcon from '@mui/icons-material/PieChartOutlineOutlined';
+import ChartIcon from "@mui/icons-material/InsertChartOutlinedSharp";
+import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
+import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import IconBreadcrumbs from "@components/BreadCrumbs";
 import OverviewCard, { OverviewCardProps } from "@components/OverviewCard";
 import AnnualPrice from "@components/AnnualPrice";
 import { Card, Grid } from "@mui/material";
 import { AuthLayout } from "@components/Layout";
 import { ReactElement, useMemo } from "react";
-import PeopleOutlineOutlinedIcon from "@mui/icons-material/PeopleOutlineOutlined";
-import ChartIcon from "@mui/icons-material/InsertChartOutlinedSharp";
-import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import Head from "next/head";
 import { useDashboard } from "@utils/hooks/queries/useDashboard";
 import TurnoverChart from "@components/Dashboard/TurnoverChart";
@@ -35,13 +36,13 @@ function MainPage() {
               unit: "家",
             },
             {
-              icon: BoltIcon,
+              icon: LocalMallOutlinedIcon,
               name: "電廠數量",
               count: data.dashboard.companyInfo.totalPowerPlants,
               unit: "座",
             },
             {
-              icon: MailIcon,
+              icon: PieChartOutlineOutlinedIcon,
               name: "總裝置量",
               count: Number(data.dashboard.companyInfo.totalVolume),
               unit: "MW",
@@ -55,7 +56,7 @@ function MainPage() {
       basicInfos: data
         ? [
             {
-              icon: PeopleOutlineOutlinedIcon,
+              icon: GroupsOutlinedIcon,
               name: "用戶數量",
               count: data.dashboard.userInfo.count,
               unit: "位",
