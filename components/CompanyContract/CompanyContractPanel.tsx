@@ -15,7 +15,7 @@ interface CompanyContractPanelProps {
 function CompanyContractPanel(props: CompanyContractPanelProps) {
   const { company } = props;
   const [state, setState] = useState("");
-  const { data, loading } = useCompanyContracts({ companyId: company.id });
+  const { data, loading } = useCompanyContracts({ variables: { companyId: company.id }});
   return (
     <Card sx={{ p: "36px" }}>
       <Typography variant="h4">{company.name}</Typography>

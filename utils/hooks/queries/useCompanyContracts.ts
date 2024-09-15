@@ -8,8 +8,12 @@ interface Variables {
   companyId: string;
 }
 
-export const useCompanyContracts = (variables?: Variables) => {
+export const useCompanyContracts = ( { skip = false, variables }: {
+  skip?: boolean;
+  variables?: Variables;
+} = {} ) => {
   return useQuery<{ companyContracts: CompanyContractPage }>(COMPANY_CONTRACTS, {
     variables: variables,
+    skip,
   })
 }
