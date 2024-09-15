@@ -19,7 +19,7 @@ import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import dynamic from "next/dynamic";
 import UserBillDialog from "@components/UserBill/UserBillDialog/UserBillDialog";
 import IndustryBillDialog from "@components/IndustryBill/IndustryBillDialog/IndustryBillDialog";
-import { useFee, useUserBills } from "@utils/hooks/queries";
+import { useFee, useUserBills, useIndustryBills } from "@utils/hooks/queries";
 import InboxOutlinedIcon from "@mui/icons-material/InboxOutlined";
 import LaptopOutlinedIcon from "@mui/icons-material/LaptopOutlined";
 import AnalyticsOutlinedIcon from "@mui/icons-material/AnalyticsOutlined";
@@ -59,8 +59,13 @@ function ExportElectricBillPage() {
   const {
     data: userBillsData,
     loading: userBillLoading,
-    refetch,
+    refetch: userBillRefetch,
   } = useUserBills();
+  const {
+    data: industryBillsData,
+    loading: industryBillLoading,
+    refetch: industryBillRefetch,
+  } = useIndustryBills();
 
   return (
     <>
@@ -205,7 +210,7 @@ function ExportElectricBillPage() {
                 userBills={userBillsData?.userBills}
                 loading={userBillLoading}
                 refetchFn={(page: any) =>
-                  refetch({
+                  userBillRefetch({
                     limit: page.rows,
                     offset: page.rows * page.index,
                   })
@@ -243,10 +248,10 @@ function ExportElectricBillPage() {
             {data?.fee ? (
               <IndustryBillPanel
                 fee={data.fee}
-                userBills={userBillsData?.userBills}
-                loading={userBillLoading}
+                industryBills={industryBillsData?.industryBills}
+                loading={industryBillLoading}
                 refetchFn={(page: any) =>
-                  refetch({
+                  industryBillRefetch({
                     limit: page.rows,
                     offset: page.rows * page.index,
                   })

@@ -15,3 +15,5 @@ export * from './tpcBills';
 export * from './userBill';
 export * from './userBills';
 export * from './fee';
+export * from './industryBill';
+export * from './industryBills';

@@ -13,20 +13,20 @@ import { useState } from "react";
 import { IconBtn } from "@components/Button";
 import CloseIcon from "@mui/icons-material/HighlightOff";
 import DialogAlert from "@components/DialogAlert";
-import { useUserContracts } from "@utils/hooks/queries";
-import { ElectricNumberInfo } from "@core/graphql/types";
+import { useCompanyContracts } from "@utils/hooks/queries";
+import { PowerPlant } from "@core/graphql/types";
 
-interface ElectricNumbersFieldProps {
+interface ElectricNumbersFieldProps{
   control: Control<any, any>;
   field: ControllerRenderProps<FormData, any>;
-  userId: string;
+  companyId: string;
 }
 
 export function ElectricNumbersField(props: ElectricNumbersFieldProps) {
-  const { field: rootField, control, userId } = props;
+  const { field: rootField, control, companyId } = props;
 
-  const { data, loading } = useUserContracts({
-    variables: { userId },
+  const { data, loading } = useCompanyContracts({
+    variables: { companyId },
   });
 
   const [addElectricNumber, setAddElectricNumber] = useState<number>(1);
@@ -45,14 +45,14 @@ export function ElectricNumbersField(props: ElectricNumbersFieldProps) {
   const priceMap = new Map();
 
   const flattenElectricNumberOptions =
-    data?.userContracts.list.reduce((agg: ElectricNumberInfo[], curr) => {
-      if (!curr.electricNumberInfos || !curr.electricNumberInfos.length)
+    data?.companyContracts.list.reduce((agg: PowerPlant[], curr) => {
+      if (!curr.powerPlants || !curr.powerPlants.length)
         return agg;
-      curr.electricNumberInfos.forEach((info) => {
+      curr.powerPlants.forEach((info) => {
         priceMap.set(info.number, curr.price);
       });
-      return [...agg, ...curr.electricNumberInfos];
-    }, [] as ElectricNumberInfo[]) ?? [];
+      return [...agg, ...curr.powerPlants];
+    }, [] as PowerPlant[]) ?? [];
 
   return (
     <>

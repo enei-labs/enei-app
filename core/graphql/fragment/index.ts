@@ -13,3 +13,4 @@ export * from './tpcBillFields';
 export * from './userBillFields';
 export * from './feeFields';
 export * from './electricNumberInfoFields';
+export * from './industryBillFields';
