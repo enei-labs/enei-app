@@ -7,7 +7,7 @@ import Head from "next/head";
 import { InputSearch } from "@components/Input";
 import { AuthGuard } from "@components/AuthGuard";
 import { Role } from "@core/graphql/types";
-import ChartIcon from "@mui/icons-material/InsertChartOutlinedSharp";
+import TaskOutlinedIcon from "@mui/icons-material/TaskOutlined";
 
 import dynamic from "next/dynamic";
 import { useTransferDocuments } from "@utils/hooks/queries";
@@ -41,7 +41,7 @@ function TransferDataManagementPage() {
         items={[
           {
             name: "轉供資料管理",
-            icon: ChartIcon,
+            icon: TaskOutlinedIcon,
             href: "/transfer",
           },
         ]}
