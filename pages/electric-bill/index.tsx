@@ -14,7 +14,6 @@ import Head from "next/head";
 import { InputSearch } from "@components/Input";
 import { AuthGuard } from "@components/AuthGuard";
 import { Role } from "@core/graphql/types";
-import ChartIcon from "@mui/icons-material/InsertChartOutlinedSharp";
 import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import dynamic from "next/dynamic";
 import UserBillDialog from "@components/UserBill/UserBillDialog/UserBillDialog";
