@@ -18,15 +18,15 @@ import IndustryBillDialog from "@components/IndustryBill/IndustryBillDialog/Indu
 
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
-interface UserBillPanelProps {
+interface IndustryBillPanelProps {
   industryBills?: IndustryBillPage;
   loading?: boolean;
-  refetchFn: (userBill: Page) => void;
+  refetchFn: (industryBill: Page) => void;
   onAction: (action: ActionTypeEnum, industryBill?: IndustryBill) => void;
   fee: Fee;
 }
 
-const UserBillPanel = (props: UserBillPanelProps) => {
+const IndustryBillPanel = (props: IndustryBillPanelProps) => {
   const { industryBills, loading = false, refetchFn, onAction, fee } = props;
   const { me } = useAuth();
   const router = useRouter();
@@ -161,4 +161,4 @@ const UserBillPanel = (props: UserBillPanelProps) => {
   );
 };
 
-export default UserBillPanel;
+export default IndustryBillPanel;
