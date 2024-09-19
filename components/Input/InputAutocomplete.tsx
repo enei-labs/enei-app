@@ -73,7 +73,8 @@ const InputAutocomplete = forwardRef<HTMLDivElement, InputAutocompleteProps>(
           loadingText={<CircularProgress size="16px" />}
           getOptionLabel={(option) => option.label}
           onChange={(e, value) => {
-            onChange?.(value);
+            console.log(value)
+            onChange?.(value)
           }}
           renderInput={(params: AutocompleteRenderInputParams) => (
             <InputText

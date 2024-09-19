@@ -24,3 +24,6 @@ export * from './useUpdateCompany';
 export * from './useUpdateFee';
 export * from './useUpdateUserBill';
 export * from './useRemoveTPCBill';
+export * from './useCreateIndustryBill';
+export * from './useUpdateIndustryBill';
+export * from './useRemoveIndustryBill';

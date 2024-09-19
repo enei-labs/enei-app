@@ -13,8 +13,8 @@ import RadioGroup from "@components/RadioGroup";
 import { ChargeType } from "@core/graphql/types";
 import { ElectricNumbersField } from "@components/IndustryBill/IndustryBillDialog/ElectricNumbersField";
 import { useCompanies } from "@utils/hooks/queries";
-import CreateUserBillBtn from "@components/UserBill/UserBillDialog/CreateUserBillBtn";
-import UpdateUserBillBtn from "@components/UserBill/UserBillDialog/UpdateUserBillBtn";
+import CreateIndustryBillBtn from "@components/IndustryBill/IndustryBillDialog/CreateIndustryBillBtn";
+import UpdateIndustryBillBtn from "@components/IndustryBill/IndustryBillDialog/UpdateIndustryBillBtn";
 
 interface IndustryBillDialogProps {
   isOpenDialog: boolean;
@@ -63,13 +63,13 @@ function IndustryBillDialog(props: IndustryBillDialogProps) {
             label: currentModifyIndustryBill.industry.contactEmail,
             value: currentModifyIndustryBill.industry.id,
           },
-          recipientAccount: {
-            label: `(${currentModifyIndustryBill.recipientAccount.bankCode}) ${currentModifyIndustryBill.recipientAccount.account}`,
-            value: {
-              bankCode: currentModifyIndustryBill.recipientAccount.bankCode,
-              account: currentModifyIndustryBill.recipientAccount.account,
-            },
-          },
+          // recipientAccount: {
+          //   label: `(${currentModifyIndustryBill.recipientAccount.bankCode}) ${currentModifyIndustryBill.recipientAccount.account}`,
+          //   value: {
+          //     bankCode: currentModifyIndustryBill.recipientAccount.bankCode,
+          //     account: currentModifyIndustryBill.recipientAccount.account,
+          //   },
+          // },
           estimatedBillDeliverDate:
             currentModifyIndustryBill.estimatedBillDeliverDate,
           paymentDeadline: currentModifyIndustryBill.paymentDeadline,
@@ -98,7 +98,7 @@ function IndustryBillDialog(props: IndustryBillDialogProps) {
 
   const industryId = watch("industryId");
 
-  const userInformationConfig: FieldConfig[] = [
+  const industryInformationConfig: FieldConfig[] = [
     {
       type: "TEXT",
       name: "name",
@@ -108,23 +108,15 @@ function IndustryBillDialog(props: IndustryBillDialogProps) {
     },
     {
       type: "SINGLE_SELECT",
-      name: "recipientAccount",
+      name: "industryId",
       label: "發電業",
       placeholder: "請填入",
-      validated: textValidated,
       options:
-        // data?.companies.list
-        //   .find((industry) => industryId?.value === industry.id)
-        //   ?.companyContracts.map((b) => ({
-        //     label: `${b.name}`,
-        //     value: {
-        //       name: b.name
-        //     },
-        //   })) ?? [],
-        data?.companies.list.map((industry) => ({
-            label: `${industry.contactEmail}(${industry.name})`,
-            value: industry.id,
+        data?.companies.list.map((company) => ({
+            label: `${company.contactEmail}(${company.name})`,
+            value: company.id,
           })) ?? [],
+      validated: textValidated,
       loading: loading,
     },
     {
@@ -158,7 +150,7 @@ function IndustryBillDialog(props: IndustryBillDialogProps) {
           電費單設定
         </Typography>
         <FieldsController
-          configs={userInformationConfig}
+          configs={industryInformationConfig}
           form={{ control, errors }}
         />
 
@@ -331,15 +323,15 @@ function IndustryBillDialog(props: IndustryBillDialogProps) {
           alignItems={"center"}
           gap={"10px"}
         >
-          {/* {!currentModifyIndustryBill ? (
-            <CreateUserBillBtn handleSubmit={handleSubmit} onClose={onClose} />
+          {!currentModifyIndustryBill ? (
+            <CreateIndustryBillBtn handleSubmit={handleSubmit} onClose={onClose} />
           ) : (
-            <UpdateUserBillBtn
+            <UpdateIndustryBillBtn
               handleSubmit={handleSubmit}
               onClose={onClose}
-              userBillId={currentModifyIndustryBill.id}
+              industryBillId={currentModifyIndustryBill.id}
             />
-          )} */}
+          )}
         </Grid>
       </>
 

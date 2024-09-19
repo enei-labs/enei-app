@@ -30,3 +30,5 @@ export * from './removeCompany';
 export * from './createUserBill';
 export * from './updateFee';
 export * from './updateUserBill';
+export * from './createIndustryBill';
+export * from './updateIndustryBill';

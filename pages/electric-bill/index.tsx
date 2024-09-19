@@ -282,14 +282,6 @@ function ExportElectricBillPage() {
           onClose={() => setShowIndustryBillDialog(false)}
         />
       ) : null}
-      {showIndustryBillDialog ? (
-        <IndustryBillDialog
-          isOpenDialog={showIndustryBillDialog}
-          variant="create"
-          onClose={() => setShowIndustryBillDialog(false)}
-        />
-      ) : null}
-
       {showFeeDialog ? (
         <FeeDialog
           isOpenDialog={showFeeDialog}

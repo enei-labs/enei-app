@@ -160,7 +160,7 @@ export type ChangePasswordResponse = Admin | InvalidCurrentPasswordError;
 
 export enum ChargeType {
   Self = 'SELF',
-  User = 'USER'
+  User = 'USER',
 }
 
 export type Company = {
@@ -640,7 +640,7 @@ export type Mutation = {
   createAdmin: CreateAdminResponse;
   createCompany: Company;
   createCompanyContract: CompanyContract;
-  createIndustryBill: UserBill;
+  createIndustryBill: IndustryBill;
   createPowerPlant: PowerPlant;
   createTPCBill: TpcBill;
   createTransferDocument: TransferDocument;

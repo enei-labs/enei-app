@@ -9,10 +9,10 @@ import { Box } from "@mui/material";
 import { useRouter } from "next/router";
 import { ActionTypeEnum } from "@core/types/actionTypeEnum";
 import { useState } from "react";
-import { UserBillDownloadDialog } from "@components/UserBill/UserBillDownloadDialog";
+import { IndustryBillDownloadDialog } from "@components/IndustryBill/IndustryBillDownloadDialog";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import dynamic from "next/dynamic";
-import { useRemoveUserBill } from "@utils/hooks/mutations/useRemoveUserBill";
+import { useRemoveIndustryBill } from "@utils/hooks/mutations/useRemoveIndustryBill";
 import { toast } from "react-toastify";
 import IndustryBillDialog from "@components/IndustryBill/IndustryBillDialog/IndustryBillDialog";
 
@@ -35,7 +35,7 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
 
-  const [removeUserBill] = useRemoveUserBill();
+  const [removeIndustryBill] = useRemoveIndustryBill();
 
   const configs: Config<IndustryBill>[] = [
     {
@@ -122,14 +122,14 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
         onPageChange={refetchFn}
       />
 
-      {/* {currentIndustryBill && currentIndustryBill ? (
+      {currentIndustryBill && currentIndustryBill ? (
         <IndustryBillDownloadDialog
           fee={fee}
           industryBill={currentIndustryBill}
           isOpenDialog={isOpenDialog}
           onClose={() => setOpenDownloadDialog(false)}
         />
-      ) : null} */}
+      ) : null}
 
       {openUpdateDialog && currentIndustryBill ? (
         <IndustryBillDialog
@@ -146,7 +146,7 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
           title={"刪除電費單"}
           content={"是否確認要刪除電費單？"}
           onConfirm={() => {
-            removeUserBill({
+            removeIndustryBill({
               variables: { id: currentIndustryBill.id },
               onCompleted: () => {
                 toast.success("刪除成功");

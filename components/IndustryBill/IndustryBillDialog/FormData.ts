@@ -6,13 +6,13 @@ export type FormData = {
     label: string,
     value: string;
   };
-  recipientAccount: {
-    label: string;
-    value: {
-      bankCode: string;
-      account: string;
-    }
-  };
+  // recipientAccount: {
+  //   label: string;
+  //   value: {
+  //     bankCode: string;
+  //     account: string;
+  //   }
+  // };
   estimatedBillDeliverDate: number;
   paymentDeadline: number;
   transportationFee: ChargeType;
