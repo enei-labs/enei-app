@@ -17,7 +17,6 @@ const CreateIndustryBillBtn = (props: CreateIndustryBillBtnProps) => {
 
   /** 新增用戶電費單 mutation */
   const onCreateIndustryBill = async (formData: FormData) => {
-    console.log(formData);
     await createIndustryBill({
       variables: {
         input: {
@@ -33,8 +32,8 @@ const CreateIndustryBillBtn = (props: CreateIndustryBillBtnProps) => {
           //   account: formData.recipientAccount.value.account,
           // },
           recipientAccount: {
-            bankCode: '',
-            account: '',
+            bankCode: "",
+            account: "",
           },
           electricNumbers: formData.electricNumberInfos.map(
             (i) => i.number.value

@@ -1,4 +1,4 @@
-import { ChargeType } from "@core/graphql/types";
+import { UserBillChargeType } from "@core/graphql/types";
 
 export type FormData = {
   name: string;
@@ -15,9 +15,9 @@ export type FormData = {
   };
   estimatedBillDeliverDate: number;
   paymentDeadline: number;
-  transportationFee: ChargeType;
-  credentialInspectionFee: ChargeType;
-  credentialServiceFee: ChargeType;
+  transportationFee: UserBillChargeType;
+  credentialInspectionFee: UserBillChargeType;
+  credentialServiceFee: UserBillChargeType;
   noticeForTheBuilding: boolean;
   noticeForTPCBill: boolean;
   electricNumberInfos: {

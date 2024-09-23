@@ -158,11 +158,6 @@ export type BankAccountInput = {
 
 export type ChangePasswordResponse = Admin | InvalidCurrentPasswordError;
 
-export enum ChargeType {
-  Self = 'SELF',
-  User = 'USER',
-}
-
 export type Company = {
   __typename?: 'Company';
   companyContracts: Array<CompanyContract>;
@@ -283,8 +278,8 @@ export type CreateIndustryBillInput = {
   contactEmail: Scalars['String']['input'];
   contactName: Scalars['String']['input'];
   contactPhone: Scalars['String']['input'];
-  credentialInspectionFee: ChargeType;
-  credentialServiceFee: ChargeType;
+  credentialInspectionFee: IndustryBillChargeType;
+  credentialServiceFee: IndustryBillChargeType;
   electricNumbers: Array<Scalars['String']['input']>;
   /** 預計電費單寄出期限（收到繳費通知單後天數 */
   estimatedBillDeliverDate: Scalars['Float']['input'];
@@ -295,7 +290,7 @@ export type CreateIndustryBillInput = {
   /** 用戶繳費期限（收到繳費通知單後天數） */
   paymentDeadline: Scalars['Float']['input'];
   recipientAccount: RecipientAccountInput;
-  transportationFee: ChargeType;
+  transportationFee: IndustryBillChargeType;
 };
 
 export type CreatePowerPlantInput = {
@@ -372,8 +367,8 @@ export type CreateUserBillInput = {
   contactEmail: Scalars['String']['input'];
   contactName: Scalars['String']['input'];
   contactPhone: Scalars['String']['input'];
-  credentialInspectionFee: ChargeType;
-  credentialServiceFee: ChargeType;
+  credentialInspectionFee: UserBillChargeType;
+  credentialServiceFee: UserBillChargeType;
   electricNumbers: Array<Scalars['String']['input']>;
   /** 預計電費單寄出期限（收到繳費通知單後天數 */
   estimatedBillDeliverDate: Scalars['Float']['input'];
@@ -383,7 +378,7 @@ export type CreateUserBillInput = {
   /** 用戶繳費期限（收到繳費通知單後天數） */
   paymentDeadline: Scalars['Float']['input'];
   recipientAccount: RecipientAccountInput;
-  transportationFee: ChargeType;
+  transportationFee: UserBillChargeType;
   userId: Scalars['String']['input'];
 };
 
@@ -569,8 +564,8 @@ export type IndustryBill = {
   contactName: Scalars['String']['output'];
   contactPhone: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
-  credentialInspectionFee: ChargeType;
-  credentialServiceFee: ChargeType;
+  credentialInspectionFee: IndustryBillChargeType;
+  credentialServiceFee: IndustryBillChargeType;
   electricNumberInfos: Array<IndustryBillElectricNumberInfo>;
   /** 預計電費單寄出期限（收到繳費通知單後天數 */
   estimatedBillDeliverDate: Scalars['Int']['output'];
@@ -582,8 +577,13 @@ export type IndustryBill = {
   /** 發電業繳費期限（收到繳費通知單後天數） */
   paymentDeadline: Scalars['Int']['output'];
   recipientAccount: IndustryBillRecipientAccount;
-  transportationFee: ChargeType;
+  transportationFee: IndustryBillChargeType;
 };
+
+export enum IndustryBillChargeType {
+  Industry = 'INDUSTRY',
+  Self = 'SELF'
+}
 
 export type IndustryBillElectricNumberInfo = {
   __typename?: 'IndustryBillElectricNumberInfo';
@@ -640,7 +640,7 @@ export type Mutation = {
   createAdmin: CreateAdminResponse;
   createCompany: Company;
   createCompanyContract: CompanyContract;
-  createIndustryBill: IndustryBill;
+  createIndustryBill: UserBill;
   createPowerPlant: PowerPlant;
   createTPCBill: TpcBill;
   createTransferDocument: TransferDocument;
@@ -1375,8 +1375,8 @@ export type UpdateIndustryBillInput = {
   contactEmail: Scalars['String']['input'];
   contactName: Scalars['String']['input'];
   contactPhone: Scalars['String']['input'];
-  credentialInspectionFee: ChargeType;
-  credentialServiceFee: ChargeType;
+  credentialInspectionFee: IndustryBillChargeType;
+  credentialServiceFee: IndustryBillChargeType;
   electricNumbers: Array<Scalars['String']['input']>;
   /** 預計電費單寄出期限（收到繳費通知單後天數 */
   estimatedBillDeliverDate: Scalars['Float']['input'];
@@ -1388,7 +1388,7 @@ export type UpdateIndustryBillInput = {
   /** 用戶繳費期限（收到繳費通知單後天數） */
   paymentDeadline: Scalars['Float']['input'];
   recipientAccount: RecipientAccountInput;
-  transportationFee: ChargeType;
+  transportationFee: IndustryBillChargeType;
 };
 
 export type UpdatePowerPlantInput = {
@@ -1428,8 +1428,8 @@ export type UpdateUserBillInput = {
   contactEmail: Scalars['String']['input'];
   contactName: Scalars['String']['input'];
   contactPhone: Scalars['String']['input'];
-  credentialInspectionFee: ChargeType;
-  credentialServiceFee: ChargeType;
+  credentialInspectionFee: UserBillChargeType;
+  credentialServiceFee: UserBillChargeType;
   electricNumbers: Array<Scalars['String']['input']>;
   /** 預計電費單寄出期限（收到繳費通知單後天數 */
   estimatedBillDeliverDate: Scalars['Float']['input'];
@@ -1440,7 +1440,7 @@ export type UpdateUserBillInput = {
   /** 用戶繳費期限（收到繳費通知單後天數） */
   paymentDeadline: Scalars['Float']['input'];
   recipientAccount: RecipientAccountInput;
-  transportationFee: ChargeType;
+  transportationFee: UserBillChargeType;
   userId: Scalars['String']['input'];
 };
 
@@ -1486,8 +1486,8 @@ export type UserBill = {
   contactName: Scalars['String']['output'];
   contactPhone: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
-  credentialInspectionFee: ChargeType;
-  credentialServiceFee: ChargeType;
+  credentialInspectionFee: UserBillChargeType;
+  credentialServiceFee: UserBillChargeType;
   electricNumberInfos: Array<UserBillElectricNumberInfo>;
   /** 預計電費單寄出期限（收到繳費通知單後天數 */
   estimatedBillDeliverDate: Scalars['Int']['output'];
@@ -1498,9 +1498,14 @@ export type UserBill = {
   /** 用戶繳費期限（收到繳費通知單後天數） */
   paymentDeadline: Scalars['Int']['output'];
   recipientAccount: UserBillRecipientAccount;
-  transportationFee: ChargeType;
+  transportationFee: UserBillChargeType;
   user: User;
 };
+
+export enum UserBillChargeType {
+  Self = 'SELF',
+  User = 'USER'
+}
 
 export type UserBillElectricNumberInfo = {
   __typename?: 'UserBillElectricNumberInfo';

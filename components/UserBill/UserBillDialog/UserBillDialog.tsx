@@ -10,7 +10,7 @@ import { FormData } from "./FormData";
 import { Controller, useForm } from "react-hook-form";
 import { InputText } from "@components/Input";
 import RadioGroup from "@components/RadioGroup";
-import { ChargeType } from "@core/graphql/types";
+import { UserBillChargeType } from "@core/graphql/types";
 import { ElectricNumbersField } from "@components/UserBill/UserBillDialog/ElectricNumbersField";
 import { useUsers } from "@utils/hooks/queries";
 import CreateUserBillBtn from "@components/UserBill/UserBillDialog/CreateUserBillBtn";
@@ -26,11 +26,11 @@ interface UserBillDialogProps {
 const ChargeTypeRadios = [
   {
     label: "向用戶收取",
-    value: ChargeType.User,
+    value: UserBillChargeType.User,
   },
   {
     label: "自行負擔",
-    value: ChargeType.Self,
+    value: UserBillChargeType.Self,
   },
 ];
 

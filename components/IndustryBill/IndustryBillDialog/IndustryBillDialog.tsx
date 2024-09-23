@@ -10,7 +10,7 @@ import { FormData } from "@components/IndustryBill/IndustryBillDialog/FormData";
 import { Controller, useForm } from "react-hook-form";
 import { InputText } from "@components/Input";
 import RadioGroup from "@components/RadioGroup";
-import { ChargeType } from "@core/graphql/types";
+import { IndustryBillChargeType } from "@core/graphql/types";
 import { ElectricNumbersField } from "@components/IndustryBill/IndustryBillDialog/ElectricNumbersField";
 import { useCompanies } from "@utils/hooks/queries";
 import CreateIndustryBillBtn from "@components/IndustryBill/IndustryBillDialog/CreateIndustryBillBtn";
@@ -26,11 +26,11 @@ interface IndustryBillDialogProps {
 const ChargeTypeRadios = [
   {
     label: "向發電業收取",
-    value: ChargeType.User,
+    value: IndustryBillChargeType.Industry,
   },
   {
     label: "自行負擔",
-    value: ChargeType.Self,
+    value: IndustryBillChargeType.Self,
   },
 ];
 
@@ -113,9 +113,9 @@ function IndustryBillDialog(props: IndustryBillDialogProps) {
       placeholder: "請填入",
       options:
         data?.companies.list.map((company) => ({
-            label: `${company.contactEmail}(${company.name})`,
-            value: company.id,
-          })) ?? [],
+          label: `${company.contactEmail}(${company.name})`,
+          value: company.id,
+        })) ?? [],
       validated: textValidated,
       loading: loading,
     },
@@ -324,7 +324,10 @@ function IndustryBillDialog(props: IndustryBillDialogProps) {
           gap={"10px"}
         >
           {!currentModifyIndustryBill ? (
-            <CreateIndustryBillBtn handleSubmit={handleSubmit} onClose={onClose} />
+            <CreateIndustryBillBtn
+              handleSubmit={handleSubmit}
+              onClose={onClose}
+            />
           ) : (
             <UpdateIndustryBillBtn
               handleSubmit={handleSubmit}

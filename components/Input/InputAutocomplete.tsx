@@ -29,9 +29,9 @@ const theme = createTheme({
           fontSize: "16px",
         },
         listbox: {
-          maxHeight: "250px", 
+          maxHeight: "250px",
           overflow: "auto",
-        }
+        },
       },
     },
   },
@@ -73,8 +73,7 @@ const InputAutocomplete = forwardRef<HTMLDivElement, InputAutocompleteProps>(
           loadingText={<CircularProgress size="16px" />}
           getOptionLabel={(option) => option.label}
           onChange={(e, value) => {
-            console.log(value)
-            onChange?.(value)
+            onChange?.(value);
           }}
           renderInput={(params: AutocompleteRenderInputParams) => (
             <InputText
@@ -88,7 +87,7 @@ const InputAutocomplete = forwardRef<HTMLDivElement, InputAutocompleteProps>(
           ListboxProps={{
             onScroll: handleScroll,
           }}
-          noOptionsText={ "沒有資料" }
+          noOptionsText={"沒有資料"}
           isOptionEqualToValue={(option, value) => option.value === value.value}
           ref={ref}
         />
