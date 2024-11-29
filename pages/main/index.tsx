@@ -1,12 +1,12 @@
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
-import LocalMallOutlinedIcon from '@mui/icons-material/LocalMallOutlined';
+import LocalMallOutlinedIcon from "@mui/icons-material/LocalMallOutlined";
 import BoltIcon from "@mui/icons-material/BoltOutlined";
 import OutlinedFlagIcon from "@mui/icons-material/OutlinedFlag";
-import PieChartOutlineOutlinedIcon from '@mui/icons-material/PieChartOutlineOutlined';
+import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutlined";
 import ChartIcon from "@mui/icons-material/InsertChartOutlinedSharp";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
-import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
+import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
 import IconBreadcrumbs from "@components/BreadCrumbs";
 import OverviewCard, { OverviewCardProps } from "@components/OverviewCard";
 import AnnualPrice from "@components/AnnualPrice";
@@ -44,7 +44,8 @@ function MainPage() {
             {
               icon: PieChartOutlineOutlinedIcon,
               name: "總裝置量",
-              count: Number(data.dashboard.companyInfo.totalVolume),
+              /** 單位換算 Kw -> MW */
+              count: Number(data.dashboard.companyInfo.totalVolume / 1000),
               unit: "MW",
             },
           ]
