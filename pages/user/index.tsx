@@ -1,13 +1,13 @@
 import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { AuthLayout } from "@components/Layout";
-import { Box, Button, Card, Divider } from "@mui/material";
+import { Box, Button, Card, Divider, Tooltip } from "@mui/material";
 import { ReactElement, useState } from "react";
 import Head from "next/head";
 import IconBreadcrumbs from "@components/BreadCrumbs";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import { InputSearch } from "@components/Input";
 import { AuthGuard } from "@components/AuthGuard";
-import { Action, Role, User } from "@core/graphql/types";
+import { Role, User } from "@core/graphql/types";
 import UserPanel from "@components/User/UserPanel";
 import { useUsers } from "@utils/hooks/queries";
 import { ActionTypeEnum } from "@core/types/actionTypeEnum";
@@ -15,9 +15,21 @@ import UserDialog from "@components/User/UserDialog/UserDialog";
 import DialogAlert from "@components/DialogAlert";
 import { useRemoveUser } from "@utils/hooks";
 import { toast } from "react-toastify";
+import InfoIcon from "@mui/icons-material/Info";
 
 const UsersPage = () => {
-  const { data: userData, loading, refetch } = useUsers();
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [term, setTerm] = useState<string>("");
+  const search = (value: string) => {
+    setTerm(value);
+  };
+  const {
+    data: userData,
+    loading,
+    refetch,
+  } = useUsers({
+    variables: { term: term },
+  });
   const [actionType, setActionType] = useState<ActionTypeEnum>(
     ActionTypeEnum.CLOSE
   );
@@ -57,7 +69,15 @@ const UsersPage = () => {
               }}
             >
               {/* 搜尋 */}
-              <InputSearch onChange={() => {}} />
+              <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <InputSearch
+                  onChange={setSearchTerm}
+                  onEnter={() => search(searchTerm)}
+                />
+                <Tooltip title="可使用用戶名稱或 Email 搜尋">
+                  <InfoIcon />
+                </Tooltip>
+              </Box>
 
               {/* 新增帳號 */}
               <Button

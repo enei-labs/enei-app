@@ -1108,6 +1108,7 @@ export type QueryUsersArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   roles?: Array<Role>;
+  term?: InputMaybe<Scalars['String']['input']>;
 };
 
 export enum RateType {

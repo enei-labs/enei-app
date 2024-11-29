@@ -6,10 +6,12 @@ export const USERS = gql`
   query users(
     $limit: Int = 10
     $offset: Int = 0
+    $term: String
   ) {
     users(
       limit: $limit
       offset: $offset
+      term: $term
     ) {
       total
       list {
@@ -23,10 +25,12 @@ export const BASE_USERS = gql`
   query baseUsers(
     $limit: Int = 10
     $offset: Int = 0
+    $term: String
   ) {
     users(
       limit: $limit
       offset: $offset
+      term: $term
     ) {
       total
       list {

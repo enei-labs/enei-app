@@ -1,8 +1,12 @@
 import { InputAdornment, TextField } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 
-function InputSearch(props: { onChange?: (value: string) => void }) {
-  const { onChange } = props;
+function InputSearch(props: {
+  onChange?: (value: string) => void;
+  onEnter?: () => void;
+  placeholder?: string;
+}) {
+  const { onChange, onEnter, placeholder } = props;
 
   return (
     <TextField
@@ -14,10 +18,15 @@ function InputSearch(props: { onChange?: (value: string) => void }) {
         ),
       }}
       type="search"
-      placeholder="搜尋"
+      placeholder={placeholder || "搜尋(Enter)"}
       variant="outlined"
       onChange={(e) => {
         onChange?.(e.target.value);
+      }}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          onEnter?.();
+        }
       }}
     />
   );
