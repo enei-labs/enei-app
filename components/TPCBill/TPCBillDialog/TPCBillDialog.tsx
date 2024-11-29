@@ -168,7 +168,7 @@ export default function TPCBillDialog(props: TPCBillDialogProps) {
               return (
                 <Chip
                   key={item.powerPlant.id}
-                  label={item.powerPlant.name}
+                  label={`${item.powerPlant.name}(${item.powerPlant.number})`}
                   handleClick={() => selectPowerPlant(item.powerPlant.id)}
                 />
               );
