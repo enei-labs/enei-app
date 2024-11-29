@@ -5,6 +5,7 @@ export type FormData = {
     label: string;
     value: string;
   };
+  billNumber: string;
   billReceivedDate: Date;
   billingDate: Date;
   billDoc: {

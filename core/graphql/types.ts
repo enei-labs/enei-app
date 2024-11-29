@@ -320,6 +320,8 @@ export type CreateRecipientAccountInput = {
 
 export type CreateTpcBillInput = {
   billDoc: Scalars['String']['input'];
+  /** 台電繳費單編號 */
+  billNumber: Scalars['String']['input'];
   billReceivedDate: Scalars['DateTime']['input'];
   billingDate: Scalars['DateTime']['input'];
   transferDegrees: Array<CreateTransferDegreeInput>;
@@ -640,7 +642,7 @@ export type Mutation = {
   createAdmin: CreateAdminResponse;
   createCompany: Company;
   createCompanyContract: CompanyContract;
-  createIndustryBill: UserBill;
+  createIndustryBill: IndustryBill;
   createPowerPlant: PowerPlant;
   createTPCBill: TpcBill;
   createTransferDocument: TransferDocument;
@@ -1266,7 +1268,11 @@ export type Success = {
 export type TpcBill = {
   __typename?: 'TPCBill';
   billDoc: Scalars['String']['output'];
+  /** 台電繳費單編號 */
+  billNumber: Scalars['String']['output'];
+  /** 收到台電繳費單日期 */
   billReceivedDate: Scalars['DateTime']['output'];
+  /** 計費年月 */
   billingDate: Scalars['DateTime']['output'];
   id: Scalars['ID']['output'];
   transferDegrees: Array<TransferDegree>;

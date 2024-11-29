@@ -26,6 +26,14 @@ interface TPCBillDialogProps {
 
 const basicInfoConfigs: FieldConfig[] = [
   {
+    type: "TEXT",
+    name: "billNumber",
+    label: "台電繳費單編號",
+    placeholder: "請填入",
+    validated: textValidated,
+    required: true,
+  },
+  {
     type: "DATE",
     name: "billReceivedDate",
     label: "收到台電繳費單日期",
@@ -87,6 +95,7 @@ export default function TPCBillDialog(props: TPCBillDialogProps) {
       variables: {
         input: {
           billDoc: formData.billDoc.id,
+          billNumber: formData.billNumber,
           billReceivedDate: formData.billReceivedDate,
           billingDate: formData.billingDate,
           transferDocumentId: formData.transferDocument.value,
