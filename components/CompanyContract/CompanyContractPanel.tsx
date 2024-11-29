@@ -15,7 +15,9 @@ interface CompanyContractPanelProps {
 function CompanyContractPanel(props: CompanyContractPanelProps) {
   const { company } = props;
   const [state, setState] = useState("");
-  const { data, loading } = useCompanyContracts({ variables: { companyId: company.id }});
+  const { data, loading } = useCompanyContracts({
+    variables: { companyId: company.id },
+  });
   return (
     <Card sx={{ p: "36px" }}>
       <Typography variant="h4">{company.name}</Typography>
@@ -28,7 +30,8 @@ function CompanyContractPanel(props: CompanyContractPanelProps) {
       >
         <Box sx={{ display: "flex", columnGap: "0.75em" }}>
           <InputSearch />
-          <BasicSelect state={state} setState={setState} items={[]} />
+          {/* 選擇合約類型 @TODO: 後續開發 */}
+          {/* <BasicSelect state={state} setState={setState} items={[]} /> */}
         </Box>
         <AddCompanyContractBtn company={company} />
       </Box>

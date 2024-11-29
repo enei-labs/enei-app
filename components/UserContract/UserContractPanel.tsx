@@ -30,7 +30,8 @@ function UserContractPanel(props: UserContractPanelProps) {
       >
         <Box sx={{ display: "flex", columnGap: "0.75em" }}>
           <InputSearch />
-          <BasicSelect state={state} setState={setState} items={[]} />
+          {/* 選擇合約類型 @TODO: 後續開發 */}
+          {/* <BasicSelect state={state} setState={setState} items={[]} /> */}
         </Box>
         <AddUserContractBtn user={user} />
       </Box>
