@@ -16,7 +16,7 @@ import DialogAlert from "@components/DialogAlert";
 import { useCompanyContracts } from "@utils/hooks/queries";
 import { PowerPlant } from "@core/graphql/types";
 
-interface ElectricNumbersFieldProps{
+interface ElectricNumbersFieldProps {
   control: Control<any, any>;
   field: ControllerRenderProps<FormData, any>;
   companyId: string;
@@ -44,10 +44,9 @@ export function ElectricNumbersField(props: ElectricNumbersFieldProps) {
 
   const priceMap = new Map();
 
-  const flattenElectricNumberOptions =
+  const flattenPowerPlants =
     data?.companyContracts.list.reduce((agg: PowerPlant[], curr) => {
-      if (!curr.powerPlants || !curr.powerPlants.length)
-        return agg;
+      if (!curr.powerPlants || !curr.powerPlants.length) return agg;
       curr.powerPlants.forEach((info) => {
         priceMap.set(info.number, curr.price);
       });
@@ -68,9 +67,9 @@ export function ElectricNumbersField(props: ElectricNumbersFieldProps) {
                   {...field}
                   onChange={(e) => field.onChange(e)}
                   options={
-                    flattenElectricNumberOptions.map((o) => ({
+                    flattenPowerPlants.map((o) => ({
                       label: o.number,
-                      value: o.number,
+                      value: o.id,
                     })) ?? []
                   }
                   label={`發電業電號${fieldIndex + 1}`}

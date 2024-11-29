@@ -18,6 +18,7 @@ export const COMPANY_CONTRACTS = gql`
         ...companyContractFields
         powerPlants {
           id
+          number
           name
           supplyVolume
         }
