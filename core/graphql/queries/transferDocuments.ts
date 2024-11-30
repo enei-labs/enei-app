@@ -6,10 +6,12 @@ export const TRANSFER_DOCUMENTS = gql`
   query transferDocuments(
     $limit: Int = 10
     $offset: Int = 0
+    $term: String
   ) {
     transferDocuments(
       limit: $limit
       offset: $offset
+      term: $term
     ) {
       total
       list {

@@ -5,6 +5,7 @@ import { TRANSFER_DOCUMENTS } from '@core/graphql/queries';
 interface Variables {
   offset?: number;
   limit?: number;
+  term?: string;
 }
 
 export const useTransferDocuments = (variables?: Variables) => {
