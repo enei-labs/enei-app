@@ -14,11 +14,14 @@ import CompanyDialog from "@components/Company/CompanyDialog";
 
 interface CompanyPanelProps {
   setCompanyFn: (company: Company) => void;
+  searchTerm?: string;
 }
 
 const CompanyPanel = (props: CompanyPanelProps) => {
-  const { setCompanyFn } = props;
-  const { data, loading, refetch } = useCompanies();
+  const { setCompanyFn, searchTerm } = props;
+  const { data, loading, refetch } = useCompanies({
+    variables: { term: searchTerm },
+  });
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [selectedData, selectData] = useState<Company | null>(null);

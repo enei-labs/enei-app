@@ -6,10 +6,12 @@ export const COMPANIES = gql`
   query companies(
     $limit: Int = 10
     $offset: Int = 0
+    $term: String
   ) {
     companies(
       limit: $limit
       offset: $offset
+      term: $term
     ) {
       total
       list {

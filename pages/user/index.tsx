@@ -16,19 +16,16 @@ import DialogAlert from "@components/DialogAlert";
 import { useRemoveUser } from "@utils/hooks";
 import { toast } from "react-toastify";
 import InfoIcon from "@mui/icons-material/Info";
+import { useSearch } from "@utils/hooks/useSearch";
 
 const UsersPage = () => {
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const [term, setTerm] = useState<string>("");
-  const search = (value: string) => {
-    setTerm(value);
-  };
+  const { setInputValue, searchTerm, executeSearch } = useSearch();
   const {
     data: userData,
     loading,
     refetch,
   } = useUsers({
-    variables: { term: term },
+    variables: { term: searchTerm },
   });
   const [actionType, setActionType] = useState<ActionTypeEnum>(
     ActionTypeEnum.CLOSE
@@ -70,10 +67,7 @@ const UsersPage = () => {
             >
               {/* 搜尋 */}
               <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <InputSearch
-                  onChange={setSearchTerm}
-                  onEnter={() => search(searchTerm)}
-                />
+                <InputSearch onChange={setInputValue} onEnter={executeSearch} />
                 <Tooltip title="可使用用戶名稱或 Email 搜尋">
                   <InfoIcon />
                 </Tooltip>

@@ -5,6 +5,7 @@ import useQuery from '../useQuery'
 interface Variables {
   offset?: number;
   limit?: number;
+  term?: string;
 }
 
 export const useCompanies = ({ skip = false, variables }: {

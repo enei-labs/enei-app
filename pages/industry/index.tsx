@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import BoltIcon from "@mui/icons-material/BoltOutlined";
 import IconBreadcrumbs from "@components/BreadCrumbs";
-import { Card, CircularProgress, Divider } from "@mui/material";
+import { Card, CircularProgress, Divider, Tooltip } from "@mui/material";
 import { AuthLayout } from "@components/Layout";
 import { ReactElement, useEffect, useState } from "react";
 import Head from "next/head";
@@ -11,6 +11,8 @@ import { AuthGuard } from "@components/AuthGuard";
 import { Company, Role } from "@core/graphql/types";
 import CompanyPanel from "@components/Company/CompanyPanel";
 import dynamic from "next/dynamic";
+import { useSearch } from "@utils/hooks/useSearch";
+import InfoIcon from "@mui/icons-material/Info";
 
 const CompanyContractPanel = dynamic(
   () => import("@components/CompanyContract/CompanyContractPanel"),
@@ -20,6 +22,7 @@ const CompanyContractPanel = dynamic(
 );
 
 function IndustryPage() {
+  const { setInputValue, searchTerm, executeSearch } = useSearch();
   const [company, setCompany] = useState<Company | null>(null);
 
   useEffect(() => {
@@ -57,10 +60,19 @@ function IndustryPage() {
                 mb: "16px",
               }}
             >
-              <InputSearch />
+              {/* 搜尋 */}
+              <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <InputSearch onChange={setInputValue} onEnter={executeSearch} />
+                <Tooltip title="可使用公司名稱或統一編號搜尋">
+                  <InfoIcon />
+                </Tooltip>
+              </Box>
+
+              {/* 新增發電業 */}
               <AddCompanyBtn />
             </Box>
             <CompanyPanel
+              searchTerm={searchTerm}
               setCompanyFn={(company: Company) => setCompany(company)}
             />
           </Card>
