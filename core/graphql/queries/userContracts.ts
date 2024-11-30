@@ -7,11 +7,13 @@ export const USER_CONTRACTS = gql`
     $limit: Int = 10
     $offset: Int = 0
     $userId: UUID
+    $term: String
   ) {
     userContracts(
       limit: $limit
       offset: $offset
       userId: $userId
+      term: $term
     ) {
       total
       list {

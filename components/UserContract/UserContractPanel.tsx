@@ -3,10 +3,10 @@ import { useUserContracts } from "@utils/hooks/queries";
 import { User } from "@core/graphql/types";
 import { InputSearch } from "../Input";
 import { BasicSelect } from "../Select";
-import { useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import UserContractBox from "@components/ContractBox/UserContractBox";
 import { AddUserContractBtn } from "@components/UserContract/UserContractDialog/AddUserContractBtn";
+import { useSearch } from "@utils/hooks/useSearch";
 
 interface UserContractPanelProps {
   user: User;
@@ -14,9 +14,9 @@ interface UserContractPanelProps {
 
 function UserContractPanel(props: UserContractPanelProps) {
   const { user } = props;
-  const [state, setState] = useState("");
+  const { searchTerm, setInputValue, executeSearch } = useSearch();
   const { data, loading } = useUserContracts({
-    variables: { userId: user.id },
+    variables: { userId: user.id, term: searchTerm },
   });
 
   return (
@@ -29,7 +29,7 @@ function UserContractPanel(props: UserContractPanelProps) {
         }}
       >
         <Box sx={{ display: "flex", columnGap: "0.75em" }}>
-          <InputSearch />
+          <InputSearch onChange={setInputValue} onEnter={executeSearch} />
           {/* 選擇合約類型 @TODO: 後續開發 */}
           {/* <BasicSelect state={state} setState={setState} items={[]} /> */}
         </Box>

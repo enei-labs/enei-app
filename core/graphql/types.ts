@@ -1015,6 +1015,7 @@ export type QueryCompanyContractsArgs = {
   companyId: Scalars['ID']['input'];
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+  term?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -1038,6 +1039,7 @@ export type QueryIndustryBillArgs = {
 export type QueryIndustryBillsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+  term?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -1073,6 +1075,7 @@ export type QueryTransferDocumentArgs = {
 export type QueryTransferDocumentsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+  term?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -1089,6 +1092,7 @@ export type QueryUserBillArgs = {
 export type QueryUserBillsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+  term?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -1100,6 +1104,7 @@ export type QueryUserContractArgs = {
 export type QueryUserContractsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+  term?: InputMaybe<Scalars['String']['input']>;
   userId?: InputMaybe<Scalars['UUID']['input']>;
 };
 

@@ -7,6 +7,7 @@ interface Variables {
   offset?: number;
   limit?: number;
   userId?: string;
+  term?: string;
 }
 
 export const useUserContracts = ({ skip = false, variables }: {

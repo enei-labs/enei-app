@@ -6,6 +6,7 @@ interface Variables {
   offset?: number;
   limit?: number;
   companyId: string;
+  term?: string;
 }
 
 export const useCompanyContracts = ( { skip = false, variables }: {

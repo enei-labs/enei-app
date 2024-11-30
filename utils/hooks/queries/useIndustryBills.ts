@@ -5,6 +5,7 @@ import { INDUSTRY_BILLS } from '@core/graphql/queries';
 interface Variables {
   offset?: number;
   limit?: number;
+  term?: string;
 }
 
 export const useIndustryBills = (variables?: Variables) => {

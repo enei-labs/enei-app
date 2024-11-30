@@ -5,6 +5,7 @@ import { USER_BILLS } from '@core/graphql/queries';
 interface Variables {
   offset?: number;
   limit?: number;
+  term?: string;
 }
 
 export const useUserBills = (variables?: Variables) => {

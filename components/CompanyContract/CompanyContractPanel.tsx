@@ -4,9 +4,9 @@ import { Company } from "@core/graphql/types";
 import { InputSearch } from "../Input";
 import AddCompanyContractBtn from "./CompanyContractDialog/AddCompanyContractBtn";
 import { BasicSelect } from "../Select";
-import { useState } from "react";
 import CircularProgress from "@mui/material/CircularProgress";
 import CompanyContractBox from "@components/ContractBox/CompanyContractBox";
+import { useSearch } from "@utils/hooks/useSearch";
 
 interface CompanyContractPanelProps {
   company: Company;
@@ -14,9 +14,9 @@ interface CompanyContractPanelProps {
 
 function CompanyContractPanel(props: CompanyContractPanelProps) {
   const { company } = props;
-  const [state, setState] = useState("");
+  const { searchTerm, setInputValue, executeSearch } = useSearch();
   const { data, loading } = useCompanyContracts({
-    variables: { companyId: company.id },
+    variables: { companyId: company.id, term: searchTerm },
   });
   return (
     <Card sx={{ p: "36px" }}>
@@ -29,7 +29,7 @@ function CompanyContractPanel(props: CompanyContractPanelProps) {
         }}
       >
         <Box sx={{ display: "flex", columnGap: "0.75em" }}>
-          <InputSearch />
+          <InputSearch onChange={setInputValue} onEnter={executeSearch} />
           {/* 選擇合約類型 @TODO: 後續開發 */}
           {/* <BasicSelect state={state} setState={setState} items={[]} /> */}
         </Box>

@@ -22,10 +22,11 @@ import { useFee, useUserBills, useIndustryBills } from "@utils/hooks/queries";
 import UserBillPanel from "@components/UserBill/UserBillPanel";
 import IndustryBillPanel from "@components/IndustryBill/IndustryBillPanel";
 import BorderColorOutlined from "@mui/icons-material/BorderColorOutlined";
-import InboxOutlinedIcon from '@mui/icons-material/InboxOutlined';
-import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
+import InboxOutlinedIcon from "@mui/icons-material/InboxOutlined";
+import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 import { IconBtn } from "@components/Button";
 import Link from "next/link";
+import { useSearch } from "@utils/hooks/useSearch";
 
 const TransferDocumentDialog = dynamic(
   () =>
@@ -49,6 +50,16 @@ const styles = {
 } as const;
 
 function ExportElectricBillPage() {
+  const {
+    searchTerm: userBillSearchTerm,
+    setInputValue: setUserBillInputValue,
+    executeSearch: executeUserBillSearch,
+  } = useSearch();
+  const {
+    searchTerm: industryBillSearchTerm,
+    setInputValue: setIndustryBillInputValue,
+    executeSearch: executeIndustryBillSearch,
+  } = useSearch();
   const [open, setOpen] = useState(false);
   const [showUserBillDialog, setShowUserBillDialog] = useState(false);
   const [showIndustryBillDialog, setShowIndustryBillDialog] = useState(false);
@@ -58,12 +69,12 @@ function ExportElectricBillPage() {
     data: userBillsData,
     loading: userBillLoading,
     refetch: userBillRefetch,
-  } = useUserBills();
+  } = useUserBills({ term: userBillSearchTerm });
   const {
     data: industryBillsData,
     loading: industryBillLoading,
     refetch: industryBillRefetch,
-  } = useIndustryBills();
+  } = useIndustryBills({ term: industryBillSearchTerm });
 
   return (
     <>
@@ -96,7 +107,10 @@ function ExportElectricBillPage() {
               <Grid container>
                 <Grid item sm={4} sx={{ padding: "36px 36px 36px 0" }}>
                   <Box sx={{ display: "flex", columnGap: "12px" }}>
-                    <AccountBalanceWalletOutlinedIcon sx={{ color: "#009688" }} width="20px" />
+                    <AccountBalanceWalletOutlinedIcon
+                      sx={{ color: "#009688" }}
+                      width="20px"
+                    />
                     <Typography variant="body2">代輸費</Typography>
                   </Box>
                   <Box sx={styles.box}>
@@ -119,7 +133,10 @@ function ExportElectricBillPage() {
                 </Grid>
                 <Grid item sm={4} sx={{ padding: "36px 36px 36px 0" }}>
                   <Box sx={{ display: "flex", columnGap: "12px" }}>
-                    <AccountBalanceWalletOutlinedIcon sx={{ color: "#009688" }} width="20px" />
+                    <AccountBalanceWalletOutlinedIcon
+                      sx={{ color: "#009688" }}
+                      width="20px"
+                    />
                     <Typography variant="body2">憑證審查費</Typography>
                   </Box>
                   <Box sx={styles.box}>
@@ -142,7 +159,10 @@ function ExportElectricBillPage() {
                 </Grid>
                 <Grid item sm={4} sx={{ padding: "36px 36px 36px 0" }}>
                   <Box sx={{ display: "flex", columnGap: "12px" }}>
-                    <AccountBalanceWalletOutlinedIcon sx={{ color: "#009688" }} width="20px" />
+                    <AccountBalanceWalletOutlinedIcon
+                      sx={{ color: "#009688" }}
+                      width="20px"
+                    />
                     <Typography variant="body2">憑證服務費</Typography>
                   </Box>
                   <Box sx={styles.box}>
@@ -180,7 +200,10 @@ function ExportElectricBillPage() {
               }}
             >
               {/* 搜尋 */}
-              <InputSearch onChange={() => {}} />
+              <InputSearch
+                onChange={setUserBillInputValue}
+                onEnter={executeUserBillSearch}
+              />
 
               {/* 新增電費單 */}
               <Box sx={{ display: "flex", columnGap: "12px" }}>
@@ -231,7 +254,10 @@ function ExportElectricBillPage() {
               }}
             >
               {/* 搜尋 */}
-              <InputSearch onChange={() => {}} />
+              <InputSearch
+                onChange={setIndustryBillInputValue}
+                onEnter={executeIndustryBillSearch}
+              />
 
               {/* 新增電費單 */}
               <Button

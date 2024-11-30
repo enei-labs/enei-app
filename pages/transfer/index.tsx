@@ -1,6 +1,12 @@
 import Box from "@mui/material/Box";
 import IconBreadcrumbs from "@components/BreadCrumbs";
-import { Button, Card, CircularProgress, Divider } from "@mui/material";
+import {
+  Button,
+  Card,
+  CircularProgress,
+  Divider,
+  Tooltip,
+} from "@mui/material";
 import { AuthLayout } from "@components/Layout";
 import { ReactElement, useState } from "react";
 import Head from "next/head";
@@ -14,6 +20,8 @@ import { useTransferDocuments } from "@utils/hooks/queries";
 import TransferDocumentPanel from "@components/TransferDocument/TransferDocumentPanel";
 import TransferDegreeChart from "@components/Dashboard/TransferDegreeChart";
 import { useMonthlyTransferDegrees } from "@utils/hooks/queries/useMonthlyTransferDegrees";
+import { useSearch } from "@utils/hooks/useSearch";
+import InfoIcon from "@mui/icons-material/Info";
 
 const TPCBillDialog = dynamic(
   () => import("@components/TPCBill/TPCBillDialog/TPCBillDialog"),
@@ -21,12 +29,13 @@ const TPCBillDialog = dynamic(
 );
 
 function TransferDataManagementPage() {
+  const { setInputValue, searchTerm, executeSearch } = useSearch();
   const [open, setOpen] = useState(false);
   const {
     data: transferDocumentsData,
     loading,
     refetch,
-  } = useTransferDocuments();
+  } = useTransferDocuments({ term: searchTerm });
 
   const { data: monthlyTpcTransferDegreeData, loading: tpcBillLoading } =
     useMonthlyTransferDegrees();
@@ -73,7 +82,15 @@ function TransferDataManagementPage() {
                 mb: "16px",
               }}
             >
-              <InputSearch />
+              {/* 搜尋 */}
+              <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <InputSearch onChange={setInputValue} onEnter={executeSearch} />
+                <Tooltip title="可使用轉供合約名稱或轉供合約編號搜尋">
+                  <InfoIcon />
+                </Tooltip>
+              </Box>
+
+              {/* 新增台電代輸繳費單 */}
               <Button onClick={() => setOpen(true)}>新增台電代輸繳費單</Button>
             </Box>
             {/* 轉供申請進度表格 */}
