@@ -11,7 +11,6 @@ import TransferDocumentPowerPlant from "./TransferDocumentPowerPlant";
 import TransferDocumentUsers from "./TransferDocumentUsers";
 import ProgressBar from "@components/TransferDocument/TransferDocumentCard/ProgressBar";
 import DownloadDocBox from "@components/DownloadDocBox";
-import { BasicTable } from "@components/Table";
 import TPCPanel from "@components/TPCBill/TPCPanel";
 import TransferDocumentInfoBox from "@components/TransferDocument/TransferDocumentInfoBox";
 import { useTpcBills } from "@utils/hooks/queries";
@@ -34,7 +33,7 @@ function TransferDocumentCard(props: TransferDocumentProps) {
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [removeTransferDocument] = useRemoveTransferDocument();
 
-  const { data, loading, refetch } = useTpcBills({
+  const { data, loading } = useTpcBills({
     transferDocumentId: transferDocument.id,
     offset: 0,
     limit: 1000,

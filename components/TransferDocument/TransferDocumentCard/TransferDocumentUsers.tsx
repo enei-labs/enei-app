@@ -68,34 +68,36 @@ function TransferDocumentUsersItem(props: TransferDocumentUsersItemProps) {
 function TransferDocumentUsers(props: TransferDocumentUsersProps) {
   const { transferDocumentUsers } = props;
 
-  const transferDocumentUsersView = transferDocumentUsers.map((el) => ({
-    nameNode: (
-      <Typography sx={{ m: "0 0 8px 0" }} variant="h5">
-        {el.userContract.name}
-      </Typography>
-    ),
-    serialNumberNode: (
-      <Typography variant="body1">{el.userContract.serialNumber}</Typography>
-    ),
-    purchaseDegreeNode: (
-      <Typography variant="body1">
-        {el.userContract.purchaseDegree}{" "}
-        <Typography variant="body4">MWh</Typography>
-      </Typography>
-    ),
-    monthlyTransferDegreeNode: (
-      <Typography variant="body1">
-        {el.userContract.upperLimit}{" "}
-        <Typography variant="body4">MWh</Typography>
-      </Typography>
-    ),
-    yearlyTransferDegreeNode: (
-      <Typography variant="body1">
-        {el.userContract.lowerLimit}{" "}
-        <Typography variant="body4">MWh</Typography>
-      </Typography>
-    ),
-  }));
+  const transferDocumentUsersView = transferDocumentUsers
+    .filter((el) => el.userContract)
+    .map((el) => ({
+      nameNode: (
+        <Typography sx={{ m: "0 0 8px 0" }} variant="h5">
+          {el.userContract?.name}
+        </Typography>
+      ),
+      serialNumberNode: (
+        <Typography variant="body1">{el.userContract?.serialNumber}</Typography>
+      ),
+      purchaseDegreeNode: (
+        <Typography variant="body1">
+          {el.userContract?.purchaseDegree}{" "}
+          <Typography variant="body4">MWh</Typography>
+        </Typography>
+      ),
+      monthlyTransferDegreeNode: (
+        <Typography variant="body1">
+          {el.userContract?.upperLimit}{" "}
+          <Typography variant="body4">MWh</Typography>
+        </Typography>
+      ),
+      yearlyTransferDegreeNode: (
+        <Typography variant="body1">
+          {el.userContract?.lowerLimit}{" "}
+          <Typography variant="body4">MWh</Typography>
+        </Typography>
+      ),
+    }));
 
   return (
     <Box
