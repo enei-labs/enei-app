@@ -5,12 +5,12 @@ import useQuery from "../useQuery";
 interface Variables {
   offset?: number;
   limit?: number;
+  term?: string;
 }
 
 export const useAccounts = (variables?: Variables) => {
   return useQuery<{ accounts: AccountPage }>(ACCOUNTS, {
     notifyOnNetworkStatusChange: false,
-    fetchPolicy: 'cache-first',
     variables: variables,
   });
 };

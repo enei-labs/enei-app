@@ -3,8 +3,8 @@ import { ACCOUNT_FIELDS } from "../fragment";
 
 export const ACCOUNTS = gql`
   ${ACCOUNT_FIELDS}
-  query accounts($limit: Int = 10, $offset: Int = 0) {
-    accounts(limit: $limit, offset: $offset) {
+  query accounts($limit: Int = 10, $offset: Int = 0, $term: String) {
+    accounts(limit: $limit, offset: $offset, term: $term) {
       total
       list {
         ...accountFields

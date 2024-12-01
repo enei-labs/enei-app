@@ -1,6 +1,6 @@
 import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { AuthLayout } from "@components/Layout";
-import { Box, Button, Card, Divider, Toolbar } from "@mui/material";
+import { Box, Button, Card, Divider, Toolbar, Tooltip } from "@mui/material";
 import { ReactElement, useReducer } from "react";
 import Head from "next/head";
 import IconBreadcrumbs from "@components/BreadCrumbs";
@@ -11,33 +11,17 @@ import { useAccounts } from "@utils/hooks/queries/useAccounts";
 import { AuthGuard } from "@components/AuthGuard";
 import { Role } from "@core/graphql/types";
 import { reducer } from "@core/context/account-dialog/reducer";
+import { useSearch } from "@utils/hooks/useSearch";
+import InfoIcon from "@mui/icons-material/Info";
 
 const Permissions = () => {
-  const { data: accountsData, loading, refetch } = useAccounts();
+  const { searchTerm, setInputValue, executeSearch } = useSearch();
+  const {
+    data: accountsData,
+    loading,
+    refetch,
+  } = useAccounts({ term: searchTerm });
   const [state, dispatch] = useReducer(reducer, { status: "closed" });
-
-  // /** 搜尋行為 */
-  // const onSearch = (value: string) => {
-  //   if (!accountsData) return;
-
-  //   if (!value) setFilterData(accountsData.accounts);
-
-  //   const _filterList = accountsData.accounts.list.filter((o) =>
-  //     o.name.includes(value)
-  //   );
-
-  //   const _filterData: AccountPage = {
-  //     list: _filterList,
-  //     total: _filterList.length,
-  //     __typename: accountsData.accounts.__typename,
-  //   };
-
-  //   setFilterData(_filterData);
-  // };
-
-  // useEffect(() => {
-  //   if (accountsData) setFilterData(accountsData.accounts);
-  // }, [accountsData, data?.companies.list]);
 
   return (
     <>
@@ -65,7 +49,12 @@ const Permissions = () => {
               }}
             >
               {/* 搜尋 */}
-              <InputSearch onChange={() => {}} />
+              <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <InputSearch onChange={setInputValue} onEnter={executeSearch} />
+                <Tooltip title="可使用用戶名稱或信箱搜尋">
+                  <InfoIcon />
+                </Tooltip>
+              </Box>
 
               {/* 新增帳號 */}
               <Button
