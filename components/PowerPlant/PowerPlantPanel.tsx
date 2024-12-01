@@ -15,11 +15,13 @@ const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
 const PowerPlantPanel = ({
   companyContract,
+  searchTerm,
 }: {
   companyContract: CompanyContract;
+  searchTerm?: string;
 }) => {
   const { data, loading, refetch } = usePowerPlants({
-    variables: { companyContractId: companyContract.id },
+    variables: { companyContractId: companyContract.id, term: searchTerm },
   });
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
@@ -37,6 +39,7 @@ const PowerPlantPanel = ({
     },
     {
       header: "尚未銷售度數",
+      /** TODO: 改成從 API 取得 */
       // render: (data) => {
       //   const f = data.annualPowerGeneration;
       //   return <div>test</div>;

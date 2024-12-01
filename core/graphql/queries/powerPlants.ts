@@ -7,11 +7,13 @@ export const POWER_PLANTS = gql`
     $limit: Int = 10
     $offset: Int = 0
     $companyContractId: UUID
+    $term: String
   ) {
     powerPlants(
       limit: $limit
       offset: $offset
       companyContractId: $companyContractId
+      term: $term
     ) {
       total
       list {

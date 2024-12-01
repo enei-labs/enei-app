@@ -1,4 +1,4 @@
-import { Box, Card, Divider, Grid, Typography } from "@mui/material";
+import { Box, Card, Divider, Grid, Tooltip, Typography } from "@mui/material";
 import { CompanyContract, RateType } from "@core/graphql/types";
 import FlagIcon from "@mui/icons-material/OutlinedFlag";
 import MonetizationOnOutlinedIcon from "@mui/icons-material/MonetizationOnOutlined";
@@ -23,6 +23,8 @@ import AddPowerPlantBtn from "@components/PowerPlant/AddPowerPlantBtn";
 import { useRouter } from "next/router";
 import EditCompanyContractBtn from "@components/CompanyContract/CompanyContractDialog/EditCompanyContractBtn";
 import MonthlyTransferDegreeChart from "@components/CompanyContract/MonthlyTransferDegreeChart";
+import { useSearch } from "@utils/hooks/useSearch";
+import InfoIcon from "@mui/icons-material/Info";
 
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
@@ -94,7 +96,9 @@ const companyContractCardInfo = (companyContract: CompanyContract) => {
 function CompanyContractCard(props: CompanyContractCardProps) {
   const { companyContract } = props;
   const router = useRouter();
+  const { searchTerm, setInputValue, executeSearch } = useSearch();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  /** TODO: 改成從 API 取得 */
   const degrees = 20;
 
   const [removeCompanyContract] = useRemoveCompanyContract();
@@ -248,10 +252,19 @@ function CompanyContractCard(props: CompanyContractCardProps) {
               mb: "16px",
             }}
           >
-            <InputSearch />
+            {/* 搜尋 */}
+            <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <InputSearch onChange={setInputValue} onEnter={executeSearch} />
+              <Tooltip title="可使用電廠名稱或電號搜尋">
+                <InfoIcon />
+              </Tooltip>
+            </Box>
             <AddPowerPlantBtn companyContract={companyContract} />
           </Box>
-          <PowerPlantPanel companyContract={companyContract} />
+          <PowerPlantPanel
+            companyContract={companyContract}
+            searchTerm={searchTerm}
+          />
         </Box>
       </Card>
       {openDeleteDialog ? (

@@ -6,6 +6,7 @@ interface Variables {
   offset?: number;
   limit?: number;
   companyContractId?: string;
+  term?: string;
 }
 
 export const usePowerPlants = ({ skip = false, variables }: {
