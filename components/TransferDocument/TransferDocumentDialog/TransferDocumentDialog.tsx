@@ -148,12 +148,12 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
               },
               yearlyTransferDegree: u.yearlyTransferDegree,
               userContract: {
-                label: u.userContract.name,
-                value: u.userContract.id,
+                label: u.userContract?.name,
+                value: u.userContract?.id,
               },
               electricNumber: {
-                label: u.electricNumberInfo.number,
-                value: u.electricNumberInfo.number,
+                label: u.electricNumberInfo?.number,
+                value: u.electricNumberInfo?.number,
               },
             })),
         }

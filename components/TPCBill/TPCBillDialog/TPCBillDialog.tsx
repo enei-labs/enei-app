@@ -186,6 +186,7 @@ export default function TPCBillDialog(props: TPCBillDialogProps) {
           {transferDocumentData && selectedPowerPlant
             ? transferDocumentData.transferDocument.transferDocumentUsers.map(
                 (item, index) => {
+                  if (!item.userContract) return null;
                   return (
                     <Controller
                       key={`transferDegrees.${item.user.id}_${item.userContract.id}_${selectedPowerPlant}_${index}`}
