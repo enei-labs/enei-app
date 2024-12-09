@@ -24,7 +24,7 @@ const powerPlantMappedLabels: Array<{
   },
   {
     key: "estimateAnnualSupplyNode",
-    label: "預計年採購度數",
+    label: "預計年供電度數(",
   },
   {
     key: "transferRateNode",
@@ -79,7 +79,7 @@ function TransferDocumentPowerPlant(props: TransferDocumentPowerPlantProps) {
       ),
       estimateAnnualSupplyNode: (
         <Typography variant="body1">
-          {el.estimateAnnualSupply} <Typography variant="body4">MWh</Typography>
+          {el.estimateAnnualSupply} <Typography variant="body4">kWh</Typography>
         </Typography>
       ),
       transferRateNode: (
