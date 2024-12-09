@@ -24,7 +24,7 @@ const powerPlantMappedLabels: Array<{
   },
   {
     key: "estimateAnnualSupplyNode",
-    label: "預計年供電度數(",
+    label: "預計年供電度數",
   },
   {
     key: "transferRateNode",

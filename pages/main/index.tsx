@@ -189,9 +189,10 @@ function MainPage() {
             </Card>
           </Grid>
           <Grid item sm={6}>
-            <Card sx={{ p: "36px" }}>
-              {/* <BasicTable title="未來一年電廠合約到期名單" /> */}
-            </Card>
+            {/* TODO: 未來一年電廠合約到期名單 */}
+            {/* <Card sx={{ p: "36px" }}> */}
+            {/* <BasicTable title="未來一年電廠合約到期名單" /> */}
+            {/* </Card> */}
           </Grid>
         </Grid>
       </>
