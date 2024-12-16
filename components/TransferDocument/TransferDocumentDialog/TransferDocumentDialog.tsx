@@ -404,7 +404,7 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                       (currentPowerPlantInfo.volume *
                         currentPowerPlantInfo.estimatedAnnualPowerGeneration *
                         transferDocumentPowerPlants[index].transferRate) /
-                        100
+                        (100 * 100)
                     )}
                   />
                 )}
