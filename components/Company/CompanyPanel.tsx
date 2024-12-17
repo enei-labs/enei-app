@@ -62,11 +62,8 @@ const CompanyPanel = (props: CompanyPanelProps) => {
       accessor: "contactEmail",
     },
     {
-      header: "總裝置量(kW)",
+      header: "總裝置量(MW)",
       accessor: "totalVolume",
-      render: (data) => {
-        return <>{data.totalVolume / 1000}</>;
-      },
     },
     {
       header: "修改 / 刪除",

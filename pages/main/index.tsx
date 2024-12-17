@@ -44,8 +44,7 @@ function MainPage() {
             {
               icon: PieChartOutlineOutlinedIcon,
               name: "總裝置量",
-              /** 單位換算 Kw -> MW */
-              count: Number(data.dashboard.companyInfo.totalVolume / 1000),
+              count: data.dashboard.companyInfo.totalVolume,
               unit: "MW",
             },
           ]

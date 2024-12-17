@@ -168,7 +168,7 @@ export type Company = {
   name: Scalars['String']['output'];
   recipientAccounts: Array<RecipientAccount>;
   taxId: Scalars['String']['output'];
-  /** 裝置量=該發電業簽署的合約裡面，所有裝置量的加總 */
+  /** 總裝置容量(MW), 所有合約的電廠裝置容量(kW)總和，除以 1000 轉換為 MW */
   totalVolume: Scalars['Float']['output'];
 };
 
@@ -199,7 +199,7 @@ export type CompanyContract = {
   /** 單一費率/個別費率 */
   rateType: RateType;
   startedAt: Scalars['DateTime']['output'];
-  /** 裝置量=該合約所有的電廠裡面的裝置量的加總 */
+  /** 合約裝置容量(MW), 該合約所有的電廠裝置容量(kW)總和，除以 1000 轉換為 MW */
   totalVolume: Scalars['Float']['output'];
   transferAt?: Maybe<Scalars['DateTime']['output']>;
   transferDoc?: Maybe<Scalars['String']['output']>;
@@ -431,6 +431,7 @@ export type DashboardCompany = {
   totalCompanies: Scalars['Int']['output'];
   /** 電廠數量 */
   totalPowerPlants: Scalars['Int']['output'];
+  /** 總裝置容量(MW): 所有合約的電廠裝置容量(kW)總和，除以 1000 轉換為 MW */
   totalVolume: Scalars['Float']['output'];
 };
 
@@ -930,9 +931,9 @@ export type PowerPlant = {
   price: Scalars['String']['output'];
   recipientAccount?: Maybe<PowerPlantRecipientAccount>;
   supplyVolume: Scalars['Float']['output'];
-  /** 供電容量比例 */
+  /** 供電容量比例(%) */
   transferRate: Scalars['Float']['output'];
-  /** 電廠裝置容量 */
+  /** 電廠裝置容量(kW) */
   volume: Scalars['Float']['output'];
 };
 
@@ -1174,7 +1175,7 @@ export type RemainingDemandFromCompanyContract = {
   /** 單一費率/個別費率 */
   rateType: RateType;
   startedAt: Scalars['DateTime']['output'];
-  /** 裝置量=該合約所有的電廠裡面的裝置量的加總 */
+  /** 合約裝置容量(MW), 該合約所有的電廠裝置容量(kW)總和，除以 1000 轉換為 MW */
   totalVolume: Scalars['Float']['output'];
   transferAt?: Maybe<Scalars['DateTime']['output']>;
   transferDoc?: Maybe<Scalars['String']['output']>;

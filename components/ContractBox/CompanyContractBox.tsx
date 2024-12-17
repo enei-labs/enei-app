@@ -19,11 +19,17 @@ function CompanyContractBox(props: CompanyContractBoxProps) {
   const router = useRouter();
   const isSingleRate = contract.rateType === RateType.Single;
 
+  /**
+   * 計算所有電廠的總供電量
+   * 單位換算: W (瓦) -> MW (百萬瓦)
+   * 換算比例: 1 MW = 1,000,000 W
+   */
   const totalSupplyVolume = useMemo(
     () =>
       (contract.powerPlants ?? []).reduce((acc, cur) => {
         return acc + cur.supplyVolume;
-      }, 0),
+      }, 0) /
+      (1000 * 1000),
     [contract.powerPlants]
   );
 
