@@ -177,7 +177,7 @@ export default function TPCBillDialog(props: TPCBillDialogProps) {
               return (
                 <Chip
                   key={item.powerPlant.id}
-                  label={`${item.powerPlant.name}(${item.powerPlant.number})`}
+                  label={item.powerPlant.name}
                   handleClick={() => selectPowerPlant(item.powerPlant.id)}
                 />
               );
@@ -196,7 +196,7 @@ export default function TPCBillDialog(props: TPCBillDialogProps) {
                         <InputText
                           {...field}
                           type="number"
-                          label={`${item.user.name}(kWh)`}
+                          label={`${item.user.name}(${item.userContract?.serialNumber})(kWh)`}
                         />
                       )}
                       rules={{ min: 0 }}
