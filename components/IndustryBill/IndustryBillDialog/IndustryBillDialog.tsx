@@ -15,6 +15,7 @@ import { ElectricNumbersField } from "@components/IndustryBill/IndustryBillDialo
 import { useCompanies } from "@utils/hooks/queries";
 import CreateIndustryBillBtn from "@components/IndustryBill/IndustryBillDialog/CreateIndustryBillBtn";
 import UpdateIndustryBillBtn from "@components/IndustryBill/IndustryBillDialog/UpdateIndustryBillBtn";
+import { useCallback } from "react";
 
 interface IndustryBillDialogProps {
   isOpenDialog: boolean;
@@ -48,7 +49,7 @@ const YesOrNoRadios = [
 function IndustryBillDialog(props: IndustryBillDialogProps) {
   const { isOpenDialog, onClose, currentModifyIndustryBill, variant } = props;
 
-  const { data, loading } = useCompanies();
+  const { data, loading, fetchMore } = useCompanies();
 
   const {
     control,
@@ -98,6 +99,28 @@ function IndustryBillDialog(props: IndustryBillDialogProps) {
 
   const industryId = watch("industryId");
 
+  const companiesLoadMore = useCallback(
+    () =>
+      fetchMore({
+        variables: {
+          offset: data?.companies.list.length,
+        },
+        updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult) return prev;
+          return {
+            companies: {
+              total: fetchMoreResult.companies.total,
+              list: [
+                ...(prev?.companies?.list ?? []),
+                ...fetchMoreResult.companies.list,
+              ],
+            },
+          };
+        },
+      }),
+    [data, fetchMore]
+  );
+
   const industryInformationConfig: FieldConfig[] = [
     {
       type: "TEXT",
@@ -118,6 +141,7 @@ function IndustryBillDialog(props: IndustryBillDialogProps) {
         })) ?? [],
       validated: textValidated,
       loading: loading,
+      fetchMoreData: companiesLoadMore,
     },
     {
       type: "NUMBER",

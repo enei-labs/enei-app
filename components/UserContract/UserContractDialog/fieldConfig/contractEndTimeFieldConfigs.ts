@@ -63,7 +63,7 @@ export const contractEndTimeFieldConfigs: FieldConfig[] = [
   {
     type: "NUMBER",
     name: "salesPeriod",
-    required: false,
+    required: true,
     label: "賣電年限",
   },
   {

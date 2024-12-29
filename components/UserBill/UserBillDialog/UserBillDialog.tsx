@@ -15,6 +15,7 @@ import { ElectricNumbersField } from "@components/UserBill/UserBillDialog/Electr
 import { useUsers } from "@utils/hooks/queries";
 import CreateUserBillBtn from "@components/UserBill/UserBillDialog/CreateUserBillBtn";
 import UpdateUserBillBtn from "@components/UserBill/UserBillDialog/UpdateUserBillBtn";
+import { useCallback } from "react";
 
 interface UserBillDialogProps {
   isOpenDialog: boolean;
@@ -48,7 +49,29 @@ const YesOrNoRadios = [
 function UserBillDialog(props: UserBillDialogProps) {
   const { isOpenDialog, onClose, currentModifyUserBill, variant } = props;
 
-  const { data, loading } = useUsers();
+  const { data, loading, fetchMore } = useUsers();
+
+  const usersLoadMore = useCallback(
+    () =>
+      fetchMore({
+        variables: {
+          offset: data?.users.list.length,
+        },
+        updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult) return prev;
+          return {
+            users: {
+              total: fetchMoreResult.users.total,
+              list: [
+                ...(prev?.users?.list ?? []),
+                ...fetchMoreResult.users.list,
+              ],
+            },
+          };
+        },
+      }),
+    [data, fetchMore]
+  );
 
   const {
     control,
@@ -118,6 +141,7 @@ function UserBillDialog(props: UserBillDialogProps) {
         })) ?? [],
       validated: textValidated,
       loading: loading,
+      fetchMoreData: usersLoadMore,
     },
     {
       type: "SINGLE_SELECT",
