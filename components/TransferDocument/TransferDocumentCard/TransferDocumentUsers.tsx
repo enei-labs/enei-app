@@ -7,10 +7,10 @@ import type {
 
 type TransferDocumentUsersItem = Pick<
   TransferDocumentUser,
-  "monthlyTransferDegree" | "yearlyTransferDegree"
+  "monthlyTransferDegree" | "yearlyTransferDegree" | "electricNumberInfo"
 > &
   Pick<User, "name"> &
-  Pick<UserContract, "purchaseDegree" | "serialNumber">;
+  Pick<UserContract, "purchaseDegree">;
 
 type TransferDocumentUsersItemView = {
   [key in keyof TransferDocumentUsersItem as `${key}Node`]: React.ReactNode;
@@ -21,7 +21,7 @@ const usersMappedLabels: Array<{
   label: string;
 }> = [
   {
-    key: "serialNumberNode",
+    key: "electricNumberInfoNode",
     label: "電號",
   },
   {
@@ -76,8 +76,8 @@ function TransferDocumentUsers(props: TransferDocumentUsersProps) {
           {el.userContract?.name}
         </Typography>
       ),
-      serialNumberNode: (
-        <Typography variant="body1">{el.userContract?.serialNumber}</Typography>
+      electricNumberInfoNode: (
+        <Typography variant="body1">{el.electricNumberInfo?.number}</Typography>
       ),
       purchaseDegreeNode: (
         <Typography variant="body1">

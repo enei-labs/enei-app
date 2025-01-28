@@ -89,7 +89,7 @@ export function ElectricNumbersField(props: ElectricNumbersFieldProps) {
                   {...field}
                   label={`採購電價（元/kWh）`}
                   value={
-                    priceMap.get(formData?.[fieldIndex]?.number?.value) ?? 0
+                    priceMap.get(formData?.[fieldIndex]?.price?.value) ?? 0
                   }
                 />
               );

@@ -81,11 +81,13 @@ export default function TPCBillDialog(props: TPCBillDialogProps) {
   const onCreateTPCBill = async (formData: FormData) => {
     const transferDegrees = Object.entries(formData.transferDegrees).map(
       ([key, value]) => {
-        const [userId, userContractId, powerPlantId] = key.split("_");
+        const [userId, userContractId, powerPlantId, electricNumber] =
+          key.split("_");
         return {
           userId,
           userContractId,
           powerPlantId,
+          electricNumber,
           degree: Number(value),
         };
       }
@@ -185,18 +187,18 @@ export default function TPCBillDialog(props: TPCBillDialogProps) {
           </Box>
           {transferDocumentData && selectedPowerPlant
             ? transferDocumentData.transferDocument.transferDocumentUsers.map(
-                (item, index) => {
+                (item) => {
                   if (!item.userContract) return null;
                   return (
                     <Controller
-                      key={`transferDegrees.${item.user.id}_${item.userContract.id}_${selectedPowerPlant}_${index}`}
+                      key={`transferDegrees.${item.user.id}_${item.userContract.id}_${selectedPowerPlant}_${item.electricNumberInfo?.number}`}
                       control={control}
-                      name={`transferDegrees.${item.user.id}_${item.userContract.id}_${selectedPowerPlant}_${index}`}
+                      name={`transferDegrees.${item.user.id}_${item.userContract.id}_${selectedPowerPlant}_${item.electricNumberInfo?.number}`}
                       render={({ field }) => (
                         <InputText
                           {...field}
                           type="number"
-                          label={`${item.user.name}(${item.userContract?.serialNumber})(kWh)`}
+                          label={`${item.user.name} | ${item.electricNumberInfo?.number}(kWh)`}
                         />
                       )}
                       rules={{ min: 0 }}
