@@ -1341,11 +1341,11 @@ export type TransferDocumentPowerPlant = {
 
 export type TransferDocumentUser = {
   __typename?: 'TransferDocumentUser';
-  electricNumberInfo: ElectricNumberInfo;
+  electricNumberInfo?: Maybe<ElectricNumberInfo>;
   expectedYearlyPurchaseDegree?: Maybe<Scalars['Int']['output']>;
   monthlyTransferDegree: Scalars['Int']['output'];
   user: User;
-  userContract: UserContract;
+  userContract?: Maybe<UserContract>;
   yearlyTransferDegree: Scalars['Int']['output'];
 };
 
