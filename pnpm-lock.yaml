@@ -14,7 +14,6 @@ specifiers:
   '@mui/material': ^5.15.9
   '@mui/x-date-pickers': ^6.19.4
   '@next/bundle-analyzer': ^14.1.0
-  '@next/font': 14.1.0
   '@svgr/webpack': ^8.1.0
   '@testing-library/react': ^14.2.1
   '@testing-library/react-hooks': ^8.0.1
@@ -63,7 +62,6 @@ dependencies:
   '@mui/lab': 5.0.0-alpha.165_vaeuufaorfas56hl7yievr5coq
   '@mui/material': 5.15.9_3cja3pxyovlzk5dexvnn2dz3ca
   '@mui/x-date-pickers': 6.19.4_gwu5rlh277hgj2pr53wcqeig4u
-  '@next/font': 14.1.0_next@14.1.0
   '@svgr/webpack': 8.1.0_typescript@5.3.3
   '@testing-library/react': 14.2.1_biqbaboplfbrettd7655fr4n2y
   '@testing-library/react-hooks': 8.0.1_jczjbtsmbzi7zofs22bstoer6y
@@ -3076,14 +3074,6 @@ packages:
     resolution: {integrity: sha512-x4FavbNEeXx/baD/zC/SdrvkjSby8nBn8KcCREqk6UuwvwoAPZmaV8TFCAuo/cpovBRTIY67mHhe86MQQm/68Q==}
     dependencies:
       glob: 10.3.10
-    dev: false
-
-  /@next/font/14.1.0_next@14.1.0:
-    resolution: {integrity: sha512-9hJ7bEYDI7UGQ1a++5zRD3F2VUu9NIaK5Hro/uL9bvFFs6b0Cy1OdLtLQHCIQE7sSMt8Rbu4VtcbnlubsseelA==}
-    peerDependencies:
-      next: '*'
-    dependencies:
-      next: 14.1.0_biqbaboplfbrettd7655fr4n2y
     dev: false
 
   /@next/swc-darwin-arm64/14.1.0:
