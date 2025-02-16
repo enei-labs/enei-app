@@ -143,7 +143,7 @@ export default function TPCBillDialog(props: TPCBillDialogProps) {
                   }}
                   options={
                     transferDocumentsData?.transferDocuments.list.map((o) => ({
-                      label: o.name,
+                      label: `${o.number ?? ""}(${o.name})`,
                       value: o.id,
                     })) ?? []
                   }
