@@ -10,5 +10,8 @@ export type FormData = {
     id: string;
     file: File;
   };
-  transferDegrees: Record<string, string>;
+  transferDegrees: Record<string, {
+    degree: number;
+    fee: string;
+  }>;
 }

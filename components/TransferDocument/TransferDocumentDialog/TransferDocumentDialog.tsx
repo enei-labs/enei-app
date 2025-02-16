@@ -506,7 +506,7 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
                         {...field}
                         onChange={(e, newValue) => {
                           field.onChange(e, newValue);
-                          if (e.value) {
+                          if (e?.value) {
                             getUserContracts({
                               variables: { userId: e.value },
                             });
