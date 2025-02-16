@@ -29,9 +29,11 @@ const IconBtn: React.FC<IconBtnProps> = ({
 }) => {
   return (
     <Tooltip title={tooltipText}>
-      <IconButton sx={style.wrapper} onClick={onClick} disabled={disabled}>
-        {icon}
-      </IconButton>
+      <span>
+        <IconButton sx={style.wrapper} onClick={onClick} disabled={disabled}>
+          {icon}
+        </IconButton>
+      </span>
     </Tooltip>
   );
 };
