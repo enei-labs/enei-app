@@ -331,6 +331,7 @@ export type CreateTpcBillInput = {
 export type CreateTransferDegreeInput = {
   degree: Scalars['Int']['input'];
   electricNumber: Scalars['String']['input'];
+  fee?: Scalars['Int']['input'];
   powerPlantId: Scalars['ID']['input'];
   userContractId: Scalars['ID']['input'];
   userId: Scalars['ID']['input'];
@@ -1298,6 +1299,7 @@ export type TransferDegree = {
   __typename?: 'TransferDegree';
   createdAt: Scalars['DateTime']['output'];
   degree: Scalars['Int']['output'];
+  fee?: Maybe<Scalars['Int']['output']>;
   id: Scalars['ID']['output'];
   powerPlant: PowerPlant;
   user: User;
