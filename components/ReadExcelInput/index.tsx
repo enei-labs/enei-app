@@ -109,7 +109,12 @@ export function ReadExcelInput() {
 
   return (
     <>
-      <input type="file" onChange={handleFileUpload} ref={fileInputRef} />
+      <input
+        type="file"
+        onChange={handleFileUpload}
+        ref={fileInputRef}
+        accept=".xlsx"
+      />
 
       {(userBillTemplatesData.length > 0 ||
         companyBillTemplatesData.length > 0) && (
