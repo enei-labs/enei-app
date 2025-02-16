@@ -39,7 +39,7 @@ const TPCPanel = (props: TPCPanelProps) => {
       },
     },
     {
-      header: "電費單下載",
+      header: "繳費單下載",
       render: (rowData) => {
         return (
           <IconBtn
