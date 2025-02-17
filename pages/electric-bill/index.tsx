@@ -27,6 +27,7 @@ import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalance
 import { IconBtn } from "@components/Button";
 import Link from "next/link";
 import { useSearch } from "@utils/hooks/useSearch";
+import ImportExportOutlinedIcon from "@mui/icons-material/ImportExportOutlined";
 
 const TransferDocumentDialog = dynamic(
   () =>
@@ -209,7 +210,7 @@ function ExportElectricBillPage() {
               <Box sx={{ display: "flex", columnGap: "12px" }}>
                 <Link href="/electric-bill/import">
                   <Button
-                    startIcon={<AddIcon />}
+                    startIcon={<ImportExportOutlinedIcon />}
                     onClick={() => setShowUserBillDialog(true)}
                   >
                     匯入電費單
