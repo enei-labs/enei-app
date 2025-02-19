@@ -1,17 +1,15 @@
-import React from "react";
 import { Typography } from "@mui/material";
 import { FieldsController } from "@components/Controller";
 import FieldConfig from "@core/types/fieldConfig";
+import { useFormContext } from "react-hook-form";
+import { FormData } from "@components/TPCBill/TPCBillDialog/FormData";
 
-interface DocumentFieldsProps {
-  control: any;
-  errors: any;
-}
+export default function DocumentFields() {
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext<FormData>();
 
-export default function DocumentFields({
-  control,
-  errors,
-}: DocumentFieldsProps) {
   const docConfigs: FieldConfig[] = [
     {
       type: "FILE",

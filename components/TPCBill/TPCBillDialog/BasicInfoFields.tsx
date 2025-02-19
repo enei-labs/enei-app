@@ -1,16 +1,13 @@
-import React from "react";
 import { FieldsController } from "@components/Controller";
 import FieldConfig, { textValidated } from "@core/types/fieldConfig";
+import { useFormContext } from "react-hook-form";
+import { FormData } from "@components/TPCBill/TPCBillDialog/FormData";
 
-interface BasicInfoFieldsProps {
-  control: any;
-  errors: any;
-}
-
-export default function BasicInfoFields({
-  control,
-  errors,
-}: BasicInfoFieldsProps) {
+export default function BasicInfoFields() {
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext<FormData>();
   const basicInfoConfigs: FieldConfig[] = [
     {
       type: "TEXT",

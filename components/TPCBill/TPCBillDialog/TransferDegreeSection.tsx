@@ -1,47 +1,54 @@
-import React from "react";
 import { Box, Typography } from "@mui/material";
-import { Controller } from "react-hook-form";
+import { Controller, useFormContext, useWatch } from "react-hook-form";
 import InputText from "@components/Input/InputText";
 import Chip from "@components/Chip";
-import { TransferDocument } from "@core/graphql/types";
-
-interface UserItem {
-  user: { id: string; name: string };
-  userContract: any;
-  electricNumberInfo?: { number?: string };
-}
-
-interface PowerPlantItem {
-  powerPlant: { id: string; name: string };
-}
+import { PowerPlant, TransferDocument } from "@core/graphql/types";
+import ImportTransferDegreeBtn from "@components/TPCBill/TPCBillDialog/ImportTransferDegreeBtn";
+import { FormData } from "@components/TPCBill/TPCBillDialog/FormData";
 
 interface TransferDocumentData {
   transferDocument: TransferDocument;
 }
 
 interface TransferDegreeSectionProps {
-  control: any;
   transferDocumentData?: TransferDocumentData;
-  selectedPowerPlant: string | null;
-  selectPowerPlant: (id: string) => void;
-  transferDocumentValue: {
-    label: string;
-    value: string;
-  } | null;
+  selectedPowerPlant: PowerPlant | null;
+  selectPowerPlant: (powerPlant: PowerPlant) => void;
 }
 
 export default function TransferDegreeSection({
-  control,
   transferDocumentData,
   selectedPowerPlant,
   selectPowerPlant,
-  transferDocumentValue,
 }: TransferDegreeSectionProps) {
+  const { control, setValue } = useFormContext<FormData>();
+  const transferDocumentValue = useWatch({ control, name: "transferDocument" });
+  const transferDegreesValue = useWatch({ control, name: "transferDegrees" });
+  const handleExcelParsed = (
+    data: Map<string, { degree: number; fee: number }>
+  ) => {
+    data.forEach((value, key) => {
+      const [userNumber, industryNumber] = key.split("-");
+      const fieldBase =
+        `transferDegrees.${industryNumber}_${userNumber}` as const;
+      setValue(fieldBase, {
+        ...transferDegreesValue?.[fieldBase],
+        degree: value.degree,
+        fee: value.fee.toString(),
+      });
+    });
+  };
+
+  console.log({ transferDegreesValue });
+
   return (
     <>
-      <Typography textAlign="left" variant="h5">
-        轉供度數
-      </Typography>
+      <Box display="flex" justifyContent="space-between">
+        <Typography textAlign="left" variant="h5">
+          轉供度數
+        </Typography>
+        <ImportTransferDegreeBtn onExcelParsed={handleExcelParsed} />
+      </Box>
       {transferDocumentData?.transferDocument.transferDocumentPowerPlants &&
       transferDocumentValue ? (
         <Box display="flex" flexDirection="column" rowGap="24px">
@@ -53,14 +60,15 @@ export default function TransferDegreeSection({
               <Chip
                 key={item.powerPlant.id}
                 label={item.powerPlant.name}
-                handleClick={() => selectPowerPlant(item.powerPlant.id)}
+                handleClick={() => selectPowerPlant(item.powerPlant)}
               />
             ))}
           </Box>
           {transferDocumentData.transferDocument.transferDocumentUsers.map(
             (item) => {
-              if (!item.userContract) return null;
-              const fieldBase = `transferDegrees.${item.user.id}_${item.userContract.id}_${selectedPowerPlant}_${item.electricNumberInfo?.number}`;
+              if (!item.userContract && !selectedPowerPlant) return null;
+              const fieldBase =
+                `transferDegrees.${selectedPowerPlant?.number}_${item.electricNumberInfo?.number}` as const;
               return (
                 <Box
                   key={fieldBase}
@@ -91,6 +99,24 @@ export default function TransferDegreeSection({
                     name={`${fieldBase}.fee`}
                     render={({ field }) => (
                       <InputText {...field} type="number" label="費用" />
+                    )}
+                  />
+                  <Controller
+                    control={control}
+                    name={`${fieldBase}.userContractId`}
+                    render={({ field }) => (
+                      <input
+                        type="hidden"
+                        {...field}
+                        value={item.userContract?.id}
+                      />
+                    )}
+                  />
+                  <Controller
+                    control={control}
+                    name={`${fieldBase}.userId`}
+                    render={({ field }) => (
+                      <input type="hidden" {...field} value={item.user?.id} />
                     )}
                   />
                 </Box>

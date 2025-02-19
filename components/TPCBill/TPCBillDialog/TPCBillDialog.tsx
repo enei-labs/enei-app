@@ -1,7 +1,7 @@
 import Dialog from "@components/Dialog";
 import { LoadingButton } from "@mui/lab";
 import { useState } from "react";
-import { useForm, useWatch } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import TransferDocumentSelector from "./TransferDocumentSelector";
 import BasicInfoFields from "./BasicInfoFields";
@@ -15,6 +15,7 @@ import {
 } from "@utils/hooks/queries";
 import { useCreateTPCBill } from "@utils/hooks";
 import { FormData } from "@components/TPCBill/TPCBillDialog/FormData";
+import { PowerPlant } from "@core/graphql/types";
 
 interface TPCBillDialogProps {
   isOpenDialog: boolean;
@@ -24,12 +25,8 @@ interface TPCBillDialogProps {
 
 export default function TPCBillDialog(props: TPCBillDialogProps) {
   const { isOpenDialog, onClose, variant } = props;
-  const {
-    control,
-    formState: { errors },
-    handleSubmit,
-    reset,
-  } = useForm<FormData>();
+  const methods = useForm<FormData>();
+  const { handleSubmit, reset } = methods;
 
   const { data: transferDocumentsData } = useTransferDocuments();
   const [createTPCBill, { loading: createLoading }] = useCreateTPCBill();
@@ -37,22 +34,26 @@ export default function TPCBillDialog(props: TPCBillDialogProps) {
     useLazyTransferDocument();
 
   /** component-state */
-  const [selectedPowerPlant, selectPowerPlant] = useState<string | null>(null);
-  const transferDocumentValue = useWatch({ control, name: "transferDocument" });
+  const [selectedPowerPlant, selectPowerPlant] = useState<PowerPlant | null>(
+    null
+  );
 
   const onCreateTPCBill = async (formData: FormData) => {
-    console.log({ formData });
+    if (!formData.billDoc?.id) {
+      /** @TODO 確認是否為必填 */
+      toast.error("請上傳台電繳費單");
+      return;
+    }
     const transferDegrees = Object.entries(formData.transferDegrees)
       .map(([key, value]) => {
-        const [userId, userContractId, powerPlantId, electricNumber] =
-          key.split("_");
+        const [powerPlantId, userContractId, electricNumber] = key.split("_");
         return {
-          userId,
           userContractId,
           powerPlantId,
           electricNumber,
           degree: Number(value.degree ?? 0),
           fee: Number(value.fee ?? 0),
+          userId: value.userId,
         };
       })
       .filter((t) => Boolean(t.powerPlantId) && t.powerPlantId !== "null");
@@ -60,7 +61,7 @@ export default function TPCBillDialog(props: TPCBillDialogProps) {
     await createTPCBill({
       variables: {
         input: {
-          billDoc: formData.billDoc.id,
+          billDoc: formData.billDoc?.id,
           billNumber: formData.billNumber,
           billReceivedDate: formData.billReceivedDate,
           billingDate: formData.billingDate,
@@ -77,10 +78,9 @@ export default function TPCBillDialog(props: TPCBillDialogProps) {
 
   return (
     <Dialog open={isOpenDialog} onClose={onClose}>
-      <>
+      <FormProvider {...methods}>
         <TPCBillHeader variant={variant} onClose={onClose} />
         <TransferDocumentSelector
-          control={control}
           getTransferDocument={getTransferDocument}
           transferDocumentsData={transferDocumentsData}
           reset={() => {
@@ -88,14 +88,12 @@ export default function TPCBillDialog(props: TPCBillDialogProps) {
             selectPowerPlant(null);
           }}
         />
-        <BasicInfoFields control={control} errors={errors} />
-        <DocumentFields control={control} errors={errors} />
+        <BasicInfoFields />
+        <DocumentFields />
         <TransferDegreeSection
-          control={control}
           transferDocumentData={transferDocumentData}
           selectedPowerPlant={selectedPowerPlant}
           selectPowerPlant={selectPowerPlant}
-          transferDocumentValue={transferDocumentValue}
         />
         <LoadingButton
           loading={createLoading}
@@ -104,7 +102,7 @@ export default function TPCBillDialog(props: TPCBillDialogProps) {
         >
           儲存
         </LoadingButton>
-      </>
+      </FormProvider>
     </Dialog>
   );
 }

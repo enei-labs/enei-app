@@ -1,10 +1,10 @@
 import React from "react";
-import { Controller } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import { Typography } from "@mui/material";
 import { InputAutocomplete } from "@components/Input";
+import { FormData } from "@components/TPCBill/TPCBillDialog/FormData";
 
 interface TransferDocumentSelectorProps {
-  control: any; // 可根據實際型別調整
   getTransferDocument: (options: any) => void;
   transferDocumentsData?: {
     transferDocuments: {
@@ -15,11 +15,11 @@ interface TransferDocumentSelectorProps {
 }
 
 export default function TransferDocumentSelector({
-  control,
   getTransferDocument,
   transferDocumentsData,
   reset,
 }: TransferDocumentSelectorProps) {
+  const { control } = useFormContext<FormData>();
   return (
     <>
       <Typography variant="h5" textAlign="left">
