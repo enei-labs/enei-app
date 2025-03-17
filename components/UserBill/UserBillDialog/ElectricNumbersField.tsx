@@ -56,52 +56,63 @@ export function ElectricNumbersField(props: ElectricNumbersFieldProps) {
 
   return (
     <>
-      {fields.map((field, fieldIndex) => (
-        <Box display={"flex"} key={field.id} columnGap="12px">
-          <Controller
-            control={control}
-            name={`${rootField.name}.${fieldIndex}.number`}
-            render={({ field }) => {
-              return (
-                <InputAutocomplete
-                  sx={{ width: "600px" }}
-                  {...field}
-                  onChange={(e) => field.onChange(e)}
-                  options={
-                    flattenElectricNumberOptions.map((o) => ({
-                      label: o.number,
-                      value: o.number,
-                    })) ?? []
-                  }
-                  label={`用戶電號${fieldIndex + 1}`}
-                  placeholder={"請填入"}
-                  required
-                />
-              );
-            }}
-          />
-          <Controller
-            control={control}
-            name={`${rootField.name}.${fieldIndex}.price`}
-            render={({ field }) => {
-              return (
-                <InputText
-                  disabled
-                  {...field}
-                  label={`採購電價（元/kWh）`}
-                  value={
-                    priceMap.get(formData?.[fieldIndex]?.number?.value) ?? 0
-                  }
-                />
-              );
-            }}
-          />
-          <IconBtn
-            icon={<CloseIcon />}
-            onClick={() => setDeleteElectricNumberIndex(fieldIndex)}
-          />
-        </Box>
-      ))}
+      {fields.map((field, fieldIndex) => {
+        const selectedNumbers =
+          formData
+            ?.filter(
+              (item: any, index: number) =>
+                index !== fieldIndex && item?.number?.value
+            )
+            .map((item: any) => item.number.value) || [];
+
+        return (
+          <Box display={"flex"} key={field.id} columnGap="12px">
+            <Controller
+              control={control}
+              name={`${rootField.name}.${fieldIndex}.number`}
+              render={({ field }) => {
+                return (
+                  <InputAutocomplete
+                    sx={{ width: "600px" }}
+                    {...field}
+                    onChange={(e) => field.onChange(e)}
+                    options={
+                      flattenElectricNumberOptions.map((o) => ({
+                        label: o.number,
+                        value: o.number,
+                        disabled: selectedNumbers.includes(o.number),
+                      })) ?? []
+                    }
+                    label={`用戶電號${fieldIndex + 1}`}
+                    placeholder={"請填入"}
+                    required
+                  />
+                );
+              }}
+            />
+            <Controller
+              control={control}
+              name={`${rootField.name}.${fieldIndex}.price`}
+              render={({ field }) => {
+                return (
+                  <InputText
+                    disabled
+                    {...field}
+                    label={`採購電價（元/kWh）`}
+                    value={
+                      priceMap.get(formData?.[fieldIndex]?.number?.value) ?? 0
+                    }
+                  />
+                );
+              }}
+            />
+            <IconBtn
+              icon={<CloseIcon />}
+              onClick={() => setDeleteElectricNumberIndex(fieldIndex)}
+            />
+          </Box>
+        );
+      })}
 
       {/* 新增用戶電號欄位 */}
       <Grid
