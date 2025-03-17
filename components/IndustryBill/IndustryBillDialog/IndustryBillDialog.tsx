@@ -78,7 +78,6 @@ function IndustryBillDialog(props: IndustryBillDialogProps) {
           credentialInspectionFee:
             currentModifyIndustryBill.credentialInspectionFee,
           credentialServiceFee: currentModifyIndustryBill.credentialServiceFee,
-          noticeForTheBuilding: currentModifyIndustryBill.noticeForTheBuilding,
           noticeForTPCBill: currentModifyIndustryBill.noticeForTPCBill,
           electricNumberInfos: (
             currentModifyIndustryBill.electricNumberInfos ?? []
@@ -215,20 +214,6 @@ function IndustryBillDialog(props: IndustryBillDialogProps) {
                 {...field}
                 label="憑證服務費"
                 radios={ChargeTypeRadios}
-              />
-            );
-          }}
-        />
-
-        <Controller
-          control={control}
-          name={"noticeForTheBuilding"}
-          render={({ field }) => {
-            return (
-              <RadioGroup
-                {...field}
-                label="是否需要大樓通知單"
-                radios={YesOrNoRadios}
               />
             );
           }}

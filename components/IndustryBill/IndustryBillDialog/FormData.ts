@@ -18,7 +18,6 @@ export type FormData = {
   transportationFee: IndustryBillChargeType;
   credentialInspectionFee: IndustryBillChargeType;
   credentialServiceFee: IndustryBillChargeType;
-  noticeForTheBuilding: boolean;
   noticeForTPCBill: boolean;
   electricNumberInfos: {
     number: {

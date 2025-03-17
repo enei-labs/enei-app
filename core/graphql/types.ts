@@ -286,7 +286,6 @@ export type CreateIndustryBillInput = {
   industryId: Scalars['String']['input'];
   name: Scalars['String']['input'];
   noticeForTPCBill: Scalars['Boolean']['input'];
-  noticeForTheBuilding: Scalars['Boolean']['input'];
   /** 用戶繳費期限（收到繳費通知單後天數） */
   paymentDeadline: Scalars['Float']['input'];
   recipientAccount: RecipientAccountInput;
@@ -379,7 +378,6 @@ export type CreateUserBillInput = {
   estimatedBillDeliverDate: Scalars['Float']['input'];
   name: Scalars['String']['input'];
   noticeForTPCBill: Scalars['Boolean']['input'];
-  noticeForTheBuilding: Scalars['Boolean']['input'];
   /** 用戶繳費期限（收到繳費通知單後天數） */
   paymentDeadline: Scalars['Float']['input'];
   recipientAccount: RecipientAccountInput;
@@ -578,7 +576,6 @@ export type IndustryBill = {
   industry: Company;
   name: Scalars['String']['output'];
   noticeForTPCBill: Scalars['Boolean']['output'];
-  noticeForTheBuilding: Scalars['Boolean']['output'];
   /** 發電業繳費期限（收到繳費通知單後天數） */
   paymentDeadline: Scalars['Int']['output'];
   recipientAccount: IndustryBillRecipientAccount;
@@ -1402,7 +1399,6 @@ export type UpdateIndustryBillInput = {
   industryId: Scalars['String']['input'];
   name: Scalars['String']['input'];
   noticeForTPCBill: Scalars['Boolean']['input'];
-  noticeForTheBuilding: Scalars['Boolean']['input'];
   /** 用戶繳費期限（收到繳費通知單後天數） */
   paymentDeadline: Scalars['Float']['input'];
   recipientAccount: RecipientAccountInput;
@@ -1454,7 +1450,6 @@ export type UpdateUserBillInput = {
   id: Scalars['ID']['input'];
   name: Scalars['String']['input'];
   noticeForTPCBill: Scalars['Boolean']['input'];
-  noticeForTheBuilding: Scalars['Boolean']['input'];
   /** 用戶繳費期限（收到繳費通知單後天數） */
   paymentDeadline: Scalars['Float']['input'];
   recipientAccount: RecipientAccountInput;
@@ -1512,7 +1507,6 @@ export type UserBill = {
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
   noticeForTPCBill: Scalars['Boolean']['output'];
-  noticeForTheBuilding: Scalars['Boolean']['output'];
   /** 用戶繳費期限（收到繳費通知單後天數） */
   paymentDeadline: Scalars['Int']['output'];
   recipientAccount: UserBillRecipientAccount;

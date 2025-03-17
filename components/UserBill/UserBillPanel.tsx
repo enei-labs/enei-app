@@ -62,12 +62,6 @@ const UserBillPanel = (props: UserBillPanelProps) => {
       },
     },
     {
-      header: "本月使用度數",
-      // render: (rowData) => {
-      //   return <Box>{addUp(rowData.thisYearTransferRecords)}</Box>;
-      // },
-    },
-    {
       header: "電費單下載",
       render: (rowData) => {
         return (
@@ -80,10 +74,6 @@ const UserBillPanel = (props: UserBillPanelProps) => {
           />
         );
       },
-    },
-    {
-      header: "大樓電費單下載",
-      /** @TODO */
     },
     {
       header: "修改 / 刪除",

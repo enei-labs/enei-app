@@ -20,7 +20,6 @@ export const USER_BILL_FIELDS = gql`
     transportationFee
     credentialInspectionFee
     credentialServiceFee
-    noticeForTheBuilding
     noticeForTPCBill
     contactName
     contactPhone

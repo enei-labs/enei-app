@@ -100,7 +100,6 @@ function UserBillDialog(props: UserBillDialogProps) {
           credentialInspectionFee:
             currentModifyUserBill.credentialInspectionFee,
           credentialServiceFee: currentModifyUserBill.credentialServiceFee,
-          noticeForTheBuilding: currentModifyUserBill.noticeForTheBuilding,
           noticeForTPCBill: currentModifyUserBill.noticeForTPCBill,
           electricNumberInfos: (
             currentModifyUserBill.electricNumberInfos ?? []
@@ -233,20 +232,6 @@ function UserBillDialog(props: UserBillDialogProps) {
                 {...field}
                 label="憑證服務費"
                 radios={ChargeTypeRadios}
-              />
-            );
-          }}
-        />
-
-        <Controller
-          control={control}
-          name={"noticeForTheBuilding"}
-          render={({ field }) => {
-            return (
-              <RadioGroup
-                {...field}
-                label="是否需要大樓通知單"
-                radios={YesOrNoRadios}
               />
             );
           }}

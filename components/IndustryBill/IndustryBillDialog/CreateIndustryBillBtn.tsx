@@ -41,8 +41,6 @@ const CreateIndustryBillBtn = (props: CreateIndustryBillBtnProps) => {
           transportationFee: formData.transportationFee,
           credentialInspectionFee: formData.credentialInspectionFee,
           credentialServiceFee: formData.credentialServiceFee,
-          noticeForTheBuilding:
-            (formData.noticeForTheBuilding as unknown) === "true",
           noticeForTPCBill: (formData.noticeForTPCBill as unknown) === "true",
           contactName: formData.contactName,
           contactPhone: formData.contactPhone,

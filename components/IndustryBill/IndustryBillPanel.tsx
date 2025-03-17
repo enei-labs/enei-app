@@ -30,7 +30,8 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
   const { industryBills, loading = false, refetchFn, onAction, fee } = props;
   const { me } = useAuth();
   const router = useRouter();
-  const [currentIndustryBill, setCurrentIndustryBill] = useState<IndustryBill | null>(null);
+  const [currentIndustryBill, setCurrentIndustryBill] =
+    useState<IndustryBill | null>(null);
   const [isOpenDialog, setOpenDownloadDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
@@ -62,12 +63,6 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
       },
     },
     {
-      header: "本月使用度數",
-      // render: (rowData) => {
-      //   return <Box>{addUp(rowData.thisYearTransferRecords)}</Box>;
-      // },
-    },
-    {
       header: "電費單下載",
       render: (rowData) => {
         return (
@@ -80,10 +75,6 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
           />
         );
       },
-    },
-    {
-      header: "大樓電費單下載",
-      /** @TODO */
     },
     {
       header: "修改 / 刪除",
