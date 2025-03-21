@@ -1,5 +1,5 @@
 import { Table } from "@components/Table";
-import { Fee, Role, IndustryBill, IndustryBillPage } from "@core/graphql/types";
+import { Fee, Role, IndustryBillConfig } from "@core/graphql/types";
 import { Config, Page } from "../Table/Table";
 import BorderColorOutlined from "@mui/icons-material/BorderColorOutlined";
 import DeleteOutlined from "@mui/icons-material/DeleteOutlined";
@@ -7,40 +7,37 @@ import { IconBtn } from "@components/Button";
 import { useAuth } from "@core/context/auth";
 import { Box } from "@mui/material";
 import { useRouter } from "next/router";
-import { ActionTypeEnum } from "@core/types/actionTypeEnum";
 import { useState } from "react";
-import { IndustryBillDownloadDialog } from "@components/IndustryBill/IndustryBillDownloadDialog";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import dynamic from "next/dynamic";
-import { useRemoveIndustryBill } from "@utils/hooks/mutations/useRemoveIndustryBill";
 import { toast } from "react-toastify";
-import IndustryBillDialog from "@components/IndustryBill/IndustryBillDialog/IndustryBillDialog";
-
+import IndustryBillConfigDialog from "@components/IndustryBill/IndustryBillConfigDialog/IndustryBillConfigDialog";
+import { useRemoveIndustryBillConfig } from "@utils/hooks/mutations/useRemoveIndustryBillConfig";
+import { useIndustryBillConfigs } from "@utils/hooks/queries";
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
-interface IndustryBillPanelProps {
-  industryBills?: IndustryBillPage;
-  loading?: boolean;
-  refetchFn: (industryBill: Page) => void;
-  onAction: (action: ActionTypeEnum, industryBill?: IndustryBill) => void;
+interface IndustryBillConfigPanelProps {
   fee: Fee;
 }
 
-const IndustryBillPanel = (props: IndustryBillPanelProps) => {
-  const { industryBills, loading = false, refetchFn, onAction, fee } = props;
+const IndustryBillConfigPanel = (props: IndustryBillConfigPanelProps) => {
+  const { fee } = props;
   const { me } = useAuth();
   const router = useRouter();
-  const [currentIndustryBill, setCurrentIndustryBill] =
-    useState<IndustryBill | null>(null);
+
+  const { data, loading, refetch } = useIndustryBillConfigs();
+
+  const [currentIndustryBillConfig, setCurrentIndustryBillConfig] =
+    useState<IndustryBillConfig | null>(null);
   const [isOpenDialog, setOpenDownloadDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
 
-  const [removeIndustryBill] = useRemoveIndustryBill();
+  const [removeIndustryBillConfig] = useRemoveIndustryBillConfig();
 
-  const configs: Config<IndustryBill>[] = [
+  const configs: Config<IndustryBillConfig>[] = [
     {
-      header: "電費單名稱",
+      header: "電費單組合名稱",
       accessor: "name",
       render: (rowData) => (
         <Box
@@ -70,7 +67,7 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
             icon={<FileDownloadOutlinedIcon />}
             onClick={() => {
               setOpenDownloadDialog(true);
-              setCurrentIndustryBill(rowData);
+              setCurrentIndustryBillConfig(rowData);
             }}
           />
         );
@@ -78,13 +75,13 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
     },
     {
       header: "修改 / 刪除",
-      render: (industryBill) => (
+      render: (industryBillConfig) => (
         <>
           {/* 修改 */}
           <IconBtn
             icon={<BorderColorOutlined />}
             onClick={() => {
-              setCurrentIndustryBill(industryBill);
+              setCurrentIndustryBillConfig(industryBillConfig);
               setOpenUpdateDialog(true);
             }}
           />
@@ -94,7 +91,7 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
             disabled={!me || me.role === Role.User}
             icon={<DeleteOutlined />}
             onClick={() => {
-              setCurrentIndustryBill(industryBill);
+              setCurrentIndustryBillConfig(industryBillConfig);
               setOpenDeleteDialog(true);
             }}
           />
@@ -107,38 +104,43 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
     <>
       <Table
         configs={configs}
-        list={industryBills?.list}
-        total={industryBills?.total}
+        list={data?.industryBillConfigs?.list}
+        total={data?.industryBillConfigs?.total}
         loading={loading}
-        onPageChange={refetchFn}
+        onPageChange={(page: any) =>
+          refetch({
+            limit: page.rows,
+            offset: page.rows * page.index,
+          })
+        }
       />
 
-      {currentIndustryBill && currentIndustryBill ? (
+      {/* {currentIndustryBillConfig && currentIndustryBillConfig ? (
         <IndustryBillDownloadDialog
           fee={fee}
-          industryBill={currentIndustryBill}
+          industryBillConfig={currentIndustryBillConfig}
           isOpenDialog={isOpenDialog}
           onClose={() => setOpenDownloadDialog(false)}
         />
-      ) : null}
+      ) : null} */}
 
-      {openUpdateDialog && currentIndustryBill ? (
-        <IndustryBillDialog
+      {openUpdateDialog && currentIndustryBillConfig ? (
+        <IndustryBillConfigDialog
           isOpenDialog={openUpdateDialog}
           onClose={() => setOpenUpdateDialog(false)}
           variant="edit"
-          currentModifyIndustryBill={currentIndustryBill}
+          currentModifyIndustryBillConfig={currentIndustryBillConfig}
         />
       ) : null}
 
-      {openDeleteDialog && currentIndustryBill ? (
+      {openDeleteDialog && currentIndustryBillConfig ? (
         <DialogAlert
           open={openDeleteDialog}
-          title={"刪除電費單"}
-          content={"是否確認要刪除電費單？"}
+          title={"刪除電費單組合"}
+          content={"是否確認要刪除電費單組合？"}
           onConfirm={() => {
-            removeIndustryBill({
-              variables: { id: currentIndustryBill.id },
+            removeIndustryBillConfig({
+              variables: { id: currentIndustryBillConfig.id },
               onCompleted: () => {
                 toast.success("刪除成功");
                 setOpenDeleteDialog(false);
@@ -152,4 +154,4 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
   );
 };
 
-export default IndustryBillPanel;
+export default IndustryBillConfigPanel;

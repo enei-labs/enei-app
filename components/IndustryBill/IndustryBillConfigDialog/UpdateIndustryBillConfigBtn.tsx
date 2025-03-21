@@ -3,35 +3,39 @@ import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { UseFormHandleSubmit } from "react-hook-form";
 import { FormData } from "./FormData";
 import { toast } from "react-toastify";
-import { useUpdateUserBill } from "@utils/hooks";
+import { useUpdateIndustryBillConfig } from "@utils/hooks";
 
-interface UpdateUserBillBtnProps {
+interface UpdateIndustryBillBtnProps {
   onClose: VoidFunction;
   handleSubmit: UseFormHandleSubmit<FormData>;
-  userBillId: string;
+  industryBillId: string;
 }
 
-const UpdateUserBillBtn = (props: UpdateUserBillBtnProps) => {
-  const { userBillId, onClose, handleSubmit } = props;
+const UpdateIndustryBillBtn = (props: UpdateIndustryBillBtnProps) => {
+  const { industryBillId, onClose, handleSubmit } = props;
 
-  const [updateUserBill, { loading }] = useUpdateUserBill();
+  const [updateIndustryBillConfig, { loading }] = useUpdateIndustryBillConfig();
 
-  /** 更新用戶電費單 mutation */
-  const onUpdateUserBill = async (formData: FormData) => {
-    await updateUserBill({
+  /** 更新用戶電費單組合 mutation */
+  const onUpdateIndustryBill = async (formData: FormData) => {
+    await updateIndustryBillConfig({
       variables: {
         input: {
-          id: userBillId,
+          id: industryBillId,
           name: formData.name,
-          userId: formData.userId.value,
+          industryId: formData.industryId.value,
           /** 預計電費單寄出期限（收到繳費通知單後天數 */
           estimatedBillDeliverDate: Number(formData.estimatedBillDeliverDate),
           /** 用戶繳費期限（收到繳費通知單後天數） */
           paymentDeadline: Number(formData.paymentDeadline),
           /** 收款帳戶 */
+          // recipientAccount: {
+          //   bankCode: formData.recipientAccount.value.bankCode,
+          //   account: formData.recipientAccount.value.account,
+          // },
           recipientAccount: {
-            bankCode: formData.recipientAccount.value.bankCode,
-            account: formData.recipientAccount.value.account,
+            bankCode: "",
+            account: "",
           },
           electricNumbers: formData.electricNumberInfos.map(
             (i) => i.number.value
@@ -47,7 +51,7 @@ const UpdateUserBillBtn = (props: UpdateUserBillBtnProps) => {
         },
       },
       onCompleted: (data) => {
-        if (data.updateUserBill.__typename === "UserBill") {
+        if (data.updateIndustryBillConfig.__typename === "IndustryBillConfig") {
           toast.success("更新成功");
           onClose();
         }
@@ -59,11 +63,11 @@ const UpdateUserBillBtn = (props: UpdateUserBillBtnProps) => {
     <LoadingButton
       loading={loading}
       startIcon={<AddIcon />}
-      onClick={handleSubmit(onUpdateUserBill)}
+      onClick={handleSubmit(onUpdateIndustryBill)}
     >
       儲存
     </LoadingButton>
   );
 };
 
-export default UpdateUserBillBtn;
+export default UpdateIndustryBillBtn;

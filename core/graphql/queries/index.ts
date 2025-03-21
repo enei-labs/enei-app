@@ -17,3 +17,7 @@ export * from './userBills';
 export * from './fee';
 export * from './industryBill';
 export * from './industryBills';
+export * from './userBillConfig';
+export * from './userBillConfigs';
+export * from './industryBillConfig';
+export * from './industryBillConfigs';

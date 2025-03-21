@@ -1,23 +1,23 @@
-import { IndustryBillChargeType } from "@core/graphql/types";
+import { UserBillConfigChargeType } from "@core/graphql/types";
 
 export type FormData = {
   name: string;
-  industryId: {
+  userId: {
     label: string,
     value: string;
   };
-  // recipientAccount: {
-  //   label: string;
-  //   value: {
-  //     bankCode: string;
-  //     account: string;
-  //   }
-  // };
+  recipientAccount: {
+    label: string;
+    value: {
+      bankCode: string;
+      account: string;
+    }
+  };
   estimatedBillDeliverDate: number;
   paymentDeadline: number;
-  transportationFee: IndustryBillChargeType;
-  credentialInspectionFee: IndustryBillChargeType;
-  credentialServiceFee: IndustryBillChargeType;
+  transportationFee: UserBillConfigChargeType;
+  credentialInspectionFee: UserBillConfigChargeType;
+  credentialServiceFee: UserBillConfigChargeType;
   noticeForTPCBill: boolean;
   electricNumberInfos: {
     number: {

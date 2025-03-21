@@ -1,37 +1,37 @@
 import { Grid, Typography } from "@mui/material";
 import { IconBtn } from "@components/Button";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import { UserBill } from "@core/graphql/types";
+import { IndustryBillConfig } from "@core/graphql/types";
 import { FieldsController } from "@components/Controller";
 import { FieldConfig } from "@core/types";
 import { textValidated } from "@core/types/fieldConfig";
 import Dialog from "@components/Dialog";
-import { FormData } from "./FormData";
+import { FormData } from "@components/IndustryBill/IndustryBillConfigDialog/FormData";
 import { Controller, useForm } from "react-hook-form";
 import { InputText } from "@components/Input";
 import RadioGroup from "@components/RadioGroup";
-import { UserBillChargeType } from "@core/graphql/types";
-import { ElectricNumbersField } from "@components/UserBill/UserBillDialog/ElectricNumbersField";
-import { useUsers } from "@utils/hooks/queries";
-import CreateUserBillBtn from "@components/UserBill/UserBillDialog/CreateUserBillBtn";
-import UpdateUserBillBtn from "@components/UserBill/UserBillDialog/UpdateUserBillBtn";
+import { IndustryBillConfigChargeType } from "@core/graphql/types";
+import { ElectricNumbersField } from "@components/IndustryBill/IndustryBillConfigDialog/ElectricNumbersField";
+import { useCompanies } from "@utils/hooks/queries";
+import CreateIndustryBillBtn from "@components/IndustryBill/IndustryBillConfigDialog/CreateIndustryBillConfigBtn";
+import UpdateIndustryBillBtn from "@components/IndustryBill/IndustryBillConfigDialog/UpdateIndustryBillConfigBtn";
 import { useCallback } from "react";
 
-interface UserBillDialogProps {
+interface IndustryBillDialogProps {
   isOpenDialog: boolean;
-  currentModifyUserBill?: UserBill;
+  currentModifyIndustryBillConfig?: IndustryBillConfig;
   variant: "edit" | "create";
   onClose: VoidFunction;
 }
 
 const ChargeTypeRadios = [
   {
-    label: "向用戶收取",
-    value: UserBillChargeType.User,
+    label: "向發電業收取",
+    value: IndustryBillConfigChargeType.Industry,
   },
   {
     label: "自行負擔",
-    value: UserBillChargeType.Self,
+    value: IndustryBillConfigChargeType.Self,
   },
 ];
 
@@ -46,25 +46,74 @@ const YesOrNoRadios = [
   },
 ];
 
-function UserBillDialog(props: UserBillDialogProps) {
-  const { isOpenDialog, onClose, currentModifyUserBill, variant } = props;
+function IndustryBillConfigDialog(props: IndustryBillDialogProps) {
+  const { isOpenDialog, onClose, currentModifyIndustryBillConfig, variant } =
+    props;
 
-  const { data, loading, fetchMore } = useUsers();
+  const { data, loading, fetchMore } = useCompanies();
 
-  const usersLoadMore = useCallback(
+  const {
+    control,
+    formState: { errors },
+    handleSubmit,
+    watch,
+  } = useForm<FormData>({
+    defaultValues: currentModifyIndustryBillConfig
+      ? {
+          name: currentModifyIndustryBillConfig.name,
+          industryId: {
+            label: currentModifyIndustryBillConfig.industry.contactEmail,
+            value: currentModifyIndustryBillConfig.industry.id,
+          },
+          // recipientAccount: {
+          //   label: `(${currentModifyIndustryBillConfig.recipientAccount.bankCode}) ${currentModifyIndustryBillConfig.recipientAccount.account}`,
+          //   value: {
+          //     bankCode: currentModifyIndustryBillConfig.recipientAccount.bankCode,
+          //     account: currentModifyIndustryBillConfig.recipientAccount.account,
+          //   },
+          // },
+          estimatedBillDeliverDate:
+            currentModifyIndustryBillConfig.estimatedBillDeliverDate,
+          paymentDeadline: currentModifyIndustryBillConfig.paymentDeadline,
+          transportationFee: currentModifyIndustryBillConfig.transportationFee,
+          credentialInspectionFee:
+            currentModifyIndustryBillConfig.credentialInspectionFee,
+          credentialServiceFee:
+            currentModifyIndustryBillConfig.credentialServiceFee,
+          noticeForTPCBill: currentModifyIndustryBillConfig.noticeForTPCBill,
+          electricNumberInfos: (
+            currentModifyIndustryBillConfig.electricNumberInfos ?? []
+          ).map((info) => ({
+            number: {
+              label: info.number,
+              value: info.number,
+            },
+            price: info.price,
+          })),
+          contactName: currentModifyIndustryBillConfig.contactName,
+          contactEmail: currentModifyIndustryBillConfig.contactEmail,
+          contactPhone: currentModifyIndustryBillConfig.contactPhone,
+          address: currentModifyIndustryBillConfig.address,
+        }
+      : {},
+  });
+
+  const industryId = watch("industryId");
+
+  const companiesLoadMore = useCallback(
     () =>
       fetchMore({
         variables: {
-          offset: data?.users.list.length,
+          offset: data?.companies.list.length,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
           if (!fetchMoreResult) return prev;
           return {
-            users: {
-              total: fetchMoreResult.users.total,
+            companies: {
+              total: fetchMoreResult.companies.total,
               list: [
-                ...(prev?.users?.list ?? []),
-                ...fetchMoreResult.users.list,
+                ...(prev?.companies?.list ?? []),
+                ...fetchMoreResult.companies.list,
               ],
             },
           };
@@ -73,92 +122,27 @@ function UserBillDialog(props: UserBillDialogProps) {
     [data, fetchMore]
   );
 
-  const {
-    control,
-    formState: { errors },
-    handleSubmit,
-    watch,
-  } = useForm<FormData>({
-    defaultValues: currentModifyUserBill
-      ? {
-          name: currentModifyUserBill.name,
-          userId: {
-            label: currentModifyUserBill.user.contactEmail,
-            value: currentModifyUserBill.user.id,
-          },
-          recipientAccount: {
-            label: `(${currentModifyUserBill.recipientAccount.bankCode}) ${currentModifyUserBill.recipientAccount.account}`,
-            value: {
-              bankCode: currentModifyUserBill.recipientAccount.bankCode,
-              account: currentModifyUserBill.recipientAccount.account,
-            },
-          },
-          estimatedBillDeliverDate:
-            currentModifyUserBill.estimatedBillDeliverDate,
-          paymentDeadline: currentModifyUserBill.paymentDeadline,
-          transportationFee: currentModifyUserBill.transportationFee,
-          credentialInspectionFee:
-            currentModifyUserBill.credentialInspectionFee,
-          credentialServiceFee: currentModifyUserBill.credentialServiceFee,
-          noticeForTPCBill: currentModifyUserBill.noticeForTPCBill,
-          electricNumberInfos: (
-            currentModifyUserBill.electricNumberInfos ?? []
-          ).map((info) => ({
-            number: {
-              label: info.number,
-              value: info.number,
-            },
-            price: info.price,
-          })),
-          contactName: currentModifyUserBill.contactName,
-          contactEmail: currentModifyUserBill.contactEmail,
-          contactPhone: currentModifyUserBill.contactPhone,
-          address: currentModifyUserBill.address,
-        }
-      : {},
-  });
-
-  const userId = watch("userId");
-
-  const userInformationConfig: FieldConfig[] = [
+  const industryInformationConfig: FieldConfig[] = [
     {
       type: "TEXT",
       name: "name",
-      label: "電費單名稱",
+      label: "電費單組合名稱",
       placeholder: "請填入",
       validated: textValidated,
     },
     {
       type: "SINGLE_SELECT",
-      name: "userId",
-      label: "用戶",
+      name: "industryId",
+      label: "發電業",
       placeholder: "請填入",
       options:
-        data?.users.list.map((user) => ({
-          label: `${user.contactEmail}(${user.name})`,
-          value: user.id,
+        data?.companies.list.map((company) => ({
+          label: `${company.contactEmail}(${company.name})`,
+          value: company.id,
         })) ?? [],
       validated: textValidated,
       loading: loading,
-      fetchMoreData: usersLoadMore,
-    },
-    {
-      type: "SINGLE_SELECT",
-      name: "recipientAccount",
-      label: "收款帳戶",
-      placeholder: "請填入",
-      validated: textValidated,
-      options:
-        data?.users.list
-          .find((user) => userId?.value === user.id)
-          ?.bankAccounts.map((b) => ({
-            label: `${b.bankCode}(${b.bankName}) ${b.account}`,
-            value: {
-              bankCode: b.bankCode,
-              account: b.account,
-            },
-          })) ?? [],
-      loading: loading,
+      fetchMoreData: companiesLoadMore,
     },
     {
       type: "NUMBER",
@@ -170,7 +154,7 @@ function UserBillDialog(props: UserBillDialogProps) {
     {
       type: "NUMBER",
       name: "paymentDeadline",
-      label: "用戶繳費期限（收到繳費通知單後天數）",
+      label: "售電業繳費期限（收到繳費通知單後天數）",
       placeholder: "請填入",
       validated: textValidated,
     },
@@ -191,7 +175,7 @@ function UserBillDialog(props: UserBillDialogProps) {
           電費單設定
         </Typography>
         <FieldsController
-          configs={userInformationConfig}
+          configs={industryInformationConfig}
           form={{ control, errors }}
         />
 
@@ -251,12 +235,12 @@ function UserBillDialog(props: UserBillDialogProps) {
           }}
         />
 
-        {/* 用戶電號 Block */}
+        {/* 發電業電號 Block */}
         <Typography variant="h5" textAlign={"left"}>
-          用戶電號
+          發電業電號
         </Typography>
 
-        {userId && userId.value ? (
+        {industryId && industryId.value ? (
           <Controller
             control={control}
             name={`electricNumberInfos`}
@@ -264,7 +248,7 @@ function UserBillDialog(props: UserBillDialogProps) {
               <ElectricNumbersField
                 field={field}
                 control={control}
-                userId={userId.value}
+                companyId={industryId.value}
               />
             )}
           />
@@ -350,13 +334,16 @@ function UserBillDialog(props: UserBillDialogProps) {
           alignItems={"center"}
           gap={"10px"}
         >
-          {!currentModifyUserBill ? (
-            <CreateUserBillBtn handleSubmit={handleSubmit} onClose={onClose} />
-          ) : (
-            <UpdateUserBillBtn
+          {!currentModifyIndustryBillConfig ? (
+            <CreateIndustryBillBtn
               handleSubmit={handleSubmit}
               onClose={onClose}
-              userBillId={currentModifyUserBill.id}
+            />
+          ) : (
+            <UpdateIndustryBillBtn
+              handleSubmit={handleSubmit}
+              onClose={onClose}
+              industryBillId={currentModifyIndustryBillConfig.id}
             />
           )}
         </Grid>
@@ -381,4 +368,4 @@ function UserBillDialog(props: UserBillDialogProps) {
   );
 }
 
-export default UserBillDialog;
+export default IndustryBillConfigDialog;

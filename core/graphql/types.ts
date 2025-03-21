@@ -58,11 +58,13 @@ export enum Action {
   CreateFee = 'CREATE_FEE',
   CreateGuest = 'CREATE_GUEST',
   CreateIndustryBill = 'CREATE_INDUSTRY_BILL',
+  CreateIndustryBillConfig = 'CREATE_INDUSTRY_BILL_CONFIG',
   CreatePowerPlant = 'CREATE_POWER_PLANT',
   CreateTpcBill = 'CREATE_TPC_BILL',
   CreateTransferDocument = 'CREATE_TRANSFER_DOCUMENT',
   CreateUser = 'CREATE_USER',
   CreateUserBill = 'CREATE_USER_BILL',
+  CreateUserBillConfig = 'CREATE_USER_BILL_CONFIG',
   CreateUserContract = 'CREATE_USER_CONTRACT',
   RemoveAccount = 'REMOVE_ACCOUNT',
   RemoveAdmin = 'REMOVE_ADMIN',
@@ -70,11 +72,13 @@ export enum Action {
   RemoveCompanyContract = 'REMOVE_COMPANY_CONTRACT',
   RemoveGuest = 'REMOVE_GUEST',
   RemoveIndustryBill = 'REMOVE_INDUSTRY_BILL',
+  RemoveIndustryBillConfig = 'REMOVE_INDUSTRY_BILL_CONFIG',
   RemovePowerPlant = 'REMOVE_POWER_PLANT',
   RemoveTpcBill = 'REMOVE_TPC_BILL',
   RemoveTransferDocument = 'REMOVE_TRANSFER_DOCUMENT',
   RemoveUser = 'REMOVE_USER',
   RemoveUserBill = 'REMOVE_USER_BILL',
+  RemoveUserBillConfig = 'REMOVE_USER_BILL_CONFIG',
   RemoveUserContract = 'REMOVE_USER_CONTRACT',
   SendResetPasswordEmail = 'SEND_RESET_PASSWORD_EMAIL',
   UpdateAccount = 'UPDATE_ACCOUNT',
@@ -82,11 +86,13 @@ export enum Action {
   UpdateCompanyContract = 'UPDATE_COMPANY_CONTRACT',
   UpdateFee = 'UPDATE_FEE',
   UpdateIndustryBill = 'UPDATE_INDUSTRY_BILL',
+  UpdateIndustryBillConfig = 'UPDATE_INDUSTRY_BILL_CONFIG',
   UpdatePowerPlant = 'UPDATE_POWER_PLANT',
   UpdateTpcBill = 'UPDATE_TPC_BILL',
   UpdateTransferDocument = 'UPDATE_TRANSFER_DOCUMENT',
   UpdateUser = 'UPDATE_USER',
   UpdateUserBill = 'UPDATE_USER_BILL',
+  UpdateUserBillConfig = 'UPDATE_USER_BILL_CONFIG',
   UpdateUserContract = 'UPDATE_USER_CONTRACT',
   ViewAccountList = 'VIEW_ACCOUNT_LIST',
   ViewAdminList = 'VIEW_ADMIN_LIST',
@@ -94,9 +100,11 @@ export enum Action {
   ViewCompanyList = 'VIEW_COMPANY_LIST',
   ViewGuestList = 'VIEW_GUEST_LIST',
   ViewIndustriesBillList = 'VIEW_INDUSTRIES_BILL_LIST',
+  ViewIndustryBillConfigList = 'VIEW_INDUSTRY_BILL_CONFIG_LIST',
   ViewPowerPlantList = 'VIEW_POWER_PLANT_LIST',
   ViewTpcBillList = 'VIEW_TPC_BILL_LIST',
   ViewTransferDocumentList = 'VIEW_TRANSFER_DOCUMENT_LIST',
+  ViewUserBillConfigList = 'VIEW_USER_BILL_CONFIG_LIST',
   ViewUserBillList = 'VIEW_USER_BILL_LIST',
   ViewUserContractList = 'VIEW_USER_CONTRACT_LIST',
   ViewUserList = 'VIEW_USER_LIST'
@@ -273,13 +281,13 @@ export type CreateCompanyInput = {
   taxId: Scalars['String']['input'];
 };
 
-export type CreateIndustryBillInput = {
+export type CreateIndustryBillConfigInput = {
   address: Scalars['String']['input'];
   contactEmail: Scalars['String']['input'];
   contactName: Scalars['String']['input'];
   contactPhone: Scalars['String']['input'];
-  credentialInspectionFee: IndustryBillChargeType;
-  credentialServiceFee: IndustryBillChargeType;
+  credentialInspectionFee: IndustryBillConfigChargeType;
+  credentialServiceFee: IndustryBillConfigChargeType;
   electricNumbers: Array<Scalars['String']['input']>;
   /** 預計電費單寄出期限（收到繳費通知單後天數 */
   estimatedBillDeliverDate: Scalars['Float']['input'];
@@ -289,7 +297,7 @@ export type CreateIndustryBillInput = {
   /** 用戶繳費期限（收到繳費通知單後天數） */
   paymentDeadline: Scalars['Float']['input'];
   recipientAccount: RecipientAccountInput;
-  transportationFee: IndustryBillChargeType;
+  transportationFee: IndustryBillConfigChargeType;
 };
 
 export type CreatePowerPlantInput = {
@@ -366,13 +374,13 @@ export type CreateTransferDocumentUserInput = {
   yearlyTransferDegree: Scalars['Int']['input'];
 };
 
-export type CreateUserBillInput = {
+export type CreateUserBillConfigInput = {
   address: Scalars['String']['input'];
   contactEmail: Scalars['String']['input'];
   contactName: Scalars['String']['input'];
   contactPhone: Scalars['String']['input'];
-  credentialInspectionFee: UserBillChargeType;
-  credentialServiceFee: UserBillChargeType;
+  credentialInspectionFee: UserBillConfigChargeType;
+  credentialServiceFee: UserBillConfigChargeType;
   electricNumbers: Array<Scalars['String']['input']>;
   /** 預計電費單寄出期限（收到繳費通知單後天數 */
   estimatedBillDeliverDate: Scalars['Float']['input'];
@@ -381,7 +389,7 @@ export type CreateUserBillInput = {
   /** 用戶繳費期限（收到繳費通知單後天數） */
   paymentDeadline: Scalars['Float']['input'];
   recipientAccount: RecipientAccountInput;
-  transportationFee: UserBillChargeType;
+  transportationFee: UserBillConfigChargeType;
   userId: Scalars['String']['input'];
 };
 
@@ -483,6 +491,12 @@ export type DashboardUserContract = {
   userContractsExpiringSoon: Array<UserContract>;
 };
 
+export enum ElectricBillStatus {
+  Approved = 'APPROVED',
+  Pending = 'PENDING',
+  Rejected = 'REJECTED'
+}
+
 export type ElectricNumberInfo = {
   __typename?: 'ElectricNumberInfo';
   address: Scalars['String']['output'];
@@ -562,14 +576,28 @@ export type GuestPage = {
 
 export type IndustryBill = {
   __typename?: 'IndustryBill';
+  auditBy?: Maybe<User>;
+  billingDate: Scalars['DateTime']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  deletedAt: Scalars['DateTime']['output'];
+  deletedBy: Scalars['String']['output'];
+  electricNumberInfos: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  industryBillConfig: IndustryBillConfig;
+  name: Scalars['String']['output'];
+  status: ElectricBillStatus;
+};
+
+export type IndustryBillConfig = {
+  __typename?: 'IndustryBillConfig';
   address: Scalars['String']['output'];
   contactEmail: Scalars['String']['output'];
   contactName: Scalars['String']['output'];
   contactPhone: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
-  credentialInspectionFee: IndustryBillChargeType;
-  credentialServiceFee: IndustryBillChargeType;
-  electricNumberInfos: Array<IndustryBillElectricNumberInfo>;
+  credentialInspectionFee: IndustryBillConfigChargeType;
+  credentialServiceFee: IndustryBillConfigChargeType;
+  electricNumberInfos: Array<IndustryBillConfigElectricNumberInfo>;
   /** 預計電費單寄出期限（收到繳費通知單後天數 */
   estimatedBillDeliverDate: Scalars['Int']['output'];
   id: Scalars['ID']['output'];
@@ -578,36 +606,42 @@ export type IndustryBill = {
   noticeForTPCBill: Scalars['Boolean']['output'];
   /** 發電業繳費期限（收到繳費通知單後天數） */
   paymentDeadline: Scalars['Int']['output'];
-  recipientAccount: IndustryBillRecipientAccount;
-  transportationFee: IndustryBillChargeType;
+  recipientAccount: IndustryBillConfigRecipientAccount;
+  transportationFee: IndustryBillConfigChargeType;
 };
 
-export enum IndustryBillChargeType {
+export enum IndustryBillConfigChargeType {
   Industry = 'INDUSTRY',
   Self = 'SELF'
 }
 
-export type IndustryBillElectricNumberInfo = {
-  __typename?: 'IndustryBillElectricNumberInfo';
+export type IndustryBillConfigElectricNumberInfo = {
+  __typename?: 'IndustryBillConfigElectricNumberInfo';
   number: Scalars['String']['output'];
   /** 採購電價（元/kWh） */
   price: Scalars['String']['output'];
 };
 
-export type IndustryBillPage = {
-  __typename?: 'IndustryBillPage';
-  list: Array<IndustryBill>;
+export type IndustryBillConfigPage = {
+  __typename?: 'IndustryBillConfigPage';
+  list: Array<IndustryBillConfig>;
   total: Scalars['Int']['output'];
 };
 
-export type IndustryBillRecipientAccount = {
-  __typename?: 'IndustryBillRecipientAccount';
+export type IndustryBillConfigRecipientAccount = {
+  __typename?: 'IndustryBillConfigRecipientAccount';
   /** 帳號 */
   account: Scalars['String']['output'];
   /** 分行代碼 */
   bankBranchCode?: Maybe<Scalars['String']['output']>;
   /** 銀行代碼 */
   bankCode: Scalars['String']['output'];
+};
+
+export type IndustryBillPage = {
+  __typename?: 'IndustryBillPage';
+  list: Array<IndustryBill>;
+  total: Scalars['Int']['output'];
 };
 
 export type InvalidCurrentPasswordError = Error & {
@@ -642,12 +676,12 @@ export type Mutation = {
   createAdmin: CreateAdminResponse;
   createCompany: Company;
   createCompanyContract: CompanyContract;
-  createIndustryBill: IndustryBill;
+  createIndustryBillConfig: IndustryBillConfig;
   createPowerPlant: PowerPlant;
   createTPCBill: TpcBill;
   createTransferDocument: TransferDocument;
   createUser: User;
-  createUserBill: UserBill;
+  createUserBillConfig: UserBillConfig;
   createUserContract: UserContract;
   modifyAccount: Account;
   modifyProfile: Account;
@@ -657,12 +691,12 @@ export type Mutation = {
   removeCompany: Company;
   removeCompanyContract: CompanyContract;
   removeGuest: Guest;
-  removeIndustryBill: IndustryBill;
+  removeIndustryBillConfig: IndustryBillConfig;
   removePowerPlant: PowerPlant;
   removeTPCBill: TpcBill;
   removeTransferDocument: TransferDocument;
   removeUser: User;
-  removeUserBill: UserBill;
+  removeUserBillConfig: UserBillConfig;
   removeUserContract: UserContract;
   requestResetPassword: RequestResetPasswordResponse;
   resetPassword: ResetPasswordResponse;
@@ -673,11 +707,11 @@ export type Mutation = {
   updateCompany: Company;
   updateCompanyContract: CompanyContract;
   updateFee: Fee;
-  updateIndustryBill: IndustryBill;
+  updateIndustryBillConfig: IndustryBillConfig;
   updatePowerPlant: PowerPlant;
   updateTransferDocument: TransferDocument;
   updateTransferDocumentStage: TransferDocument;
-  updateUserBill: UserBill;
+  updateUserBillConfig: UserBillConfig;
   updateUserContract: UserContract;
 };
 
@@ -708,8 +742,8 @@ export type MutationCreateCompanyContractArgs = {
 };
 
 
-export type MutationCreateIndustryBillArgs = {
-  input: CreateIndustryBillInput;
+export type MutationCreateIndustryBillConfigArgs = {
+  input: CreateIndustryBillConfigInput;
 };
 
 
@@ -733,8 +767,8 @@ export type MutationCreateUserArgs = {
 };
 
 
-export type MutationCreateUserBillArgs = {
-  input: CreateUserBillInput;
+export type MutationCreateUserBillConfigArgs = {
+  input: CreateUserBillConfigInput;
 };
 
 
@@ -792,7 +826,7 @@ export type MutationRemoveGuestArgs = {
 };
 
 
-export type MutationRemoveIndustryBillArgs = {
+export type MutationRemoveIndustryBillConfigArgs = {
   input: RemoveIndustryBillInput;
 };
 
@@ -817,7 +851,7 @@ export type MutationRemoveUserArgs = {
 };
 
 
-export type MutationRemoveUserBillArgs = {
+export type MutationRemoveUserBillConfigArgs = {
   input: RemoveUserBillInput;
 };
 
@@ -870,8 +904,8 @@ export type MutationUpdateFeeArgs = {
 };
 
 
-export type MutationUpdateIndustryBillArgs = {
-  input: UpdateIndustryBillInput;
+export type MutationUpdateIndustryBillConfigArgs = {
+  input: UpdateIndustryBillConfigInput;
 };
 
 
@@ -893,8 +927,8 @@ export type MutationUpdateTransferDocumentStageArgs = {
 };
 
 
-export type MutationUpdateUserBillArgs = {
-  input: UpdateUserBillInput;
+export type MutationUpdateUserBillConfigArgs = {
+  input: UpdateUserBillConfigInput;
 };
 
 
@@ -964,6 +998,8 @@ export type Query = {
   guest: Guest;
   guests: GuestPage;
   industryBill: IndustryBill;
+  industryBillConfig: IndustryBillConfig;
+  industryBillConfigs: IndustryBillConfigPage;
   industryBills: IndustryBillPage;
   me?: Maybe<Account>;
   powerPlant: PowerPlant;
@@ -974,6 +1010,8 @@ export type Query = {
   transferDocuments: TransferDocumentPage;
   user: User;
   userBill: UserBill;
+  userBillConfig: UserBillConfig;
+  userBillConfigs: UserBillConfigPage;
   userBills: UserBillPage;
   userContract: UserContract;
   userContracts: UserContractPage;
@@ -1037,6 +1075,18 @@ export type QueryIndustryBillArgs = {
 };
 
 
+export type QueryIndustryBillConfigArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
+export type QueryIndustryBillConfigsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  term?: InputMaybe<Scalars['String']['input']>;
+};
+
+
 export type QueryIndustryBillsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -1088,6 +1138,18 @@ export type QueryUserArgs = {
 
 export type QueryUserBillArgs = {
   id: Scalars['UUID']['input'];
+};
+
+
+export type QueryUserBillConfigArgs = {
+  id: Scalars['UUID']['input'];
+};
+
+
+export type QueryUserBillConfigsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  term?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -1385,13 +1447,13 @@ export type UpdateFeeInput = {
   substitutionFee?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type UpdateIndustryBillInput = {
+export type UpdateIndustryBillConfigInput = {
   address: Scalars['String']['input'];
   contactEmail: Scalars['String']['input'];
   contactName: Scalars['String']['input'];
   contactPhone: Scalars['String']['input'];
-  credentialInspectionFee: IndustryBillChargeType;
-  credentialServiceFee: IndustryBillChargeType;
+  credentialInspectionFee: IndustryBillConfigChargeType;
+  credentialServiceFee: IndustryBillConfigChargeType;
   electricNumbers: Array<Scalars['String']['input']>;
   /** 預計電費單寄出期限（收到繳費通知單後天數 */
   estimatedBillDeliverDate: Scalars['Float']['input'];
@@ -1402,7 +1464,7 @@ export type UpdateIndustryBillInput = {
   /** 用戶繳費期限（收到繳費通知單後天數） */
   paymentDeadline: Scalars['Float']['input'];
   recipientAccount: RecipientAccountInput;
-  transportationFee: IndustryBillChargeType;
+  transportationFee: IndustryBillConfigChargeType;
 };
 
 export type UpdatePowerPlantInput = {
@@ -1437,13 +1499,13 @@ export type UpdateTransferDocumentStageInput = {
   number?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type UpdateUserBillInput = {
+export type UpdateUserBillConfigInput = {
   address: Scalars['String']['input'];
   contactEmail: Scalars['String']['input'];
   contactName: Scalars['String']['input'];
   contactPhone: Scalars['String']['input'];
-  credentialInspectionFee: UserBillChargeType;
-  credentialServiceFee: UserBillChargeType;
+  credentialInspectionFee: UserBillConfigChargeType;
+  credentialServiceFee: UserBillConfigChargeType;
   electricNumbers: Array<Scalars['String']['input']>;
   /** 預計電費單寄出期限（收到繳費通知單後天數 */
   estimatedBillDeliverDate: Scalars['Float']['input'];
@@ -1453,7 +1515,7 @@ export type UpdateUserBillInput = {
   /** 用戶繳費期限（收到繳費通知單後天數） */
   paymentDeadline: Scalars['Float']['input'];
   recipientAccount: RecipientAccountInput;
-  transportationFee: UserBillChargeType;
+  transportationFee: UserBillConfigChargeType;
   userId: Scalars['String']['input'];
 };
 
@@ -1494,14 +1556,28 @@ export type User = {
 
 export type UserBill = {
   __typename?: 'UserBill';
+  auditBy?: Maybe<User>;
+  billingDate: Scalars['DateTime']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  deletedAt: Scalars['DateTime']['output'];
+  deletedBy: Scalars['String']['output'];
+  electricNumberInfos: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  status: ElectricBillStatus;
+  userBillConfig: UserBillConfig;
+};
+
+export type UserBillConfig = {
+  __typename?: 'UserBillConfig';
   address: Scalars['String']['output'];
   contactEmail: Scalars['String']['output'];
   contactName: Scalars['String']['output'];
   contactPhone: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
-  credentialInspectionFee: UserBillChargeType;
-  credentialServiceFee: UserBillChargeType;
-  electricNumberInfos: Array<UserBillElectricNumberInfo>;
+  credentialInspectionFee: UserBillConfigChargeType;
+  credentialServiceFee: UserBillConfigChargeType;
+  electricNumberInfos: Array<UserBillConfigElectricNumberInfo>;
   /** 預計電費單寄出期限（收到繳費通知單後天數 */
   estimatedBillDeliverDate: Scalars['Int']['output'];
   id: Scalars['ID']['output'];
@@ -1509,37 +1585,43 @@ export type UserBill = {
   noticeForTPCBill: Scalars['Boolean']['output'];
   /** 用戶繳費期限（收到繳費通知單後天數） */
   paymentDeadline: Scalars['Int']['output'];
-  recipientAccount: UserBillRecipientAccount;
-  transportationFee: UserBillChargeType;
+  recipientAccount: UserBillConfigRecipientAccount;
+  transportationFee: UserBillConfigChargeType;
   user: User;
 };
 
-export enum UserBillChargeType {
+export enum UserBillConfigChargeType {
   Self = 'SELF',
   User = 'USER'
 }
 
-export type UserBillElectricNumberInfo = {
-  __typename?: 'UserBillElectricNumberInfo';
+export type UserBillConfigElectricNumberInfo = {
+  __typename?: 'UserBillConfigElectricNumberInfo';
   number: Scalars['String']['output'];
   /** 採購電價（元/kWh） */
   price: Scalars['String']['output'];
 };
 
-export type UserBillPage = {
-  __typename?: 'UserBillPage';
-  list: Array<UserBill>;
+export type UserBillConfigPage = {
+  __typename?: 'UserBillConfigPage';
+  list: Array<UserBillConfig>;
   total: Scalars['Int']['output'];
 };
 
-export type UserBillRecipientAccount = {
-  __typename?: 'UserBillRecipientAccount';
+export type UserBillConfigRecipientAccount = {
+  __typename?: 'UserBillConfigRecipientAccount';
   /** 帳號 */
   account: Scalars['String']['output'];
   /** 分行代碼 */
   bankBranchCode?: Maybe<Scalars['String']['output']>;
   /** 銀行代碼 */
   bankCode: Scalars['String']['output'];
+};
+
+export type UserBillPage = {
+  __typename?: 'UserBillPage';
+  list: Array<UserBill>;
+  total: Scalars['Int']['output'];
 };
 
 export type UserContract = {

@@ -13,3 +13,5 @@ export * from './useTPCBills';
 export * from './useUserBills';
 export * from './useFee';
 export * from './useIndustryBills';
+export * from './useUserBillConfigs';
+export * from './useIndustryBillConfigs';

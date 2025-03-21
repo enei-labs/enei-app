@@ -16,11 +16,9 @@ import { AuthGuard } from "@components/AuthGuard";
 import { Role } from "@core/graphql/types";
 import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import dynamic from "next/dynamic";
-import UserBillDialog from "@components/UserBill/UserBillDialog/UserBillDialog";
-import IndustryBillDialog from "@components/IndustryBill/IndustryBillDialog/IndustryBillDialog";
-import { useFee, useUserBills, useIndustryBills } from "@utils/hooks/queries";
-import UserBillPanel from "@components/UserBill/UserBillPanel";
-import IndustryBillPanel from "@components/IndustryBill/IndustryBillPanel";
+import UserBillConfigDialog from "@components/UserBill/UserBillConfigDialog/UserBillConfigDialog";
+
+import { useFee } from "@utils/hooks/queries";
 import BorderColorOutlined from "@mui/icons-material/BorderColorOutlined";
 import InboxOutlinedIcon from "@mui/icons-material/InboxOutlined";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
@@ -28,6 +26,9 @@ import { IconBtn } from "@components/Button";
 import Link from "next/link";
 import { useSearch } from "@utils/hooks/useSearch";
 import ImportExportOutlinedIcon from "@mui/icons-material/ImportExportOutlined";
+import UserBillConfigPanel from "@components/UserBill/UserBillConfigPanel";
+import IndustryBillConfigDialog from "@components/IndustryBill/IndustryBillConfigDialog/IndustryBillConfigDialog";
+import IndustryBillConfigPanel from "@components/IndustryBill/IndustryBillConfigPanel";
 
 const TransferDocumentDialog = dynamic(
   () =>
@@ -62,20 +63,12 @@ function ExportElectricBillPage() {
     executeSearch: executeIndustryBillSearch,
   } = useSearch();
   const [open, setOpen] = useState(false);
-  const [showUserBillDialog, setShowUserBillDialog] = useState(false);
-  const [showIndustryBillDialog, setShowIndustryBillDialog] = useState(false);
+  const [showUserBillConfigDialog, setShowUserBillConfigDialog] =
+    useState(false);
+  const [showIndustryBillConfigDialog, setShowIndustryBillConfigDialog] =
+    useState(false);
   const [showFeeDialog, setShowFeeDialog] = useState(false);
   const { data, loading } = useFee();
-  const {
-    data: userBillsData,
-    loading: userBillLoading,
-    refetch: userBillRefetch,
-  } = useUserBills({ term: userBillSearchTerm });
-  const {
-    data: industryBillsData,
-    loading: industryBillLoading,
-    refetch: industryBillRefetch,
-  } = useIndustryBills({ term: industryBillSearchTerm });
 
   return (
     <>
@@ -191,7 +184,7 @@ function ExportElectricBillPage() {
           <Divider sx={{ margin: "36px 0 " }} />
 
           <Card sx={{ p: "36px" }}>
-            <Typography variant="h4">用戶電費單</Typography>
+            <Typography variant="h4">用戶電費單組合</Typography>
 
             <Box
               sx={{
@@ -211,14 +204,14 @@ function ExportElectricBillPage() {
                 <Link href="/electric-bill/import">
                   <Button
                     startIcon={<ImportExportOutlinedIcon />}
-                    onClick={() => setShowUserBillDialog(true)}
+                    onClick={() => setShowUserBillConfigDialog(true)}
                   >
                     匯入電費單
                   </Button>
                 </Link>
                 <Button
                   startIcon={<AddIcon />}
-                  onClick={() => setShowUserBillDialog(true)}
+                  onClick={() => setShowUserBillConfigDialog(true)}
                 >
                   新增電費單組合
                 </Button>
@@ -226,20 +219,11 @@ function ExportElectricBillPage() {
             </Box>
 
             {/* 電費單表格 */}
-            {data?.fee ? (
-              <UserBillPanel
-                fee={data.fee}
-                userBills={userBillsData?.userBills}
-                loading={userBillLoading}
-                refetchFn={(page: any) =>
-                  userBillRefetch({
-                    limit: page.rows,
-                    offset: page.rows * page.index,
-                  })
-                }
-                onAction={() => {}}
-              />
-            ) : null}
+            {data?.fee ? <UserBillConfigPanel fee={data.fee} /> : null}
+          </Card>
+
+          <Card sx={{ p: "36px" }}>
+            <Typography variant="h4">用戶電費單</Typography>
           </Card>
 
           <Divider sx={{ my: "24px" }} />
@@ -263,27 +247,14 @@ function ExportElectricBillPage() {
               {/* 新增電費單 */}
               <Button
                 startIcon={<AddIcon />}
-                onClick={() => setShowIndustryBillDialog(true)}
+                onClick={() => setShowIndustryBillConfigDialog(true)}
               >
                 新增電費單組合
               </Button>
             </Box>
 
             {/* 電費單表格 */}
-            {data?.fee ? (
-              <IndustryBillPanel
-                fee={data.fee}
-                industryBills={industryBillsData?.industryBills}
-                loading={industryBillLoading}
-                refetchFn={(page: any) =>
-                  industryBillRefetch({
-                    limit: page.rows,
-                    offset: page.rows * page.index,
-                  })
-                }
-                onAction={() => {}}
-              />
-            ) : null}
+            {data?.fee ? <IndustryBillConfigPanel fee={data.fee} /> : null}
           </Card>
           <Divider sx={{ my: "24px" }} />
         </AuthGuard>
@@ -295,18 +266,18 @@ function ExportElectricBillPage() {
           variant="create"
         />
       ) : null}
-      {showUserBillDialog ? (
-        <UserBillDialog
-          isOpenDialog={showUserBillDialog}
+      {showUserBillConfigDialog ? (
+        <UserBillConfigDialog
+          isOpenDialog={showUserBillConfigDialog}
           variant="create"
-          onClose={() => setShowUserBillDialog(false)}
+          onClose={() => setShowUserBillConfigDialog(false)}
         />
       ) : null}
-      {showIndustryBillDialog ? (
-        <IndustryBillDialog
-          isOpenDialog={showIndustryBillDialog}
+      {showIndustryBillConfigDialog ? (
+        <IndustryBillConfigDialog
+          isOpenDialog={showIndustryBillConfigDialog}
           variant="create"
-          onClose={() => setShowIndustryBillDialog(false)}
+          onClose={() => setShowIndustryBillConfigDialog(false)}
         />
       ) : null}
       {showFeeDialog ? (

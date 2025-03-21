@@ -3,25 +3,23 @@ import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { UseFormHandleSubmit } from "react-hook-form";
 import { FormData } from "./FormData";
 import { toast } from "react-toastify";
-import { useUpdateIndustryBill } from "@utils/hooks";
+import { useCreateIndustryBillConfig } from "@utils/hooks";
 
-interface UpdateIndustryBillBtnProps {
+interface CreateIndustryBillBtnProps {
   onClose: VoidFunction;
   handleSubmit: UseFormHandleSubmit<FormData>;
-  industryBillId: string;
 }
 
-const UpdateIndustryBillBtn = (props: UpdateIndustryBillBtnProps) => {
-  const { industryBillId, onClose, handleSubmit } = props;
+const CreateIndustryBillConfigBtn = (props: CreateIndustryBillBtnProps) => {
+  const { onClose, handleSubmit } = props;
 
-  const [updateIndustryBill, { loading }] = useUpdateIndustryBill();
+  const [createIndustryBillConfig, { loading }] = useCreateIndustryBillConfig();
 
-  /** 更新用戶電費單 mutation */
-  const onUpdateIndustryBill = async (formData: FormData) => {
-    await updateIndustryBill({
+  /** 新增用戶電費單組合 mutation */
+  const onCreateIndustryBillConfig = async (formData: FormData) => {
+    await createIndustryBillConfig({
       variables: {
         input: {
-          id: industryBillId,
           name: formData.name,
           industryId: formData.industryId.value,
           /** 預計電費單寄出期限（收到繳費通知單後天數 */
@@ -51,8 +49,8 @@ const UpdateIndustryBillBtn = (props: UpdateIndustryBillBtnProps) => {
         },
       },
       onCompleted: (data) => {
-        if (data.updateIndustryBill.__typename === "IndustryBill") {
-          toast.success("更新成功");
+        if (data.createIndustryBillConfig.__typename === "IndustryBillConfig") {
+          toast.success("新增成功");
           onClose();
         }
       },
@@ -63,11 +61,11 @@ const UpdateIndustryBillBtn = (props: UpdateIndustryBillBtnProps) => {
     <LoadingButton
       loading={loading}
       startIcon={<AddIcon />}
-      onClick={handleSubmit(onUpdateIndustryBill)}
+      onClick={handleSubmit(onCreateIndustryBillConfig)}
     >
       儲存
     </LoadingButton>
   );
 };
 
-export default UpdateIndustryBillBtn;
+export default CreateIndustryBillConfigBtn;

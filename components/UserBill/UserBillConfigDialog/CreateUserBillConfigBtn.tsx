@@ -3,21 +3,21 @@ import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { UseFormHandleSubmit } from "react-hook-form";
 import { FormData } from "./FormData";
 import { toast } from "react-toastify";
-import { useCreateUserBill } from "@utils/hooks";
+import { useCreateUserBillConfig } from "@utils/hooks/mutations/useCreateUserBillConfig";
 
-interface CreateUserBillBtnProps {
+interface CreateUserBillConfigBtnProps {
   onClose: VoidFunction;
   handleSubmit: UseFormHandleSubmit<FormData>;
 }
 
-const CreateUserBillBtn = (props: CreateUserBillBtnProps) => {
+const CreateUserBillConfigBtn = (props: CreateUserBillConfigBtnProps) => {
   const { onClose, handleSubmit } = props;
 
-  const [createUserBill, { loading }] = useCreateUserBill();
+  const [createUserBillConfig, { loading }] = useCreateUserBillConfig();
 
   /** 新增用戶電費單 mutation */
-  const onCreateUserBill = async (formData: FormData) => {
-    await createUserBill({
+  const onCreateUserBillConfig = async (formData: FormData) => {
+    await createUserBillConfig({
       variables: {
         input: {
           name: formData.name,
@@ -45,7 +45,7 @@ const CreateUserBillBtn = (props: CreateUserBillBtnProps) => {
         },
       },
       onCompleted: (data) => {
-        if (data.createUserBill.__typename === "UserBill") {
+        if (data.createUserBillConfig.__typename === "UserBillConfig") {
           toast.success("新增成功");
           onClose();
         }
@@ -57,11 +57,11 @@ const CreateUserBillBtn = (props: CreateUserBillBtnProps) => {
     <LoadingButton
       loading={loading}
       startIcon={<AddIcon />}
-      onClick={handleSubmit(onCreateUserBill)}
+      onClick={handleSubmit(onCreateUserBillConfig)}
     >
       儲存
     </LoadingButton>
   );
 };
 
-export default CreateUserBillBtn;
+export default CreateUserBillConfigBtn;
