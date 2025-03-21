@@ -54,26 +54,6 @@ const IndustryBillConfigPanel = (props: IndustryBillConfigPanelProps) => {
       ),
     },
     {
-      header: "發電業",
-      render: (rowData) => {
-        return <Box>{rowData.industry.name}</Box>;
-      },
-    },
-    {
-      header: "電費單下載",
-      render: (rowData) => {
-        return (
-          <IconBtn
-            icon={<FileDownloadOutlinedIcon />}
-            onClick={() => {
-              setOpenDownloadDialog(true);
-              setCurrentIndustryBillConfig(rowData);
-            }}
-          />
-        );
-      },
-    },
-    {
       header: "修改 / 刪除",
       render: (industryBillConfig) => (
         <>
