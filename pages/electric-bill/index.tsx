@@ -222,14 +222,14 @@ function ExportElectricBillPage() {
             {data?.fee ? <UserBillConfigPanel fee={data.fee} /> : null}
           </Card>
 
-          <Card sx={{ p: "36px" }}>
+          <Card sx={{ mt: "36px", p: "36px" }}>
             <Typography variant="h4">用戶電費單</Typography>
           </Card>
 
           <Divider sx={{ my: "24px" }} />
 
           <Card sx={{ p: "36px" }}>
-            <Typography variant="h4">發電業電費單</Typography>
+            <Typography variant="h4">發電業電費單組合</Typography>
 
             <Box
               sx={{
@@ -256,6 +256,11 @@ function ExportElectricBillPage() {
             {/* 電費單表格 */}
             {data?.fee ? <IndustryBillConfigPanel fee={data.fee} /> : null}
           </Card>
+
+          <Card sx={{ mt: "36px", p: "36px" }}>
+            <Typography variant="h4">發電業電費單</Typography>
+          </Card>
+
           <Divider sx={{ my: "24px" }} />
         </AuthGuard>
       </Box>
