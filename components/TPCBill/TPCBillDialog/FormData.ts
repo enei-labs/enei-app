@@ -15,8 +15,8 @@ export type FormData = {
     {
       degree: number;
       fee: string;
-      userContractId: string;
       userId: string;
+      powerPlantId: string;
     }
   >;
 }

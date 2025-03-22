@@ -65,10 +65,6 @@ export function ElectricNumbersField(props: ElectricNumbersFieldProps) {
             )
             .map((item: any) => item.number.value) || [];
 
-        console.log({
-          field,
-        });
-
         return (
           <Box display={"flex"} key={field.id} columnGap="12px">
             <Controller

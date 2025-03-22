@@ -132,6 +132,7 @@ const taiwanUBNValidation = yup.string().test(
   );
 
 export {
+  requiredMessage,
   numberRangeValidated,
   numberValidated,
   textValidated,

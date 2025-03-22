@@ -10,10 +10,6 @@ export const TPC_BILL_FIELDS = gql`
     transferDegrees {
       id
       degree
-      userContract {
-        id
-        name
-      }
       user {
         id
         name

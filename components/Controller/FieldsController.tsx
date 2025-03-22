@@ -13,6 +13,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { Controller } from "react-hook-form";
 import UploadDocBox from "../UploadDocBox";
+import { requiredMessage } from "@core/types/fieldConfig";
 
 type FieldType =
   | "NUMBER"
@@ -129,6 +130,7 @@ const FieldsController: React.FC<FieldsControllerProps> = ({
             <Controller
               name={name}
               control={control}
+              rules={item.required ? { required: requiredMessage } : undefined}
               render={(fieldProps) => {
                 return slotsField(fieldProps, type as FieldType, item);
               }}

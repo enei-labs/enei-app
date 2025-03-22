@@ -3,7 +3,7 @@ import { Controller, useFormContext, useWatch } from "react-hook-form";
 import InputText from "@components/Input/InputText";
 import Chip from "@components/Chip";
 import { PowerPlant, TransferDocument } from "@core/graphql/types";
-import ImportTransferDegreeBtn from "@components/TPCBill/TPCBillDialog/ImportTransferDegreeBtn";
+// import ImportTransferDegreeBtn from "@components/TPCBill/TPCBillDialog/ImportTransferDegreeBtn";
 import { FormData } from "@components/TPCBill/TPCBillDialog/FormData";
 
 interface TransferDocumentData {
@@ -24,31 +24,31 @@ export default function TransferDegreeSection({
   const { control, setValue } = useFormContext<FormData>();
   const transferDocumentValue = useWatch({ control, name: "transferDocument" });
   const transferDegreesValue = useWatch({ control, name: "transferDegrees" });
-  const handleExcelParsed = (
-    data: Map<string, { degree: number; fee: number }>
-  ) => {
-    data.forEach((value, key) => {
-      const [userNumber, industryNumber] = key.split("-");
-      const fieldBase =
-        `transferDegrees.${industryNumber}_${userNumber}` as const;
-      setValue(fieldBase, {
-        ...transferDegreesValue?.[fieldBase],
-        degree: value.degree,
-        fee: value.fee.toString(),
-      });
-    });
-  };
+  // const handleExcelParsed = (
+  //   data: Map<string, { degree: number; fee: number }>
+  // ) => {
+  //   data.forEach((value, key) => {
+  //     const [userNumber, industryNumber] = key.split("-");
+  //     const fieldBase =
+  //       `transferDegrees.${industryNumber}_${userNumber}` as const;
+  //     setValue(fieldBase, {
+  //       ...transferDegreesValue?.[fieldBase],
+  //       degree: value.degree,
+  //       fee: value.fee.toString(),
+  //     });
+  //   });
+  // };
 
-  console.log({ transferDegreesValue });
+  // console.log({ transferDegreesValue });
 
   return (
     <>
-      <Box display="flex" justifyContent="space-between">
+      {/* <Box display="flex" justifyContent="space-between">
         <Typography textAlign="left" variant="h5">
           轉供度數
         </Typography>
         <ImportTransferDegreeBtn onExcelParsed={handleExcelParsed} />
-      </Box>
+      </Box> */}
       {transferDocumentData?.transferDocument.transferDocumentPowerPlants &&
       transferDocumentValue ? (
         <Box display="flex" flexDirection="column" rowGap="24px">
@@ -66,9 +66,10 @@ export default function TransferDegreeSection({
           </Box>
           {transferDocumentData.transferDocument.transferDocumentUsers.map(
             (item) => {
-              if (!item.userContract && !selectedPowerPlant) return null;
+              if (!item.user && !selectedPowerPlant) return null;
               const fieldBase =
                 `transferDegrees.${selectedPowerPlant?.number}_${item.electricNumberInfo?.number}` as const;
+
               return (
                 <Box
                   key={fieldBase}
@@ -101,9 +102,10 @@ export default function TransferDegreeSection({
                       <InputText {...field} type="number" label="費用" />
                     )}
                   />
-                  <Controller
+                  {/* <Controller
                     control={control}
                     name={`${fieldBase}.userContractId`}
+                    defaultValue={item.userContract?.id ?? ""}
                     render={({ field }) => (
                       <input
                         type="hidden"
@@ -111,12 +113,25 @@ export default function TransferDegreeSection({
                         value={item.userContract?.id}
                       />
                     )}
-                  />
+                  /> */}
                   <Controller
                     control={control}
                     name={`${fieldBase}.userId`}
+                    defaultValue={item.user?.id ?? ""}
                     render={({ field }) => (
                       <input type="hidden" {...field} value={item.user?.id} />
+                    )}
+                  />
+                  <Controller
+                    control={control}
+                    name={`${fieldBase}.powerPlantId`}
+                    defaultValue={selectedPowerPlant?.id ?? ""}
+                    render={({ field }) => (
+                      <input
+                        type="hidden"
+                        {...field}
+                        value={selectedPowerPlant?.id}
+                      />
                     )}
                   />
                 </Box>

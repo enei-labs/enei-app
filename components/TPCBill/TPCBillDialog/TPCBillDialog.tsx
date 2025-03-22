@@ -46,17 +46,25 @@ export default function TPCBillDialog(props: TPCBillDialogProps) {
     }
     const transferDegrees = Object.entries(formData.transferDegrees)
       .map(([key, value]) => {
-        const [powerPlantId, userContractId, electricNumber] = key.split("_");
+        const [powerPlantNumber, electricNumber] = key.split("_");
         return {
-          userContractId,
-          powerPlantId,
+          powerPlantId: value.powerPlantId,
+          // powerPlantNumber,
           electricNumber,
           degree: Number(value.degree ?? 0),
           fee: Number(value.fee ?? 0),
           userId: value.userId,
         };
       })
-      .filter((t) => Boolean(t.powerPlantId) && t.powerPlantId !== "null");
+      .filter(
+        (t) =>
+          Boolean(t.powerPlantId) &&
+          t.powerPlantId !== "null" &&
+          t.powerPlantId !== "undefined" &&
+          Boolean(t.userId) &&
+          t.userId !== "null" &&
+          t.userId !== "undefined"
+      );
 
     await createTPCBill({
       variables: {
