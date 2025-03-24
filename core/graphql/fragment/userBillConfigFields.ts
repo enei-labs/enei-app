@@ -15,10 +15,7 @@ export const USER_BILL_CONFIG_FIELDS = gql`
       bankBranchCode
       account
     }
-    electricNumberInfos {
-      number
-      price
-    }
+    electricNumbers
     transportationFee
     credentialInspectionFee
     credentialServiceFee

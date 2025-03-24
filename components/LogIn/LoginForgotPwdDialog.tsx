@@ -2,13 +2,10 @@ import { FieldsController } from "@components/Controller";
 import Dialog from "@components/Dialog";
 import { FieldConfig } from "@core/types";
 import { textValidated } from "@core/types/fieldConfig";
-import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useValidatedForm } from "@utils/hooks";
-import { useState } from "react";
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 
 type FormData = {
   email: string;
