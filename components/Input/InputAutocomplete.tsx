@@ -90,6 +90,7 @@ const InputAutocomplete = forwardRef<HTMLDivElement, InputAutocompleteProps>(
           noOptionsText={"沒有資料"}
           isOptionEqualToValue={(option, value) => option.value === value.value}
           ref={ref}
+          getOptionKey={(option) => `${option.value}-${option.label}`}
           getOptionDisabled={(option) =>
             typeof option.disabled === "boolean" && option.disabled
           }
