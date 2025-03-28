@@ -492,6 +492,7 @@ export type DashboardUserContract = {
 
 export enum ElectricBillStatus {
   Approved = 'APPROVED',
+  Draft = 'DRAFT',
   Pending = 'PENDING',
   Rejected = 'REJECTED'
 }
@@ -1153,6 +1154,7 @@ export type QueryUserBillConfigsArgs = {
 
 
 export type QueryUserBillsArgs = {
+  lastYearOnly?: InputMaybe<Scalars['Boolean']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   term?: InputMaybe<Scalars['String']['input']>;
@@ -1357,6 +1359,7 @@ export type TransferDegree = {
   __typename?: 'TransferDegree';
   createdAt: Scalars['DateTime']['output'];
   degree: Scalars['Int']['output'];
+  electricNumber: Scalars['String']['output'];
   fee?: Maybe<Scalars['Int']['output']>;
   id: Scalars['ID']['output'];
   powerPlant: PowerPlant;
@@ -1559,11 +1562,11 @@ export type UserBill = {
   createdAt: Scalars['DateTime']['output'];
   deletedAt: Scalars['DateTime']['output'];
   deletedBy: Scalars['String']['output'];
-  electricNumberInfos: Scalars['String']['output'];
+  electricNumberInfos: Array<UserBillElectricNumberInfo>;
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
   status: ElectricBillStatus;
-  userBillConfig: UserBillConfig;
+  userBillConfig?: Maybe<UserBillConfig>;
 };
 
 export type UserBillConfig = {
@@ -1575,7 +1578,7 @@ export type UserBillConfig = {
   createdAt: Scalars['DateTime']['output'];
   credentialInspectionFee: UserBillConfigChargeType;
   credentialServiceFee: UserBillConfigChargeType;
-  electricNumberInfos: Array<UserBillConfigElectricNumberInfo>;
+  electricNumbers: Array<Scalars['String']['output']>;
   /** 預計電費單寄出期限（收到繳費通知單後天數 */
   estimatedBillDeliverDate: Scalars['Int']['output'];
   id: Scalars['ID']['output'];
@@ -1593,13 +1596,6 @@ export enum UserBillConfigChargeType {
   User = 'USER'
 }
 
-export type UserBillConfigElectricNumberInfo = {
-  __typename?: 'UserBillConfigElectricNumberInfo';
-  number: Scalars['String']['output'];
-  /** 採購電價（元/kWh） */
-  price: Scalars['String']['output'];
-};
-
 export type UserBillConfigPage = {
   __typename?: 'UserBillConfigPage';
   list: Array<UserBillConfig>;
@@ -1614,6 +1610,12 @@ export type UserBillConfigRecipientAccount = {
   bankBranchCode?: Maybe<Scalars['String']['output']>;
   /** 銀行代碼 */
   bankCode: Scalars['String']['output'];
+};
+
+export type UserBillElectricNumberInfo = {
+  __typename?: 'UserBillElectricNumberInfo';
+  number: Scalars['String']['output'];
+  price?: Maybe<Scalars['Float']['output']>;
 };
 
 export type UserBillPage = {

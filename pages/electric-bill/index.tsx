@@ -29,6 +29,7 @@ import ImportExportOutlinedIcon from "@mui/icons-material/ImportExportOutlined";
 import UserBillConfigPanel from "@components/UserBill/UserBillConfigPanel";
 import IndustryBillConfigDialog from "@components/IndustryBill/IndustryBillConfigDialog/IndustryBillConfigDialog";
 import IndustryBillConfigPanel from "@components/IndustryBill/IndustryBillConfigPanel";
+import UserBillPanel from "@components/UserBill/UserBillPanel";
 
 const TransferDocumentDialog = dynamic(
   () =>
@@ -224,6 +225,7 @@ function ExportElectricBillPage() {
 
           <Card sx={{ mt: "36px", p: "36px" }}>
             <Typography variant="h4">用戶電費單</Typography>
+            {data?.fee ? <UserBillPanel fee={data.fee} /> : null}
           </Card>
 
           <Divider sx={{ my: "24px" }} />
