@@ -234,6 +234,7 @@ function UserDialog(props: UserDialogProps) {
                   }
                   handleClick={() => setBankAccountIndex(index)}
                   handleDelete={() => setDeleteBankAccountIndex(index)}
+                  selected={bankAccountIndex === index}
                 />
               );
             })}

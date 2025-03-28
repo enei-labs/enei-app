@@ -358,6 +358,7 @@ function UserContractDialog(props: UserContractDialogProps) {
                   label={`電號${index + 1}`}
                   handleClick={() => setElectricNumberIndex(index)}
                   handleDelete={() => setDeleteElectricNumberIndex(index)}
+                  selected={electricNumberIndex === index}
                 />
               );
             })}

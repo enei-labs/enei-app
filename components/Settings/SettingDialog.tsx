@@ -206,6 +206,7 @@ function SettingDialog(props: SettingDialogProps) {
                     }
                     handleClick={() => setRecipientAccountIndex(index)}
                     handleDelete={() => setDeleteRecipientAccountIndex(index)}
+                    selected={recipientAccountIndex === index}
                   />
                 );
               })}

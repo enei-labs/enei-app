@@ -129,6 +129,8 @@ function TransferDocumentInfoBox(props: TransferDocumentInfoBoxProps) {
 
   if (loading) return <CircularProgress />;
 
+  console.log({ powerPlantId });
+
   return (
     <Box display={"flex"} flexDirection="column" rowGap="24px">
       <Box display={"flex"} gap="8px" flexWrap={"wrap"} marginY={"24px"}>
@@ -138,6 +140,7 @@ function TransferDocumentInfoBox(props: TransferDocumentInfoBoxProps) {
               key={item.powerPlant.id}
               label={item.powerPlant.name}
               handleClick={() => setPowerPlantId(item.powerPlant.id)}
+              selected={powerPlantId === item.powerPlant.id}
             />
           );
         })}

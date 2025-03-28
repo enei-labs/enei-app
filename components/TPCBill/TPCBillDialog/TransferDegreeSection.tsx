@@ -61,6 +61,7 @@ export default function TransferDegreeSection({
                 key={item.powerPlant.id}
                 label={item.powerPlant.name}
                 handleClick={() => selectPowerPlant(item.powerPlant)}
+                selected={selectedPowerPlant?.id === item.powerPlant.id}
               />
             ))}
           </Box>
