@@ -30,8 +30,8 @@ function UserBillConfigPage() {
   return (
     <>
       <Head>
-        <title>用戶電費單</title>
-        <meta name="description" content="用戶電費單" />
+        <title>用戶電費單組合</title>
+        <meta name="description" content="用戶電費單組合" />
       </Head>
       {data ? (
         <>
@@ -49,7 +49,7 @@ function UserBillConfigPage() {
               },
             ]}
           />
-          <Box sx={{ paddingTop: "12px" }}></Box>
+          <Box sx={{ paddingTop: "12px" }}>用戶電費單組合</Box>
         </>
       ) : null}
     </>

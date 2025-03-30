@@ -1,7 +1,7 @@
 import { InputDate } from "@components/Input";
 import Table, { Config } from "@components/Table/Table";
-import { UserBillsByMonth } from "@core/graphql/types";
-import { Box, Card, Typography } from "@mui/material";
+import { ElectricBillStatus, UserBillsByMonth } from "@core/graphql/types";
+import { Box, Card, Link, Typography } from "@mui/material";
 import { formatDateTime } from "@utils/format";
 import { useUserBillsByMonth } from "@utils/hooks/queries/useUserBillsByMonth";
 import { useState } from "react";
@@ -36,24 +36,79 @@ export const UserBillsByMonthPanel = () => {
     endDate: formatDateToString(currentDate),
   });
 
-  // 使用月初和月底的完整日期進行查詢
   const { data, loading } = useUserBillsByMonth(
     getMonthStartDate(dateRange.startDate),
     getMonthEndDate(dateRange.endDate)
   );
+
+  console.log({ data });
 
   const configs: Config<UserBillsByMonth>[] = [
     {
       header: "計費年月",
       accessor: "month",
       render: (rowData) => (
-        <Box>{formatDateTime(rowData.month, "yyyy-MM")}</Box>
+        <Link href={`/electric-bill/user-bill?month=${rowData.month}`}>
+          <Box>{formatDateTime(rowData.month, "yyyy-MM")}</Box>
+        </Link>
       ),
     },
     {
       header: "電費單數量",
       accessor: "bills",
       render: (rowData) => <Box>{rowData.bills.length}</Box>,
+    },
+    {
+      header: "狀態（未完成）",
+      accessor: "bills",
+      render: (rowData) => (
+        <Box>
+          {
+            rowData.bills.filter(
+              (bill) => bill.status === ElectricBillStatus.Draft
+            ).length
+          }
+        </Box>
+      ),
+    },
+    {
+      header: "狀態（待審核）",
+      accessor: "bills",
+      render: (rowData) => (
+        <Box>
+          {
+            rowData.bills.filter(
+              (bill) => bill.status === ElectricBillStatus.Pending
+            ).length
+          }
+        </Box>
+      ),
+    },
+    {
+      header: "狀態（已審核）",
+      accessor: "bills",
+      render: (rowData) => (
+        <Box>
+          {
+            rowData.bills.filter(
+              (bill) => bill.status === ElectricBillStatus.Approved
+            ).length
+          }
+        </Box>
+      ),
+    },
+    {
+      header: "狀態（已拒絕）",
+      accessor: "bills",
+      render: (rowData) => (
+        <Box>
+          {
+            rowData.bills.filter(
+              (bill) => bill.status === ElectricBillStatus.Rejected
+            ).length
+          }
+        </Box>
+      ),
     },
   ];
 

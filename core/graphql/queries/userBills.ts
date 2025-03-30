@@ -7,11 +7,13 @@ export const USER_BILLS = gql`
     $limit: Int = 10
     $offset: Int = 0
     $term: String
+    $month: DateTime
   ) {
     userBills(
       limit: $limit
       offset: $offset
       term: $term
+      month: $month
     ) {
       total
       list {

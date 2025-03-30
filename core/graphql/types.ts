@@ -1157,6 +1157,7 @@ export type QueryUserBillConfigsArgs = {
 export type QueryUserBillsArgs = {
   lastYearOnly?: InputMaybe<Scalars['Boolean']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
+  month?: InputMaybe<Scalars['DateTime']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   term?: InputMaybe<Scalars['String']['input']>;
 };

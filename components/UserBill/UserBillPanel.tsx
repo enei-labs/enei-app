@@ -1,15 +1,17 @@
 import { Table } from "@components/Table";
 import { Fee, UserBill } from "@core/graphql/types";
 import { Config } from "../Table/Table";
-import { Box } from "@mui/material";
+import { Box, Typography, Card } from "@mui/material";
 import { useUserBills } from "@utils/hooks/queries";
-
+import { formatDateTime } from "@utils/format";
 interface UserBillPanelProps {
-  fee: Fee;
+  month: string;
 }
 
 const UserBillPanel = (props: UserBillPanelProps) => {
-  const { data, loading, refetch } = useUserBills();
+  const { data, loading, refetch } = useUserBills({
+    month: props.month,
+  });
 
   const configs: Config<UserBill>[] = [
     {
@@ -17,10 +19,19 @@ const UserBillPanel = (props: UserBillPanelProps) => {
       accessor: "name",
       render: (rowData) => <Box>{rowData.name}</Box>,
     },
+    {
+      header: "狀態",
+      accessor: "status",
+      render: (rowData) => <Box>{rowData.status}</Box>,
+    },
   ];
 
   return (
-    <>
+    <Card sx={{ mt: "36px", p: "36px" }}>
+      <Typography variant="h4">{`用戶電費單 - ${formatDateTime(
+        props.month,
+        "yyyy-MM"
+      )}`}</Typography>
       <Table
         configs={configs}
         list={data?.userBills?.list}
@@ -33,7 +44,7 @@ const UserBillPanel = (props: UserBillPanelProps) => {
           });
         }}
       />
-    </>
+    </Card>
   );
 };
 
