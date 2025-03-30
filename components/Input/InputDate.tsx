@@ -1,4 +1,5 @@
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { zhTW } from "date-fns/locale";
 import type { DatePickerProps } from "@mui/x-date-pickers/DatePicker";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -23,7 +24,7 @@ const InputDate = forwardRef<HTMLDivElement, InputDateProps>((props, ref) => {
   };
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={zhTW}>
       <DatePicker
         {...otherProps}
         label={label}
