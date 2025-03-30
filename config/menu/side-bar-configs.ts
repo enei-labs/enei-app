@@ -8,6 +8,7 @@ import VpnKeyOutlinedIcon from '@mui/icons-material/VpnKeyOutlined';
 import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import InboxOutlinedIcon from '@mui/icons-material/InboxOutlined';
+import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 
 export const sideBarConfigs = {
   top: [
@@ -44,7 +45,7 @@ export const sideBarConfigs = {
     },
     {
       name: "電費單匯入",
-      icon: InboxOutlinedIcon,
+      icon: FileUploadOutlinedIcon,
       path: '/electric-bill/import'
     }
   ],

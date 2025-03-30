@@ -5,8 +5,9 @@ import { Box, Card, Link, Typography } from "@mui/material";
 import { formatDateTime } from "@utils/format";
 import { useUserBillsByMonth } from "@utils/hooks/queries/useUserBillsByMonth";
 import { useState } from "react";
-
+import { useRouter } from "next/router";
 export const UserBillsByMonthPanel = () => {
+  const router = useRouter();
   const currentDate = new Date();
   const oneYearAgo = new Date();
   oneYearAgo.setFullYear(currentDate.getFullYear() - 1);
@@ -41,16 +42,24 @@ export const UserBillsByMonthPanel = () => {
     getMonthEndDate(dateRange.endDate)
   );
 
-  console.log({ data });
-
   const configs: Config<UserBillsByMonth>[] = [
     {
       header: "計費年月",
       accessor: "month",
       render: (rowData) => (
-        <Link href={`/electric-bill/user-bill?month=${rowData.month}`}>
-          <Box>{formatDateTime(rowData.month, "yyyy-MM")}</Box>
-        </Link>
+        <Box
+          sx={{
+            cursor: "pointer",
+            "&:hover": {
+              color: "primary.main",
+            },
+          }}
+          onClick={() =>
+            router.push(`/electric-bill/user-bill?month=${rowData.month}`)
+          }
+        >
+          {formatDateTime(rowData.month, "yyyy-MM")}
+        </Box>
       ),
     },
     {

@@ -4,6 +4,8 @@ import { Config } from "../Table/Table";
 import { Box, Typography, Card } from "@mui/material";
 import { useUserBills } from "@utils/hooks/queries";
 import { formatDateTime } from "@utils/format";
+import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
+import { IconBtn } from "@components/Button";
 interface UserBillPanelProps {
   month: string;
 }
@@ -23,6 +25,12 @@ const UserBillPanel = (props: UserBillPanelProps) => {
       header: "狀態",
       accessor: "status",
       render: (rowData) => <Box>{rowData.status}</Box>,
+    },
+    {
+      header: "檢視 / 審核",
+      render: (data) => (
+        <IconBtn icon={<EventNoteOutlinedIcon />} onClick={() => {}} />
+      ),
     },
   ];
 
