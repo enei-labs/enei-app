@@ -202,14 +202,6 @@ function ExportElectricBillPage() {
 
               {/* 新增電費單 */}
               <Box sx={{ display: "flex", columnGap: "12px" }}>
-                <Link href="/electric-bill/import">
-                  <Button
-                    startIcon={<ImportExportOutlinedIcon />}
-                    onClick={() => setShowUserBillConfigDialog(true)}
-                  >
-                    匯入電費單
-                  </Button>
-                </Link>
                 <Button
                   startIcon={<AddIcon />}
                   onClick={() => setShowUserBillConfigDialog(true)}

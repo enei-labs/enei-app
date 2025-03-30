@@ -27,7 +27,7 @@ function UserBillElectricImportPage() {
           },
         ]}
       />
-      <Card sx={{ padding: 2 }}>
+      <Card sx={{ padding: 2, marginTop: "!2px" }}>
         <Typography variant="h4" color="#000">
           電費匯入
         </Typography>

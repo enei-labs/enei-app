@@ -42,6 +42,11 @@ export const sideBarConfigs = {
       icon: InboxOutlinedIcon,
       path: '/electric-bill'
     },
+    {
+      name: "電費單匯入",
+      icon: InboxOutlinedIcon,
+      path: '/electric-bill/import'
+    }
   ],
   down: [
     {
