@@ -6,11 +6,16 @@ import { useUserBills } from "@utils/hooks/queries";
 import { formatDateTime } from "@utils/format";
 import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import { IconBtn } from "@components/Button";
+import { UserBillDialog } from "./UserBillDialog";
+import { useState } from "react";
+
 interface UserBillPanelProps {
   month: string;
 }
 
 const UserBillPanel = (props: UserBillPanelProps) => {
+  const [isOpenDialog, setIsOpenDialog] = useState(false);
+  const [userBill, setUserBill] = useState<UserBill | null>(null);
   const { data, loading, refetch } = useUserBills({
     month: props.month,
   });
@@ -29,30 +34,45 @@ const UserBillPanel = (props: UserBillPanelProps) => {
     {
       header: "檢視 / 審核",
       render: (data) => (
-        <IconBtn icon={<EventNoteOutlinedIcon />} onClick={() => {}} />
+        <IconBtn
+          icon={<EventNoteOutlinedIcon />}
+          onClick={() => {
+            setUserBill(data);
+            setIsOpenDialog(true);
+          }}
+        />
       ),
     },
   ];
 
   return (
-    <Card sx={{ mt: "36px", p: "36px" }}>
-      <Typography variant="h4">{`用戶電費單 - ${formatDateTime(
-        props.month,
-        "yyyy-MM"
-      )}`}</Typography>
-      <Table
-        configs={configs}
-        list={data?.userBills?.list}
-        total={data?.userBills?.total}
-        loading={loading}
-        onPageChange={(page) => {
-          refetch({
-            limit: page.rows,
-            offset: page.rows * page.index,
-          });
-        }}
-      />
-    </Card>
+    <>
+      <Card sx={{ mt: "36px", p: "36px" }}>
+        <Typography variant="h4">{`用戶電費單 - ${formatDateTime(
+          props.month,
+          "yyyy-MM"
+        )}`}</Typography>
+        <Table
+          configs={configs}
+          list={data?.userBills?.list}
+          total={data?.userBills?.total}
+          loading={loading}
+          onPageChange={(page) => {
+            refetch({
+              limit: page.rows,
+              offset: page.rows * page.index,
+            });
+          }}
+        />
+      </Card>
+      {userBill && (
+        <UserBillDialog
+          userBill={userBill}
+          isOpenDialog={isOpenDialog}
+          onClose={() => setIsOpenDialog(false)}
+        />
+      )}
+    </>
   );
 };
 

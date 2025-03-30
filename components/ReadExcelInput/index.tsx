@@ -36,7 +36,7 @@ export const excelDateToJSDate = (serial: number) => {
   );
 };
 
-const PrintWrapper = forwardRef<
+export const PrintWrapper = forwardRef<
   HTMLDivElement,
   {
     userBillTemplatesData: UserBillTemplateData[];
