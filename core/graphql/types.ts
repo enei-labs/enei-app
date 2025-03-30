@@ -1013,6 +1013,7 @@ export type Query = {
   userBillConfig: UserBillConfig;
   userBillConfigs: UserBillConfigPage;
   userBills: UserBillPage;
+  userBillsByMonth: Array<UserBillsByMonth>;
   userContract: UserContract;
   userContracts: UserContractPage;
   users: UserPage;
@@ -1158,6 +1159,12 @@ export type QueryUserBillsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   term?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryUserBillsByMonthArgs = {
+  endDate: Scalars['DateTime']['input'];
+  startDate: Scalars['DateTime']['input'];
 };
 
 
@@ -1622,6 +1629,12 @@ export type UserBillPage = {
   __typename?: 'UserBillPage';
   list: Array<UserBill>;
   total: Scalars['Int']['output'];
+};
+
+export type UserBillsByMonth = {
+  __typename?: 'UserBillsByMonth';
+  bills: Array<UserBill>;
+  month: Scalars['DateTime']['output'];
 };
 
 export type UserContract = {

@@ -1,0 +1,114 @@
+import { InputDate } from "@components/Input";
+import Table, { Config } from "@components/Table/Table";
+import { UserBillsByMonth } from "@core/graphql/types";
+import { Box, Card, Typography } from "@mui/material";
+import { formatDateTime } from "@utils/format";
+import { useUserBillsByMonth } from "@utils/hooks/queries/useUserBillsByMonth";
+import { useState } from "react";
+
+export const UserBillsByMonthPanel = () => {
+  const currentDate = new Date();
+  const oneYearAgo = new Date();
+  oneYearAgo.setFullYear(currentDate.getFullYear() - 1);
+
+  const formatDateToString = (date: Date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    return `${year}-${month.toString().padStart(2, "0")}`;
+  };
+
+  // 設置日期到月初和月底的輔助函數
+  const getMonthStartDate = (dateStr: string) => {
+    const [year, month] = dateStr.split("-").map(Number);
+    return new Date(year, month - 1, 1); // 月份從0開始，所以要減1
+  };
+
+  const getMonthEndDate = (dateStr: string) => {
+    const [year, month] = dateStr.split("-").map(Number);
+    return new Date(year, month, 0); // 下個月的第0天就是本月的最後一天
+  };
+
+  const [dateRange, setDateRange] = useState<{
+    startDate: string;
+    endDate: string;
+  }>({
+    startDate: formatDateToString(oneYearAgo),
+    endDate: formatDateToString(currentDate),
+  });
+
+  // 使用月初和月底的完整日期進行查詢
+  const { data, loading } = useUserBillsByMonth(
+    getMonthStartDate(dateRange.startDate),
+    getMonthEndDate(dateRange.endDate)
+  );
+
+  const configs: Config<UserBillsByMonth>[] = [
+    {
+      header: "計費年月",
+      accessor: "month",
+      render: (rowData) => (
+        <Box>{formatDateTime(rowData.month, "yyyy-MM")}</Box>
+      ),
+    },
+    {
+      header: "電費單數量",
+      accessor: "bills",
+      render: (rowData) => <Box>{rowData.bills.length}</Box>,
+    },
+  ];
+
+  return (
+    <Card sx={{ mt: "36px", p: "36px" }}>
+      <Typography variant="h4">用戶電費單</Typography>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+          my: "16px",
+          gap: "12px", // 添加間距
+        }}
+      >
+        <Box sx={{ display: "flex", gap: "12px" }}>
+          <InputDate
+            label="起始年月"
+            value={dateRange.startDate}
+            openTo="month"
+            views={["year", "month"]}
+            onChange={(newValue) => {
+              if (newValue) {
+                const dateObj = new Date(newValue);
+                const formattedDate = formatDateToString(dateObj);
+                setDateRange((prev) => ({
+                  ...prev,
+                  startDate: formattedDate,
+                }));
+              }
+            }}
+          />
+          <InputDate
+            label="結束年月"
+            value={dateRange.endDate}
+            openTo="month"
+            views={["year", "month"]}
+            onChange={(newValue) => {
+              if (newValue) {
+                const dateObj = new Date(newValue);
+                const formattedDate = formatDateToString(dateObj);
+                setDateRange((prev) => ({
+                  ...prev,
+                  endDate: formattedDate,
+                }));
+              }
+            }}
+          />
+        </Box>
+      </Box>
+      <Table
+        configs={configs}
+        list={data?.userBillsByMonth}
+        total={data?.userBillsByMonth?.length}
+        loading={loading}
+      />
+    </Card>
+  );
+};

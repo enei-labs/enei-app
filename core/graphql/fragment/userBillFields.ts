@@ -9,5 +9,6 @@ export const USER_BILL_FIELDS = gql`
       price
     }
     billingDate
+    status
   }
 `;

@@ -103,13 +103,13 @@ function UserBillConfigDialog(props: UserBillConfigDialogProps) {
             currentModifyUserBillConfig.credentialServiceFee,
           noticeForTPCBill: currentModifyUserBillConfig.noticeForTPCBill,
           electricNumberInfos: (
-            currentModifyUserBillConfig.electricNumberInfos ?? []
-          ).map((info) => ({
+            currentModifyUserBillConfig.electricNumbers ?? []
+          ).map((number) => ({
             number: {
-              label: info.number,
-              value: info.number,
+              label: number,
+              value: number,
             },
-            price: info.price,
+            price: "",
           })),
           contactName: currentModifyUserBillConfig.contactName,
           contactEmail: currentModifyUserBillConfig.contactEmail,
