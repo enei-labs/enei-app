@@ -60,9 +60,15 @@ export const UserBillDialog = ({
           userBillTemplatesData={[userBillTemplateData]}
           companyBillTemplatesData={[]}
         />
-        <Button onClick={handlePrint} sx={{ marginRight: "6px" }}>
-          列印
-        </Button>
+        <Box display="flex" justifyContent="flex-end" gap={2}>
+          <Button onClick={() => {}} sx={{ marginRight: "6px" }}>
+            審核
+          </Button>
+
+          <Button onClick={handlePrint} sx={{ marginRight: "6px" }}>
+            列印
+          </Button>
+        </Box>
       </Box>
     </Dialog>
   );

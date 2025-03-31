@@ -204,7 +204,7 @@ function ExportElectricBillPage() {
                   startIcon={<AddIcon />}
                   onClick={() => setShowUserBillConfigDialog(true)}
                 >
-                  新增電費單組合
+                  新增用戶電費單組合
                 </Button>
               </Box>
             </Box>
@@ -237,7 +237,7 @@ function ExportElectricBillPage() {
                 startIcon={<AddIcon />}
                 onClick={() => setShowIndustryBillConfigDialog(true)}
               >
-                新增電費單組合
+                新增發電業電費單組合
               </Button>
             </Box>
 

@@ -182,14 +182,14 @@ function UserBillConfigDialog(props: UserBillConfigDialogProps) {
       <>
         <Grid container justifyContent={"space-between"} alignItems={"center"}>
           <Typography variant="h4" textAlign={"left"}>
-            {variant === "create" ? "新增電費單組合" : "修改電費單組合"}
+            {variant === "create" ? "新增用戶電費單組合" : "修改用戶電費單組合"}
           </Typography>
           <IconBtn icon={<HighlightOffIcon />} onClick={onClose} />
         </Grid>
 
         {/* 用戶資訊 Block */}
         <Typography variant="h5" textAlign={"left"}>
-          電費單設定
+          用戶電費單設定
         </Typography>
         <FieldsController
           configs={userInformationConfig}

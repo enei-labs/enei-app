@@ -165,14 +165,16 @@ function IndustryBillConfigDialog(props: IndustryBillDialogProps) {
       <>
         <Grid container justifyContent={"space-between"} alignItems={"center"}>
           <Typography variant="h4" textAlign={"left"}>
-            {variant === "create" ? "新增電費單組合" : "修改電費單組合"}
+            {variant === "create"
+              ? "新增發電業電費單組合"
+              : "修改發電業電費單組合"}
           </Typography>
           <IconBtn icon={<HighlightOffIcon />} onClick={onClose} />
         </Grid>
 
-        {/* 用戶資訊 Block */}
+        {/* 發電業資訊 Block */}
         <Typography variant="h5" textAlign={"left"}>
-          電費單設定
+          發電業資訊
         </Typography>
         <FieldsController
           configs={industryInformationConfig}
