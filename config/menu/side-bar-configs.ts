@@ -28,7 +28,7 @@ export const sideBarConfigs = {
       path: '/user'
     },
     {
-      name: "轉供申請進度",
+      name: "轉供契約管理",
       icon: ChartIcon,
       path: '/application'
     },
