@@ -7,8 +7,46 @@ export const USER_BILL_FIELDS = gql`
     electricNumberInfos {
       number
       price
+      degree
     }
     billingDate
     status
+    transferDocumentNumbers
+    userBillConfig {
+      id
+      user {
+        id
+        name
+        contactName
+        contactEmail
+        bankAccounts {
+          bankCode
+          bankName
+          bankBranchCode
+          bankBranchName
+          accountName
+          account
+          taxId
+        }
+        companyAddress
+      }
+      name
+      estimatedBillDeliverDate
+      paymentDeadline
+      recipientAccount {
+        bankCode
+        bankBranchCode
+        account
+      }
+      electricNumbers
+      transportationFee
+      credentialInspectionFee
+      credentialServiceFee
+      noticeForTPCBill
+      contactName
+      contactPhone
+      contactEmail
+      address
+    }
   }
 `;

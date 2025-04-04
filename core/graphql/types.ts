@@ -671,6 +671,7 @@ export type ModifyUserResponse = AccountAlreadyExistsError | User;
 
 export type Mutation = {
   __typename?: 'Mutation';
+  auditUserBill: UserBill;
   changePassword: ChangePasswordResponse;
   createAccount: CreateAccountResponse;
   createAdmin: CreateAdminResponse;
@@ -713,6 +714,12 @@ export type Mutation = {
   updateTransferDocumentStage: TransferDocument;
   updateUserBillConfig: UserBillConfig;
   updateUserContract: UserContract;
+};
+
+
+export type MutationAuditUserBillArgs = {
+  id: Scalars['String']['input'];
+  status: ElectricBillStatus;
 };
 
 
@@ -1574,6 +1581,8 @@ export type UserBill = {
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
   status: ElectricBillStatus;
+  /** 轉供契約編號 */
+  transferDocumentNumbers: Array<Scalars['String']['output']>;
   userBillConfig?: Maybe<UserBillConfig>;
 };
 
@@ -1622,8 +1631,9 @@ export type UserBillConfigRecipientAccount = {
 
 export type UserBillElectricNumberInfo = {
   __typename?: 'UserBillElectricNumberInfo';
+  degree: Scalars['Float']['output'];
   number: Scalars['String']['output'];
-  price?: Maybe<Scalars['Float']['output']>;
+  price: Scalars['Float']['output'];
 };
 
 export type UserBillPage = {

@@ -1,7 +1,8 @@
 import { gql } from '@apollo/client'
-import { USER_BILL_FIELDS } from '../fragment'
+import { FEE_FIELDS, USER_BILL_FIELDS } from '../fragment'
 
 export const USER_BILL = gql`
+  ${FEE_FIELDS}
   ${USER_BILL_FIELDS}
   query userBill(
     $id: UUID!
@@ -10,6 +11,9 @@ export const USER_BILL = gql`
       id: $id
     ) {
       ...userBillFields
+    }
+    fee {
+      ...feeFields
     }
   }
 `

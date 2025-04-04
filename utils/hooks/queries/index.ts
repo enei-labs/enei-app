@@ -15,3 +15,4 @@ export * from './useFee';
 export * from './useIndustryBills';
 export * from './useUserBillConfigs';
 export * from './useIndustryBillConfigs';
+export * from './useUserBill';

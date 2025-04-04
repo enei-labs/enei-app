@@ -56,9 +56,9 @@ export interface UserBillTemplateData {
 
 import { Box, Grid, Typography } from "@mui/material";
 import { forwardRef } from "react";
-import Logo from "public/logo-with-name.svg";
+import Logo from "public/logo.svg";
 import { formatNumber } from "@utils/format";
-
+import { ANNEAL_ENERGY } from "@config/anneal-energy";
 const styles = {
   container: {
     backgroundColor: "#FFF",
@@ -135,7 +135,17 @@ const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
   return (
     <Box sx={styles.container} ref={ref}>
       <Box display="flex" justifyContent="space-between">
-        <Logo height="40" />
+        <Box display="flex" alignItems="center" columnGap="12px">
+          <Logo height="40" />
+          <Box>
+            <Typography variant="h6" sx={{ fontWeight: 500, color: "#009688" }}>
+              {ANNEAL_ENERGY.companyName}
+            </Typography>
+            <Typography variant="h6" sx={{ fontWeight: 500, color: "#009688" }}>
+              {ANNEAL_ENERGY.companyNameEn}
+            </Typography>
+          </Box>
+        </Box>
         <Box
           sx={{
             display: "flex",
@@ -152,7 +162,7 @@ const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
             {data.billingMonth}
           </Typography>
           <Typography variant="h6" sx={{ fontWeight: 500, color: "#009688" }}>
-            {data.billingDate}
+            {`計費期間：${data.billingDate}`}
           </Typography>
         </Box>
       </Box>
@@ -170,7 +180,7 @@ const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
         </Typography>
       </Box>
       <Box display="flex" justifyContent="flex-end" marginY="24px">
-        <Typography fontSize="14px">{data.customerNumber}</Typography>
+        <Typography fontSize="14px">{`台電轉供單編號：${data.customerNumber}`}</Typography>
       </Box>
       <Grid container spacing={"8px"}>
         <Grid item sm={4}>
@@ -353,6 +363,7 @@ const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
           {/* Additional fees */}
           <Grid container>
             <Grid
+              item
               container
               sx={{
                 ...styles.tableRow,
@@ -390,6 +401,7 @@ const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
               </Grid>
             </Grid>
             <Grid
+              item
               container
               sx={{
                 borderBottom: "1px solid #000",
