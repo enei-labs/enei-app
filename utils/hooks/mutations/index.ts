@@ -33,3 +33,4 @@ export * from './useRemoveUserBillConfig';
 export * from './useCreateIndustryBillConfig';
 export * from './useUpdateIndustryBillConfig';
 export * from './useRemoveIndustryBillConfig';
+export * from './useAuditUserBill';

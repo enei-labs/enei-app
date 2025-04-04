@@ -1,17 +1,22 @@
 import { UserBillTemplateData } from "@components/ElectricBill/UserBillTemplate";
 import { PrintWrapper } from "@components/ReadExcelInput";
-import { UserBill } from "@core/graphql/types";
+import { UserBill, ElectricBillStatus } from "@core/graphql/types";
+import { ReviewStatusLookup } from "@core/look-up/review-status";
 import {
   Box,
   Dialog,
   Typography,
   Button,
   CircularProgress,
+  ToggleButtonGroup,
+  ToggleButton,
 } from "@mui/material";
 import { formatDateTime } from "@utils/format";
 import { useUserBill } from "@utils/hooks/queries";
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
+import { useAuditUserBill } from "@utils/hooks/mutations";
+import { toast } from "react-toastify";
 
 interface UserBillDialogProps {
   isOpenDialog: boolean;
@@ -25,6 +30,28 @@ export const UserBillDialog = ({
   onClose,
 }: UserBillDialogProps) => {
   const { data, loading, error } = useUserBill(userBill.id);
+  const [auditUserBill, { loading: auditUserBillLoading }] = useAuditUserBill();
+  const [reviewStatus, setReviewStatus] = useState<ElectricBillStatus | null>(
+    null
+  );
+
+  useEffect(() => {
+    if (data?.userBill.status === ElectricBillStatus.Approved) {
+      setReviewStatus(ElectricBillStatus.Approved);
+    }
+
+    if (data?.userBill.status === ElectricBillStatus.Manual) {
+      setReviewStatus(ElectricBillStatus.Manual);
+    }
+
+    if (data?.userBill.status === ElectricBillStatus.Pending) {
+      setReviewStatus(ElectricBillStatus.Pending);
+    }
+
+    if (data?.userBill.status === ElectricBillStatus.Rejected) {
+      setReviewStatus(ElectricBillStatus.Rejected);
+    }
+  }, [data]);
 
   const calculateTotalDegree = (
     electricNumberInfos: UserBill["electricNumberInfos"]
@@ -116,6 +143,30 @@ export const UserBillDialog = ({
     documentTitle: userBill.name,
   });
 
+  const handleReviewChange = async (
+    event: React.MouseEvent<HTMLElement>,
+    newStatus: ElectricBillStatus | null
+  ) => {
+    if (!newStatus) return;
+    const variables = { id: userBill.id, status: newStatus };
+    console.log({ variables });
+    await auditUserBill({ variables });
+    setReviewStatus(newStatus);
+    switch (newStatus) {
+      case ElectricBillStatus.Approved:
+        toast.success(`已調整審核狀態: ${ReviewStatusLookup[newStatus]}`);
+        break;
+      case ElectricBillStatus.Manual:
+        toast.success(`已調整審核狀態: ${ReviewStatusLookup[newStatus]}`);
+        break;
+    }
+  };
+
+  const handleManualImport = () => {
+    // TODO: 實作手動匯入邏輯
+    onClose();
+  };
+
   return (
     <Dialog open={isOpenDialog} onClose={onClose} maxWidth="md">
       <Box padding="36px">
@@ -138,14 +189,54 @@ export const UserBillDialog = ({
             companyBillTemplatesData={[]}
           />
         )}
-        <Box display="flex" justifyContent="flex-end" gap={2}>
-          <Button onClick={() => {}} sx={{ marginRight: "6px" }}>
-            審核
-          </Button>
 
-          <Button onClick={handlePrint} sx={{ marginRight: "6px" }}>
-            列印
-          </Button>
+        {reviewStatus && (
+          <Box sx={{ mt: 3, mb: 2 }}>
+            <Typography>
+              當前審核狀態：{ReviewStatusLookup[reviewStatus]}
+            </Typography>
+          </Box>
+        )}
+
+        <Box sx={{ mt: 3, mb: 2 }}>
+          <ToggleButtonGroup
+            value={reviewStatus}
+            exclusive
+            onChange={handleReviewChange}
+            aria-label="審核狀態"
+            fullWidth
+          >
+            <ToggleButton
+              value={ElectricBillStatus.Approved}
+              aria-label="審核通過"
+            >
+              審核通過
+            </ToggleButton>
+            <ToggleButton
+              value={ElectricBillStatus.Manual}
+              aria-label="選擇手動輸入"
+            >
+              選擇手動輸入
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </Box>
+
+        <Box display="flex" justifyContent="flex-end" gap={2}>
+          {reviewStatus === ElectricBillStatus.Approved && (
+            <Button variant="contained" color="primary" onClick={handlePrint}>
+              列印
+            </Button>
+          )}
+
+          {reviewStatus === ElectricBillStatus.Manual && (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleManualImport}
+            >
+              手動輸入
+            </Button>
+          )}
         </Box>
       </Box>
     </Dialog>

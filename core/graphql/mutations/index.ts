@@ -38,3 +38,4 @@ export * from './removeUserBillConfig';
 export * from './createIndustryBillConfig';
 export * from './updateIndustryBillConfig';
 export * from './removeIndustryBillConfig';
+export * from './auditUserBill';

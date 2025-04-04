@@ -493,6 +493,7 @@ export type DashboardUserContract = {
 export enum ElectricBillStatus {
   Approved = 'APPROVED',
   Draft = 'DRAFT',
+  Manual = 'MANUAL',
   Pending = 'PENDING',
   Rejected = 'REJECTED'
 }

@@ -8,7 +8,7 @@ import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import { IconBtn } from "@components/Button";
 import { UserBillDialog } from "./UserBillDialog";
 import { useState } from "react";
-
+import { ReviewStatusLookup } from "@core/look-up/review-status";
 interface UserBillPanelProps {
   month: string;
 }
@@ -29,7 +29,7 @@ const UserBillPanel = (props: UserBillPanelProps) => {
     {
       header: "狀態",
       accessor: "status",
-      render: (rowData) => <Box>{rowData.status}</Box>,
+      render: (rowData) => <Box>{ReviewStatusLookup[rowData.status]}</Box>,
     },
     {
       header: "檢視 / 審核",
