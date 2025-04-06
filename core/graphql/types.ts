@@ -582,11 +582,13 @@ export type IndustryBill = {
   createdAt: Scalars['DateTime']['output'];
   deletedAt: Scalars['DateTime']['output'];
   deletedBy: Scalars['String']['output'];
-  electricNumberInfos: Scalars['String']['output'];
+  electricNumberInfos: Array<IndustryBillElectricNumberInfo>;
   id: Scalars['ID']['output'];
   industryBillConfig: IndustryBillConfig;
   name: Scalars['String']['output'];
   status: ElectricBillStatus;
+  /** 轉供契約編號 */
+  transferDocumentNumbers: Array<Scalars['String']['output']>;
 };
 
 export type IndustryBillConfig = {
@@ -598,7 +600,7 @@ export type IndustryBillConfig = {
   createdAt: Scalars['DateTime']['output'];
   credentialInspectionFee: IndustryBillConfigChargeType;
   credentialServiceFee: IndustryBillConfigChargeType;
-  electricNumberInfos: Array<IndustryBillConfigElectricNumberInfo>;
+  electricNumbers: Array<Scalars['String']['output']>;
   /** 預計電費單寄出期限（收到繳費通知單後天數 */
   estimatedBillDeliverDate: Scalars['Int']['output'];
   id: Scalars['ID']['output'];
@@ -616,13 +618,6 @@ export enum IndustryBillConfigChargeType {
   Self = 'SELF'
 }
 
-export type IndustryBillConfigElectricNumberInfo = {
-  __typename?: 'IndustryBillConfigElectricNumberInfo';
-  number: Scalars['String']['output'];
-  /** 採購電價（元/kWh） */
-  price: Scalars['String']['output'];
-};
-
 export type IndustryBillConfigPage = {
   __typename?: 'IndustryBillConfigPage';
   list: Array<IndustryBillConfig>;
@@ -637,6 +632,13 @@ export type IndustryBillConfigRecipientAccount = {
   bankBranchCode?: Maybe<Scalars['String']['output']>;
   /** 銀行代碼 */
   bankCode: Scalars['String']['output'];
+};
+
+export type IndustryBillElectricNumberInfo = {
+  __typename?: 'IndustryBillElectricNumberInfo';
+  degree: Scalars['Float']['output'];
+  number: Scalars['String']['output'];
+  price: Scalars['Float']['output'];
 };
 
 export type IndustryBillPage = {
@@ -672,6 +674,7 @@ export type ModifyUserResponse = AccountAlreadyExistsError | User;
 
 export type Mutation = {
   __typename?: 'Mutation';
+  auditIndustryBill: IndustryBill;
   auditUserBill: UserBill;
   changePassword: ChangePasswordResponse;
   createAccount: CreateAccountResponse;
@@ -715,6 +718,12 @@ export type Mutation = {
   updateTransferDocumentStage: TransferDocument;
   updateUserBillConfig: UserBillConfig;
   updateUserContract: UserContract;
+};
+
+
+export type MutationAuditIndustryBillArgs = {
+  id: Scalars['String']['input'];
+  status: ElectricBillStatus;
 };
 
 
