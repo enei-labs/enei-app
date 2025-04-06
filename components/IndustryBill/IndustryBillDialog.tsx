@@ -33,7 +33,8 @@ export const IndustryBillDialog = ({
   onClose,
 }: IndustryBillDialogProps) => {
   const { data, loading, error } = useIndustryBill(industryBill.id);
-  const [auditIndustryBill] = useAuditIndustryBill();
+  const [auditIndustryBill, { loading: auditIndustryBillLoading }] =
+    useAuditIndustryBill();
   const [reviewStatus, setReviewStatus] = useState<ElectricBillStatus | null>(
     null
   );
@@ -187,10 +188,13 @@ export const IndustryBillDialog = ({
         )}
 
         {reviewStatus && (
-          <Box sx={{ mt: 3, mb: 2 }}>
-            <Typography>
-              當前審核狀態：{ReviewStatusLookup[reviewStatus]}
-            </Typography>
+          <Box sx={{ mt: 3, mb: 2, display: "flex", alignItems: "center" }}>
+            <Typography>當前審核狀態：</Typography>
+            {auditIndustryBillLoading ? (
+              <CircularProgress size="16px" />
+            ) : (
+              <Typography>{ReviewStatusLookup[reviewStatus]}</Typography>
+            )}
           </Box>
         )}
 

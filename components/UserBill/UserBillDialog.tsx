@@ -149,7 +149,7 @@ export const UserBillDialog = ({
   ) => {
     if (!newStatus) return;
     const variables = { id: userBill.id, status: newStatus };
-    console.log({ variables });
+
     await auditUserBill({ variables });
     setReviewStatus(newStatus);
     switch (newStatus) {
@@ -191,10 +191,13 @@ export const UserBillDialog = ({
         )}
 
         {reviewStatus && (
-          <Box sx={{ mt: 3, mb: 2 }}>
-            <Typography>
-              當前審核狀態：{ReviewStatusLookup[reviewStatus]}
-            </Typography>
+          <Box sx={{ mt: 3, mb: 2, display: "flex", alignItems: "center" }}>
+            <Typography>當前審核狀態：</Typography>
+            {auditUserBillLoading ? (
+              <CircularProgress size="16px" />
+            ) : (
+              <Typography>{ReviewStatusLookup[reviewStatus]}</Typography>
+            )}
           </Box>
         )}
 
