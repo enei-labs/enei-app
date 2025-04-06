@@ -65,13 +65,14 @@ function IndustryBillConfigDialog(props: IndustryBillDialogProps) {
             label: currentModifyIndustryBillConfig.industry.contactEmail,
             value: currentModifyIndustryBillConfig.industry.id,
           },
-          // recipientAccount: {
-          //   label: `(${currentModifyIndustryBillConfig.recipientAccount.bankCode}) ${currentModifyIndustryBillConfig.recipientAccount.account}`,
-          //   value: {
-          //     bankCode: currentModifyIndustryBillConfig.recipientAccount.bankCode,
-          //     account: currentModifyIndustryBillConfig.recipientAccount.account,
-          //   },
-          // },
+          recipientAccount: {
+            label: `(${currentModifyIndustryBillConfig.recipientAccount.bankCode}) ${currentModifyIndustryBillConfig.recipientAccount.account}`,
+            value: {
+              bankCode:
+                currentModifyIndustryBillConfig.recipientAccount.bankCode,
+              account: currentModifyIndustryBillConfig.recipientAccount.account,
+            },
+          },
           estimatedBillDeliverDate:
             currentModifyIndustryBillConfig.estimatedBillDeliverDate,
           paymentDeadline: currentModifyIndustryBillConfig.paymentDeadline,
@@ -82,13 +83,13 @@ function IndustryBillConfigDialog(props: IndustryBillDialogProps) {
             currentModifyIndustryBillConfig.credentialServiceFee,
           noticeForTPCBill: currentModifyIndustryBillConfig.noticeForTPCBill,
           electricNumberInfos: (
-            currentModifyIndustryBillConfig.electricNumberInfos ?? []
-          ).map((info) => ({
+            currentModifyIndustryBillConfig.electricNumbers ?? []
+          ).map((number) => ({
             number: {
-              label: info.number,
-              value: info.number,
+              label: number,
+              value: number,
             },
-            price: info.price,
+            price: "",
           })),
           contactName: currentModifyIndustryBillConfig.contactName,
           contactEmail: currentModifyIndustryBillConfig.contactEmail,
