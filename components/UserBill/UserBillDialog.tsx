@@ -1,5 +1,5 @@
 import { UserBillTemplateData } from "@components/ElectricBill/UserBillTemplate";
-import { PrintWrapper } from "@components/ReadExcelInput";
+import { PrintWrapper, ReadExcelInput } from "@components/ReadExcelInput";
 import { UserBill, ElectricBillStatus } from "@core/graphql/types";
 import { ReviewStatusLookup } from "@core/look-up/review-status";
 import {
@@ -224,23 +224,14 @@ export const UserBillDialog = ({
           </ToggleButtonGroup>
         </Box>
 
-        <Box display="flex" justifyContent="flex-end" gap={2}>
+        <Box display="flex" justifyContent="flex-start" gap={2}>
           {reviewStatus === ElectricBillStatus.Approved && (
             <Button variant="contained" color="primary" onClick={handlePrint}>
               列印
             </Button>
           )}
-
-          {reviewStatus === ElectricBillStatus.Manual && (
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleManualImport}
-            >
-              手動輸入
-            </Button>
-          )}
         </Box>
+        {reviewStatus === ElectricBillStatus.Manual && <ReadExcelInput />}
       </Box>
     </Dialog>
   );

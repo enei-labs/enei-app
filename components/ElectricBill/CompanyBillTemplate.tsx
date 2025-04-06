@@ -43,8 +43,9 @@ export interface CompanyBillTemplateData {
 
 import { Box, Divider, Grid, Paper, Typography } from "@mui/material";
 import { forwardRef } from "react";
-import Logo from "public/logo-with-name.svg";
+import Logo from "public/logo.svg";
 import { formatNumber } from "@utils/format";
+import { ANNEAL_ENERGY } from "@config/anneal-energy";
 
 const styles = {
   container: {
@@ -137,7 +138,17 @@ const CompanyBillTemplate = forwardRef((props: CompanyBillProps, ref) => {
   return (
     <Box sx={styles.container} ref={ref}>
       <Box display="flex" justifyContent="space-between">
-        <Logo height="40" />
+        <Box display="flex" alignItems="center" columnGap="12px">
+          <Logo height="40" />
+          <Box>
+            <Typography variant="h6" sx={{ fontWeight: 500, color: "#009688" }}>
+              {ANNEAL_ENERGY.companyName}
+            </Typography>
+            <Typography variant="h6" sx={{ fontWeight: 500, color: "#009688" }}>
+              {ANNEAL_ENERGY.companyNameEn}
+            </Typography>
+          </Box>
+        </Box>
         <Box
           sx={{
             display: "flex",
@@ -169,7 +180,7 @@ const CompanyBillTemplate = forwardRef((props: CompanyBillProps, ref) => {
         </Box>
       </Box>
       <Box display="flex" justifyContent="flex-end" marginY="24px">
-        <Typography fontSize="14px">{data.transferNumber}</Typography>
+        <Typography fontSize="14px">{`台電轉供單編號：${data.transferNumber}`}</Typography>
       </Box>
       <Grid container spacing={"8px"}>
         <Grid item sm={4}>

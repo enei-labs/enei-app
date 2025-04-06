@@ -11,7 +11,7 @@ export const getCompanyBillTemplateData = (data: any) => {
     // 負責人名稱
     responsibleName: data[2][2],
     // 轉供單編號
-    transferNumber: data[4][6],
+    transferNumber: (data[4][6] ?? "").replace("台電轉供單編號：", ""),
     // 電號
     serialNumber: data[7][1],
     // 電廠名稱

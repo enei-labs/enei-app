@@ -40,7 +40,7 @@ export const getUserBillTemplateData = (data: any) => {
     billingDate: data[2][7],
     companyName: data[2][1],
     customerName: data[2][2],
-    customerNumber: data[4][7],
+    customerNumber: (data[4][7] ?? "").replace("台電轉供單編號：", ""),
     address: data[3][1],
     dueDate: formatDateTime(excelDateToJSDate(data[7][3])),
     amount: data[7][1],
