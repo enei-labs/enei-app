@@ -6,14 +6,15 @@ import { useUserBills } from "@utils/hooks/queries";
 import { formatDateTime } from "@utils/format";
 import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import { IconBtn } from "@components/Button";
-import { UserBillDialog } from "./UserBillDialog";
+import { IndustryBillDialog } from "./IndustryBillDialog";
 import { useState } from "react";
 import { ReviewStatusLookup } from "@core/look-up/review-status";
-interface UserBillPanelProps {
+
+interface IndustryBillPanelProps {
   month: string;
 }
 
-const UserBillPanel = (props: UserBillPanelProps) => {
+const IndustryBillPanel = (props: IndustryBillPanelProps) => {
   const [isOpenDialog, setIsOpenDialog] = useState(false);
   const [userBill, setUserBill] = useState<UserBill | null>(null);
   const { data, loading, refetch } = useUserBills({
@@ -66,8 +67,8 @@ const UserBillPanel = (props: UserBillPanelProps) => {
         />
       </Card>
       {userBill && (
-        <UserBillDialog
-          userBill={userBill}
+        <IndustryBillDialog
+          industryBill={userBill}
           isOpenDialog={isOpenDialog}
           onClose={() => setIsOpenDialog(false)}
         />
@@ -76,4 +77,4 @@ const UserBillPanel = (props: UserBillPanelProps) => {
   );
 };
 
-export default UserBillPanel;
+export default IndustryBillPanel;

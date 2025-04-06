@@ -6,16 +6,16 @@ import { Box } from "@mui/material";
 import { AuthLayout } from "@components/Layout";
 import { ReactElement } from "react";
 import InboxOutlinedIcon from "@mui/icons-material/InboxOutlined";
-import UserBillPanel from "@components/UserBill/UserBillPanel";
-function UserBillPage() {
+import IndustryBillPanel from "@components/IndustryBill/IndustryBillPanel";
+function IndustryBillPage() {
   const router = useRouter();
   const month = router.query.month as string;
 
   return (
     <>
       <Head>
-        <title>用戶電費單</title>
-        <meta name="description" content="用戶電費單" />
+        <title>發電業電費單</title>
+        <meta name="description" content="發電業電費單" />
       </Head>
       {month ? (
         <>
@@ -27,14 +27,14 @@ function UserBillPage() {
                 href: "/electric-bill",
               },
               {
-                name: "用戶電費單",
+                name: "發電業電費單",
                 icon: Person2OutlinedIcon,
-                href: `/electric-bill/user-bill?month=${month}`,
+                href: `/electric-bill/industry-bill?month=${month}`,
               },
             ]}
           />
           <Box sx={{ paddingTop: "12px" }}>
-            <UserBillPanel month={month} />
+            <IndustryBillPanel month={month} />
           </Box>
         </>
       ) : null}
@@ -42,8 +42,8 @@ function UserBillPage() {
   );
 }
 
-UserBillPage.getLayout = (page: ReactElement) => {
+IndustryBillPage.getLayout = (page: ReactElement) => {
   return <AuthLayout>{page}</AuthLayout>;
 };
 
-export default UserBillPage;
+export default IndustryBillPage;
