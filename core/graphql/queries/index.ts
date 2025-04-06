@@ -19,5 +19,7 @@ export * from './industryBill';
 export * from './industryBills';
 export * from './userBillConfig';
 export * from './userBillConfigs';
+export * from './userBillsByMonth';
 export * from './industryBillConfig';
 export * from './industryBillConfigs';
+export * from './industryBillsByMonth';

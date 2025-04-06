@@ -3,11 +3,11 @@ import Table, { Config } from "@components/Table/Table";
 import { ElectricBillStatus, UserBillsByMonth } from "@core/graphql/types";
 import { Box, Card, Typography } from "@mui/material";
 import { formatDateTime } from "@utils/format";
-import { useUserBillsByMonth } from "@utils/hooks/queries/useUserBillsByMonth";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { useIndustryBillsByMonth } from "@utils/hooks/queries/useIndustryBillsByMonth";
 
-export const UserBillsByMonthPanel = () => {
+export const IndustryBillsByMonthPanel = () => {
   const router = useRouter();
   const currentDate = new Date();
   const oneYearAgo = new Date();
@@ -38,7 +38,7 @@ export const UserBillsByMonthPanel = () => {
     endDate: formatDateToString(currentDate),
   });
 
-  const { data, loading } = useUserBillsByMonth(
+  const { data, loading } = useIndustryBillsByMonth(
     getMonthStartDate(dateRange.startDate),
     getMonthEndDate(dateRange.endDate)
   );
@@ -124,7 +124,7 @@ export const UserBillsByMonthPanel = () => {
 
   return (
     <Card sx={{ mt: "36px", p: "36px" }}>
-      <Typography variant="h4">用戶電費單</Typography>
+      <Typography variant="h4">發電業電費單</Typography>
       <Box
         sx={{
           display: "flex",

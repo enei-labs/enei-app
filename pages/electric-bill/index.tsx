@@ -28,7 +28,7 @@ import UserBillConfigPanel from "@components/UserBill/UserBillConfigPanel";
 import IndustryBillConfigDialog from "@components/IndustryBill/IndustryBillConfigDialog/IndustryBillConfigDialog";
 import IndustryBillConfigPanel from "@components/IndustryBill/IndustryBillConfigPanel";
 import { UserBillsByMonthPanel } from "@components/UserBill/UserBillsByMonthPanel";
-
+import { IndustryBillsByMonthPanel } from "@components/IndustryBill/IndustryBillsByMonthPanel";
 const TransferDocumentDialog = dynamic(
   () =>
     import(
@@ -245,11 +245,7 @@ function ExportElectricBillPage() {
             {data?.fee ? <IndustryBillConfigPanel fee={data.fee} /> : null}
           </Card>
 
-          <Card sx={{ mt: "36px", p: "36px" }}>
-            <Typography variant="h4">發電業電費單</Typography>
-          </Card>
-
-          <Divider sx={{ my: "24px" }} />
+          <IndustryBillsByMonthPanel />
         </AuthGuard>
       </Box>
       {open ? (

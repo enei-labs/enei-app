@@ -647,6 +647,12 @@ export type IndustryBillPage = {
   total: Scalars['Int']['output'];
 };
 
+export type IndustryBillsByMonth = {
+  __typename?: 'IndustryBillsByMonth';
+  bills: Array<IndustryBill>;
+  month: Scalars['DateTime']['output'];
+};
+
 export type InvalidCurrentPasswordError = Error & {
   __typename?: 'InvalidCurrentPasswordError';
   id: Scalars['ID']['output'];
@@ -1018,6 +1024,7 @@ export type Query = {
   industryBillConfig: IndustryBillConfig;
   industryBillConfigs: IndustryBillConfigPage;
   industryBills: IndustryBillPage;
+  industryBillsByMonth: Array<IndustryBillsByMonth>;
   me?: Maybe<Account>;
   powerPlant: PowerPlant;
   powerPlants: PowerPlantPage;
@@ -1109,6 +1116,12 @@ export type QueryIndustryBillsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   term?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryIndustryBillsByMonthArgs = {
+  endDate: Scalars['DateTime']['input'];
+  startDate: Scalars['DateTime']['input'];
 };
 
 
