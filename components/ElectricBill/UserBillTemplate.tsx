@@ -138,10 +138,10 @@ const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
         <Box display="flex" alignItems="center" columnGap="12px">
           <Logo height="40" />
           <Box>
-            <Typography variant="h6" sx={{ fontWeight: 500, color: "#009688" }}>
+            <Typography variant="h6" sx={{ fontWeight: 500 }}>
               {ANNEAL_ENERGY.companyName}
             </Typography>
-            <Typography variant="h6" sx={{ fontWeight: 500, color: "#009688" }}>
+            <Typography variant="h6" sx={{ fontWeight: 500 }}>
               {ANNEAL_ENERGY.companyNameEn}
             </Typography>
           </Box>

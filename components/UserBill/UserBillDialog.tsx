@@ -76,12 +76,16 @@ export const UserBillDialog = ({
       verification: Number(data.fee.certificateVerificationFee),
       service: Number(data.fee.certificateServiceFee),
     };
+    const substitutionFee = Math.round(
+      (totalDegree * feeRates.substitution) / 1.05
+    );
+    const certificationFee = Math.round(totalDegree * feeRates.verification);
+    const certificationServiceFee = Math.round(totalDegree * feeRates.service);
 
     const totalFee =
-      totalDegree *
-      (feeRates.substitution + feeRates.verification + feeRates.service);
-    const totalAmount =
-      calculateTotalAmount(data.userBill.electricNumberInfos) + totalFee;
+      substitutionFee + certificationFee + certificationServiceFee;
+
+    const totalAmount = calculateTotalAmount(data.userBill.electricNumberInfos);
     const tax = (totalAmount + totalFee) * 0.05;
 
     return {
@@ -100,7 +104,7 @@ export const UserBillDialog = ({
       // 「計費年月」在「新增台電代輸繳費單」中的所有「轉供契約編號」
       customerNumber: data.userBill.transferDocumentNumbers.join("、"),
       address: data.userBill.userBillConfig?.user.companyAddress ?? "",
-      amount: totalAmount + totalFee - tax,
+      amount: totalAmount + totalFee,
       dueDate: formatDateTime(
         new Date(
           Date.now() +
@@ -124,16 +128,16 @@ export const UserBillDialog = ({
       totalFee,
       total: totalAmount + totalFee,
       tax,
-      totalIncludeTax: totalAmount + totalFee - tax,
+      totalIncludeTax: totalAmount + totalFee + tax,
       usage: data.userBill.electricNumberInfos.map((info) => ({
         serialNumber: info.number ?? "",
         kwh: info.degree,
         price: info.price ?? 0,
         amount: (info.price ?? 0) * (info.degree ?? 0),
       })),
-      substitutionFee: totalDegree * feeRates.substitution,
-      certificationFee: totalDegree * feeRates.verification,
-      certificationServiceFee: totalDegree * feeRates.service,
+      substitutionFee,
+      certificationFee,
+      certificationServiceFee,
     };
   }, [data, loading, error]);
 

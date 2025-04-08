@@ -182,7 +182,7 @@ function IndustryBillConfigDialog(props: IndustryBillDialogProps) {
           form={{ control, errors }}
         />
 
-        <Controller
+        {/* <Controller
           control={control}
           name={"transportationFee"}
           render={({ field }) => {
@@ -222,7 +222,7 @@ function IndustryBillConfigDialog(props: IndustryBillDialogProps) {
               />
             );
           }}
-        />
+        /> */}
 
         <Controller
           control={control}
