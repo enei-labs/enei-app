@@ -286,8 +286,6 @@ export type CreateIndustryBillConfigInput = {
   contactEmail: Scalars['String']['input'];
   contactName: Scalars['String']['input'];
   contactPhone: Scalars['String']['input'];
-  credentialInspectionFee: IndustryBillConfigChargeType;
-  credentialServiceFee: IndustryBillConfigChargeType;
   electricNumbers: Array<Scalars['String']['input']>;
   /** 預計電費單寄出期限（收到繳費通知單後天數 */
   estimatedBillDeliverDate: Scalars['Float']['input'];
@@ -297,7 +295,6 @@ export type CreateIndustryBillConfigInput = {
   /** 用戶繳費期限（收到繳費通知單後天數） */
   paymentDeadline: Scalars['Float']['input'];
   recipientAccount: RecipientAccountInput;
-  transportationFee: IndustryBillConfigChargeType;
 };
 
 export type CreatePowerPlantInput = {
@@ -598,8 +595,6 @@ export type IndustryBillConfig = {
   contactName: Scalars['String']['output'];
   contactPhone: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
-  credentialInspectionFee: IndustryBillConfigChargeType;
-  credentialServiceFee: IndustryBillConfigChargeType;
   electricNumbers: Array<Scalars['String']['output']>;
   /** 預計電費單寄出期限（收到繳費通知單後天數 */
   estimatedBillDeliverDate: Scalars['Int']['output'];
@@ -610,13 +605,7 @@ export type IndustryBillConfig = {
   /** 發電業繳費期限（收到繳費通知單後天數） */
   paymentDeadline: Scalars['Int']['output'];
   recipientAccount: IndustryBillConfigRecipientAccount;
-  transportationFee: IndustryBillConfigChargeType;
 };
-
-export enum IndustryBillConfigChargeType {
-  Industry = 'INDUSTRY',
-  Self = 'SELF'
-}
 
 export type IndustryBillConfigPage = {
   __typename?: 'IndustryBillConfigPage';
@@ -1491,8 +1480,6 @@ export type UpdateIndustryBillConfigInput = {
   contactEmail: Scalars['String']['input'];
   contactName: Scalars['String']['input'];
   contactPhone: Scalars['String']['input'];
-  credentialInspectionFee: IndustryBillConfigChargeType;
-  credentialServiceFee: IndustryBillConfigChargeType;
   electricNumbers: Array<Scalars['String']['input']>;
   /** 預計電費單寄出期限（收到繳費通知單後天數 */
   estimatedBillDeliverDate: Scalars['Float']['input'];
@@ -1503,7 +1490,6 @@ export type UpdateIndustryBillConfigInput = {
   /** 用戶繳費期限（收到繳費通知單後天數） */
   paymentDeadline: Scalars['Float']['input'];
   recipientAccount: RecipientAccountInput;
-  transportationFee: IndustryBillConfigChargeType;
 };
 
 export type UpdatePowerPlantInput = {

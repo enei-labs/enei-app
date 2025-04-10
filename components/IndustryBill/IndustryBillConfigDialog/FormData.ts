@@ -1,5 +1,3 @@
-import { IndustryBillConfigChargeType } from "@core/graphql/types";
-
 export type FormData = {
   name: string;
   industryId: {
@@ -15,9 +13,6 @@ export type FormData = {
   };
   estimatedBillDeliverDate: number;
   paymentDeadline: number;
-  transportationFee: IndustryBillConfigChargeType;
-  credentialInspectionFee: IndustryBillConfigChargeType;
-  credentialServiceFee: IndustryBillConfigChargeType;
   noticeForTPCBill: boolean;
   electricNumberInfos: {
     number: {

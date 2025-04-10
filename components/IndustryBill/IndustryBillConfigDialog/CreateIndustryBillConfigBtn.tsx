@@ -38,9 +38,6 @@ const CreateIndustryBillConfigBtn = (props: CreateIndustryBillBtnProps) => {
           electricNumbers: formData.electricNumberInfos.map(
             (i) => i.number.value
           ),
-          transportationFee: formData.transportationFee,
-          credentialInspectionFee: formData.credentialInspectionFee,
-          credentialServiceFee: formData.credentialServiceFee,
           noticeForTPCBill: (formData.noticeForTPCBill as unknown) === "true",
           contactName: formData.contactName,
           contactPhone: formData.contactPhone,

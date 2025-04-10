@@ -108,13 +108,13 @@ export const UserBillsByMonthPanel = () => {
       ),
     },
     {
-      header: "狀態（已拒絕）",
+      header: "狀態（手動輸入）",
       accessor: "bills",
       render: (rowData) => (
         <Box>
           {
             rowData.bills.filter(
-              (bill) => bill.status === ElectricBillStatus.Rejected
+              (bill) => bill.status === ElectricBillStatus.Manual
             ).length
           }
         </Box>

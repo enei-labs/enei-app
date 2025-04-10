@@ -10,7 +10,6 @@ import { FormData } from "@components/IndustryBill/IndustryBillConfigDialog/Form
 import { Controller, useForm } from "react-hook-form";
 import { InputText } from "@components/Input";
 import RadioGroup from "@components/RadioGroup";
-import { IndustryBillConfigChargeType } from "@core/graphql/types";
 import { ElectricNumbersField } from "@components/IndustryBill/IndustryBillConfigDialog/ElectricNumbersField";
 import { useCompanies } from "@utils/hooks/queries";
 import CreateIndustryBillBtn from "@components/IndustryBill/IndustryBillConfigDialog/CreateIndustryBillConfigBtn";
@@ -23,17 +22,6 @@ interface IndustryBillDialogProps {
   variant: "edit" | "create";
   onClose: VoidFunction;
 }
-
-const ChargeTypeRadios = [
-  {
-    label: "向發電業收取",
-    value: IndustryBillConfigChargeType.Industry,
-  },
-  {
-    label: "自行負擔",
-    value: IndustryBillConfigChargeType.Self,
-  },
-];
 
 const YesOrNoRadios = [
   {
@@ -76,11 +64,6 @@ function IndustryBillConfigDialog(props: IndustryBillDialogProps) {
           estimatedBillDeliverDate:
             currentModifyIndustryBillConfig.estimatedBillDeliverDate,
           paymentDeadline: currentModifyIndustryBillConfig.paymentDeadline,
-          transportationFee: currentModifyIndustryBillConfig.transportationFee,
-          credentialInspectionFee:
-            currentModifyIndustryBillConfig.credentialInspectionFee,
-          credentialServiceFee:
-            currentModifyIndustryBillConfig.credentialServiceFee,
           noticeForTPCBill: currentModifyIndustryBillConfig.noticeForTPCBill,
           electricNumberInfos: (
             currentModifyIndustryBillConfig.electricNumbers ?? []
@@ -181,48 +164,6 @@ function IndustryBillConfigDialog(props: IndustryBillDialogProps) {
           configs={industryInformationConfig}
           form={{ control, errors }}
         />
-
-        {/* <Controller
-          control={control}
-          name={"transportationFee"}
-          render={({ field }) => {
-            return (
-              <RadioGroup
-                {...field}
-                label="代輸費款項"
-                radios={ChargeTypeRadios}
-              />
-            );
-          }}
-        />
-
-        <Controller
-          control={control}
-          name={"credentialInspectionFee"}
-          render={({ field }) => {
-            return (
-              <RadioGroup
-                {...field}
-                label="憑證審查費"
-                radios={ChargeTypeRadios}
-              />
-            );
-          }}
-        />
-
-        <Controller
-          control={control}
-          name={"credentialServiceFee"}
-          render={({ field }) => {
-            return (
-              <RadioGroup
-                {...field}
-                label="憑證服務費"
-                radios={ChargeTypeRadios}
-              />
-            );
-          }}
-        /> */}
 
         <Controller
           control={control}
