@@ -4,14 +4,15 @@ export const INDUSTRY_BILL_FIELDS = gql`
   fragment industryBillFields on IndustryBill {
     id
     name
-    electricNumberInfos {
-      number
-      price
-      degree
-    }
+    powerPlantNumber
+    powerPlantName
+    companyContractNumber
+    transferDegree
+    price
+    supplyVolume
+    transferDocumentNumber
     billingDate
     status
-    transferDocumentNumbers
     industryBillConfig {
       id
       industry {
@@ -35,10 +36,6 @@ export const INDUSTRY_BILL_FIELDS = gql`
         bankBranchCode
         account
       }
-      electricNumbers
-      transportationFee
-      credentialInspectionFee
-      credentialServiceFee
       noticeForTPCBill
       contactName
       contactPhone

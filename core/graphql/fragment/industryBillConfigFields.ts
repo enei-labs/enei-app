@@ -17,9 +17,6 @@ export const INDUSTRY_BILL_CONFIG_FIELDS = gql`
       account
     }
     electricNumbers
-    transportationFee
-    credentialInspectionFee
-    credentialServiceFee
     noticeForTPCBill
     contactName
     contactPhone

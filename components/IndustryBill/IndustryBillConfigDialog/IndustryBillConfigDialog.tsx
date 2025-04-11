@@ -65,15 +65,16 @@ function IndustryBillConfigDialog(props: IndustryBillDialogProps) {
             currentModifyIndustryBillConfig.estimatedBillDeliverDate,
           paymentDeadline: currentModifyIndustryBillConfig.paymentDeadline,
           noticeForTPCBill: currentModifyIndustryBillConfig.noticeForTPCBill,
-          electricNumberInfos: (
-            currentModifyIndustryBillConfig.electricNumbers ?? []
-          ).map((number) => ({
-            number: {
-              label: number,
-              value: number,
-            },
-            price: "",
-          })),
+          // 不要在初始化設定
+          // electricNumberInfos: (
+          //   currentModifyIndustryBillConfig.electricNumbers ?? []
+          // ).map((number) => ({
+          //   number: {
+          //     label: number,
+          //     value: number,
+          //   },
+          //   price: "",
+          // })),
           contactName: currentModifyIndustryBillConfig.contactName,
           contactEmail: currentModifyIndustryBillConfig.contactEmail,
           contactPhone: currentModifyIndustryBillConfig.contactPhone,
@@ -145,7 +146,7 @@ function IndustryBillConfigDialog(props: IndustryBillDialogProps) {
   ];
 
   return (
-    <Dialog open={isOpenDialog} onClose={onClose}>
+    <Dialog open={isOpenDialog} onClose={onClose} maxWidth="md">
       <>
         <Grid container justifyContent={"space-between"} alignItems={"center"}>
           <Typography variant="h4" textAlign={"left"}>
@@ -190,6 +191,9 @@ function IndustryBillConfigDialog(props: IndustryBillDialogProps) {
             name={`electricNumberInfos`}
             render={({ field }) => (
               <ElectricNumbersField
+                currentModifyIndustryBillConfig={
+                  currentModifyIndustryBillConfig
+                }
                 field={field}
                 control={control}
                 companyId={industryId.value}

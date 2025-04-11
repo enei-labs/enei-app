@@ -1,9 +1,5 @@
 import { PrintWrapper } from "@components/ReadExcelInput";
-import {
-  UserBill,
-  ElectricBillStatus,
-  IndustryBill,
-} from "@core/graphql/types";
+import { UserBill, ElectricBillStatus } from "@core/graphql/types";
 import { ReviewStatusLookup } from "@core/look-up/review-status";
 import {
   Box,
@@ -57,30 +53,10 @@ export const IndustryBillDialog = ({
     }
   }, [data]);
 
-  const calculateTotalDegree = (
-    electricNumberInfos: IndustryBill["electricNumberInfos"]
-  ) => electricNumberInfos.reduce((acc, info) => acc + (info.degree ?? 0), 0);
-
-  const calculateTotalAmount = (
-    electricNumberInfos: IndustryBill["electricNumberInfos"]
-  ) =>
-    electricNumberInfos.reduce(
-      (acc, info) => acc + (info.price ?? 0) * (info.degree ?? 0),
-      0
-    );
-
   const industryBillTemplateData: CompanyBillTemplateData | null =
     useMemo(() => {
       if (!data || loading) return null;
       if (error) return null;
-
-      const totalDegree = calculateTotalDegree(
-        data.industryBill.electricNumberInfos
-      );
-      const totalAmount = calculateTotalAmount(
-        data.industryBill.electricNumberInfos
-      );
-      const tax = totalAmount * 0.05;
 
       return {
         // 計費年月： 「新增台電代輸繳費單」「計費年月」+1個月
@@ -98,21 +74,19 @@ export const IndustryBillDialog = ({
         responsibleName:
           data.industryBill.industryBillConfig.industry.contactName,
         // 轉供單編號
-        transferNumber: data.industryBill.transferDocumentNumbers.join(","),
+        transferNumber: data.industryBill.transferDocumentNumber,
         // 電號
-        serialNumber: data.industryBill.electricNumberInfos
-          .map((info) => info.number)
-          .join(","),
+        serialNumber: data.industryBill.powerPlantNumber,
         // 電廠名稱
-        powerPlantName: data.industryBill.industryBillConfig.industry.name,
+        powerPlantName: data.industryBill.powerPlantName,
         // 契約編號
-        contractNumber: "",
+        contractNumber: data.industryBill.companyContractNumber ?? "",
         // 基本資訊
         basicInfo: {
           // 併聯容量
-          totalCapacity: 0,
+          totalCapacity: data.industryBill.supplyVolume,
           // 轉供容量
-          transferCapacity: 0,
+          transferCapacity: data.industryBill.transferDegree,
         },
         // 城市
         city: "",
@@ -121,15 +95,18 @@ export const IndustryBillDialog = ({
         // 電費計算
         billing: {
           // 轉供度數
-          transferKwh: totalDegree,
+          transferKwh: data.industryBill.transferDegree,
           // 費率
-          price: totalAmount,
+          price: data.industryBill.price,
           // 電費（未稅）
-          amount: totalAmount,
+          amount: data.industryBill.price * data.industryBill.transferDegree,
           // 營業稅
-          tax: tax,
+          tax:
+            data.industryBill.price * data.industryBill.transferDegree * 0.05,
           // 總金額
-          totalIncludeTax: totalAmount + tax,
+          totalIncludeTax:
+            data.industryBill.price * data.industryBill.transferDegree +
+            data.industryBill.price * data.industryBill.transferDegree * 0.05,
         },
       };
     }, [data, loading, error]);

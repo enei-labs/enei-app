@@ -202,7 +202,7 @@ export type CompanyContract = {
   /** 正式轉供日：合約裡面有複數電廠，每個電廠歸屬於不同的轉供合約，造成有多個不同的正式轉供日，那以最早取得正式轉供日的為主 */
   officialTransferDate?: Maybe<Scalars['DateTime']['output']>;
   powerPlants: Array<PowerPlant>;
-  /** 合約價格 */
+  /** 費率 */
   price?: Maybe<Scalars['String']['output']>;
   /** 單一費率/個別費率 */
   rateType: RateType;
@@ -576,16 +576,20 @@ export type IndustryBill = {
   __typename?: 'IndustryBill';
   auditBy?: Maybe<User>;
   billingDate: Scalars['DateTime']['output'];
+  companyContractNumber?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   deletedAt: Scalars['DateTime']['output'];
   deletedBy: Scalars['String']['output'];
-  electricNumberInfos: Array<IndustryBillElectricNumberInfo>;
   id: Scalars['ID']['output'];
   industryBillConfig: IndustryBillConfig;
   name: Scalars['String']['output'];
+  powerPlantName: Scalars['String']['output'];
+  powerPlantNumber: Scalars['String']['output'];
+  price: Scalars['Float']['output'];
   status: ElectricBillStatus;
-  /** 轉供契約編號 */
-  transferDocumentNumbers: Array<Scalars['String']['output']>;
+  supplyVolume: Scalars['Float']['output'];
+  transferDegree: Scalars['Float']['output'];
+  transferDocumentNumber: Scalars['String']['output'];
 };
 
 export type IndustryBillConfig = {
@@ -595,6 +599,7 @@ export type IndustryBillConfig = {
   contactName: Scalars['String']['output'];
   contactPhone: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
+  /** 電廠電號 */
   electricNumbers: Array<Scalars['String']['output']>;
   /** 預計電費單寄出期限（收到繳費通知單後天數 */
   estimatedBillDeliverDate: Scalars['Int']['output'];
@@ -621,13 +626,6 @@ export type IndustryBillConfigRecipientAccount = {
   bankBranchCode?: Maybe<Scalars['String']['output']>;
   /** 銀行代碼 */
   bankCode: Scalars['String']['output'];
-};
-
-export type IndustryBillElectricNumberInfo = {
-  __typename?: 'IndustryBillElectricNumberInfo';
-  degree: Scalars['Float']['output'];
-  number: Scalars['String']['output'];
-  price: Scalars['Float']['output'];
 };
 
 export type IndustryBillPage = {
@@ -973,6 +971,7 @@ export type PowerPlant = {
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
   number: Scalars['String']['output'];
+  /** 費率（元/kWh */
   price: Scalars['String']['output'];
   recipientAccount?: Maybe<PowerPlantRecipientAccount>;
   supplyVolume: Scalars['Float']['output'];
@@ -1259,7 +1258,7 @@ export type RemainingDemandFromCompanyContract = {
   /** 正式轉供日：合約裡面有複數電廠，每個電廠歸屬於不同的轉供合約，造成有多個不同的正式轉供日，那以最早取得正式轉供日的為主 */
   officialTransferDate?: Maybe<Scalars['DateTime']['output']>;
   powerPlants: Array<PowerPlant>;
-  /** 合約價格 */
+  /** 費率 */
   price?: Maybe<Scalars['String']['output']>;
   /** 單一費率/個別費率 */
   rateType: RateType;
