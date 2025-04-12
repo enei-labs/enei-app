@@ -47,6 +47,7 @@ export default function TPCBillDialog(props: TPCBillDialogProps) {
     const transferDegrees = Object.entries(formData.transferDegrees)
       .map(([key, value]) => {
         const [powerPlantNumber, electricNumber] = key.split("_");
+
         return {
           powerPlantId: value.powerPlantId,
           // powerPlantNumber,

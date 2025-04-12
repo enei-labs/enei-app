@@ -1,6 +1,6 @@
 import { InputDate } from "@components/Input";
 import Table, { Config } from "@components/Table/Table";
-import { ElectricBillStatus, UserBillsByMonth } from "@core/graphql/types";
+import { ElectricBillStatus, IndustryBillsByMonth } from "@core/graphql/types";
 import { Box, Card, Typography } from "@mui/material";
 import { formatDateTime } from "@utils/format";
 import { useState } from "react";
@@ -43,7 +43,7 @@ export const IndustryBillsByMonthPanel = () => {
     getMonthEndDate(dateRange.endDate)
   );
 
-  const configs: Config<UserBillsByMonth>[] = [
+  const configs: Config<IndustryBillsByMonth>[] = [
     {
       header: "計費年月",
       accessor: "month",
@@ -56,7 +56,7 @@ export const IndustryBillsByMonthPanel = () => {
             },
           }}
           onClick={() =>
-            router.push(`/electric-bill/user-bill?month=${rowData.month}`)
+            router.push(`/electric-bill/industry-bill?month=${rowData.month}`)
           }
         >
           {formatDateTime(rowData.month, "yyyy-MM")}
@@ -170,8 +170,8 @@ export const IndustryBillsByMonthPanel = () => {
       </Box>
       <Table
         configs={configs}
-        list={data?.userBillsByMonth}
-        total={data?.userBillsByMonth?.length}
+        list={data?.industryBillsByMonth}
+        total={data?.industryBillsByMonth?.length}
         loading={loading}
       />
     </Card>

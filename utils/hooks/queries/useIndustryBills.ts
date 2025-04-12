@@ -6,6 +6,7 @@ interface Variables {
   offset?: number;
   limit?: number;
   term?: string;
+  month?: string;
 }
 
 export const useIndustryBills = (variables?: Variables) => {

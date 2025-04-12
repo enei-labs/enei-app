@@ -1,5 +1,5 @@
 import { PrintWrapper } from "@components/ReadExcelInput";
-import { UserBill, ElectricBillStatus } from "@core/graphql/types";
+import { IndustryBill, ElectricBillStatus } from "@core/graphql/types";
 import { ReviewStatusLookup } from "@core/look-up/review-status";
 import {
   Box,
@@ -20,7 +20,7 @@ import { CompanyBillTemplateData } from "@components/ElectricBill/CompanyBillTem
 interface IndustryBillDialogProps {
   isOpenDialog: boolean;
   onClose: () => void;
-  industryBill: UserBill;
+  industryBill: IndustryBill;
 }
 
 export const IndustryBillDialog = ({
@@ -69,10 +69,10 @@ export const IndustryBillDialog = ({
         }/1 - ${new Date(data.industryBill.billingDate).getFullYear()}/${
           new Date(data.industryBill.billingDate).getMonth() + 1
         }/${new Date(new Date(data.industryBill.billingDate).getFullYear(), new Date(data.industryBill.billingDate).getMonth() + 1, 0).getDate()}`,
-        companyName: data.industryBill.industryBillConfig.industry.name,
+        companyName: data.industryBill.industryBillConfig?.industry?.name ?? "",
         // 負責人名稱
         responsibleName:
-          data.industryBill.industryBillConfig.industry.contactName,
+          data.industryBill.industryBillConfig?.industry?.contactName ?? "",
         // 轉供單編號
         transferNumber: data.industryBill.transferDocumentNumber,
         // 電號
@@ -123,7 +123,7 @@ export const IndustryBillDialog = ({
   ) => {
     if (!newStatus) return;
     const variables = { id: industryBill.id, status: newStatus };
-    console.log({ variables });
+
     await auditIndustryBill({ variables });
     setReviewStatus(newStatus);
     switch (newStatus) {

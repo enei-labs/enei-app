@@ -1,8 +1,8 @@
 import { Table } from "@components/Table";
-import { UserBill } from "@core/graphql/types";
+import { IndustryBill } from "@core/graphql/types";
 import { Config } from "../Table/Table";
 import { Box, Typography, Card } from "@mui/material";
-import { useUserBills } from "@utils/hooks/queries";
+import { useIndustryBills } from "@utils/hooks/queries";
 import { formatDateTime } from "@utils/format";
 import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import { IconBtn } from "@components/Button";
@@ -16,12 +16,12 @@ interface IndustryBillPanelProps {
 
 const IndustryBillPanel = (props: IndustryBillPanelProps) => {
   const [isOpenDialog, setIsOpenDialog] = useState(false);
-  const [userBill, setUserBill] = useState<UserBill | null>(null);
-  const { data, loading, refetch } = useUserBills({
+  const [industryBill, setIndustryBill] = useState<IndustryBill | null>(null);
+  const { data, loading, refetch } = useIndustryBills({
     month: props.month,
   });
 
-  const configs: Config<UserBill>[] = [
+  const configs: Config<IndustryBill>[] = [
     {
       header: "電費單名稱",
       accessor: "name",
@@ -38,7 +38,7 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
         <IconBtn
           icon={<EventNoteOutlinedIcon />}
           onClick={() => {
-            setUserBill(data);
+            setIndustryBill(data);
             setIsOpenDialog(true);
           }}
         />
@@ -49,14 +49,14 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
   return (
     <>
       <Card sx={{ mt: "36px", p: "36px" }}>
-        <Typography variant="h4">{`用戶電費單 - ${formatDateTime(
+        <Typography variant="h4">{`發電業電費單 - ${formatDateTime(
           props.month,
           "yyyy-MM"
         )}`}</Typography>
         <Table
           configs={configs}
-          list={data?.userBills?.list}
-          total={data?.userBills?.total}
+          list={data?.industryBills?.list}
+          total={data?.industryBills?.total}
           loading={loading}
           onPageChange={(page) => {
             refetch({
@@ -66,9 +66,9 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
           }}
         />
       </Card>
-      {userBill && (
+      {industryBill && (
         <IndustryBillDialog
-          industryBill={userBill}
+          industryBill={industryBill}
           isOpenDialog={isOpenDialog}
           onClose={() => setIsOpenDialog(false)}
         />
