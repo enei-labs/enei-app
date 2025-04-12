@@ -6,6 +6,7 @@ export const INDUSTRY_BILL_FIELDS = gql`
     name
     powerPlantNumber
     powerPlantName
+    powerPlantAddress
     companyContractNumber
     transferDegree
     price

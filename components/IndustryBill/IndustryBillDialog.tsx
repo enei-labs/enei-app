@@ -91,7 +91,7 @@ export const IndustryBillDialog = ({
         // 城市
         city: "",
         // 廠址
-        address: "",
+        address: data.industryBill.powerPlantAddress,
         // 電費計算
         billing: {
           // 轉供度數

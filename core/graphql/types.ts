@@ -581,8 +581,9 @@ export type IndustryBill = {
   deletedAt: Scalars['DateTime']['output'];
   deletedBy: Scalars['String']['output'];
   id: Scalars['ID']['output'];
-  industryBillConfig: IndustryBillConfig;
+  industryBillConfig?: Maybe<IndustryBillConfig>;
   name: Scalars['String']['output'];
+  powerPlantAddress: Scalars['String']['output'];
   powerPlantName: Scalars['String']['output'];
   powerPlantNumber: Scalars['String']['output'];
   price: Scalars['Float']['output'];
@@ -990,9 +991,9 @@ export type PowerPlantPage = {
 export type PowerPlantRecipientAccount = {
   __typename?: 'PowerPlantRecipientAccount';
   /** 帳號 */
-  account: Scalars['String']['output'];
+  account?: Maybe<Scalars['String']['output']>;
   /** 銀行代碼 */
-  bankCode: Scalars['String']['output'];
+  bankCode?: Maybe<Scalars['String']['output']>;
 };
 
 export type Query = {
