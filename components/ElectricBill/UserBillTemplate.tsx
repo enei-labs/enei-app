@@ -156,7 +156,7 @@ const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
           }}
         >
           <Typography variant="h6" sx={{ fontWeight: 500, color: "#009688" }}>
-            購電通知單
+            繳費通知單
           </Typography>
           <Typography variant="h6" sx={{ fontWeight: 500, color: "#009688" }}>
             {data.billingMonth}
