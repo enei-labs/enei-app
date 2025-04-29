@@ -4,6 +4,13 @@ import useMutation from "../useMutation";
 
 export const useRemoveAccount = () => {
   return useMutation<{ removeAccount: Success }, { input: RemoveAccountInput }>(
-    REMOVE_ACCOUNT
+    REMOVE_ACCOUNT, {
+      update(cache, { data }) {
+        if (data?.removeAccount) {
+          cache.evict({ id: cache.identify(data.removeAccount) });
+          cache.gc();
+        }
+      },
+    }
   );
 };

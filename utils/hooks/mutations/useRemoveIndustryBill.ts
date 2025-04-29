@@ -8,22 +8,11 @@ export const useRemoveIndustryBill = () => {
   return useMutation<{ removeIndustryBill: IndustryBill }, { id: string }>(
     REMOVE_INDUSTRY_BILL, {
       update(cache, { data }) {
-        if (data?.removeIndustryBill?.__typename === 'IndustryBill') {
-          const existingIndustryBills = cache.readQuery<{ industryBills: IndustryBillPage }>({ query: INDUSTRY_BILLS, variables: { offset: 0, limit: 10 } });
-
-          if (existingIndustryBills) {
-            cache.writeQuery({
-              query: INDUSTRY_BILLS,
-              variables: { offset: 0, limit: 10 },
-              data: {
-                industryBills: {
-                  ...existingIndustryBills.industryBills,
-                  total: existingIndustryBills.industryBills.total - 1,
-                  list: existingIndustryBills.industryBills.list.filter(industry => industry.id !== data.removeIndustryBill.id),
-                },
-              },
-            });
-          }
+        if (data?.removeIndustryBill) {
+          // Directly evict the industry bill from the cache
+          cache.evict({ id: cache.identify(data.removeIndustryBill) });
+          // Garbage collect any unreferenced objects
+          cache.gc();
         }
       },
     }

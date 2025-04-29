@@ -8,24 +8,11 @@ export const useRemoveUserBillConfig = () => {
   return useMutation<{ removeUserBillConfig: UserBillConfig }, { id: string }>(
     REMOVE_USER_BILL_CONFIG, {
       update(cache, { data }) {
-        if (data?.removeUserBillConfig?.__typename === 'UserBillConfig') {
-          const existingUserBillConfigs = cache.readQuery<{ userBillConfigs: UserBillConfigPage }>({
-            query: USER_BILL_CONFIGS, variables: { offset: 0, limit: 10 }
-          });
-
-          if (existingUserBillConfigs) {
-            cache.writeQuery({
-              query: USER_BILL_CONFIGS,
-              variables: { offset: 0, limit: 10 },
-              data: {
-                userBillConfigs: {
-                  ...existingUserBillConfigs.userBillConfigs,
-                  total: existingUserBillConfigs.userBillConfigs.total - 1,
-                  list: existingUserBillConfigs.userBillConfigs.list.filter(user => user.id !== data.removeUserBillConfig.id),
-                },
-              },
-            });
-          }
+        if (data?.removeUserBillConfig) {
+          // Directly evict the user bill config from the cache
+          cache.evict({ id: cache.identify(data.removeUserBillConfig) });
+          // Garbage collect any unreferenced objects
+          cache.gc();
         }
       },
     }

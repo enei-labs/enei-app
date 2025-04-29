@@ -7,22 +7,11 @@ export const useRemovePowerPlant = (companyContractId: string) => {
   return useMutation<{ removePowerPlant: PowerPlant }, { id: string }>(
     REMOVE_POWER_PLANT, {
       update(cache, { data }) {
-        if (data?.removePowerPlant?.__typename === 'PowerPlant') {
-          const existingPowerPlants = cache.readQuery<{ powerPlants: PowerPlantPage }>({ query: POWER_PLANTS, variables: { limit: 10, offset: 0, companyContractId } });
-
-          if (existingPowerPlants) {
-            cache.writeQuery({
-              query: POWER_PLANTS,
-              variables: { limit: 10, offset: 0, companyContractId },
-              data: {
-                powerPlants: {
-                  ...existingPowerPlants.powerPlants,
-                  total: existingPowerPlants.powerPlants.total - 1,
-                  list: existingPowerPlants.powerPlants.list.filter(user => user.id !== data.removePowerPlant.id),
-                },
-              },
-            });
-          }
+        if (data?.removePowerPlant) {
+          // Directly evict the power plant from the cache
+          cache.evict({ id: cache.identify(data.removePowerPlant) });
+          // Garbage collect any unreferenced objects
+          cache.gc();
         }
       },
     }

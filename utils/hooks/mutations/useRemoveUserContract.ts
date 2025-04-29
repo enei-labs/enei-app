@@ -8,22 +8,11 @@ export const useRemoveUserContract = (userId: string) => {
   return useMutation<{ removeUserContract: UserContract }, { id: string }>(
     REMOVE_USER_CONTRACT, {
       update(cache, { data }) {
-        if (data?.removeUserContract?.__typename === 'UserContract') {
-          const existingUserContracts = cache.readQuery<{ userContracts: UserContractPage }>({ query: USER_CONTRACTS, variables: { userId, offset: 0, limit: 10 } });
-
-          if (existingUserContracts) {
-            cache.writeQuery({
-              query: USER_CONTRACTS,
-              variables: { userId, offset: 0, limit: 10 },
-              data: {
-                userContracts: {
-                  ...existingUserContracts.userContracts,
-                  total: existingUserContracts.userContracts.total - 1,
-                  list: existingUserContracts.userContracts.list.filter(contract => contract.id !== data.removeUserContract.id),
-                },
-              },
-            });
-          }
+        if (data?.removeUserContract) {
+          // Directly evict the user contract from the cache
+          cache.evict({ id: cache.identify(data.removeUserContract) });
+          // Garbage collect any unreferenced objects
+          cache.gc();
         }
       },
     }

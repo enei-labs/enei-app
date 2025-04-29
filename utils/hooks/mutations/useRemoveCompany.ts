@@ -7,21 +7,11 @@ export const useRemoveCompany = () => {
   return useMutation<{ removeCompany: Company }, { id: string }>(
     REMOVE_COMPANY, {
       update(cache, { data }) {
-        if (data?.removeCompany?.__typename === 'Company') {
-          const existingCompanies = cache.readQuery<{ companies: CompanyPage }>({ query: COMPANIES });
-
-          if (existingCompanies) {
-            cache.writeQuery({
-              query: COMPANIES,
-              data: {
-                companies: {
-                  ...existingCompanies.companies,
-                  total: existingCompanies.companies.total - 1,
-                  list: existingCompanies.companies.list.filter(user => user.id !== data.removeCompany.id),
-                },
-              },
-            });
-          }
+        if (data?.removeCompany) {
+          // Directly evict the company from the cache
+          cache.evict({ id: cache.identify(data.removeCompany) });
+          // Garbage collect any unreferenced objects
+          cache.gc();
         }
       },
     }
