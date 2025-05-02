@@ -81,6 +81,7 @@ function UserContractDialog(props: UserContractDialogProps) {
               upperLimit: Number(userContract?.upperLimit),
               lowerLimit: Number(userContract?.lowerLimit),
               salesAt: new Date(userContract?.salesAt),
+              salesTo: new Date(userContract?.salesTo),
               salesPeriod: userContract?.salesPeriod,
               transferAt: new Date(userContract?.transferAt),
               contractDoc: userContract?.contractDoc
