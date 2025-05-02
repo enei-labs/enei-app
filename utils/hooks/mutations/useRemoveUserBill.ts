@@ -1,7 +1,6 @@
-import { UserBill, UserBillPage } from '@core/graphql/types';
+import { UserBill } from '@core/graphql/types';
 import useMutation from '../useMutation';
 import { REMOVE_USER_BILL } from '@core/graphql/mutations/removeUserBill';
-import { USER_BILLS } from '@core/graphql/queries';
 
 
 export const useRemoveUserBill = () => {

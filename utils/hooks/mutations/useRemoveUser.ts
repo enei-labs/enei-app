@@ -1,6 +1,5 @@
-import { Dashboard, RemoveUserInput, User, UserPage } from '@core/graphql/types';
+import { RemoveUserInput, User } from '@core/graphql/types';
 import useMutation from '../useMutation';
-import { DASHBOARD, USERS } from '@core/graphql/queries';
 import { REMOVE_USER } from '@core/graphql/mutations';
 
 export const useRemoveUser = () => {

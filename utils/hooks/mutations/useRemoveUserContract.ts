@@ -1,8 +1,6 @@
-import { UserContract, UserContractPage } from '@core/graphql/types';
+import { UserContract } from '@core/graphql/types';
 import useMutation from '../useMutation';
 import { REMOVE_USER_CONTRACT } from '@core/graphql/mutations/removeUserContract';
-import { USER_CONTRACTS } from '@core/graphql/queries';
-
 
 export const useRemoveUserContract = (userId: string) => {
   return useMutation<{ removeUserContract: UserContract }, { id: string }>(

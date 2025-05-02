@@ -1,6 +1,5 @@
 import { TransferDocument, TransferDocumentPage } from '@core/graphql/types';
 import useMutation from '../useMutation';
-import { TRANSFER_DOCUMENTS } from '@core/graphql/queries';
 import { REMOVE_TRANSFER_DOCUMENT } from '@core/graphql/mutations';
 
 interface TransferDocumentUpdateQuery {
