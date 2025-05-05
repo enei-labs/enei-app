@@ -38,6 +38,14 @@ const PowerPlantPanel = ({
       accessor: "number",
     },
     {
+      header: "正式轉供日期",
+      accessor: "transferDate",
+      /** @TODO: 需要從轉供契約取得 */
+      // render: (data) => {
+      //   return <div>{data.transferDate ? format(data.transferDate, "yyyy-MM-dd") : ""}</div>;
+      // },
+    },
+    {
       header: "尚未銷售度數",
       /** TODO: 改成從 API 取得 */
       // render: (data) => {
@@ -62,6 +70,12 @@ const PowerPlantPanel = ({
     {
       header: "單位預估年發電量",
       accessor: "estimatedAnnualPowerGeneration",
+    },
+    {
+      header: "預計年發電量",
+      render: (data) => {
+        return <div>{(data.supplyVolume / 1000) * data.estimatedAnnualPowerGeneration}</div>;
+      },
     },
     {
       header: "轉供比例",
