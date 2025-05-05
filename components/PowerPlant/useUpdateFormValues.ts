@@ -70,7 +70,7 @@ export const initialConfigs: FieldConfig[] = [
   {
     type: "NUMBER",
     name: "estimatedAnnualPowerGeneration",
-    label: "單位預估年發電量（度/kWh）",
+    label: "單位預估年發電量（kWh）",
     required: true,
     validated: numberValidated,
   },
