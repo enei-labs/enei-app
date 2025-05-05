@@ -1,8 +1,6 @@
-import { CreatePowerPlantInput, PowerPlant, PowerPlantPage } from '@core/graphql/types';
+import { CreatePowerPlantInput, PowerPlant } from '@core/graphql/types';
 import useMutation from '../useMutation';
 import { CREATE_POWER_PLANT } from '@core/graphql/mutations';
-import { POWER_PLANTS } from '@core/graphql/queries';
-import { gql } from '@apollo/client';
 
 export const useCreatePowerPlant = (companyContractId: string) => {
   return useMutation<{ createPowerPlant: PowerPlant }, { input: CreatePowerPlantInput }>(

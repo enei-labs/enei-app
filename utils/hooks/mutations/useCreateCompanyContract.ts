@@ -1,31 +1,26 @@
-import { CompanyContract, CompanyContractPage, CreateCompanyContractInput } from '@core/graphql/types';
+import { CompanyContract, CreateCompanyContractInput } from '@core/graphql/types';
 import useMutation from '../useMutation';
 import { CREATE_COMPANY_CONTRACT } from '@core/graphql/mutations';
-import { COMPANY_CONTRACTS } from '@core/graphql/queries';
 
 export const useCreateCompanyContract = () => {
   return useMutation<{ createCompanyContract: CompanyContract }, { input: CreateCompanyContractInput }>(
     CREATE_COMPANY_CONTRACT, {
       update(cache, { data }) {
         if (data?.createCompanyContract?.__typename === 'CompanyContract') {
-          const existingCompanyContracts = cache.readQuery<{ companyContracts: CompanyContractPage }>({ query: COMPANY_CONTRACTS });
-
-          if (existingCompanyContracts) {
-            cache.writeQuery({
-              query: COMPANY_CONTRACTS,
-              variables: {
-                limit: 10,
-                offset: 0,
-              },
-              data: {
-                companyContracts: {
-                  ...existingCompanyContracts.companyContracts,
-                  total: existingCompanyContracts.companyContracts.total + 1,
-                  list: [data.createCompanyContract, ...existingCompanyContracts.companyContracts.list],
-                },
-              },
-            });
-          }
+          cache.modify({
+            fields: {
+              companyContracts: (existingData = { total: 0, list: [] }) => {
+                // Get reference to the newly created contract
+                const newContractRef = { __ref: cache.identify(data.createCompanyContract) };
+                
+                return {
+                  ...existingData,
+                  total: existingData.total + 1,
+                  list: [newContractRef, ...(existingData.list || [])]
+                };
+              }
+            }
+          });
         }
       },
     }

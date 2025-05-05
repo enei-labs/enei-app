@@ -1,42 +1,41 @@
-import { CreateUserInput, Dashboard, User, UserPage } from "@core/graphql/types";
+import { CreateUserInput, User } from "@core/graphql/types";
 import { CREATE_USER } from "@core/graphql/mutations";
 import useMutation from "../useMutation";
-import { DASHBOARD, USERS } from "@core/graphql/queries";
 
 export const useCreateUser = () => {
   return useMutation<{ createUser: User }, { input: CreateUserInput }>(CREATE_USER, {
     update(cache, { data }) {
       if (data?.createUser?.__typename === 'User') {
-        const existingUsers = cache.readQuery<{ users: UserPage }>({ query: USERS });
-        const existingDashboard = cache.readQuery<{ dashboard: Dashboard }>({ query: DASHBOARD });
-
-        if (existingUsers) {
-          cache.writeQuery<{ users: UserPage }>({
-            query: USERS,
-            data: {
-              users: {
-                ...existingUsers.users,
-                total: existingUsers.users.total + 1,
-                list: [data.createUser, ...existingUsers.users.list],
-              },
+        // Update users list using cache.modify
+        cache.modify({
+          fields: {
+            users: (existingData = { total: 0, list: [] }) => {
+              // Get reference to the newly created user
+              const newUserRef = { __ref: cache.identify(data.createUser) };
+              
+              return {
+                ...existingData,
+                total: existingData.total + 1,
+                list: [newUserRef, ...(existingData.list || [])]
+              };
             },
-          });
-        }
-
-        if (existingDashboard) {
-          cache.writeQuery<{ dashboard: Dashboard }>({
-            query: DASHBOARD,
-            data: {
-              dashboard: {
-              ...existingDashboard.dashboard,
-                userInfo: {
-                  ...existingDashboard.dashboard.userInfo,
-                  count: existingDashboard.dashboard.userInfo.count + 1,
-                }
+            
+            // Update dashboard count
+            dashboard: (existingDashboard = {}) => {
+              if (!existingDashboard.userInfo) {
+                return existingDashboard;
               }
+              
+              return {
+                ...existingDashboard,
+                userInfo: {
+                  ...existingDashboard.userInfo,
+                  count: (existingDashboard.userInfo.count || 0) + 1
+                }
+              };
             }
-          })
-        }
+          }
+        });
       }
     },
   });

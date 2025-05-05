@@ -1,31 +1,27 @@
-import { Company, CompanyPage, CreateCompanyInput } from '@core/graphql/types'
+import { Company, CreateCompanyInput } from '@core/graphql/types'
 import { CREATE_COMPANY } from '@core/graphql/mutations/createCompany'
 import useMutation from '../useMutation'
-import { COMPANIES } from '@core/graphql/queries'
 
 export const useCreateCompany = () => {
   return useMutation<{ createCompany: Company }, { input: CreateCompanyInput }>(
     CREATE_COMPANY, {
       update(cache, { data }) {
         if (data?.createCompany?.__typename === 'Company') {
-          const existingCompanies = cache.readQuery<{ companies: CompanyPage }>({ query: COMPANIES });
-
-          if (existingCompanies) {
-            cache.writeQuery({
-              query: COMPANIES,
-              variables: {
-                limit: 10,
-                offset: 0,
-              },
-              data: {
-                companies: {
-                  ...existingCompanies.companies,
-                  total: existingCompanies.companies.total + 1,
-                  list: [data.createCompany, ...existingCompanies.companies.list],
-                },
-              },
-            });
-          }
+          // Use cache.modify to update companies list
+          cache.modify({
+            fields: {
+              companies: (existingData = { total: 0, list: [] }) => {
+                // Get reference to the newly created company
+                const newCompanyRef = { __ref: cache.identify(data.createCompany) };
+                
+                return {
+                  ...existingData,
+                  total: existingData.total + 1,
+                  list: [newCompanyRef, ...(existingData.list || [])]
+                };
+              }
+            }
+          });
         }
       },
     }

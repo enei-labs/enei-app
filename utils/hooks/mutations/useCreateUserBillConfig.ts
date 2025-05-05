@@ -1,7 +1,6 @@
-import { CreateUserBillConfigInput, UserBillConfig, UserBillConfigPage } from "@core/graphql/types";
+import { CreateUserBillConfigInput, UserBillConfig } from "@core/graphql/types";
 import { CREATE_USER_BILL_CONFIG } from "@core/graphql/mutations";
 import useMutation from "../useMutation";
-import { USER_BILL_CONFIGS } from "@core/graphql/queries";
 
 export const useCreateUserBillConfig = () => {
   return useMutation<
@@ -10,21 +9,20 @@ export const useCreateUserBillConfig = () => {
   >(CREATE_USER_BILL_CONFIG, {
     update(cache, { data }) {
       if (data?.createUserBillConfig?.__typename === 'UserBillConfig') {
-        const existingUserBillConfigs = cache.readQuery<{ userBillConfigs: UserBillConfigPage }>({ query: USER_BILL_CONFIGS, variables: { limit: 10, offset: 0 } });
-
-        if (existingUserBillConfigs) {
-          cache.writeQuery({
-            query: USER_BILL_CONFIGS,
-            variables: { limit: 10, offset: 0 },
-            data: {
-              userBillConfigs: {
-                ...existingUserBillConfigs.userBillConfigs,
-                total: existingUserBillConfigs.userBillConfigs.total + 1,
-                list: [data.createUserBillConfig, ...existingUserBillConfigs.userBillConfigs.list],
-              },
-            },
-          });
-        }
+        cache.modify({
+          fields: {
+            userBillConfigs: (existingData = { total: 0, list: [] }) => {
+              // Get reference to the newly created config
+              const newConfigRef = { __ref: cache.identify(data.createUserBillConfig) };
+              
+              return {
+                ...existingData,
+                total: existingData.total + 1,
+                list: [newConfigRef, ...(existingData.list || [])]
+              };
+            }
+          }
+        });
       }
     },
   });

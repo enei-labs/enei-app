@@ -1,40 +1,35 @@
-
-import { CreateTpcBillInput, TpcBill, TpcBillPage } from '@core/graphql/types';
+import { CreateTpcBillInput, TpcBill } from '@core/graphql/types';
 import useMutation from '../useMutation';
 import { CREATE_TPC_BILL } from '@core/graphql/mutations';
-import { TPC_BILLS } from '@core/graphql/queries';
 
 export const useCreateTPCBill = () => {
   return useMutation<{ createTPCBill: TpcBill }, { input: CreateTpcBillInput }>(
     CREATE_TPC_BILL, {
       update(cache, { data }, { variables }) {
         if (data?.createTPCBill?.__typename === 'TPCBill') {
-          const existingTpcBills = cache.readQuery<{ tpcBills: TpcBillPage }>({
-            query: TPC_BILLS,
-            variables: {
-              offset: 0,
-              limit: 10,
-              transferDocumentId: variables?.input.transferDocumentId,
-            },
+          // Cache the transferDocumentId from variables
+          const transferDocumentId = variables?.input.transferDocumentId;
+          
+          // Use cache.modify to update the tpcBills list
+          cache.modify({
+            fields: {
+              tpcBills: (existingData = { total: 0, list: [] }, { storeFieldName }) => {
+                // Only update if this matches the document ID from the query variables
+                if (transferDocumentId && !storeFieldName.includes(`transferDocumentId:${transferDocumentId}`)) {
+                  return existingData;
+                }
+                
+                // Get reference to the newly created bill
+                const newBillRef = { __ref: cache.identify(data.createTPCBill) };
+                
+                return {
+                  ...existingData,
+                  total: existingData.total + 1,
+                  list: [newBillRef, ...(existingData.list || [])]
+                };
+              }
+            }
           });
-
-          if (existingTpcBills) {
-            cache.writeQuery({
-              query: TPC_BILLS,
-              variables: {
-                offset: 0,
-                limit: 10,
-                transferDocumentId: variables?.input.transferDocumentId,
-              },
-              data: {
-                tpcBills: {
-                  ...existingTpcBills.tpcBills,
-                  total: existingTpcBills.tpcBills.total + 1,
-                  list: [data.createTPCBill, ...existingTpcBills.tpcBills.list],
-                },
-              },
-            });
-          }
         }
       },
     }
