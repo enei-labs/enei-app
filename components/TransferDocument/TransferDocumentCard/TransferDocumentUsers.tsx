@@ -87,14 +87,14 @@ function TransferDocumentUsers(props: TransferDocumentUsersProps) {
       ),
       monthlyTransferDegreeNode: (
         <Typography variant="body1">
-          {el.userContract?.upperLimit}{" "}
-          <Typography variant="body4">MWh</Typography>
+          {el.monthlyTransferDegree}{" "}
+          <Typography variant="body4">kWh</Typography>
         </Typography>
       ),
       yearlyTransferDegreeNode: (
         <Typography variant="body1">
-          {el.userContract?.lowerLimit}{" "}
-          <Typography variant="body4">MWh</Typography>
+          {el.yearlyTransferDegree}{" "}
+          <Typography variant="body4">kWh</Typography>
         </Typography>
       ),
     }));
