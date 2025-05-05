@@ -88,7 +88,7 @@ const PowerPlantDialog = (props: PowerPlantDialogProps) => {
           input: {
             name: formData.name,
             number: formData.number,
-            volume: Number(formData.volume * 1000),
+            volume: parseInt((Number(formData.volume) * 1000).toFixed(0)),
             energyType: formData.energyType,
             generationType: formData.generationType,
             estimatedAnnualPowerGeneration: Number(
@@ -122,7 +122,7 @@ const PowerPlantDialog = (props: PowerPlantDialogProps) => {
             number: formData.number,
             generationType: formData.generationType,
             energyType: formData.energyType,
-            volume: Number(formData.volume * 1000),
+            volume: parseInt((Number(formData.volume) * 1000).toFixed(0)),
             estimatedAnnualPowerGeneration: Number(
               formData.estimatedAnnualPowerGeneration
             ),

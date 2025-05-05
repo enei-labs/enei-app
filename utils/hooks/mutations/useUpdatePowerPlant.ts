@@ -10,25 +10,7 @@ interface PowerPlantUpdateQuery {
 export const useUpdatePowerPlant = (companyContractId: string) => {
   return useMutation<{ updatePowerPlant: PowerPlant }, { input: UpdatePowerPlantInput }>(
     UPDATE_POWER_PLANT, {
-      update(cache, { data }) {
-        if (data && data.updatePowerPlant.__typename === 'PowerPlant') {
-          cache.updateQuery({ query: POWER_PLANTS }, (originData: PowerPlantUpdateQuery | null) => {
-            if (!originData) return;
-            const index = originData.powerPlants.list.findIndex(p => p.id === data.updatePowerPlant.id)
-
-            return ({
-              powerPlants: {
-                total: originData.powerPlants.total,
-                list: [
-                  ...originData.powerPlants.list.slice(0, index),
-                  data.updatePowerPlant,
-                  ...originData.powerPlants.list.slice(index + 1),
-                ],
-              }
-          })});
-
-        }
-      }
+      refetchQueries: [POWER_PLANTS],
     }
   )
 }
