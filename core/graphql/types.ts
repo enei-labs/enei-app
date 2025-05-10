@@ -392,6 +392,7 @@ export type CreateUserBillConfigInput = {
 export type CreateUserContractInput = {
   contractDoc: Scalars['String']['input'];
   contractDocName: Scalars['String']['input'];
+  contractTimeType: ContractTimeType;
   electricNumberInfos: Array<ElectricNumberInfoInput>;
   lowerLimit?: InputMaybe<Scalars['Int']['input']>;
   name: Scalars['String']['input'];
@@ -972,6 +973,8 @@ export type PowerPlant = {
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
   number: Scalars['String']['output'];
+  /** 正式轉供日 */
+  officialTransferDate?: Maybe<Scalars['DateTime']['output']>;
   /** 費率（元/kWh */
   price: Scalars['String']['output'];
   recipientAccount?: Maybe<PowerPlantRecipientAccount>;

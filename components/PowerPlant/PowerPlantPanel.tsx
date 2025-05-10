@@ -9,6 +9,7 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import { useRemovePowerPlant } from "@utils/hooks/mutations/useRemovePowerPlant";
 import { toast } from "react-toastify";
+import { formatDateTime } from "@utils/format";
 
 const PowerPlantDialog = dynamic(() => import("./PowerPlantDialog"));
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
@@ -39,11 +40,10 @@ const PowerPlantPanel = ({
     },
     {
       header: "正式轉供日期",
-      accessor: "transferDate",
-      /** @TODO: 需要從轉供契約取得 */
-      // render: (data) => {
-      //   return <div>{data.transferDate ? format(data.transferDate, "yyyy-MM-dd") : ""}</div>;
-      // },
+      accessor: "officialTransferDate",
+      render: (data) => {
+        return <div>{data.officialTransferDate ? formatDateTime(data.officialTransferDate, "yyyy-MM-dd") : ""}</div>;
+      },
     },
     {
       header: "尚未銷售度數",
