@@ -186,6 +186,7 @@ function UserContractDialog(props: UserContractDialogProps) {
         variables: {
           userId,
           input: {
+            contractTimeType: formData.contractTimeType.value,
             name: formData.name,
             userType: formData.userType,
             serialNumber: formData.serialNumber,
