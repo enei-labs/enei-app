@@ -400,6 +400,7 @@ export type CreateUserContractInput = {
   purchaseDegree: Scalars['Int']['input'];
   salesAt: Scalars['DateTime']['input'];
   salesPeriod: Scalars['String']['input'];
+  salesTo?: InputMaybe<Scalars['DateTime']['input']>;
   serialNumber: Scalars['String']['input'];
   transferAt?: InputMaybe<Scalars['DateTime']['input']>;
   upperLimit?: InputMaybe<Scalars['Int']['input']>;
@@ -1557,6 +1558,7 @@ export type UpdateUserContractInput = {
   purchaseDegree?: InputMaybe<Scalars['Int']['input']>;
   salesAt?: InputMaybe<Scalars['DateTime']['input']>;
   salesPeriod?: InputMaybe<Scalars['String']['input']>;
+  salesTo?: InputMaybe<Scalars['DateTime']['input']>;
   serialNumber?: InputMaybe<Scalars['String']['input']>;
   transferAt?: InputMaybe<Scalars['DateTime']['input']>;
   upperLimit?: InputMaybe<Scalars['Int']['input']>;

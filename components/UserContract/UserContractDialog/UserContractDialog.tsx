@@ -41,6 +41,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { priceValidated } from "@core/types/fieldConfig";
 import { contractTimeTypeMap } from "@components/CompanyContract/CompanyContractDialog/fieldConfig/contractTimeType";
+import { useEditDisplayFieldConfigs } from "@components/UserContract/UserContractDialog/fieldConfig/useEditDisplayFieldConfigs";
 
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
@@ -80,10 +81,16 @@ function UserContractDialog(props: UserContractDialogProps) {
               price: Number(userContract?.price),
               upperLimit: Number(userContract?.upperLimit),
               lowerLimit: Number(userContract?.lowerLimit),
-              salesAt: new Date(userContract?.salesAt),
-              salesTo: new Date(userContract?.salesTo),
+              salesAt: userContract?.salesAt
+                ? new Date(userContract?.salesAt)
+                : undefined,
+              salesTo: userContract?.salesTo
+                ? new Date(userContract?.salesTo)
+                : undefined,
               salesPeriod: userContract?.salesPeriod,
-              transferAt: new Date(userContract?.transferAt),
+              transferAt: userContract?.transferAt
+                ? new Date(userContract?.transferAt)
+                : undefined,
               contractDoc: userContract?.contractDoc
                 ? {
                     id: userContract.contractDoc,
@@ -138,7 +145,7 @@ function UserContractDialog(props: UserContractDialogProps) {
   const salesAt = watch("salesAt");
   const setEndedAt = (value: Date) => setValue("salesTo", value);
 
-  const displayFieldConfigs = useCreateDisplayFieldConfigs(
+  const createDisplayFieldConfigs = useCreateDisplayFieldConfigs(
     {
       contractTimeType: contractTimeType?.value,
       salesPeriod: Number(salesPeriod),
@@ -146,6 +153,16 @@ function UserContractDialog(props: UserContractDialogProps) {
     },
     setEndedAt
   );
+
+  const editDisplayFieldConfigs = useEditDisplayFieldConfigs(
+    {
+      contractTimeType: contractTimeType?.value,
+    },
+    setEndedAt
+  );
+
+  const displayFieldConfigs =
+    variant === "create" ? createDisplayFieldConfigs : editDisplayFieldConfigs;
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -159,10 +176,14 @@ function UserContractDialog(props: UserContractDialogProps) {
   const [electricNumberIndex, setElectricNumberIndex] = useState<number>(-1);
 
   /** apis */
-  const [createUserContract, { loading }] = useCreateUserContract(user.id);
+  const [createUserContract, { loading: createUserContractLoading }] =
+    useCreateUserContract(user.id);
   const [updateUserContract, { loading: updateUserContractLoading }] =
-    useUpdateUserContract();
+    useUpdateUserContract(user.id);
   const { data: usersData } = useUsers({ onlyBasicInformation: true });
+
+  const loading =
+    createUserContractLoading || updateUserContractLoading;
 
   /** selected user/power-plant info */
   const selectedUser = useMemo(() => {
@@ -196,6 +217,7 @@ function UserContractDialog(props: UserContractDialogProps) {
             lowerLimit: Number(formData.lowerLimit),
             salesAt: formData.salesAt,
             salesPeriod: formData.salesPeriod,
+            salesTo: formData.salesTo,
             transferAt: formData.transferAt,
             contractDoc: formData.contractDoc.id,
             contractDocName: formData.contractDoc.file.name,
@@ -249,6 +271,7 @@ function UserContractDialog(props: UserContractDialogProps) {
             upperLimit: Number(formData.upperLimit),
             lowerLimit: Number(formData.lowerLimit),
             salesAt: formData.salesAt,
+            salesTo: formData.salesTo,
             salesPeriod: formData.salesPeriod,
             transferAt: formData.transferAt,
             contractDoc: formData.contractDoc.id,

@@ -1,5 +1,5 @@
-import { ContractTimeType, RateType } from "@core/graphql/types";
-import { useEffect, useMemo, useState } from "react";
+import { ContractTimeType } from "@core/graphql/types";
+import { useEffect, useState } from "react";
 import { addYears } from 'date-fns';
 import { baseFieldConfigs } from "@components/UserContract/UserContractDialog/fieldConfig/baseFieldConfigs";
 import { contractStartTimeFieldConfigs } from "@components/UserContract/UserContractDialog/fieldConfig/contractStartTimeFieldConfigs";

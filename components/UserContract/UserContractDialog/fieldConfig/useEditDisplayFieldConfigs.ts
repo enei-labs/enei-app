@@ -1,63 +1,55 @@
-import { ContractTimeType, RateType } from "@core/graphql/types";
-import { useEffect, useMemo } from "react";
+import { ContractTimeType } from "@core/graphql/types";
+import { useEffect, useState } from "react";
 import { addYears } from 'date-fns';
-import { baseFieldConfigs } from "@components/CompanyContract/CompanyContractDialog/fieldConfig/baseFieldConfigs";
-import { contractStartTimeFieldConfigs } from "@components/CompanyContract/CompanyContractDialog/fieldConfig/contractStartTimeFieldConfigs";
-import { contractEndTimeFieldConfigs } from "@components/CompanyContract/CompanyContractDialog/fieldConfig/contractEndTimeFieldConfigs";
-import { contractTransferStartTimeFieldConfigs } from "@components/CompanyContract/CompanyContractDialog/fieldConfig/contractTransferStartTimeFieldConfigs";
+import { baseFieldConfigs } from "@components/UserContract/UserContractDialog/fieldConfig/baseFieldConfigs";
+import { contractStartTimeFieldConfigs } from "@components/UserContract/UserContractDialog/fieldConfig/contractStartTimeFieldConfigs";
+import { contractEndTimeFieldConfigs } from "@components/UserContract/UserContractDialog/fieldConfig/contractEndTimeFieldConfigs";
+import { contractTransferStartTimeFieldConfigs } from "@components/UserContract/UserContractDialog/fieldConfig/contractTransferStartTimeFieldConfigs";
+import { FieldConfig } from '@core/types';
 
 export const useEditDisplayFieldConfigs = (
   values: {
     contractTimeType: ContractTimeType,
-    rateType?: RateType,
-    duration?: number,
-    startedAt?: Date,
+    salesPeriod?: number,
+    salesAt?: Date,
   },
   setEndedAt?: (value: Date) => void,
-  ) => {
-  const { contractTimeType, rateType, duration, startedAt } = values;
+) => {
+  const { contractTimeType, salesPeriod, salesAt } = values;
+  const [fieldConfigs, setFieldConfigs] = useState<FieldConfig[]>(baseFieldConfigs);
 
-  const displayFieldConfigs = useMemo(() => {
-    let fieldConfigs = baseFieldConfigs;
-    const baseConfigs = {
-      name: [baseFieldConfigs[0]],
-      contract: [baseFieldConfigs[1]],
-      docs: baseFieldConfigs.slice(2),
-    };
+  useEffect(() => {
+    let newFieldConfigs = baseFieldConfigs;
 
-    if (!contractTimeType) return baseConfigs;
+    if (!contractTimeType) {
+      setFieldConfigs(baseFieldConfigs);
+      return;
+    }
 
     switch (contractTimeType) {
       case ContractTimeType.ContractStartTime:
-        fieldConfigs = contractStartTimeFieldConfigs;
+        newFieldConfigs = contractStartTimeFieldConfigs;
         break;
       case ContractTimeType.ContractEndTime:
-        fieldConfigs = contractEndTimeFieldConfigs;
+        newFieldConfigs = contractEndTimeFieldConfigs;
         break;
       case ContractTimeType.TransferStartTime:
-        fieldConfigs = contractTransferStartTimeFieldConfigs;
+        newFieldConfigs = contractTransferStartTimeFieldConfigs;
         break;
     }
 
-    if (rateType === RateType.Individual) {
-      fieldConfigs = fieldConfigs.filter(field => field.name !== 'price');
-    }
+    setFieldConfigs(newFieldConfigs);
+  }, [contractTimeType]);
 
-    return {
-      ...baseConfigs,
-      contract: fieldConfigs,
-    };
-  }, [contractTimeType, rateType]);
-
-  // Add useEffect to update endedAt when startedAt or duration changes
+  // Add useEffect to update endedAt when salesAt or duration changes
   useEffect(() => {
     if (!setEndedAt) return;
-    if (contractTimeType === ContractTimeType.ContractStartTime && startedAt && duration) {
-      const endDate = addYears(new Date(startedAt), Number(duration));
+    if (contractTimeType === ContractTimeType.ContractStartTime && salesAt && salesPeriod) {
+      const endDate = addYears(new Date(salesAt), Number(salesPeriod));
       setEndedAt(endDate);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contractTimeType, startedAt, duration]);
+  }, [contractTimeType, salesAt, salesPeriod]);
 
-  return displayFieldConfigs;
+  return fieldConfigs;
 }
