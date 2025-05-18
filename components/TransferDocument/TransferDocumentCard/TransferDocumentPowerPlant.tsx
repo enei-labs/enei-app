@@ -10,12 +10,10 @@ type TransferDocumentPowerPlantItem = Pick<
 > &
   Pick<PowerPlant, "name" | "volume">;
 
-type TransferDocumentPowerPlantItemView = {
-  [key in keyof TransferDocumentPowerPlantItem as `${key}Node`]: React.ReactNode;
-};
+
 
 const powerPlantMappedLabels: Array<{
-  key: keyof Omit<TransferDocumentPowerPlantItemView, "name">;
+  key:  "estimateSupplyVolumeNode" | "volumeNode" | "transferRateNode";
   label: string;
 }> = [
   {
@@ -23,8 +21,8 @@ const powerPlantMappedLabels: Array<{
     label: "裝置容量",
   },
   {
-    key: "estimateAnnualSupplyNode",
-    label: "預計年供電度數",
+    key: "estimateSupplyVolumeNode",
+    label: "預計年發電量",
   },
   {
     key: "transferRateNode",
@@ -37,7 +35,12 @@ interface TransferDocumentPowerPlantProps {
 }
 
 interface TransferDocumentPowerPlantItemProps {
-  transferDocumentPowerPlant: TransferDocumentPowerPlantItemView;
+  transferDocumentPowerPlant:  {
+    nameNode: React.ReactNode;
+    volumeNode: React.ReactNode;
+    estimateSupplyVolumeNode: React.ReactNode;
+    transferRateNode: React.ReactNode;
+  };
 }
 
 function TransferDocumentPowerPlantItem(
@@ -77,9 +80,9 @@ function TransferDocumentPowerPlant(props: TransferDocumentPowerPlantProps) {
           <Typography variant="body4">kWh</Typography>
         </Typography>
       ),
-      estimateAnnualSupplyNode: (
+      estimateSupplyVolumeNode: (
         <Typography variant="body1">
-          {el.estimateAnnualSupply} <Typography variant="body4">kWh</Typography>
+          {(el.estimateAnnualSupply) * (100 / el.transferRate)} <Typography variant="body4">kWh</Typography>
         </Typography>
       ),
       transferRateNode: (
