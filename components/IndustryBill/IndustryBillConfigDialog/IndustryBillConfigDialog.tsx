@@ -66,15 +66,15 @@ function IndustryBillConfigDialog(props: IndustryBillDialogProps) {
           paymentDeadline: currentModifyIndustryBillConfig.paymentDeadline,
           noticeForTPCBill: currentModifyIndustryBillConfig.noticeForTPCBill,
           // 不要在初始化設定
-          // electricNumberInfos: (
-          //   currentModifyIndustryBillConfig.electricNumbers ?? []
-          // ).map((number) => ({
-          //   number: {
-          //     label: number,
-          //     value: number,
-          //   },
-          //   price: "",
-          // })),
+          electricNumberInfos: (
+            currentModifyIndustryBillConfig.electricNumbers ?? []
+          ).map((number) => ({
+            number: {
+              label: number,
+              value: number,
+            },
+            price: "",
+          })),
           contactName: currentModifyIndustryBillConfig.contactName,
           contactEmail: currentModifyIndustryBillConfig.contactEmail,
           contactPhone: currentModifyIndustryBillConfig.contactPhone,
