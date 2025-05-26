@@ -114,6 +114,7 @@ function IndustryBillConfigDialog(props: IndustryBillDialogProps) {
       label: "電費單組合名稱",
       placeholder: "請填入",
       validated: textValidated,
+      required: true,
     },
     {
       type: "SINGLE_SELECT",
@@ -128,6 +129,7 @@ function IndustryBillConfigDialog(props: IndustryBillDialogProps) {
       validated: textValidated,
       loading: loading,
       fetchMoreData: companiesLoadMore,
+      required: true,
     },
     {
       type: "NUMBER",
@@ -142,6 +144,7 @@ function IndustryBillConfigDialog(props: IndustryBillDialogProps) {
       label: "售電業繳費期限（收到繳費通知單後天數）",
       placeholder: "請填入",
       validated: textValidated,
+      required: true,
     },
   ];
 
