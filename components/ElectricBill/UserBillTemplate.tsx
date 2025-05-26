@@ -12,7 +12,7 @@ export interface UsageData {
 export interface UserBillTemplateData {
   // 計費年月
   billingMonth: string;
-  // 計費期間
+  //計費期間 
   billingDate: string;
   // 公司名稱
   companyName: string;
@@ -162,7 +162,7 @@ const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
             {data.billingMonth}
           </Typography>
           <Typography variant="h6" sx={{ fontWeight: 500, color: "#009688" }}>
-            {`計費期間：${data.billingDate}`}
+            {data.billingDate.includes('計費期間：') ? data.billingDate : `計費期間：${data.billingDate}`}
           </Typography>
         </Box>
       </Box>
@@ -180,8 +180,9 @@ const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
         </Typography>
       </Box>
       <Box display="flex" justifyContent="flex-end" marginY="24px">
-        <Typography fontSize="14px">{`台電轉供單編號：${data.customerNumber}`}</Typography>
+        <Typography fontSize="12px">{`台電轉供單編號：${data.customerNumber}`}</Typography>
       </Box>
+
       <Grid container spacing={"8px"}>
         <Grid item sm={4}>
           <Box sx={{ display: "flex", justifyContent: "center" }}>
@@ -520,6 +521,33 @@ const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
         憑證每達一千度累積電量，憑證中心核發一張，憑證之數量以憑證中心每個月核發之數量為準。
         4. 憑證附隨電能一併出售予用戶，不另外計價 。 5.
         本繳費憑證各項金額數目係由機器印出，如發現非機器列印或有塗改字跡，概屬無效
+      </Box>
+            
+      {/* 艾涅爾公司詳細資訊 */}
+      <Box display="flex" justifyContent="flex-end" marginTop="16px">
+        <Box sx={{ 
+          backgroundColor: "#f8f9fa", 
+          padding: "12px 16px", 
+          borderRadius: "8px",
+          border: "1px solid #e9ecef",
+          maxWidth: "400px"
+        }}>
+          <Typography variant="h6" sx={{ fontSize: "16px", fontWeight: 700, color: "#009688", marginBottom: "8px" }}>
+            艾涅爾電力股份有限公司
+          </Typography>
+          <Typography variant="body2" sx={{ fontSize: "14px", fontWeight: 500, color: "#000", marginBottom: "2px" }}>
+            統一編號：{ANNEAL_ENERGY.companyNumber}
+          </Typography>
+          <Typography variant="body2" sx={{ fontSize: "14px", fontWeight: 500, color: "#000", marginBottom: "2px" }}>
+            地址：{ANNEAL_ENERGY.address}
+          </Typography>
+          <Typography variant="body2" sx={{ fontSize: "14px", fontWeight: 500, color: "#000", marginBottom: "2px" }}>
+            電話：{ANNEAL_ENERGY.phone}
+          </Typography>
+          <Typography variant="body2" sx={{ fontSize: "14px", fontWeight: 500, color: "#000" }}>
+            網站：{ANNEAL_ENERGY.website}
+          </Typography>
+        </Box>
       </Box>
     </Box>
   );

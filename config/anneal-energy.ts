@@ -4,5 +4,5 @@ export const ANNEAL_ENERGY = {
   companyNumber: "89179648",
   address: "103臺北市大同區南京西路288號3樓之3",
   phone: "02-6604-1230",
-  website: "https://www.annealenergy.com/",
+  website: "https://www.annealenergy.com",
 };

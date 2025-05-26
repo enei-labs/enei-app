@@ -321,6 +321,33 @@ const CompanyBillTemplate = forwardRef((props: CompanyBillProps, ref) => {
         4. 憑證附隨電能一併出售予用戶，不另外計價 。 5.
         本繳費憑證各項金額數目係由機器印出，如發現非機器列印或有塗改字跡，概屬無效
       </Box>
+
+      {/* 艾涅爾公司詳細資訊 */}
+      <Box display="flex" justifyContent="flex-end" marginTop="16px">
+        <Box sx={{ 
+          backgroundColor: "#f8f9fa", 
+          padding: "12px 16px", 
+          borderRadius: "8px",
+          border: "1px solid #e9ecef",
+          maxWidth: "400px"
+        }}>
+          <Typography variant="h6" sx={{ fontSize: "16px", fontWeight: 700, color: "#009688", marginBottom: "8px" }}>
+            艾涅爾電力股份有限公司
+          </Typography>
+          <Typography variant="body2" sx={{ fontSize: "14px", fontWeight: 500, color: "#000", marginBottom: "2px" }}>
+            統一編號：{ANNEAL_ENERGY.companyNumber}
+          </Typography>
+          <Typography variant="body2" sx={{ fontSize: "14px", fontWeight: 500, color: "#000", marginBottom: "2px" }}>
+            地址：{ANNEAL_ENERGY.address}
+          </Typography>
+          <Typography variant="body2" sx={{ fontSize: "14px", fontWeight: 500, color: "#000", marginBottom: "2px" }}>
+            電話：{ANNEAL_ENERGY.phone}
+          </Typography>
+          <Typography variant="body2" sx={{ fontSize: "14px", fontWeight: 500, color: "#000" }}>
+            網站：{ANNEAL_ENERGY.website}
+          </Typography>
+        </Box>
+      </Box>
     </Box>
   );
 });
