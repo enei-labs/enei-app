@@ -50,9 +50,7 @@ function UserBillConfigDialog(props: UserBillConfigDialogProps) {
   const { isOpenDialog, onClose, currentModifyUserBillConfig, variant } = props;
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
-  const { data, loading, fetchMore } = useUsers({
-    onlyBasicInformation: true,
-  });
+  const { data, loading, fetchMore } = useUsers();
 
   const usersLoadMore = useCallback(
     () => {
@@ -65,7 +63,6 @@ function UserBillConfigDialog(props: UserBillConfigDialogProps) {
       
       return fetchMore({
         variables: {
-          onlyBasicInformation: true,
           offset: data.users.list.length,
           limit: 10,
         },
@@ -160,7 +157,7 @@ function UserBillConfigDialog(props: UserBillConfigDialogProps) {
       options:
         data?.users.list
           .find((user) => userId?.value === user.id)
-          ?.bankAccounts.map((b) => ({
+          ?.bankAccounts?.map((b) => ({
             label: `${b.bankCode}(${b.bankName}) ${b.account}`,
             value: {
               bankCode: b.bankCode,
