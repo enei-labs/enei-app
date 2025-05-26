@@ -13,7 +13,7 @@ import RadioGroup from "@components/RadioGroup";
 import { UserBillConfigChargeType } from "@core/graphql/types";
 import { ElectricNumbersField } from "@components/UserBill/UserBillConfigDialog/ElectricNumbersField";
 import { useUsers } from "@utils/hooks/queries";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import UpdateUserBillConfigBtn from "@components/UserBill/UserBillConfigDialog/UpdateUserBillConfigBtn";
 import CreateUserBillConfigBtn from "@components/UserBill/UserBillConfigDialog/CreateUserBillConfigBtn";
 
@@ -48,28 +48,34 @@ const YesOrNoRadios = [
 
 function UserBillConfigDialog(props: UserBillConfigDialogProps) {
   const { isOpenDialog, onClose, currentModifyUserBillConfig, variant } = props;
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
-  const { data, loading, fetchMore } = useUsers();
+  const { data, loading, fetchMore } = useUsers({
+    onlyBasicInformation: true,
+  });
 
   const usersLoadMore = useCallback(
-    () =>
-      fetchMore({
+    () => {
+      // Check if there's more data to load
+      if (!data?.users || data.users.list.length >= data.users.total) {
+        return Promise.resolve({ data: { users: data?.users || { total: 0, list: [] } } } as any);
+      }
+
+      setIsLoadingMore(true);
+      
+      return fetchMore({
         variables: {
-          offset: data?.users.list.length,
+          onlyBasicInformation: true,
+          offset: data.users.list.length,
+          limit: 10,
         },
-        updateQuery: (prev, { fetchMoreResult }) => {
-          if (!fetchMoreResult) return prev;
-          return {
-            users: {
-              total: fetchMoreResult.users.total,
-              list: [
-                ...(prev?.users?.list ?? []),
-                ...fetchMoreResult.users.list,
-              ],
-            },
-          };
-        },
-      }),
+      }).catch((error) => {
+        console.error('Failed to load more users:', error);
+        throw error;
+      }).finally(() => {
+        setIsLoadingMore(false);
+      });
+    },
     [data, fetchMore]
   );
 

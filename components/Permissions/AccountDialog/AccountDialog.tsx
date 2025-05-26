@@ -106,47 +106,36 @@ function AccountDialog(props: AccountDialogProps) {
   });
 
   const companiesLoadMore = useCallback(
-    () =>
-      companiesFetchMore({
+    () => {
+      // Check if there's more data to load
+      if (!companiesData?.companies || companiesData.companies.list.length >= companiesData.companies.total) {
+        return Promise.resolve({ data: { companies: companiesData?.companies || { total: 0, list: [] } } } as any);
+      }
+
+      return companiesFetchMore({
         variables: {
-          offset: companiesData?.companies.list.length,
+          offset: companiesData.companies.list.length,
         },
-        updateQuery: (prev, { fetchMoreResult }) => {
-          if (!fetchMoreResult) return prev;
-          return {
-            companies: {
-              total: fetchMoreResult.companies.total,
-              list: [
-                ...(prev?.companies?.list ?? []),
-                ...fetchMoreResult.companies.list,
-              ],
-            },
-          };
-        },
-      }),
+      });
+    },
     [companiesData, companiesFetchMore]
   );
 
   const usersLoadMore = useCallback(
-    () =>
-      usersFetchMore({
+    () => {
+      // Check if there's more data to load
+      if (!usersData?.users || usersData.users.list.length >= usersData.users.total) {
+        return Promise.resolve({ data: { users: usersData?.users || { total: 0, list: [] } } } as any);
+      }
+
+      return usersFetchMore({
         variables: {
           onlyBasicInformation: true,
-          offset: usersData?.users.list.length,
+          offset: usersData.users.list.length,
+          limit: 10,
         },
-        updateQuery: (prev, { fetchMoreResult }) => {
-          if (!fetchMoreResult) return prev;
-          return {
-            users: {
-              total: fetchMoreResult.users.total,
-              list: [
-                ...(prev?.users?.list ?? []),
-                ...fetchMoreResult.users.list,
-              ],
-            },
-          };
-        },
-      }),
+      });
+    },
     [usersData, usersFetchMore]
   );
 
