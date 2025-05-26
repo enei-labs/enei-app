@@ -16,14 +16,28 @@ interface RadioGroupProps extends MuiRadioGroupProps {
   }[];
   row?: boolean;
   disabled?: boolean;
+  required?: boolean;
 }
 
 const RadioGroup = forwardRef<HTMLDivElement, RadioGroupProps>((props, ref) => {
-  const { label, radios, row = false, ...field } = props;
+  const { label, radios, row = false, required = false, ...field } = props;
 
   return (
     <FormControl ref={ref} size="small" sx={{ alignItems: "flex-start" }}>
-      <FormLabel sx={{ fontSize: "14px" }}>{label}</FormLabel>
+      <FormLabel sx={{ fontSize: "14px" }}>
+        {label}
+        {required && <span style={{ 
+          margin: 0,
+          marginLeft: 10,
+          fontSize: 14,
+          fontWeight: 500,
+          wordBreak: "break-all",
+          fontFamily: "Roboto, Helvetica, Arial, sans-serif",
+          lineHeight: 1.5,
+          letterSpacing: 0.00938,
+          color: "#f44336",
+         }}>*</span>}
+      </FormLabel>
       <MuiRadioGroup {...field} row={row}>
         {radios.map((radio) => (
           <FormControlLabel

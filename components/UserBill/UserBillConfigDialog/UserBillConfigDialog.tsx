@@ -128,6 +128,7 @@ function UserBillConfigDialog(props: UserBillConfigDialogProps) {
       label: "電費單組合名稱",
       placeholder: "請填入",
       validated: textValidated,
+      required: true,
     },
     {
       type: "SINGLE_SELECT",
@@ -142,6 +143,7 @@ function UserBillConfigDialog(props: UserBillConfigDialogProps) {
       validated: textValidated,
       loading: loading,
       fetchMoreData: usersLoadMore,
+      required: true,
     },
     {
       type: "SINGLE_SELECT",
@@ -160,6 +162,7 @@ function UserBillConfigDialog(props: UserBillConfigDialogProps) {
             },
           })) ?? [],
       loading: loading,
+      required: true,
     },
     {
       type: "NUMBER",
@@ -174,6 +177,7 @@ function UserBillConfigDialog(props: UserBillConfigDialogProps) {
       label: "用戶繳費期限（收到繳費通知單後天數）",
       placeholder: "請填入",
       validated: textValidated,
+      required: true,
     },
   ];
 
@@ -205,6 +209,7 @@ function UserBillConfigDialog(props: UserBillConfigDialogProps) {
                 {...field}
                 label="代輸費款項"
                 radios={ChargeTypeRadios}
+                required
               />
             );
           }}
@@ -219,6 +224,7 @@ function UserBillConfigDialog(props: UserBillConfigDialogProps) {
                 {...field}
                 label="憑證審查費"
                 radios={ChargeTypeRadios}
+                required
               />
             );
           }}
@@ -233,6 +239,7 @@ function UserBillConfigDialog(props: UserBillConfigDialogProps) {
                 {...field}
                 label="憑證服務費"
                 radios={ChargeTypeRadios}
+                required
               />
             );
           }}
@@ -247,6 +254,7 @@ function UserBillConfigDialog(props: UserBillConfigDialogProps) {
                 {...field}
                 label="是否需包含台電代輸費單"
                 radios={YesOrNoRadios}
+                required
               />
             );
           }}
