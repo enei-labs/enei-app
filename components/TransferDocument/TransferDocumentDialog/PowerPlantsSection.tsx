@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useCallback } from "react";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import { Controller } from "react-hook-form";
 import InputAutocomplete from "@components/Input/InputAutocomplete";
@@ -29,13 +29,13 @@ const PowerPlantsSection = ({
   addPowerPlantNumber,
   setAddPowerPlantNumber,
 }: PowerPlantsSectionProps) => {
-  // 內部管理被選取的電廠與刪除索引
+  // 管理電廠選取與刪除索引
   const [selectedIndex, setSelectedIndex] = useState<number>(
     fields.length ? 0 : -1
   );
   const [deleteIndex, setDeleteIndex] = useState<number>(-1);
 
-  // 依據選取的電廠，利用 watch 取得目前設定值
+  // 取得目前選取電廠的相關資訊
   const currentCompany = watch(
     `transferDocumentPowerPlants.${selectedIndex}.company`
   );
@@ -46,37 +46,32 @@ const PowerPlantsSection = ({
     `transferDocumentPowerPlants.${selectedIndex}.powerPlant`
   );
 
+  // 獲取所有電廠數據用於 Chip 顯示
+  const allPowerPlants = watch("transferDocumentPowerPlants") || [];
+
   const currentCompanyInfo = useMemo(() => {
-    return (
-      companiesData?.companies.list.find(
-        (c: any) => c.id === currentCompany?.value
-      ) || null
+    return companiesData?.companies.list.find(
+      (company: any) => company.id === currentCompany?.value
     );
   }, [companiesData, currentCompany]);
 
   const currentCompanyContractInfo = useMemo(() => {
-    return (
-      currentCompanyInfo?.companyContracts.find(
-        (cc: any) => cc.id === currentCompanyContract?.value
-      ) || null
+    return currentCompanyInfo?.companyContracts?.find(
+      (contract: any) => contract.id === currentCompanyContract?.value
     );
   }, [currentCompanyInfo, currentCompanyContract]);
 
   const powerPlants = useMemo(() => {
-    return (
-      companiesData?.companies.list?.flatMap((c: any) =>
-        c.companyContracts?.flatMap((cc: any) => cc.powerPlants)
-      ) || []
-    );
-  }, [companiesData]);
+    return currentCompanyContractInfo?.powerPlants || [];
+  }, [currentCompanyContractInfo]);
 
   const currentPowerPlantInfo = useMemo(() => {
     const powerPlant = powerPlants.find(
-      (p: any) => p.id === currentPowerPlant?.value
+      (pp: any) => pp.id === currentPowerPlant?.value
     );
     return {
       number: powerPlant?.number || "N/A",
-      volume: powerPlant ? powerPlant.volume / 1000 : "N/A",
+      volume: powerPlant?.volume || "N/A",
       estimatedAnnualPowerGeneration:
         powerPlant?.estimatedAnnualPowerGeneration || 0,
     };
@@ -85,37 +80,135 @@ const PowerPlantsSection = ({
   const transferRate =
     watch(`transferDocumentPowerPlants.${selectedIndex}.transferRate`) || 0;
 
+  // 優化事件處理函數，使用 useCallback 避免不必要的重新渲染
+  const handleChipClick = useCallback((index: number) => {
+    setSelectedIndex(index);
+  }, []);
+
+  const handleChipDelete = useCallback((index: number) => {
+    setDeleteIndex(index);
+  }, []);
+
+  // 優化新增電廠邏輯
+  const handleAddPowerPlants = useCallback(() => {
+    const emptyArray = [];
+    for (let i = 1; i <= addPowerPlantNumber; i++) {
+      // 每次創建新的對象引用，避免共享引用問題
+      emptyArray.push({
+        estimateAnnualSupply: 0,
+        company: { label: "", value: "" },
+        companyContract: { label: "", value: "" },
+        powerPlant: { label: "", value: "" },
+        transferRate: 0,
+      });
+    }
+    append(emptyArray);
+    if (!fields.length) {
+      setSelectedIndex(0);
+    }
+  }, [addPowerPlantNumber, append, fields.length]);
+
+  // 當電廠數量超過一定閾值時，使用虛擬化渲染
+  const VIRTUALIZATION_THRESHOLD = 50;
+  const shouldVirtualize = fields.length > VIRTUALIZATION_THRESHOLD;
+
+  // 如果需要虛擬化，只渲染當前可見的 chips
+  const visibleChips = useMemo(() => {
+    if (!shouldVirtualize) return fields;
+    
+    // 簡單的虛擬化邏輯：只顯示選中項目周圍的 chips
+    const range = 20; // 顯示範圍
+    const start = Math.max(0, selectedIndex - range);
+    const end = Math.min(fields.length, selectedIndex + range + 1);
+    
+    return fields.slice(start, end).map((item, index) => ({
+      ...item,
+      originalIndex: start + index
+    }));
+  }, [fields, selectedIndex, shouldVirtualize]);
+
+  // 生成 Chip 標籤的函數
+  const getChipLabel = useCallback((index: number) => {
+    const powerPlantInfo = allPowerPlants[index];
+    
+    // 優先顯示電廠名稱
+    const powerPlantName = powerPlantInfo?.powerPlant;
+    const powerPlantNameValue = powerPlantName?.label || powerPlantName?.value;
+    
+    if (powerPlantNameValue && powerPlantNameValue.trim()) {
+      return powerPlantNameValue;
+    }
+    
+    // 如果沒有電廠名稱，顯示公司名稱
+    const companyName = powerPlantInfo?.company;
+    const companyNameValue = companyName?.label || companyName?.value;
+    
+    if (companyNameValue && companyNameValue.trim()) {
+      return `${companyNameValue}`;
+    }
+    
+    // 最後回退到序號
+    return `電廠${index + 1}`;
+  }, [allPowerPlants]);
+
   return (
     <>
       <Typography variant="h5" textAlign="left">
         電廠
       </Typography>
       <Box display="flex" flexDirection="column" rowGap="24px">
-        {/* Chip 列表 */}
+        {/* Chip 列表 - 優化渲染 */}
         <Box display="flex" gap="8px" flexWrap="wrap">
-          {fields.map((item, index) => (
-            <Chip
-              key={item.id}
-              label={`電廠${index + 1}`}
-              aria-label={`電廠${index + 1}`}
-              handleClick={() => setSelectedIndex(index)}
-              handleDelete={() => setDeleteIndex(index)}
-              selected={selectedIndex === index}
-            />
-          ))}
+          {/* 如果電廠數量過多，顯示導航信息 */}
+          {shouldVirtualize && (
+            <Typography variant="caption" color="text.secondary" width="100%">
+              共 {fields.length} 個電廠，當前顯示第 {selectedIndex + 1} 個周圍的電廠
+            </Typography>
+          )}
+          
+          {(shouldVirtualize ? visibleChips : fields).map((item, index) => {
+            const actualIndex = shouldVirtualize ? (item as any).originalIndex : index;
+            return (
+              <Chip
+                key={item.id}
+                label={getChipLabel(actualIndex)}
+                aria-label={`電廠${actualIndex + 1}`}
+                handleClick={() => handleChipClick(actualIndex)}
+                handleDelete={() => handleChipDelete(actualIndex)}
+                selected={selectedIndex === actualIndex}
+              />
+            );
+          })}
+          
+          {/* 如果使用虛擬化且有隱藏的項目，提供快速導航 */}
+          {shouldVirtualize && (
+            <Box display="flex" gap="4px" alignItems="center" ml="auto">
+              <Typography variant="caption">跳至：</Typography>
+              <InputNumber
+                sx={{ width: "60px" }}
+                value={selectedIndex + 1}
+                onChange={(number: any) => {
+                  if (number > 0 && number <= fields.length) {
+                    setSelectedIndex(number - 1);
+                  }
+                }}
+                placeholder="電廠"
+              />
+            </Box>
+          )}
         </Box>
-        {/* 詳細欄位 */}
-        {fields.map((x, index) => (
+        
+        {/* 詳細欄位 - 只渲染當前選中的項目，提升性能 */}
+        {selectedIndex >= 0 && selectedIndex < fields.length && (
           <Box
-            key={x.id}
+            key={fields[selectedIndex].id}
             display="flex"
             flexDirection="column"
             rowGap="24px"
-            sx={selectedIndex !== index ? { display: "none" } : {}}
           >
             <Controller
               control={control}
-              name={`transferDocumentPowerPlants.${index}.company`}
+              name={`transferDocumentPowerPlants.${selectedIndex}.company`}
               render={({ field }) => (
                 <InputAutocomplete
                   {...field}
@@ -126,8 +219,8 @@ const PowerPlantsSection = ({
                       value: o.id,
                     })) || []
                   }
-                  label={`公司${index + 1}名稱`}
-                  aria-label={`公司${index + 1}名稱`}
+                  label={`公司${selectedIndex + 1}名稱`}
+                  aria-label={`公司${selectedIndex + 1}名稱`}
                   placeholder="請填入"
                   required
                 />
@@ -135,7 +228,7 @@ const PowerPlantsSection = ({
             />
             <Controller
               control={control}
-              name={`transferDocumentPowerPlants.${index}.companyContract`}
+              name={`transferDocumentPowerPlants.${selectedIndex}.companyContract`}
               render={({ field }) => (
                 <InputAutocomplete
                   {...field}
@@ -147,8 +240,8 @@ const PowerPlantsSection = ({
                       value: o.id,
                     })) || []
                   }
-                  label={`公司合約${index + 1}名稱`}
-                  aria-label={`公司合約${index + 1}名稱`}
+                  label={`公司合約${selectedIndex + 1}名稱`}
+                  aria-label={`公司合約${selectedIndex + 1}名稱`}
                   placeholder="請填入"
                   required
                 />
@@ -156,7 +249,7 @@ const PowerPlantsSection = ({
             />
             <Controller
               control={control}
-              name={`transferDocumentPowerPlants.${index}.powerPlant`}
+              name={`transferDocumentPowerPlants.${selectedIndex}.powerPlant`}
               render={({ field }) => (
                 <InputAutocomplete
                   {...field}
@@ -168,8 +261,8 @@ const PowerPlantsSection = ({
                       value: o.id,
                     })) || []
                   }
-                  label={`電廠${index + 1}名稱`}
-                  aria-label={`電廠${index + 1}名稱`}
+                  label={`電廠${selectedIndex + 1}名稱`}
+                  aria-label={`電廠${selectedIndex + 1}名稱`}
                   placeholder="請填入"
                   required
                 />
@@ -198,7 +291,7 @@ const PowerPlantsSection = ({
             />
             <Controller
               control={control}
-              name={`transferDocumentPowerPlants.${index}.transferRate`}
+              name={`transferDocumentPowerPlants.${selectedIndex}.transferRate`}
               rules={{ max: 100, min: 0 }}
               render={({ field }) => (
                 <InputText
@@ -212,7 +305,7 @@ const PowerPlantsSection = ({
             />
             <Controller
               control={control}
-              name={`transferDocumentPowerPlants.${index}.estimateAnnualSupply`}
+              name={`transferDocumentPowerPlants.${selectedIndex}.estimateAnnualSupply`}
               render={({ field }) => (
                 <InputText
                   {...field}
@@ -232,7 +325,7 @@ const PowerPlantsSection = ({
               )}
             />
           </Box>
-        ))}
+        )}
       </Box>
       {/* 新增電廠欄位 */}
       <Grid
@@ -258,23 +351,7 @@ const PowerPlantsSection = ({
         <Grid container justifyContent="flex-end">
           <Button
             startIcon={<AddCircleOutlineOutlinedIcon />}
-            onClick={() => {
-              const emptyPowerPlantInput = {
-                estimateAnnualSupply: 0,
-                company: { label: "", value: "" },
-                companyContract: { label: "", value: "" },
-                powerPlant: { label: "", value: "" },
-                transferRate: 0,
-              };
-              const emptyArray = [];
-              for (let i = 1; i <= addPowerPlantNumber; i++) {
-                emptyArray.push(emptyPowerPlantInput);
-              }
-              append(emptyArray);
-              if (!fields.length) {
-                setSelectedIndex(0);
-              }
-            }}
+            onClick={handleAddPowerPlants}
           >
             新增
           </Button>
@@ -288,6 +365,12 @@ const PowerPlantsSection = ({
           onConfirm={() => {
             remove(deleteIndex);
             setDeleteIndex(-1);
+            // 如果刪除的是當前選中的項目，調整選中索引
+            if (deleteIndex === selectedIndex) {
+              setSelectedIndex(Math.max(0, Math.min(selectedIndex, fields.length - 2)));
+            } else if (deleteIndex < selectedIndex) {
+              setSelectedIndex(selectedIndex - 1);
+            }
           }}
           onClose={() => {
             setDeleteIndex(-1);

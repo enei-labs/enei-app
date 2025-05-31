@@ -9,7 +9,7 @@ import {
   RadioGroup,
   Typography,
 } from "@mui/material";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useCallback } from "react";
 import { IconBtn } from "@components/Button";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
@@ -173,7 +173,86 @@ function UserContractDialog(props: UserContractDialogProps) {
   const [addElectricNumber, setAddElectricNumber] = useState<number>(1);
   const [deleteElectricNumberIndex, setDeleteElectricNumberIndex] =
     useState<number>(-1);
-  const [electricNumberIndex, setElectricNumberIndex] = useState<number>(-1);
+  const [electricNumberIndex, setElectricNumberIndex] = useState<number>(
+    fields.length ? 0 : -1
+  );
+
+  // 獲取所有電號數據用於 Chip 顯示
+  const allElectricNumberInfos = watch("electricNumberInfos") || [];
+
+  // 優化事件處理函數，使用 useCallback 避免不必要的重新渲染
+  const handleChipClick = useCallback((index: number) => {
+    setElectricNumberIndex(index);
+  }, []);
+
+  const handleChipDelete = useCallback((index: number) => {
+    setDeleteElectricNumberIndex(index);
+  }, []);
+
+  // 優化新增電號邏輯
+  const handleAddElectricNumbers = useCallback(() => {
+    const emptyArray = [];
+    for (let i = 1; i <= addElectricNumber; i++) {
+      // 每次創建新的對象引用，避免共享引用問題
+      emptyArray.push({
+        address: "",
+        contactEmail: user.contactEmail ?? "",
+        contactName: user.contactName ?? "",
+        contactPhone: user.contactPhone ?? "",
+        companyAddress: user.companyAddress ?? "",
+        recipientAccount: null,
+        degree: 0,
+        number: "",
+        tableNumbers: [],
+      });
+    }
+    append(emptyArray as unknown as ElectricNumberInfoInput);
+    if (!fields.length) setElectricNumberIndex(0);
+  }, [addElectricNumber, append, fields.length, user]);
+
+  // 當電號數量超過一定閾值時，使用虛擬化渲染
+  const VIRTUALIZATION_THRESHOLD = 50;
+  const shouldVirtualize = fields.length > VIRTUALIZATION_THRESHOLD;
+
+  // 如果需要虛擬化，只渲染當前可見的 chips
+  const visibleChips = useMemo(() => {
+    if (!shouldVirtualize) return fields;
+    
+    // 簡單的虛擬化邏輯：只顯示選中項目周圍的 chips
+    const range = 20; // 顯示範圍
+    const start = Math.max(0, electricNumberIndex - range);
+    const end = Math.min(fields.length, electricNumberIndex + range + 1);
+    
+    return fields.slice(start, end).map((item, index) => ({
+      ...item,
+      originalIndex: start + index
+    }));
+  }, [fields, electricNumberIndex, shouldVirtualize]);
+
+  // 生成 Chip 標籤的函數
+  const getChipLabel = useCallback((index: number) => {
+    const electricNumberInfo = allElectricNumberInfos[index];
+    
+    // 優先顯示電號
+    if (electricNumberInfo?.number && electricNumberInfo.number.trim()) {
+      return electricNumberInfo.number;
+    }
+    
+    // 如果沒有電號，顯示地址的簡短版本
+    if (electricNumberInfo?.address && electricNumberInfo.address.trim()) {
+      const address = electricNumberInfo.address;
+      // 如果地址太長，只取前 10 個字符
+      return address.length > 10 ? `${address.substring(0, 10)}...` : address;
+    }
+    
+    // 如果沒有地址，顯示聯絡人
+    if (electricNumberInfo?.contactName && electricNumberInfo.contactName.trim()) {
+      return electricNumberInfo.contactName;
+    }
+    
+    // 最後回退到序號
+    return `電號${index + 1}`;
+  }, [allElectricNumberInfos]);
 
   /** apis */
   const [createUserContract, { loading: createUserContractLoading }] =
@@ -370,35 +449,61 @@ function UserContractDialog(props: UserContractDialogProps) {
         </Typography>
         <FieldsController configs={docConfigs} form={{ control, errors }} />
 
-        {/* 電號資訊 Block */}
+        {/* 電號資訊 Block - 優化渲染 */}
         <Typography textAlign="left" variant="h5">
           電號資訊
         </Typography>
         <Box display={"flex"} flexDirection="column" rowGap="24px">
           <Box display={"flex"} gap="8px" flexWrap={"wrap"}>
-            {fields.map((item, index) => {
+            {/* 如果電號數量過多，顯示導航信息 */}
+            {shouldVirtualize && (
+              <Typography variant="caption" color="text.secondary" width="100%">
+                共 {fields.length} 個電號，當前顯示第 {electricNumberIndex + 1} 個周圍的電號
+              </Typography>
+            )}
+            
+            {(shouldVirtualize ? visibleChips : fields).map((item, index) => {
+              const actualIndex = shouldVirtualize ? (item as any).originalIndex : index;
               return (
                 <Chip
                   key={item.id}
-                  label={`電號${index + 1}`}
-                  handleClick={() => setElectricNumberIndex(index)}
-                  handleDelete={() => setDeleteElectricNumberIndex(index)}
-                  selected={electricNumberIndex === index}
+                  label={getChipLabel(actualIndex)}
+                  handleClick={() => handleChipClick(actualIndex)}
+                  handleDelete={() => handleChipDelete(actualIndex)}
+                  selected={electricNumberIndex === actualIndex}
                 />
               );
             })}
+            
+            {/* 如果使用虛擬化且有隱藏的項目，提供快速導航 */}
+            {shouldVirtualize && (
+              <Box display="flex" gap="4px" alignItems="center" ml="auto">
+                <Typography variant="caption">跳至：</Typography>
+                <InputNumber
+                  sx={{ width: "60px" }}
+                  value={electricNumberIndex + 1}
+                  onChange={(number: any) => {
+                    if (number > 0 && number <= fields.length) {
+                      setElectricNumberIndex(number - 1);
+                    }
+                  }}
+                  placeholder="電號"
+                />
+              </Box>
+            )}
           </Box>
-          {fields.map((x, index) => (
+          
+          {/* 詳細欄位 - 只渲染當前選中的項目，提升性能 */}
+          {electricNumberIndex >= 0 && electricNumberIndex < fields.length && (
             <Box
-              key={x.id}
+              key={fields[electricNumberIndex].id}
               display={"flex"}
               flexDirection="column"
               rowGap="24px"
-              sx={electricNumberIndex !== index ? { display: "none" } : {}}
             >
               <Controller
                 control={control}
-                name={`electricNumberInfos.${index}.number`}
+                name={`electricNumberInfos.${electricNumberIndex}.number`}
                 render={({ field }) => {
                   return (
                     <>
@@ -414,7 +519,7 @@ function UserContractDialog(props: UserContractDialogProps) {
               />
               <Controller
                 control={control}
-                name={`electricNumberInfos.${index}.degree`}
+                name={`electricNumberInfos.${electricNumberIndex}.degree`}
                 render={({ field }) => {
                   return (
                     <>
@@ -430,7 +535,7 @@ function UserContractDialog(props: UserContractDialogProps) {
               />
               <Controller
                 control={control}
-                name={`electricNumberInfos.${index}.recipientAccount`}
+                name={`electricNumberInfos.${electricNumberIndex}.recipientAccount`}
                 render={({ field }) => (
                   <InputAutocomplete
                     {...field}
@@ -449,7 +554,7 @@ function UserContractDialog(props: UserContractDialogProps) {
               />
               <Controller
                 control={control}
-                name={`electricNumberInfos.${index}.companyAddress`}
+                name={`electricNumberInfos.${electricNumberIndex}.companyAddress`}
                 render={({ field }) => {
                   return (
                     <>
@@ -466,14 +571,14 @@ function UserContractDialog(props: UserContractDialogProps) {
               />
               <Controller
                 control={control}
-                name={`electricNumberInfos.${index}.tableNumbers`}
+                name={`electricNumberInfos.${electricNumberIndex}.tableNumbers`}
                 render={({ field }) => (
                   <TableNumbersField field={field} control={control} />
                 )}
               />
               <Controller
                 control={control}
-                name={`electricNumberInfos.${index}.address`}
+                name={`electricNumberInfos.${electricNumberIndex}.address`}
                 render={({ field }) => {
                   return (
                     <>
@@ -489,7 +594,7 @@ function UserContractDialog(props: UserContractDialogProps) {
               />
               <Controller
                 control={control}
-                name={`electricNumberInfos.${index}.contactName`}
+                name={`electricNumberInfos.${electricNumberIndex}.contactName`}
                 render={({ field }) => {
                   return (
                     <>
@@ -505,7 +610,7 @@ function UserContractDialog(props: UserContractDialogProps) {
               />
               <Controller
                 control={control}
-                name={`electricNumberInfos.${index}.contactPhone`}
+                name={`electricNumberInfos.${electricNumberIndex}.contactPhone`}
                 render={({ field }) => {
                   return (
                     <>
@@ -521,7 +626,7 @@ function UserContractDialog(props: UserContractDialogProps) {
               />
               <Controller
                 control={control}
-                name={`electricNumberInfos.${index}.contactEmail`}
+                name={`electricNumberInfos.${electricNumberIndex}.contactEmail`}
                 render={({ field }) => {
                   return (
                     <>
@@ -536,7 +641,7 @@ function UserContractDialog(props: UserContractDialogProps) {
                 }}
               />
             </Box>
-          ))}
+          )}
         </Box>
 
         {/* 新增電號欄位 */}
@@ -565,30 +670,7 @@ function UserContractDialog(props: UserContractDialogProps) {
           <Grid container justifyContent={"flex-end"}>
             <Button
               startIcon={<AddCircleOutlineOutlinedIcon />}
-              onClick={() => {
-                const emptyElectricNumberInput: Omit<
-                  ElectricNumberInfoInput,
-                  "recipientAccount"
-                > & {
-                  recipientAccount: string | null;
-                } = {
-                  address: "",
-                  contactEmail: user.contactEmail ?? "",
-                  contactName: user.contactName ?? "",
-                  contactPhone: user.contactPhone ?? "",
-                  companyAddress: user.companyAddress ?? "",
-                  recipientAccount: null,
-                  degree: 0,
-                  number: "",
-                  tableNumbers: [],
-                };
-                const emptyArray = [];
-                for (let i = 1; i <= addElectricNumber; i++) {
-                  emptyArray.push(emptyElectricNumberInput);
-                }
-                append(emptyArray as unknown as ElectricNumberInfoInput);
-                if (!fields.length) setElectricNumberIndex(0);
-              }}
+              onClick={handleAddElectricNumbers}
             >
               新增
             </Button>
@@ -621,6 +703,12 @@ function UserContractDialog(props: UserContractDialogProps) {
           onConfirm={() => {
             remove(deleteElectricNumberIndex);
             setDeleteElectricNumberIndex(-1);
+            // 如果刪除的是當前選中的項目，調整選中索引
+            if (deleteElectricNumberIndex === electricNumberIndex) {
+              setElectricNumberIndex(Math.max(0, Math.min(electricNumberIndex, fields.length - 2)));
+            } else if (deleteElectricNumberIndex < electricNumberIndex) {
+              setElectricNumberIndex(electricNumberIndex - 1);
+            }
           }}
           onClose={() => {
             setDeleteElectricNumberIndex(-1);
