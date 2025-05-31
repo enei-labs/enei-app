@@ -1,10 +1,8 @@
 import { ContractTimeType, RateType } from "@core/graphql/types";
 import { useEffect, useMemo } from "react";
 import { addYears } from 'date-fns';
-import { baseFieldConfigs } from "@components/CompanyContract/CompanyContractDialog/fieldConfig/baseFieldConfigs";
-import { contractStartTimeFieldConfigs } from "@components/CompanyContract/CompanyContractDialog/fieldConfig/contractStartTimeFieldConfigs";
-import { contractEndTimeFieldConfigs } from "@components/CompanyContract/CompanyContractDialog/fieldConfig/contractEndTimeFieldConfigs";
-import { contractTransferStartTimeFieldConfigs } from "@components/CompanyContract/CompanyContractDialog/fieldConfig/contractTransferStartTimeFieldConfigs";
+import { getFieldConfigs } from "./index";
+import { baseFieldConfigs } from "./baseFieldConfigs";
 
 export const useEditDisplayFieldConfigs = (
   values: {
@@ -18,26 +16,15 @@ export const useEditDisplayFieldConfigs = (
   const { contractTimeType, rateType, duration, startedAt } = values;
 
   const displayFieldConfigs = useMemo(() => {
-    let fieldConfigs = baseFieldConfigs;
     const baseConfigs = {
       name: [baseFieldConfigs[0]],
       contract: [baseFieldConfigs[1]],
-      docs: baseFieldConfigs.slice(2),
+      docs: baseFieldConfigs.slice(-3), // Last 3 items are the file configs
     };
 
     if (!contractTimeType) return baseConfigs;
 
-    switch (contractTimeType) {
-      case ContractTimeType.ContractStartTime:
-        fieldConfigs = contractStartTimeFieldConfigs;
-        break;
-      case ContractTimeType.ContractEndTime:
-        fieldConfigs = contractEndTimeFieldConfigs;
-        break;
-      case ContractTimeType.TransferStartTime:
-        fieldConfigs = contractTransferStartTimeFieldConfigs;
-        break;
-    }
+    let fieldConfigs = getFieldConfigs(contractTimeType);
 
     if (rateType === RateType.Individual) {
       fieldConfigs = fieldConfigs.filter(field => field.name !== 'price');

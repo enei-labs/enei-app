@@ -12,7 +12,7 @@ import {
 } from "@core/graphql/types";
 import { COMPANY_CONTRACTS } from "@core/graphql/queries/companyContracts";
 import dynamic from "next/dynamic";
-import { fieldConfigs } from "@components/CompanyContract/CompanyContractDialog/fieldConfig/fieldConfigs";
+import { baseFieldConfigs } from "@components/CompanyContract/CompanyContractDialog/fieldConfig/baseFieldConfigs";
 import { FormData } from "@components/CompanyContract/CompanyContractDialog/FormData";
 import { toast } from "react-toastify";
 import { useCreateDisplayFieldConfigs } from "@components/CompanyContract/CompanyContractDialog/fieldConfig/useCreateDisplayFieldConfigs";
@@ -57,7 +57,7 @@ export const useCreateCompanyContractSubmitFn = (
     formState: { errors },
     watch,
     setValue,
-  } = useValidatedForm<FormData>(fieldConfigs, {
+  } = useValidatedForm<FormData>(baseFieldConfigs, {
     defaultValues: { companyName: company?.name },
   });
 
