@@ -11,8 +11,8 @@ import { ReactElement, ReactNode } from "react";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import Snackbar from "@components/Snackbar";
-import NProgress from "nprogress";
-import "nprogress/nprogress.css";
+import "@styles/nprogress.css";
+import { useNProgress } from "@utils/hooks/useNProgress";
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -25,12 +25,19 @@ type AppPropsWithLayout = AppProps & {
 function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   console.log("Current Commit Hash:", process.env.NEXT_PUBLIC_COMMIT_HASH);
   console.log("Build Time:", process.env.NEXT_PUBLIC_BUILD_TIME);
+  
   const getLayout = Component.getLayout ?? ((page) => page);
   const component = getLayout(<Component {...pageProps} />);
 
-  Router.events.on("routeChangeStart", () => NProgress.start());
-  Router.events.on("routeChangeComplete", () => NProgress.done());
-  Router.events.on("routeChangeError", () => NProgress.done());
+  // 使用自定義的 NProgress Hook
+  useNProgress({
+    minimum: 0.3,
+    speed: 500,
+    showSpinner: false,
+    onStart: (url) => console.log(`Loading: ${url}`),
+    onComplete: () => console.log('Route change completed'),
+    onError: () => console.log('Route change error'),
+  });
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
