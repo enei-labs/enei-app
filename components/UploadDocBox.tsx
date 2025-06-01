@@ -5,10 +5,13 @@ import { useRequest } from "ahooks";
 import axios from "axios";
 import { IconBtn } from "./Button";
 import { toast } from "react-toastify";
-import React, { useState } from "react";
+import React, { useState, useCallback, useRef } from "react";
 import { LoadingButton } from "@mui/lab";
 
 const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "";
+
+// File size limit (10MB)
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 // const uploadFile = async (file: File) => {
 //   const formData = new FormData();
@@ -31,21 +34,35 @@ const getSignedUrl = async (fileId: string) => {
     return data.signedUrl;
   } catch (error) {
     console.error("Error fetching signed URL:", error);
-    return null;
+    throw new Error("Failed to get upload URL");
   }
 };
 
 const uploadFile = async (file: File) => {
+  // Validate file size
+  if (file.size > MAX_FILE_SIZE) {
+    throw new Error(`File size must be less than ${MAX_FILE_SIZE / 1024 / 1024}MB`);
+  }
+
   const fileId = crypto.randomUUID();
   const signedUrl = await getSignedUrl(fileId);
+  
+  if (!signedUrl) {
+    throw new Error("Failed to get signed URL");
+  }
 
-  await axios.put(signedUrl, file, {
-    headers: {
-      "Content-Type": file.type,
-    },
-  });
+  try {
+    await axios.put(signedUrl, file, {
+      headers: {
+        "Content-Type": file.type,
+      },
+    });
 
-  return { success: true, fileId };
+    return { success: true, fileId };
+  } catch (error) {
+    console.error("Error uploading file:", error);
+    throw new Error("Failed to upload file");
+  }
 };
 
 const deleteFile = async (fileId: string) => {
@@ -104,12 +121,13 @@ interface UploadDocBoxProps
 const UploadDocBox = React.forwardRef<HTMLInputElement, UploadDocBoxProps>(
   function InputUpload(props, ref) {
     const { name, label, value, accept, required, onChange } = props;
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const { runAsync, loading } = useRequest(uploadFile, {
       manual: true,
       onSuccess: () => toast.success("上傳成功"),
       onError: (error: any) => {
-        toast.error(error.message);
+        toast.error(error.message || "Upload failed");
       },
     });
 
@@ -119,39 +137,58 @@ const UploadDocBox = React.forwardRef<HTMLInputElement, UploadDocBoxProps>(
         manual: true,
         onSuccess: () => {
           toast.success("刪除成功");
-          setFileName(null);
           onChange(null);
+          // Reset file input
+          if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+          }
         },
         onError: (error: any) => {
-          toast.error(error.message);
+          toast.error(error.message || "Delete failed");
         },
       }
     );
 
-    const [fileName, setFileName] = useState<string | null>(null);
-
-    const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
       const files = event.target.files;
       const file = files && files[0];
 
       if (file) {
-        const data = await runAsync(file);
-        onChange({ id: data.fileId, file: file });
-        setFileName(file.name);
+        try {
+          const data = await runAsync(file);
+          onChange({ id: data.fileId, file: file });
+        } catch (error) {
+          // Error is already handled by useRequest onError
+          // Reset the input
+          if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+          }
+        }
       }
-    };
+    }, [runAsync, onChange]);
+
+    const handleDelete = useCallback(() => {
+      if (value?.id) {
+        deleteFn(value.id);
+      }
+    }, [value?.id, deleteFn]);
+
+    const currentFileName = value?.file?.name || "";
+    const hasFile = Boolean(currentFileName);
 
     return (
       <Box sx={styles.box}>
         <Typography variant="h6">{label}</Typography>
         <Box sx={styles.container}>
-          <Typography variant="body2">{fileName || ""}</Typography>
+          <Typography variant="body2" title={currentFileName}>
+            {currentFileName}
+          </Typography>
           <label htmlFor={name}>
             <input
               hidden
               type="file"
               id={name}
-              ref={ref}
+              ref={fileInputRef}
               accept={accept || ".png, .jpg, .gif, .pdf"}
               onChange={handleChange}
             />
@@ -161,12 +198,14 @@ const UploadDocBox = React.forwardRef<HTMLInputElement, UploadDocBoxProps>(
               variant="outlined"
               loading={loading}
               endIcon={<UploadIcon />}
+              aria-label="Upload file"
             ></LoadingButton>
           </label>
           <IconBtn
             icon={<DeleteOutlinedIcon />}
-            onClick={() => value?.id && deleteFn(value.id)}
-            disabled={!fileName || !value || deleteLoading}
+            onClick={handleDelete}
+            disabled={!hasFile || deleteLoading}
+            aria-label="Delete file"
           />
         </Box>
       </Box>
