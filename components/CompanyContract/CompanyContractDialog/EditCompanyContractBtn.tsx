@@ -3,7 +3,7 @@ import { useState } from "react";
 import BorderColorOutlined from "@mui/icons-material/BorderColorOutlined";
 import { CompanyContract } from "@core/graphql/types";
 import dynamic from "next/dynamic";
-import { baseFieldConfigs } from "@components/CompanyContract/CompanyContractDialog/fieldConfig/baseFieldConfigs";
+import { fieldConfigs } from "@components/CompanyContract/CompanyContractDialog/fieldConfig/fieldConfigs";
 import { FormData } from "@components/CompanyContract/CompanyContractDialog/FormData";
 import CompanyContractDialog from "@components/CompanyContract/CompanyContractDialog/CompanyContractDialog";
 import { IconBtn } from "@components/Button";
@@ -31,7 +31,7 @@ const EditCompanyContractBtn = (props: CompanyContractProps) => {
     handleSubmit,
     formState: { errors },
     watch,
-  } = useValidatedForm<FormData>(baseFieldConfigs, {
+  } = useValidatedForm<FormData>(fieldConfigs, {
     defaultValues: {
       contractTimeType: {
         label: contractTimeTypeMap[companyContract.contractTimeType],

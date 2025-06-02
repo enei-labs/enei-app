@@ -1,8 +1,11 @@
 import { ContractTimeType } from "@core/graphql/types";
 import { useEffect, useState } from "react";
 import { addYears } from 'date-fns';
+import { baseFieldConfigs } from "@components/UserContract/UserContractDialog/fieldConfig/baseFieldConfigs";
+import { contractStartTimeFieldConfigs } from "@components/UserContract/UserContractDialog/fieldConfig/contractStartTimeFieldConfigs";
+import { contractEndTimeFieldConfigs } from "@components/UserContract/UserContractDialog/fieldConfig/contractEndTimeFieldConfigs";
+import { contractTransferStartTimeFieldConfigs } from "@components/UserContract/UserContractDialog/fieldConfig/contractTransferStartTimeFieldConfigs";
 import { FieldConfig } from '@core/types';
-import { getFieldConfigs } from "./index";
 
 export const useCreateDisplayFieldConfigs = (
   values: {
@@ -13,12 +16,28 @@ export const useCreateDisplayFieldConfigs = (
   setEndedAt?: (value: Date) => void,
 ) => {
   const { contractTimeType, salesPeriod, salesAt } = values;
-  const [fieldConfigs, setFieldConfigs] = useState<FieldConfig[]>(() => 
-    getFieldConfigs(contractTimeType)
-  );
+  const [fieldConfigs, setFieldConfigs] = useState<FieldConfig[]>(baseFieldConfigs);
 
   useEffect(() => {
-    const newFieldConfigs = getFieldConfigs(contractTimeType);
+    let newFieldConfigs = baseFieldConfigs;
+
+    if (!contractTimeType) {
+      setFieldConfigs(baseFieldConfigs);
+      return;
+    }
+
+    switch (contractTimeType) {
+      case ContractTimeType.ContractStartTime:
+        newFieldConfigs = contractStartTimeFieldConfigs;
+        break;
+      case ContractTimeType.ContractEndTime:
+        newFieldConfigs = contractEndTimeFieldConfigs;
+        break;
+      case ContractTimeType.TransferStartTime:
+        newFieldConfigs = contractTransferStartTimeFieldConfigs;
+        break;
+    }
+
     setFieldConfigs(newFieldConfigs);
   }, [contractTimeType]);
 
