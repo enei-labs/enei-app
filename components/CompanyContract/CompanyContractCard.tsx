@@ -181,7 +181,7 @@ function CompanyContractCard(props: CompanyContractCardProps) {
               display: "flex",
               flexDirection: "column",
               rowGap: "6px",
-              width: "500px",
+              width: "800px",
             }}
           >
             <Box
