@@ -100,7 +100,7 @@ export default function TransferDegreeSection({
                     control={control}
                     name={`${fieldBase}.fee`}
                     render={({ field }) => (
-                      <InputText {...field} type="number" label="費用" />
+                      <InputText {...field} type="number" label="代輸費" />
                     )}
                   />
                   {/* <Controller
