@@ -1,6 +1,6 @@
 import { UserBillTemplateData } from "@components/ElectricBill/UserBillTemplate";
 import { PrintWrapper, ReadExcelInput } from "@components/ReadExcelInput";
-import { UserBill, ElectricBillStatus } from "@core/graphql/types";
+import { UserBill, ElectricBillStatus, UserBillConfigChargeType } from "@core/graphql/types";
 import { ReviewStatusLookup } from "@core/look-up/review-status";
 import {
   Box,
@@ -71,16 +71,31 @@ export const UserBillDialog = ({
 
     const totalDegree = calculateTotalDegree(data.userBill.electricNumberInfos);
 
+    // 根据勾选配置决定是否计算各项费用
+    const shouldCalculateSubstitutionFee = data.userBill.userBillConfig?.transportationFee === UserBillConfigChargeType.User;
+    const shouldCalculateVerificationFee = data.userBill.userBillConfig?.credentialInspectionFee === UserBillConfigChargeType.User;
+    const shouldCalculateServiceFee = data.userBill.userBillConfig?.credentialServiceFee === UserBillConfigChargeType.User;
+
+    // 代输费计算
+    const substitutionFee = shouldCalculateSubstitutionFee 
+      ? Math.round(data.userBill.electricNumberInfos.reduce((acc, info) => acc + (info.fee ?? 0), 0) / 1.05)
+      : 0;
+
     const feeRates = {
       substitution: Number(data.fee.substitutionFee),
       verification: Number(data.fee.certificateVerificationFee),
       service: Number(data.fee.certificateServiceFee),
     };
-    const substitutionFee = Math.round(
-      (totalDegree * feeRates.substitution) / 1.05
-    );
-    const certificationFee = Math.round(totalDegree * feeRates.verification);
-    const certificationServiceFee = Math.round(totalDegree * feeRates.service);
+
+    // 憑證審查費计算
+    const certificationFee = shouldCalculateVerificationFee 
+      ? Math.round(totalDegree * feeRates.verification)
+      : 0;
+    
+    // 憑證服務費计算
+    const certificationServiceFee = shouldCalculateServiceFee 
+      ? Math.round(totalDegree * feeRates.service)
+      : 0;
 
     const totalFee =
       substitutionFee + certificationFee + certificationServiceFee;

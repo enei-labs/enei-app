@@ -627,8 +627,8 @@ export type IndustryBillConfigRecipientAccount = {
   account: Scalars['String']['output'];
   /** 分行代碼 */
   bankBranchCode?: Maybe<Scalars['String']['output']>;
-  /** 銀行代碼 */
-  bankCode: Scalars['String']['output'];
+  /** 銀行名稱 */
+  bankCode?: Maybe<Scalars['String']['output']>;
 };
 
 export type IndustryBillPage = {
@@ -865,7 +865,7 @@ export type MutationRemoveUserArgs = {
 
 
 export type MutationRemoveUserBillConfigArgs = {
-  input: RemoveUserBillInput;
+  id: Scalars['UUID']['input'];
 };
 
 
@@ -1331,10 +1331,6 @@ export type RemoveTpcBillInput = {
   tpcBillId: Scalars['UUID']['input'];
 };
 
-export type RemoveUserBillInput = {
-  userBillId: Scalars['UUID']['input'];
-};
-
 export type RemoveUserInput = {
   userId: Scalars['UUID']['input'];
 };
@@ -1391,6 +1387,7 @@ export type TransferDegree = {
   createdAt: Scalars['DateTime']['output'];
   degree: Scalars['Int']['output'];
   electricNumber: Scalars['String']['output'];
+  /** 代書費（含稅） */
   fee?: Maybe<Scalars['Int']['output']>;
   id: Scalars['ID']['output'];
   powerPlant: PowerPlant;
@@ -1646,7 +1643,10 @@ export type UserBillConfigRecipientAccount = {
 export type UserBillElectricNumberInfo = {
   __typename?: 'UserBillElectricNumberInfo';
   degree: Scalars['Float']['output'];
+  /** 代輸費（含稅） */
+  fee?: Maybe<Scalars['Float']['output']>;
   number: Scalars['String']['output'];
+  /** 採購電價 */
   price: Scalars['Float']['output'];
 };
 

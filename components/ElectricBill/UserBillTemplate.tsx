@@ -377,7 +377,9 @@ const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
                   代輸費
                 </Grid>
                 <Grid item xs={6} sx={styles.tableCell}>
-                  {formatValue(data.substitutionFee)}
+                  {data.substitutionFee
+                    ? formatValue(data.substitutionFee)
+                    : "-"}
                 </Grid>
               </Grid>
               <Grid container>
