@@ -8,6 +8,7 @@ export const USER_BILL_FIELDS = gql`
       number
       price
       degree
+      fee
     }
     billingDate
     status
