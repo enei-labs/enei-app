@@ -37,7 +37,19 @@ const UserBillConfigPanel = (props: UserBillConfigPanelProps) => {
     {
       header: "電費單組合名稱",
       accessor: "name",
-      render: (rowData) => <Box>{rowData.name}</Box>,
+      render: (rowData) => (
+        <Box
+          sx={{
+            cursor: "pointer",
+            "&:hover": {
+              color: "primary.main",
+            },
+          }}
+          onClick={() => router.push(`/electric-bill/user-bill-config/${rowData.id}`)}
+        >
+          {rowData.name}
+        </Box>
+      )
     },
     {
       header: "修改 / 刪除",
