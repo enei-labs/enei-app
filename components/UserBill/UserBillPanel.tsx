@@ -2,7 +2,7 @@ import { Table } from "@components/Table";
 import { UserBill } from "@core/graphql/types";
 import { Config } from "../Table/Table";
 import { Box, Typography, Card } from "@mui/material";
-import { useUserBills } from "@utils/hooks/queries";
+import { useFee, useUserBills } from "@utils/hooks/queries";
 import { formatDateTime } from "@utils/format";
 import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import { IconBtn } from "@components/Button";
@@ -19,6 +19,7 @@ const UserBillPanel = (props: UserBillPanelProps) => {
   const { data, loading, refetch } = useUserBills({
     month: props.month,
   });
+  const { data: feeData, loading: feeLoading } = useFee();
 
   const configs: Config<UserBill>[] = [
     {
@@ -65,9 +66,10 @@ const UserBillPanel = (props: UserBillPanelProps) => {
           }}
         />
       </Card>
-      {userBill && (
+      {userBill && feeData && (
         <UserBillDialog
           userBill={userBill}
+          feeData={feeData.fee}
           isOpenDialog={isOpenDialog}
           onClose={() => setIsOpenDialog(false)}
         />

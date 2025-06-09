@@ -1,6 +1,6 @@
 import { UserBillTemplateData } from "@components/ElectricBill/UserBillTemplate";
 import { PrintWrapper, ReadExcelInput } from "@components/ReadExcelInput";
-import { UserBill, ElectricBillStatus, UserBillConfigChargeType } from "@core/graphql/types";
+import { UserBill, ElectricBillStatus, UserBillConfigChargeType, Fee } from "@core/graphql/types";
 import { ReviewStatusLookup } from "@core/look-up/review-status";
 import {
   Box,
@@ -22,12 +22,14 @@ interface UserBillDialogProps {
   isOpenDialog: boolean;
   onClose: () => void;
   userBill: UserBill;
+  feeData: Fee;
 }
 
 export const UserBillDialog = ({
   userBill,
   isOpenDialog,
   onClose,
+  feeData,
 }: UserBillDialogProps) => {
   const { data, loading, error } = useUserBill(userBill.id);
   const [auditUserBill, { loading: auditUserBillLoading }] = useAuditUserBill();
@@ -79,7 +81,7 @@ export const UserBillDialog = ({
     // 代输费计算
     const substitutionFee = shouldCalculateSubstitutionFee 
       ? Math.round(data.userBill.electricNumberInfos.reduce((acc, info) => acc + (info.fee ?? 0), 0) / 1.05)
-      : 0;
+      : Number(feeData.substitutionFee);
 
     const feeRates = {
       substitution: Number(data.fee.substitutionFee),
@@ -90,12 +92,12 @@ export const UserBillDialog = ({
     // 憑證審查費计算
     const certificationFee = shouldCalculateVerificationFee 
       ? Math.round(totalDegree * feeRates.verification)
-      : 0;
+      : Number(feeData.certificateVerificationFee);
     
     // 憑證服務費计算
     const certificationServiceFee = shouldCalculateServiceFee 
       ? Math.round(totalDegree * feeRates.service)
-      : 0;
+      : Number(feeData.certificateServiceFee);
 
     const totalFee =
       substitutionFee + certificationFee + certificationServiceFee;
