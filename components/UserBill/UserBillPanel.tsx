@@ -2,7 +2,7 @@ import { Table } from "@components/Table";
 import { UserBill } from "@core/graphql/types";
 import { Config } from "../Table/Table";
 import { Box, Typography, Card, Tooltip } from "@mui/material";
-import { useFee, useUserBills } from "@utils/hooks/queries";
+import { useUserBills } from "@utils/hooks/queries";
 import { formatDateTime } from "@utils/format";
 import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import InfoIcon from "@mui/icons-material/Info";
@@ -27,7 +27,6 @@ const UserBillPanel = (props: UserBillPanelProps) => {
     month: props.month,
     term: searchTerm,
   });
-  const { data: feeData, loading: feeLoading } = useFee();
 
   // Handle userBillId query parameter
   useEffect(() => {
@@ -127,10 +126,9 @@ const UserBillPanel = (props: UserBillPanelProps) => {
           }}
         />
       </Card>
-      {userBill && feeData && (
+      {userBill && (
         <UserBillDialog
           userBill={userBill}
-          feeData={feeData.fee}
           isOpenDialog={isOpenDialog}
           onClose={handleCloseDialog}
         />

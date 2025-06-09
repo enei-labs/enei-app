@@ -22,14 +22,12 @@ interface UserBillDialogProps {
   isOpenDialog: boolean;
   onClose: () => void;
   userBill: UserBill;
-  feeData: Fee;
 }
 
 export const UserBillDialog = ({
   userBill,
   isOpenDialog,
   onClose,
-  feeData,
 }: UserBillDialogProps) => {
   const { data, loading, error } = useUserBill(userBill.id);
   const [auditUserBill, { loading: auditUserBillLoading }] = useAuditUserBill();
@@ -81,7 +79,7 @@ export const UserBillDialog = ({
     // 代输费计算
     const substitutionFee = shouldCalculateSubstitutionFee 
       ? Math.round(data.userBill.electricNumberInfos.reduce((acc, info) => acc + (info.fee ?? 0), 0) / 1.05)
-      : Number(feeData.substitutionFee);
+      : 0;
 
     const feeRates = {
       substitution: Number(data.fee.substitutionFee),
@@ -92,12 +90,12 @@ export const UserBillDialog = ({
     // 憑證審查費计算
     const certificationFee = shouldCalculateVerificationFee 
       ? Math.round(totalDegree * feeRates.verification)
-      : Number(feeData.certificateVerificationFee);
+      : 0;
     
     // 憑證服務費计算
     const certificationServiceFee = shouldCalculateServiceFee 
       ? Math.round(totalDegree * feeRates.service)
-      : Number(feeData.certificateServiceFee);
+      : 0;
 
     const totalFee =
       substitutionFee + certificationFee + certificationServiceFee;
