@@ -8,16 +8,18 @@ import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import InfoIcon from "@mui/icons-material/Info";
 import { IconBtn } from "@components/Button";
 import { UserBillDialog } from "./UserBillDialog";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ReviewStatusLookup } from "@core/look-up/review-status";
 import { useSearch } from "@utils/hooks/useSearch";
 import { InputSearch } from "@components/Input";
+import { useRouter } from "next/router";
 
 interface UserBillPanelProps {
   month: string;
 }
 
 const UserBillPanel = (props: UserBillPanelProps) => {
+  const router = useRouter();
   const { setInputValue, searchTerm, executeSearch } = useSearch();
   const [isOpenDialog, setIsOpenDialog] = useState(false);
   const [userBill, setUserBill] = useState<UserBill | null>(null);
@@ -26,6 +28,53 @@ const UserBillPanel = (props: UserBillPanelProps) => {
     term: searchTerm,
   });
   const { data: feeData, loading: feeLoading } = useFee();
+
+  // Handle userBillId query parameter
+  useEffect(() => {
+    const { userBillId } = router.query;
+    
+    if (userBillId && data?.userBills?.list) {
+      const targetUserBill = data.userBills.list.find(
+        (bill) => bill.id === userBillId
+      );
+      
+      if (targetUserBill) {
+        setUserBill(targetUserBill);
+        setIsOpenDialog(true);
+      }
+    }
+  }, [router.query, data?.userBills?.list]);
+
+  const handleOpenDialog = (bill: UserBill) => {
+    setUserBill(bill);
+    setIsOpenDialog(true);
+    
+    // Update URL with userBillId parameter
+    router.push(
+      {
+        pathname: router.pathname,
+        query: { ...router.query, userBillId: bill.id },
+      },
+      undefined,
+      { shallow: true }
+    );
+  };
+
+  const handleCloseDialog = () => {
+    setIsOpenDialog(false);
+    setUserBill(null);
+    
+    // Remove userBillId from URL
+    const { userBillId, ...queryWithoutUserBillId } = router.query;
+    router.push(
+      {
+        pathname: router.pathname,
+        query: queryWithoutUserBillId,
+      },
+      undefined,
+      { shallow: true }
+    );
+  };
 
   const configs: Config<UserBill>[] = [
     {
@@ -43,10 +92,7 @@ const UserBillPanel = (props: UserBillPanelProps) => {
       render: (data) => (
         <IconBtn
           icon={<EventNoteOutlinedIcon />}
-          onClick={() => {
-            setUserBill(data);
-            setIsOpenDialog(true);
-          }}
+          onClick={() => handleOpenDialog(data)}
         />
       ),
     },
@@ -86,7 +132,7 @@ const UserBillPanel = (props: UserBillPanelProps) => {
           userBill={userBill}
           feeData={feeData.fee}
           isOpenDialog={isOpenDialog}
-          onClose={() => setIsOpenDialog(false)}
+          onClose={handleCloseDialog}
         />
       )}
     </>
