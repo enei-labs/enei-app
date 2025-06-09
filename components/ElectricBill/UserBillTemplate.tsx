@@ -190,7 +190,7 @@ const UserBillTemplate = forwardRef((props: UserBillProps, ref) => {
           </Box>
           <Box sx={styles.box}>
             <Typography variant="h4" sx={{ color: "#009688" }}>
-              {formatValue(data.amount)}
+              {formatValue(data.totalIncludeTax)}
             </Typography>
           </Box>
         </Grid>
