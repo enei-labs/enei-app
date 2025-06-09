@@ -192,6 +192,9 @@ export const UserBillDialog = ({
         <Typography textAlign={"left"} variant="h4">
           用戶電費單
         </Typography>
+        <Typography textAlign={"left"} variant="h6">
+          電費單組合： {userBill.userBillConfig?.name ?? ""}
+        </Typography>
         {!userBillTemplateData ? (
           <Box
             display="flex"
