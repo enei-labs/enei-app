@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
+import Alert from "@mui/material/Alert";
 import LocalMallOutlinedIcon from "@mui/icons-material/LocalMallOutlined";
 import BoltIcon from "@mui/icons-material/BoltOutlined";
 import OutlinedFlagIcon from "@mui/icons-material/OutlinedFlag";
@@ -21,13 +22,17 @@ import TransferDegreeChart from "@components/Dashboard/TransferDegreeChart";
 import RemainingDemandFromUserContractPanel from "@components/Dashboard/RemainingDemandFromUserContractPanel";
 import RemainingDemandFromCompanyContractPanel from "@components/Dashboard/RemainingDemandFromCompanyContractPanel";
 
-function MainPage() {
-  const { data, loading } = useDashboard();
+// Constants for consistent spacing
+const CARD_PADDING = "36px";
+const GRID_SPACING = 4;
+const SECTION_MARGIN = "24px 0";
+const GRID_TOP_MARGIN = "4px";
 
-  const dashboardData = useMemo(() => {
+function useDashboardData(data: any) {
+  return useMemo(() => {
     const industryOverview: Pick<OverviewCardProps, "topic" | "basicInfos"> = {
       topic: "發電業資訊",
-      basicInfos: data
+      basicInfos: data?.dashboard?.companyInfo
         ? [
             {
               icon: BoltIcon,
@@ -53,7 +58,7 @@ function MainPage() {
 
     const userOverview: Pick<OverviewCardProps, "topic" | "basicInfos"> = {
       topic: "用戶資訊",
-      basicInfos: data
+      basicInfos: data?.dashboard?.userInfo
         ? [
             {
               icon: GroupsOutlinedIcon,
@@ -82,8 +87,25 @@ function MainPage() {
       userOverview,
     };
   }, [data]);
+}
 
-  const { industryOverview, userOverview } = dashboardData;
+function MainPage() {
+  const { data, loading, error } = useDashboard();
+  const { industryOverview, userOverview } = useDashboardData(data);
+
+  if (error) {
+    return (
+      <AuthLayout>
+        <Head>
+          <title>戰情總版</title>
+          <meta name="description" content="戰情總版" />
+        </Head>
+        <Alert severity="error">
+          載入戰情總版資料時發生錯誤，請稍後再試。
+        </Alert>
+      </AuthLayout>
+    );
+  }
 
   return (
     <>
@@ -101,7 +123,7 @@ function MainPage() {
             },
           ]}
         />
-        <Grid container spacing={4} marginTop="4px">
+        <Grid container spacing={GRID_SPACING} marginTop={GRID_TOP_MARGIN}>
           <Grid item sm={7}>
             <Box
               sx={{
@@ -117,81 +139,90 @@ function MainPage() {
             </Box>
           </Grid>
           <Grid item sm={5}>
-            <Card sx={{ p: "36px" }}>
+            <Card sx={{ p: CARD_PADDING }}>
               <AnnualPrice
                 averagePurchasePrice={
-                  data?.dashboard.companyInfo.averagePurchasePrice.toString() ??
+                  data?.dashboard?.companyInfo?.averagePurchasePrice?.toString() ??
                   "N/A"
                 }
                 averageSellingPrice={
-                  data?.dashboard.userContractInfo.averageSellingPrice.toString() ??
+                  data?.dashboard?.userContractInfo?.averageSellingPrice?.toString() ??
                   "N/A"
                 }
               />
             </Card>
           </Grid>
           <Grid item sm={6}>
-            <Card sx={{ p: "36px" }}>
+            <Card sx={{ p: CARD_PADDING }}>
               <TurnoverChart
                 name="營業額"
-                data={data?.dashboard.userBillInfo.turnover}
+                data={data?.dashboard?.userBillInfo?.turnover}
               />
             </Card>
           </Grid>
           <Grid item sm={6}>
-            <Card sx={{ p: "36px" }}>
+            <Card sx={{ p: CARD_PADDING }}>
               <TransferDegreeChart
                 name="轉供度數"
-                data={data?.dashboard.transferDegreeInfo.monthlyTransferDegree}
+                data={data?.dashboard?.transferDegreeInfo?.monthlyTransferDegree}
               />
             </Card>
           </Grid>
         </Grid>
 
-        <Divider sx={{ margin: "24px 0" }} />
+        <Divider sx={{ margin: SECTION_MARGIN }} />
 
-        <Grid container spacing={4} marginTop="4px">
+        <Grid container spacing={GRID_SPACING} marginTop={GRID_TOP_MARGIN}>
           <Grid item sm={6}>
-            <Card sx={{ p: "36px" }}>
+            <Card sx={{ p: CARD_PADDING }}>
               <RemainingDemandFromUserContractPanel
                 loading={loading}
                 userContracts={
-                  data?.dashboard.userContractInfo
-                    .remainingDemandFromUserContracts ?? []
+                  data?.dashboard?.userContractInfo
+                    ?.remainingDemandFromUserContracts ?? []
                 }
               />
             </Card>
           </Grid>
           <Grid item sm={6}>
-            <Card sx={{ p: "36px" }}>
+            <Card sx={{ p: CARD_PADDING }}>
               <RemainingDemandFromCompanyContractPanel
                 loading={loading}
                 companyContracts={
-                  data?.dashboard.companyContractInfo
-                    .remainingDemandFromCompanyContracts ?? []
+                  data?.dashboard?.companyContractInfo
+                    ?.remainingDemandFromCompanyContracts ?? []
                 }
               />
             </Card>
           </Grid>
         </Grid>
 
-        <Grid container spacing={4} marginTop="4px">
+        <Grid container spacing={GRID_SPACING} marginTop={GRID_TOP_MARGIN}>
           <Grid item sm={6}>
-            <Card sx={{ p: "36px" }}>
+            <Card sx={{ p: CARD_PADDING }}>
               <UserContractExpiredPanel
                 loading={loading}
                 userContracts={
-                  data?.dashboard.userContractInfo.userContractsExpiringSoon ??
+                  data?.dashboard?.userContractInfo?.userContractsExpiringSoon ??
                   []
                 }
               />
             </Card>
           </Grid>
           <Grid item sm={6}>
-            {/* TODO: 未來一年電廠合約到期名單 */}
-            {/* <Card sx={{ p: "36px" }}> */}
-            {/* <BasicTable title="未來一年電廠合約到期名單" /> */}
-            {/* </Card> */}
+            {/* Placeholder for future company contract expiry panel */}
+            <Box
+              sx={{
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "text.secondary",
+                fontStyle: "italic",
+              }}
+            >
+              未來功能：電廠合約到期名單
+            </Box>
           </Grid>
         </Grid>
       </>
