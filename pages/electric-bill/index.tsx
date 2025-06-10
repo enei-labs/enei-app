@@ -7,6 +7,7 @@ import {
   Divider,
   Grid,
   Typography,
+  Alert,
 } from "@mui/material";
 import { AuthLayout } from "@components/Layout";
 import { ReactElement, useState } from "react";
@@ -29,12 +30,6 @@ import IndustryBillConfigDialog from "@components/IndustryBill/IndustryBillConfi
 import IndustryBillConfigPanel from "@components/IndustryBill/IndustryBillConfigPanel";
 import { UserBillsByMonthPanel } from "@components/UserBill/UserBillsByMonthPanel";
 import { IndustryBillsByMonthPanel } from "@components/IndustryBill/IndustryBillsByMonthPanel";
-const TransferDocumentDialog = dynamic(
-  () =>
-    import(
-      "@components/TransferDocument/TransferDocumentDialog/TransferDocumentDialog"
-    )
-);
 
 const FeeDialog = dynamic(() => import("@components/UserBill/FeeDialog"));
 
@@ -50,6 +45,43 @@ const styles = {
   },
 } as const;
 
+interface FeeCardProps {
+  title: string;
+  value: string | number | null | undefined;
+  unit: string;
+}
+
+function FeeCard({ title, value, unit }: FeeCardProps) {
+  return (
+    <Grid item sm={4} sx={{ padding: "36px 36px 36px 0" }}>
+      <Box sx={{ display: "flex", columnGap: "12px" }}>
+        <AccountBalanceWalletOutlinedIcon
+          sx={{ color: "#009688" }}
+          width="20px"
+        />
+        <Typography variant="body2">{title}</Typography>
+      </Box>
+      <Box sx={styles.box}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "flex-end",
+            margin: "40px",
+            columnGap: "4px",
+          }}
+        >
+          <Typography variant="h3" sx={{ whiteSpace: "nowrap" }}>
+            {value ?? "-"}
+          </Typography>
+          <Typography variant="body3" sx={{ whiteSpace: "nowrap" }}>
+            {unit}
+          </Typography>
+        </Box>
+      </Box>
+    </Grid>
+  );
+}
+
 function ExportElectricBillPage() {
   const {
     searchTerm: userBillSearchTerm,
@@ -61,13 +93,12 @@ function ExportElectricBillPage() {
     setInputValue: setIndustryBillInputValue,
     executeSearch: executeIndustryBillSearch,
   } = useSearch();
-  const [open, setOpen] = useState(false);
   const [showUserBillConfigDialog, setShowUserBillConfigDialog] =
     useState(false);
   const [showIndustryBillConfigDialog, setShowIndustryBillConfigDialog] =
     useState(false);
   const [showFeeDialog, setShowFeeDialog] = useState(false);
-  const { data, loading } = useFee();
+  const { data, loading, error } = useFee();
 
   return (
     <>
@@ -86,96 +117,42 @@ function ExportElectricBillPage() {
       />
       <Box sx={{ paddingTop: "12px" }}>
         <AuthGuard roles={[Role.Admin, Role.SuperAdmin]}>
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              載入規費資料時發生錯誤，請稍後再試。
+            </Alert>
+          )}
+          
           <Card sx={{ p: "36px" }}>
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
               <Typography variant="h4">規費設定</Typography>
               <IconBtn
                 icon={<BorderColorOutlined />}
                 onClick={() => setShowFeeDialog(true)}
+                aria-label="編輯規費設定"
               />
             </Box>
             {loading ? (
-              <CircularProgress size="24px" />
+              <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
+                <CircularProgress size="24px" />
+              </Box>
             ) : (
               <Grid container>
-                <Grid item sm={4} sx={{ padding: "36px 36px 36px 0" }}>
-                  <Box sx={{ display: "flex", columnGap: "12px" }}>
-                    <AccountBalanceWalletOutlinedIcon
-                      sx={{ color: "#009688" }}
-                      width="20px"
-                    />
-                    <Typography variant="body2">代輸費</Typography>
-                  </Box>
-                  <Box sx={styles.box}>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "flex-end",
-                        margin: "40px",
-                        columnGap: "4px",
-                      }}
-                    >
-                      <Typography variant="h3" sx={{ whiteSpace: "nowrap" }}>
-                        {data?.fee.substitutionFee ?? "-"}
-                      </Typography>
-                      <Typography variant="body3" sx={{ whiteSpace: "nowrap" }}>
-                        元/kWh
-                      </Typography>
-                    </Box>
-                  </Box>
-                </Grid>
-                <Grid item sm={4} sx={{ padding: "36px 36px 36px 0" }}>
-                  <Box sx={{ display: "flex", columnGap: "12px" }}>
-                    <AccountBalanceWalletOutlinedIcon
-                      sx={{ color: "#009688" }}
-                      width="20px"
-                    />
-                    <Typography variant="body2">憑證審查費</Typography>
-                  </Box>
-                  <Box sx={styles.box}>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "flex-end",
-                        margin: "40px",
-                        columnGap: "4px",
-                      }}
-                    >
-                      <Typography variant="h3" sx={{ whiteSpace: "nowrap" }}>
-                        {data?.fee.certificateVerificationFee ?? "-"}
-                      </Typography>
-                      <Typography variant="body3" sx={{ whiteSpace: "nowrap" }}>
-                        元/kWh
-                      </Typography>
-                    </Box>
-                  </Box>
-                </Grid>
-                <Grid item sm={4} sx={{ padding: "36px 36px 36px 0" }}>
-                  <Box sx={{ display: "flex", columnGap: "12px" }}>
-                    <AccountBalanceWalletOutlinedIcon
-                      sx={{ color: "#009688" }}
-                      width="20px"
-                    />
-                    <Typography variant="body2">憑證服務費</Typography>
-                  </Box>
-                  <Box sx={styles.box}>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "flex-end",
-                        margin: "40px",
-                        columnGap: "4px",
-                      }}
-                    >
-                      <Typography variant="h3" sx={{ whiteSpace: "nowrap" }}>
-                        {data?.fee.certificateServiceFee ?? "-"}
-                      </Typography>
-                      <Typography variant="body3" sx={{ whiteSpace: "nowrap" }}>
-                        元/kWh
-                      </Typography>
-                    </Box>
-                  </Box>
-                </Grid>
+                <FeeCard
+                  title="代輸費"
+                  value={data?.fee.substitutionFee}
+                  unit="元/kWh"
+                />
+                <FeeCard
+                  title="憑證審查費"
+                  value={data?.fee.certificateVerificationFee}
+                  unit="元/kWh"
+                />
+                <FeeCard
+                  title="憑證服務費"
+                  value={data?.fee.certificateServiceFee}
+                  unit="元/kWh"
+                />
               </Grid>
             )}
           </Card>
@@ -192,25 +169,23 @@ function ExportElectricBillPage() {
                 my: "16px",
               }}
             >
-              {/* 搜尋 */}
               <InputSearch
                 onChange={setUserBillInputValue}
                 onEnter={executeUserBillSearch}
+                placeholder="搜尋用戶電費單組合"
               />
 
-              {/* 新增電費單 */}
-              <Box sx={{ display: "flex", columnGap: "12px" }}>
-                <Button
-                  startIcon={<AddIcon />}
-                  onClick={() => setShowUserBillConfigDialog(true)}
-                >
-                  新增用戶電費單組合
-                </Button>
-              </Box>
+              <Button
+                startIcon={<AddIcon />}
+                onClick={() => setShowUserBillConfigDialog(true)}
+              >
+                新增用戶電費單組合
+              </Button>
             </Box>
 
-            {/* 電費單表格 */}
-            {data?.fee ? <UserBillConfigPanel fee={data.fee} /> : null}
+            {data?.fee ? (
+              <UserBillConfigPanel fee={data.fee} />
+            ) : null}
           </Card>
 
           <UserBillsByMonthPanel />
@@ -226,13 +201,12 @@ function ExportElectricBillPage() {
                 my: "16px",
               }}
             >
-              {/* 搜尋 */}
               <InputSearch
                 onChange={setIndustryBillInputValue}
                 onEnter={executeIndustryBillSearch}
+                placeholder="搜尋發電業電費單組合"
               />
 
-              {/* 新增電費單 */}
               <Button
                 startIcon={<AddIcon />}
                 onClick={() => setShowIndustryBillConfigDialog(true)}
@@ -241,20 +215,14 @@ function ExportElectricBillPage() {
               </Button>
             </Box>
 
-            {/* 電費單表格 */}
-            {data?.fee ? <IndustryBillConfigPanel fee={data.fee} /> : null}
+            {data?.fee ? (
+              <IndustryBillConfigPanel fee={data.fee} />
+            ) : null}
           </Card>
 
           <IndustryBillsByMonthPanel />
         </AuthGuard>
       </Box>
-      {open ? (
-        <TransferDocumentDialog
-          isOpenDialog={open}
-          onClose={() => setOpen(false)}
-          variant="create"
-        />
-      ) : null}
       {showUserBillConfigDialog ? (
         <UserBillConfigDialog
           isOpenDialog={showUserBillConfigDialog}
