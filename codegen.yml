@@ -1,5 +1,5 @@
 overwrite: true
-schema: 'http://localhost:3004/graphql'
+schema: 'https://api-staging.annealenergy.com/graphql'
 generates:
   core/graphql/types.ts:
     plugins:
