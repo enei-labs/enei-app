@@ -19,17 +19,6 @@ export const IndustryBillsByMonthPanel = () => {
     return `${year}-${month.toString().padStart(2, "0")}`;
   };
 
-  // 設置日期到月初和月底的輔助函數
-  const getMonthStartDate = (dateStr: string) => {
-    const [year, month] = dateStr.split("-").map(Number);
-    return new Date(year, month - 1, 1); // 月份從0開始，所以要減1
-  };
-
-  const getMonthEndDate = (dateStr: string) => {
-    const [year, month] = dateStr.split("-").map(Number);
-    return new Date(year, month, 0); // 下個月的第0天就是本月的最後一天
-  };
-
   const [dateRange, setDateRange] = useState<{
     startDate: string;
     endDate: string;
@@ -39,8 +28,8 @@ export const IndustryBillsByMonthPanel = () => {
   });
 
   const { data, loading } = useIndustryBillsByMonth(
-    getMonthStartDate(dateRange.startDate),
-    getMonthEndDate(dateRange.endDate)
+    dateRange.startDate,
+    dateRange.endDate
   );
 
   const configs: Config<IndustryBillsByMonth>[] = [
@@ -56,7 +45,7 @@ export const IndustryBillsByMonthPanel = () => {
             },
           }}
           onClick={() =>
-            router.push(`/electric-bill/industry-bill?month=${rowData.month}`)
+            router.push(`/electric-bill/industry-bill?month=${formatDateToString(new Date(rowData.month))}`)
           }
         >
           {formatDateTime(rowData.month, "yyyy-MM")}

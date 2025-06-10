@@ -1,8 +1,8 @@
 import { USER_BILLS_BY_MONTH } from "@core/graphql/queries/userBillsByMonth";
 import useQuery from "../useQuery";
 
-export const useUserBillsByMonth = (startDate: Date, endDate: Date) => {
+export const useUserBillsByMonth = (startMonth: string, endMonth: string) => {
   return useQuery(USER_BILLS_BY_MONTH, {
-    variables: { startDate, endDate },
+    variables: { startMonth, endMonth },
   });
 };

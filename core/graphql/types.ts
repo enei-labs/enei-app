@@ -580,8 +580,8 @@ export type IndustryBill = {
   billingDate: Scalars['DateTime']['output'];
   companyContractNumber?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
-  deletedAt: Scalars['DateTime']['output'];
-  deletedBy: Scalars['String']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  deletedBy?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   industryBillConfig?: Maybe<IndustryBillConfig>;
   name: Scalars['String']['output'];
@@ -1029,6 +1029,10 @@ export type Query = {
   userBill: UserBill;
   userBillConfig: UserBillConfig;
   userBillConfigs: UserBillConfigPage;
+  /** 獲取 UserBill 生成隊列的統計信息 */
+  userBillQueueStats: UserBillQueueStats;
+  /** 獲取 UserBill 生成隊列的當前狀態 */
+  userBillQueueStatus: UserBillQueueStatus;
   userBills: UserBillPage;
   userBillsByMonth: Array<UserBillsByMonth>;
   userContract: UserContract;
@@ -1106,15 +1110,17 @@ export type QueryIndustryBillConfigsArgs = {
 
 
 export type QueryIndustryBillsArgs = {
+  lastYearOnly?: InputMaybe<Scalars['Boolean']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
+  month?: InputMaybe<Scalars['String']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   term?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type QueryIndustryBillsByMonthArgs = {
-  endDate: Scalars['DateTime']['input'];
-  startDate: Scalars['DateTime']['input'];
+  endMonth: Scalars['String']['input'];
+  startMonth: Scalars['String']['input'];
 };
 
 
@@ -1180,15 +1186,15 @@ export type QueryUserBillConfigsArgs = {
 export type QueryUserBillsArgs = {
   lastYearOnly?: InputMaybe<Scalars['Boolean']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
-  month?: InputMaybe<Scalars['DateTime']['input']>;
+  month?: InputMaybe<Scalars['String']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   term?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type QueryUserBillsByMonthArgs = {
-  endDate: Scalars['DateTime']['input'];
-  startDate: Scalars['DateTime']['input'];
+  endMonth: Scalars['String']['input'];
+  startMonth: Scalars['String']['input'];
 };
 
 
@@ -1586,8 +1592,8 @@ export type UserBill = {
   auditBy?: Maybe<User>;
   billingDate: Scalars['DateTime']['output'];
   createdAt: Scalars['DateTime']['output'];
-  deletedAt: Scalars['DateTime']['output'];
-  deletedBy: Scalars['String']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  deletedBy?: Maybe<Scalars['String']['output']>;
   electricNumberInfos: Array<UserBillElectricNumberInfo>;
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
@@ -1654,6 +1660,23 @@ export type UserBillPage = {
   __typename?: 'UserBillPage';
   list: Array<UserBill>;
   total: Scalars['Int']['output'];
+};
+
+export type UserBillQueueStats = {
+  __typename?: 'UserBillQueueStats';
+  currentTaskId?: Maybe<Scalars['String']['output']>;
+  processing: Scalars['Boolean']['output'];
+  queuedTasks: Array<Scalars['String']['output']>;
+  timestamp: Scalars['String']['output'];
+  totalQueued: Scalars['Float']['output'];
+};
+
+export type UserBillQueueStatus = {
+  __typename?: 'UserBillQueueStatus';
+  currentTask?: Maybe<Scalars['String']['output']>;
+  processing: Scalars['Boolean']['output'];
+  queueLength: Scalars['Float']['output'];
+  taskIds: Array<Scalars['String']['output']>;
 };
 
 export type UserBillsByMonth = {

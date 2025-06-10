@@ -2,10 +2,10 @@ import { gql } from '@apollo/client'
 
 export const USER_BILLS_BY_MONTH = gql`
   query userBillsByMonth(
-    $startDate: DateTime!
-    $endDate: DateTime!
+    $startMonth: String!
+    $endMonth: String!
   ) {
-    userBillsByMonth(startDate: $startDate, endDate: $endDate) {
+    userBillsByMonth(startMonth: $startMonth, endMonth: $endMonth) {
       month
       bills {
         id
