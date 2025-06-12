@@ -24,6 +24,82 @@ interface UserBillDialogProps {
   userBill: UserBill;
 }
 
+// 計算工具函數
+const calculateTotalDegree = (electricNumberInfos: UserBill["electricNumberInfos"]) => 
+  electricNumberInfos.reduce((acc, info) => acc + (info.degree ?? 0), 0);
+
+const calculateTotalAmount = (electricNumberInfos: UserBill["electricNumberInfos"]) =>
+  electricNumberInfos.reduce(
+    (acc, info) => acc + (info.price ?? 0) * (info.degree ?? 0),
+    0
+  );
+
+// 費用計算邏輯
+const calculateFees = (
+  electricNumberInfos: UserBill["electricNumberInfos"],
+  userBillConfig: UserBill["userBillConfig"],
+  fee: Fee
+) => {
+  const totalDegree = calculateTotalDegree(electricNumberInfos);
+  
+  const shouldCalculate = {
+    substitution: userBillConfig?.transportationFee === UserBillConfigChargeType.User,
+    verification: userBillConfig?.credentialInspectionFee === UserBillConfigChargeType.User,
+    service: userBillConfig?.credentialServiceFee === UserBillConfigChargeType.User,
+  };
+
+  const feeRates = {
+    substitution: Number(fee.substitutionFee),
+    verification: Number(fee.certificateVerificationFee),
+    service: Number(fee.certificateServiceFee),
+  };
+
+  // 代輸費計算
+  const substitutionFee = shouldCalculate.substitution 
+    ? Math.round(electricNumberInfos.reduce((acc, info) => acc + (info.fee ?? 0), 0) / 1.05)
+    : 0;
+
+  // 憑證審查費計算
+  const certificationFee = shouldCalculate.verification 
+    ? Math.round(totalDegree * feeRates.verification)
+    : 0;
+  
+  // 憑證服務費計算
+  const certificationServiceFee = shouldCalculate.service 
+    ? Math.round(totalDegree * feeRates.service)
+    : 0;
+
+  return {
+    substitutionFee,
+    certificationFee,
+    certificationServiceFee,
+    totalFee: Math.round(substitutionFee + certificationFee + certificationServiceFee),
+  };
+};
+
+// 稅費計算
+const calculateTaxAndTotal = (totalAmount: number, totalFee: number) => {
+  const total = totalAmount + totalFee;
+  const tax = Math.round(total * 0.05);
+  const totalIncludeTax = total + tax;
+
+  return { total, tax, totalIncludeTax };
+};
+
+// 日期格式化
+const formatBillingInfo = (billingDate: string) => {
+  const date = new Date(billingDate);
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  
+  const lastDay = new Date(year, month, 0).getDate();
+  
+  return {
+    billingMonth: `${year}年${month + 1}月`,
+    billingDateRange: `${year}/${month}/1 - ${year}/${month}/${lastDay}`,
+  };
+};
+
 export const UserBillDialog = ({
   userBill,
   isOpenDialog,
@@ -53,106 +129,58 @@ export const UserBillDialog = ({
     }
   }, [data]);
 
-  const calculateTotalDegree = (
-    electricNumberInfos: UserBill["electricNumberInfos"]
-  ) => electricNumberInfos.reduce((acc, info) => acc + (info.degree ?? 0), 0);
-
-  const calculateTotalAmount = (
-    electricNumberInfos: UserBill["electricNumberInfos"]
-  ) =>
-    electricNumberInfos.reduce(
-      (acc, info) => acc + (info.price ?? 0) * (info.degree ?? 0),
-      0
-    );
-
   const userBillTemplateData: UserBillTemplateData | null = useMemo(() => {
-    if (!data || loading) return null;
-    if (error) return null;
+    if (!data || loading || error) return null;
 
-    const totalDegree = calculateTotalDegree(data.userBill.electricNumberInfos);
-
-    // 根据勾选配置决定是否计算各项费用
-    const shouldCalculateSubstitutionFee = data.userBill.userBillConfig?.transportationFee === UserBillConfigChargeType.User;
-    const shouldCalculateVerificationFee = data.userBill.userBillConfig?.credentialInspectionFee === UserBillConfigChargeType.User;
-    const shouldCalculateServiceFee = data.userBill.userBillConfig?.credentialServiceFee === UserBillConfigChargeType.User;
-
-    // 代输费计算
-    const substitutionFee = shouldCalculateSubstitutionFee 
-      ? Math.round(data.userBill.electricNumberInfos.reduce((acc, info) => acc + (info.fee ?? 0), 0) / 1.05)
-      : 0;
-
-    const feeRates = {
-      substitution: Number(data.fee.substitutionFee),
-      verification: Number(data.fee.certificateVerificationFee),
-      service: Number(data.fee.certificateServiceFee),
-    };
-
-    // 憑證審查費计算
-    const certificationFee = shouldCalculateVerificationFee 
-      ? Math.round(totalDegree * feeRates.verification)
-      : 0;
+    const { userBill: bill, fee } = data;
     
-    // 憑證服務費计算
-    const certificationServiceFee = shouldCalculateServiceFee 
-      ? Math.round(totalDegree * feeRates.service)
-      : 0;
-
-    const totalFee =
-      substitutionFee + certificationFee + certificationServiceFee;
-
-    const totalAmount = calculateTotalAmount(data.userBill.electricNumberInfos);
-    const tax = (totalAmount + totalFee) * 0.05;
+    // 基礎計算
+    const totalDegree = calculateTotalDegree(bill.electricNumberInfos);
+    const totalAmount = Math.round(calculateTotalAmount(bill.electricNumberInfos));
+    
+    // 費用計算
+    const fees = calculateFees(bill.electricNumberInfos, bill.userBillConfig, fee);
+    
+    // 稅費計算
+    const { total, tax, totalIncludeTax } = calculateTaxAndTotal(totalAmount, fees.totalFee);
+    
+    // 日期格式化
+    const { billingMonth, billingDateRange } = formatBillingInfo(bill.billingDate);
 
     return {
-      // 計費年月： 「新增台電代輸繳費單」「計費年月」+1個月
-      billingMonth: `${new Date(data.userBill.billingDate).getFullYear()}年${
-        new Date(data.userBill.billingDate).getMonth() + 1 + 1
-      }月`,
-      // 計費期間： 「新增台電代輸繳費單」「計費年月」的起訖日
-      billingDate: `${new Date(data.userBill.billingDate).getFullYear()}/${
-        new Date(data.userBill.billingDate).getMonth() + 1
-      }/1 - ${new Date(data.userBill.billingDate).getFullYear()}/${
-        new Date(data.userBill.billingDate).getMonth() + 1
-      }/${new Date(new Date(data.userBill.billingDate).getFullYear(), new Date(data.userBill.billingDate).getMonth() + 1, 0).getDate()}`,
-      companyName: data.userBill.userBillConfig?.user.name ?? "",
-      customerName: data.userBill.userBillConfig?.user.contactName ?? "",
-      // 「計費年月」在「新增台電代輸繳費單」中的所有「轉供契約編號」
-      customerNumber: data.userBill.transferDocumentNumbers.join("、"),
-      address: data.userBill.userBillConfig?.user.companyAddress ?? "",
-      amount: totalAmount + totalFee,
+      billingMonth,
+      billingDate: billingDateRange,
+      companyName: bill.userBillConfig?.user.name ?? "",
+      customerName: bill.userBillConfig?.user.contactName ?? "",
+      customerNumber: bill.transferDocumentNumbers.join("、"),
+      address: bill.userBillConfig?.user.companyAddress ?? "",
+      amount: total,
       dueDate: formatDateTime(
         new Date(
           Date.now() +
-            (data.userBill.userBillConfig?.paymentDeadline ?? 0) *
-              24 *
-              60 *
-              60 *
-              1000
+            (bill.userBillConfig?.paymentDeadline ?? 0) * 24 * 60 * 60 * 1000
         )
       ),
       bank: {
-        bankName: data.userBill.userBillConfig?.recipientAccount.bankCode ?? "",
-        accountName:
-          data.userBill.userBillConfig?.user.bankAccounts?.[0]?.accountName ??
-          "",
-        accountNumber:
-          data.userBill.userBillConfig?.user.bankAccounts?.[0]?.account ?? "",
+        bankName: bill.userBillConfig?.recipientAccount.bankCode ?? "",
+        accountName: bill.userBillConfig?.user.bankAccounts?.[0]?.accountName ?? "",
+        accountNumber: bill.userBillConfig?.user.bankAccounts?.[0]?.account ?? "",
       },
       totalKwh: totalDegree,
       totalAmount,
-      totalFee,
-      total: totalAmount + totalFee,
+      totalFee: fees.totalFee,
+      total,
       tax,
-      totalIncludeTax: totalAmount + totalFee + tax,
-      usage: data.userBill.electricNumberInfos.map((info) => ({
+      totalIncludeTax,
+      usage: bill.electricNumberInfos.map((info) => ({
         serialNumber: info.number ?? "",
         kwh: info.degree,
         price: info.price ?? 0,
         amount: (info.price ?? 0) * (info.degree ?? 0),
       })),
-      substitutionFee,
-      certificationFee,
-      certificationServiceFee,
+      substitutionFee: fees.substitutionFee,
+      certificationFee: fees.certificationFee,
+      certificationServiceFee: fees.certificationServiceFee,
     };
   }, [data, loading, error]);
 
