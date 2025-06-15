@@ -180,7 +180,7 @@ const CompanyBillTemplate = forwardRef((props: CompanyBillProps, ref) => {
         </Box>
       </Box>
       <Box display="flex" justifyContent="flex-end" marginY="24px">
-        <Typography fontSize="14px">{`台電轉供單編號：${data.transferNumber}`}</Typography>
+        <Typography fontSize="12px">{`台電轉供單編號：${data.transferNumber}`}</Typography>
       </Box>
       <Grid container spacing={"8px"}>
         <Grid item sm={4}>
@@ -188,7 +188,7 @@ const CompanyBillTemplate = forwardRef((props: CompanyBillProps, ref) => {
             <Typography sx={styles.boxTitle}>電號</Typography>
           </Box>
           <Box sx={styles.box}>
-            <Typography variant="h5" sx={{ color: "#009688" }}>
+            <Typography variant="h4" sx={{ color: "#009688" }}>
               {data.serialNumber}
             </Typography>
           </Box>
@@ -198,7 +198,7 @@ const CompanyBillTemplate = forwardRef((props: CompanyBillProps, ref) => {
             <Typography sx={styles.boxTitle}>電廠名稱</Typography>
           </Box>
           <Box sx={styles.box}>
-            <Typography variant="h5" sx={{ color: "#009688" }}>
+            <Typography variant="h4" sx={{ color: "#009688" }}>
               {data.powerPlantName}
             </Typography>
           </Box>
@@ -208,7 +208,7 @@ const CompanyBillTemplate = forwardRef((props: CompanyBillProps, ref) => {
             <Typography sx={styles.boxTitle}>契約編號</Typography>
           </Box>
           <Box sx={styles.box}>
-            <Typography variant="h5" sx={{ color: "#009688" }}>
+            <Typography variant="h4" sx={{ color: "#009688" }}>
               {data.contractNumber}
             </Typography>
           </Box>
@@ -248,8 +248,8 @@ const CompanyBillTemplate = forwardRef((props: CompanyBillProps, ref) => {
             </Paper>
             <Paper elevation={0} sx={styles.section}>
               <Typography sx={styles.sectionTitle}>廠址</Typography>
-              <Typography fontSize="14px">{data.city}</Typography>
-              <Typography fontSize="14px">{data.address}</Typography>
+              <Typography fontSize="12px">{data.city}</Typography>
+              <Typography fontSize="12px">{data.address}</Typography>
             </Paper>
           </Box>
           <Box sx={{ flex: "7 7 0%" }}>
@@ -257,34 +257,34 @@ const CompanyBillTemplate = forwardRef((props: CompanyBillProps, ref) => {
               <Typography sx={styles.sectionTitle}>電費計算</Typography>
               <Grid container spacing={1}>
                 <Grid item xs={6}>
-                  <Typography fontSize="14px">轉供度數：</Typography>
+                  <Typography fontSize="12px">轉供度數：</Typography>
                 </Grid>
                 <Grid item xs={6}>
-                  <Typography fontSize="14px">
+                  <Typography fontSize="12px">
                     {formatValue(data.billing.transferKwh)} kWh
                   </Typography>
                 </Grid>
                 <Grid item xs={6}>
-                  <Typography fontSize="14px">費率：</Typography>
+                  <Typography fontSize="12px">費率：</Typography>
                 </Grid>
                 <Grid item xs={6}>
-                  <Typography fontSize="14px">
+                  <Typography fontSize="12px">
                     {formatValue(data.billing.price, true)} 元/kWh
                   </Typography>
                 </Grid>
                 <Grid item xs={6}>
-                  <Typography fontSize="14px">電費（未稅）：</Typography>
+                  <Typography fontSize="12px">電費（未稅）：</Typography>
                 </Grid>
                 <Grid item xs={6}>
-                  <Typography fontSize="14px">
+                  <Typography fontSize="12px">
                     {formatValue(data.billing.amount)} 元
                   </Typography>
                 </Grid>
                 <Grid item xs={6}>
-                  <Typography fontSize="14px">營業稅：</Typography>
+                  <Typography fontSize="12px">營業稅：</Typography>
                 </Grid>
                 <Grid item xs={6}>
-                  <Typography fontSize="14px">
+                  <Typography fontSize="12px">
                     {formatValue(data.billing.tax)} 元
                   </Typography>
                 </Grid>
