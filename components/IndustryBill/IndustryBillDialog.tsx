@@ -145,7 +145,10 @@ export const IndustryBillDialog = ({
     <Dialog open={isOpenDialog} onClose={onClose} maxWidth="md">
       <Box padding="36px">
         <Typography textAlign={"left"} variant="h4">
-          用戶電費單
+          發電業電費單
+        </Typography>
+        <Typography textAlign={"left"} variant="h6">
+          電費單組合： {industryBill.industryBillConfig?.name ?? ""}
         </Typography>
         {!industryBillTemplateData ? (
           <Box
