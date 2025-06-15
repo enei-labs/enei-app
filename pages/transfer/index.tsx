@@ -58,18 +58,14 @@ function TransferDataManagementPage() {
       <Box sx={{ paddingTop: "12px" }}>
         <AuthGuard roles={[Role.Admin, Role.SuperAdmin]}>
           <Card sx={{ p: "36px" }}>
-            {tpcBillLoading ? (
-              <CircularProgress size="24px" />
-            ) : (
               <TransferDegreeChart
                 name="每月轉供度數"
                 data={
                   monthlyTpcTransferDegreeData?.dashboard.tpcBillInfo
                     .monthlyTPCBillTransferDegrees
                 }
+                loading={tpcBillLoading}
               />
-            )}
-
             {/* 轉供資料管理表格 */}
           </Card>
           <Divider sx={{ my: "24px" }} />
