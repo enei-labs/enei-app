@@ -2,6 +2,7 @@ import { Box, TextField, Typography } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useState } from "react";
 import dynamic from "next/dynamic";
+import { ChartSkeleton } from "./ChartSkeleton";
 
 const Chart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
@@ -101,11 +102,16 @@ const styles = {
 interface TurnoverChartProps {
   name: string;
   data?: number[];
+  loading?: boolean;
 }
 
 export default function TurnoverChart(props: TurnoverChartProps) {
   const [value, setValue] = useState();
-  const { name, data } = props;
+  const { name, data, loading = false } = props;
+
+  if (loading) {
+    return <ChartSkeleton title={name} />;
+  }
 
   return (
     <Box sx={styles.container}>

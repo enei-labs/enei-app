@@ -149,6 +149,7 @@ function MainPage() {
                   data?.dashboard?.userContractInfo?.averageSellingPrice?.toString() ??
                   "N/A"
                 }
+                loading={loading}
               />
             </Card>
           </Grid>
@@ -157,6 +158,7 @@ function MainPage() {
               <TurnoverChart
                 name="營業額"
                 data={data?.dashboard?.userBillInfo?.turnover}
+                loading={loading}
               />
             </Card>
           </Grid>
@@ -165,6 +167,7 @@ function MainPage() {
               <TransferDegreeChart
                 name="轉供度數"
                 data={data?.dashboard?.transferDegreeInfo?.monthlyTransferDegree}
+                loading={loading}
               />
             </Card>
           </Grid>
