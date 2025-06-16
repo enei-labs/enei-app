@@ -8,6 +8,7 @@ interface Variables {
   limit?: number;
   term?: string;
   month?: string;
+  userBillConfigId?: string;
 }
 
 const formatDateToString = (date: Date) => {

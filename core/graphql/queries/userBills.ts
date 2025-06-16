@@ -8,12 +8,14 @@ export const USER_BILLS = gql`
     $offset: Int = 0
     $term: String
     $month: String
+    $userBillConfigId: UUID
   ) {
     userBills(
       limit: $limit
       offset: $offset
       term: $term
       month: $month
+      userBillConfigId: $userBillConfigId
     ) {
       total
       list {

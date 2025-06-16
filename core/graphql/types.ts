@@ -1029,10 +1029,6 @@ export type Query = {
   userBill: UserBill;
   userBillConfig: UserBillConfig;
   userBillConfigs: UserBillConfigPage;
-  /** 獲取 UserBill 生成隊列的統計信息 */
-  userBillQueueStats: UserBillQueueStats;
-  /** 獲取 UserBill 生成隊列的當前狀態 */
-  userBillQueueStatus: UserBillQueueStatus;
   userBills: UserBillPage;
   userBillsByMonth: Array<UserBillsByMonth>;
   userContract: UserContract;
@@ -1110,6 +1106,7 @@ export type QueryIndustryBillConfigsArgs = {
 
 
 export type QueryIndustryBillsArgs = {
+  industryBillConfigId?: InputMaybe<Scalars['UUID']['input']>;
   lastYearOnly?: InputMaybe<Scalars['Boolean']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   month?: InputMaybe<Scalars['String']['input']>;
@@ -1189,6 +1186,7 @@ export type QueryUserBillsArgs = {
   month?: InputMaybe<Scalars['String']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   term?: InputMaybe<Scalars['String']['input']>;
+  userBillConfigId?: InputMaybe<Scalars['UUID']['input']>;
 };
 
 
@@ -1660,23 +1658,6 @@ export type UserBillPage = {
   __typename?: 'UserBillPage';
   list: Array<UserBill>;
   total: Scalars['Int']['output'];
-};
-
-export type UserBillQueueStats = {
-  __typename?: 'UserBillQueueStats';
-  currentTaskId?: Maybe<Scalars['String']['output']>;
-  processing: Scalars['Boolean']['output'];
-  queuedTasks: Array<Scalars['String']['output']>;
-  timestamp: Scalars['String']['output'];
-  totalQueued: Scalars['Float']['output'];
-};
-
-export type UserBillQueueStatus = {
-  __typename?: 'UserBillQueueStatus';
-  currentTask?: Maybe<Scalars['String']['output']>;
-  processing: Scalars['Boolean']['output'];
-  queueLength: Scalars['Float']['output'];
-  taskIds: Array<Scalars['String']['output']>;
 };
 
 export type UserBillsByMonth = {
