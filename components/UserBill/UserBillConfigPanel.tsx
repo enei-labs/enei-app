@@ -45,7 +45,7 @@ const UserBillConfigPanel = (props: UserBillConfigPanelProps) => {
               color: "primary.main",
             },
           }}
-          onClick={() => router.push(`/electric-bill/user-bill-config/${rowData.id}`)}
+          onClick={() => router.push(`/electric-bill/user-bill-config/${rowData.id}?userBillConfigName=${rowData.name}`)}
         >
           {rowData.name}
         </Box>

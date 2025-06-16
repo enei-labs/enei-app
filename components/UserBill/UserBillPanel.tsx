@@ -8,14 +8,16 @@ import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import InfoIcon from "@mui/icons-material/Info";
 import { IconBtn } from "@components/Button";
 import { UserBillDialog } from "./UserBillDialog";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { ReviewStatusLookup } from "@core/look-up/review-status";
 import { useSearch } from "@utils/hooks/useSearch";
 import { InputSearch } from "@components/Input";
 import { useRouter } from "next/router";
 
 interface UserBillPanelProps {
-  month: string;
+  month?: string;
+  userBillConfigId?: string;
+  userBillConfigName?: string;
 }
 
 const UserBillPanel = (props: UserBillPanelProps) => {
@@ -25,6 +27,7 @@ const UserBillPanel = (props: UserBillPanelProps) => {
   const [userBill, setUserBill] = useState<UserBill | null>(null);
   const { data, loading, refetch } = useUserBills({
     month: props.month,
+    userBillConfigId: props.userBillConfigId,
     term: searchTerm,
   });
 
@@ -97,13 +100,22 @@ const UserBillPanel = (props: UserBillPanelProps) => {
     },
   ];
 
+  const title = useMemo(() => {
+    if (props.userBillConfigName) {
+      return `用戶電費單 - ${props.userBillConfigName}`;
+    }
+
+    if (props.month) {
+      return `用戶電費單 - ${formatDateTime(props.month, "yyyy-MM")}`;
+    }
+    
+    return `用戶電費單`;
+  }, [props.userBillConfigName, props.month]);
+
   return (
     <>
       <Card sx={{ mt: "36px", p: "36px" }}>
-        <Typography variant="h4" sx={{ mb: "16px" }}>{`用戶電費單 - ${formatDateTime(
-          props.month,
-          "yyyy-MM"
-        )}`}</Typography>
+        <Typography variant="h4" sx={{ mb: "16px" }}>{title}</Typography>
         
         {/* 搜尋 */}
         <Box sx={{ display: "flex", alignItems: "center", gap: "8px", mb: "16px" }}>
