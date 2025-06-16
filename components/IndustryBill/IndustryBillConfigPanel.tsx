@@ -47,7 +47,7 @@ const IndustryBillConfigPanel = (props: IndustryBillConfigPanelProps) => {
               color: "primary.main",
             },
           }}
-          onClick={() => router.push(`/electric-bill/industry-bill-config/${rowData.id}`)}
+          onClick={() => router.push(`/electric-bill/industry-bill-config/${rowData.id}?industryBillConfigName=${rowData.name}`)}
         >
           {rowData.name}
         </Box>

@@ -2,30 +2,18 @@ import Head from "next/head";
 import IconBreadcrumbs from "@components/BreadCrumbs";
 import { useRouter } from "next/router";
 import Person2OutlinedIcon from "@mui/icons-material/Person2Outlined";
-import CircularProgress from "@mui/material/CircularProgress";
-import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import { Box } from "@mui/material";
 import { AuthLayout } from "@components/Layout";
 import { ReactElement } from "react";
-// import { useIndustryBillConfig } from "@utils/hooks/queries";
 import InboxOutlinedIcon from "@mui/icons-material/InboxOutlined";
+import IndustryBillPanel from "@components/IndustryBill/IndustryBillPanel";
+import { useParams } from "next/navigation";
 
 function IndustryBillConfigPage() {
+  const params = useParams();
   const router = useRouter();
-  const industryBillConfigId = router.query.industryBillConfigId as string;
-
-  // const { data, loading } = useIndustryBill(industryBillId);
-  const { data, loading } = {
-    data: {
-      industryBillConfig: {
-        id: industryBillConfigId,
-        name: "測試電費單",
-      },
-    },
-    loading: false,
-  };
-
-  if (loading) return <CircularProgress size="24px" />;
+  const industryBillConfigId = params.industryBillConfigId as string;
+  const industryBillConfigName = router.query.industryBillConfigName as string;
 
   return (
     <>
@@ -33,25 +21,26 @@ function IndustryBillConfigPage() {
         <title>綠電用戶</title>
         <meta name="description" content="綠電用戶" />
       </Head>
-      {data ? (
-        <>
-          <IconBreadcrumbs
-            items={[
-              {
-                name: "電費單匯出",
-                icon: InboxOutlinedIcon,
-                href: "/electric-bill",
-              },
-              {
-                name: data.industryBillConfig.name,
-                icon: Person2OutlinedIcon,
-                href: `/electric-bill/industry-bill-config/${data.industryBillConfig.id}`,
-              },
-            ]}
-          />
-          <Box sx={{ paddingTop: "12px" }}></Box>
-        </>
-      ) : null}
+      <IconBreadcrumbs
+        items={[
+          {
+            name: "電費單匯出",
+            icon: InboxOutlinedIcon,
+            href: "/electric-bill",
+          },
+          {
+            name: industryBillConfigName,
+            icon: Person2OutlinedIcon,
+            href: `/electric-bill/industry-bill-config/${industryBillConfigId}`,
+          },
+        ]}
+      />
+      <Box sx={{ paddingTop: "12px" }}>
+        <IndustryBillPanel 
+          industryBillConfigId={industryBillConfigId} 
+          industryBillConfigName={industryBillConfigName} 
+        />
+      </Box>
     </>
   );
 }

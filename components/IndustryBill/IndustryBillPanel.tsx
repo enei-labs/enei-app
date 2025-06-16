@@ -7,12 +7,14 @@ import { formatDateTime } from "@utils/format";
 import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import { IconBtn } from "@components/Button";
 import { IndustryBillDialog } from "./IndustryBillDialog";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { ReviewStatusLookup } from "@core/look-up/review-status";
 import { useRouter } from "next/router";
 
 interface IndustryBillPanelProps {
-  month: string;
+  month?: string;
+  industryBillConfigId?: string;
+  industryBillConfigName?: string;
 }
 
 const IndustryBillPanel = (props: IndustryBillPanelProps) => {
@@ -21,6 +23,7 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
   const [industryBill, setIndustryBill] = useState<IndustryBill | null>(null);
   const { data, loading, refetch } = useIndustryBills({
     month: props.month,
+    industryBillConfigId: props.industryBillConfigId,
   });
 
   // Handle industryBillId query parameter
@@ -92,13 +95,22 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
     },
   ];
 
+  const title = useMemo(() => {
+    if (props.industryBillConfigName) {
+      return `發電業電費單 - ${props.industryBillConfigName}`;
+    }
+
+    if (props.month) {
+      return `發電業電費單 - ${formatDateTime(props.month, "yyyy-MM")}`;
+    }
+    
+    return `發電業電費單`;
+  }, [props.industryBillConfigName, props.month]);
+
   return (
     <>
       <Card sx={{ mt: "36px", p: "36px" }}>
-        <Typography variant="h4">{`發電業電費單 - ${formatDateTime(
-          props.month,
-          "yyyy-MM"
-        )}`}</Typography>
+        <Typography variant="h4">{title}</Typography>
         <Table
           configs={configs}
           list={data?.industryBills?.list}
