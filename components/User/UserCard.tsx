@@ -221,7 +221,8 @@ function UserCard(props: UserCardProps) {
         <Divider sx={{ margin: "36px 0" }} />
         <UserTransferDegreeChart
           name="月轉供量"
-          thisYearTransferRecords={user.thisYearTransferRecords}
+          // thisYearTransferRecords={user.thisYearTransferRecords}
+          thisYearTransferRecords={[]}
         />
         <Divider sx={{ margin: "36px 0 " }} />
 

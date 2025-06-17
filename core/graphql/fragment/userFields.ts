@@ -18,17 +18,5 @@ export const USER_FIELDS = gql`
       account
       taxId
     }
-    thisYearTransferRecords {
-      id
-      degree
-      createdAt
-    }
-    lastMonthTransferRecords {
-      id
-      degree
-      createdAt
-    }
-    estimatedTransferDegree
-    expectedYearlyPurchaseDegree
   }
 `

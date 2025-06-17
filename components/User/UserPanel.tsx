@@ -15,7 +15,7 @@ enum ActionTypeEnum {
 }
 
 const addUp = (transferRecords: TransferDegree[]) =>
-  transferRecords.reduce((prev, curr) => prev + curr.degree, 0);
+  transferRecords?.reduce((prev, curr) => prev + curr.degree, 0);
 
 interface UserPanelProps {
   users?: UserPage;
@@ -54,19 +54,22 @@ const UserPanel = (props: UserPanelProps) => {
     {
       header: "上月度數",
       render: (rowData) => {
-        return <Box>{addUp(rowData.lastMonthTransferRecords)}</Box>;
+        // return <Box>{addUp(rowData.lastMonthTransferRecords)}</Box>;
+        return <Box>0</Box>;
       },
     },
     {
       header: "今年度累積轉供度數",
       render: (rowData) => {
-        return <Box>{addUp(rowData.thisYearTransferRecords)}</Box>;
+        return <Box>0</Box>;
+        // return <Box>{addUp(rowData.thisYearTransferRecords)}</Box>;
       },
     },
     {
       header: "今年預估轉供度數",
       render: (rowData) => {
-        return <Box>{Number(rowData.estimatedTransferDegree).toFixed(2)}</Box>;
+        // return 
+        return <Box>0</Box>;
       },
     },
     {
