@@ -28,12 +28,6 @@ interface UserBillDialogProps {
 const calculateTotalDegree = (electricNumberInfos: UserBill["electricNumberInfos"]) => 
   electricNumberInfos.reduce((acc, info) => acc + (info.degree ?? 0), 0);
 
-const calculateTotalAmount = (electricNumberInfos: UserBill["electricNumberInfos"]) =>
-  electricNumberInfos.reduce(
-    (acc, info) => acc + (info.price ?? 0) * (info.degree ?? 0),
-    0
-  );
-
 // 費用計算邏輯
 const calculateFees = (
   electricNumberInfos: UserBill["electricNumberInfos"],
@@ -136,7 +130,13 @@ export const UserBillDialog = ({
     
     // 基礎計算
     const totalDegree = calculateTotalDegree(bill.electricNumberInfos);
-    const totalAmount = Math.round(calculateTotalAmount(bill.electricNumberInfos));
+    const usage = bill.electricNumberInfos.map((info) => ({
+      serialNumber: info.number ?? "",
+      kwh: info.degree,
+      price: info.price ?? 0,
+      amount: (info.price ?? 0) * (info.degree ?? 0),
+    }));
+    const totalAmount = Math.round(usage.reduce((acc, info) => acc + info.amount, 0));
     
     // 費用計算
     const fees = calculateFees(bill.electricNumberInfos, bill.userBillConfig, fee);
