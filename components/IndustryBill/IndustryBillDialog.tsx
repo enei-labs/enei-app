@@ -86,7 +86,7 @@ export const IndustryBillDialog = ({
           // 併聯容量
           totalCapacity: data.industryBill.supplyVolume,
           // 轉供容量
-          transferCapacity: data.industryBill.transferDegree,
+          transferCapacity: data.industryBill.supplyVolume,
         },
         // 城市
         city: "",

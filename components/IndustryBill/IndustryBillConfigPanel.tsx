@@ -14,22 +14,26 @@ import { toast } from "react-toastify";
 import IndustryBillConfigDialog from "@components/IndustryBill/IndustryBillConfigDialog/IndustryBillConfigDialog";
 import { useRemoveIndustryBillConfig } from "@utils/hooks/mutations/useRemoveIndustryBillConfig";
 import { useIndustryBillConfigs } from "@utils/hooks/queries";
+import { useSearch } from "@utils/hooks/useSearch";
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
 interface IndustryBillConfigPanelProps {
   fee: Fee;
+  searchTerm?: string;
 }
 
 const IndustryBillConfigPanel = (props: IndustryBillConfigPanelProps) => {
-  const { fee } = props;
+  const { fee, searchTerm } = props;
+  console.log("searchTerm", searchTerm);
   const { me } = useAuth();
   const router = useRouter();
 
-  const { data, loading, refetch } = useIndustryBillConfigs();
+  const { data, loading, refetch } = useIndustryBillConfigs({
+    term: searchTerm,
+  });
 
   const [currentIndustryBillConfig, setCurrentIndustryBillConfig] =
     useState<IndustryBillConfig | null>(null);
-  const [isOpenDialog, setOpenDownloadDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
 
@@ -94,15 +98,6 @@ const IndustryBillConfigPanel = (props: IndustryBillConfigPanelProps) => {
           })
         }
       />
-
-      {/* {currentIndustryBillConfig && currentIndustryBillConfig ? (
-        <IndustryBillDownloadDialog
-          fee={fee}
-          industryBillConfig={currentIndustryBillConfig}
-          isOpenDialog={isOpenDialog}
-          onClose={() => setOpenDownloadDialog(false)}
-        />
-      ) : null} */}
 
       {openUpdateDialog && currentIndustryBillConfig ? (
         <IndustryBillConfigDialog

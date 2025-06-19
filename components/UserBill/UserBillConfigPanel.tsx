@@ -17,14 +17,15 @@ const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
 interface UserBillConfigPanelProps {
   fee: Fee;
+  searchTerm?: string;
 }
 
 const UserBillConfigPanel = (props: UserBillConfigPanelProps) => {
-  const { fee } = props;
+  const { fee, searchTerm} = props;
   const { me } = useAuth();
   const router = useRouter();
 
-  const { data, loading, refetch } = useUserBillConfigs();
+  const { data, loading, refetch } = useUserBillConfigs({ term: searchTerm });
 
   const [currentUserBillConfig, setCurrentUserBillConfig] =
     useState<UserBillConfig | null>(null);

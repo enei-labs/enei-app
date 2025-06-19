@@ -83,22 +83,15 @@ function FeeCard({ title, value, unit }: FeeCardProps) {
 }
 
 function ExportElectricBillPage() {
-  const {
-    searchTerm: userBillSearchTerm,
-    setInputValue: setUserBillInputValue,
-    executeSearch: executeUserBillSearch,
-  } = useSearch();
-  const {
-    searchTerm: industryBillSearchTerm,
-    setInputValue: setIndustryBillInputValue,
-    executeSearch: executeIndustryBillSearch,
-  } = useSearch();
   const [showUserBillConfigDialog, setShowUserBillConfigDialog] =
     useState(false);
   const [showIndustryBillConfigDialog, setShowIndustryBillConfigDialog] =
     useState(false);
   const [showFeeDialog, setShowFeeDialog] = useState(false);
   const { data, loading, error } = useFee();
+
+  const { searchTerm: industryBillConfigSearchTerm, setInputValue: setIndustryBillConfigInputValue, executeSearch: executeIndustryBillConfigSearch } = useSearch();
+  const { searchTerm: userBillConfigSearchTerm, setInputValue: setUserBillConfigInputValue, executeSearch: executeUserBillConfigSearch } = useSearch();
 
   return (
     <>
@@ -170,8 +163,8 @@ function ExportElectricBillPage() {
               }}
             >
               <InputSearch
-                onChange={setUserBillInputValue}
-                onEnter={executeUserBillSearch}
+                onChange={setUserBillConfigInputValue}
+                onEnter={executeUserBillConfigSearch}
                 placeholder="搜尋用戶電費單組合"
               />
 
@@ -184,7 +177,7 @@ function ExportElectricBillPage() {
             </Box>
 
             {data?.fee ? (
-              <UserBillConfigPanel fee={data.fee} />
+              <UserBillConfigPanel fee={data.fee} searchTerm={userBillConfigSearchTerm} />
             ) : null}
           </Card>
 
@@ -202,8 +195,8 @@ function ExportElectricBillPage() {
               }}
             >
               <InputSearch
-                onChange={setIndustryBillInputValue}
-                onEnter={executeIndustryBillSearch}
+                onChange={setIndustryBillConfigInputValue}
+                onEnter={executeIndustryBillConfigSearch}
                 placeholder="搜尋發電業電費單組合"
               />
 
@@ -216,7 +209,7 @@ function ExportElectricBillPage() {
             </Box>
 
             {data?.fee ? (
-              <IndustryBillConfigPanel fee={data.fee} />
+              <IndustryBillConfigPanel fee={data.fee} searchTerm={industryBillConfigSearchTerm} />
             ) : null}
           </Card>
 
