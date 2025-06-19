@@ -19,7 +19,7 @@ import { IndustryBillConfig, PowerPlant } from "@core/graphql/types";
 const INITIAL_ADD_COUNT = 1;
 const INITIAL_DELETE_INDEX = -1;
 
-const DeleteConfirmDialog = memo(({
+const DeleteConfirmDialog = memo(function DeleteConfirmDialog({
   open,
   onConfirm,
   onClose,
@@ -27,17 +27,19 @@ const DeleteConfirmDialog = memo(({
   open: boolean;
   onConfirm: () => void;
   onClose: () => void;
-}) => (
-  <DialogAlert
-    open={open}
-    title={"刪除發電業電號欄位"}
-    content={"是否確認要刪除發電業電號欄位？"}
-    onConfirm={onConfirm}
-    onClose={onClose}
-  />
-));
+}) {
+  return (
+    <DialogAlert
+      open={open}
+      title={"刪除發電業電號欄位"}
+      content={"是否確認要刪除發電業電號欄位？"}
+      onConfirm={onConfirm}
+      onClose={onClose}
+    />
+  );
+});
 
-const AddFieldSection = memo(({
+const AddFieldSection = memo(function AddFieldSection({
   addCount,
   onAddCountChange,
   onAdd,
@@ -45,8 +47,9 @@ const AddFieldSection = memo(({
   addCount: number;
   onAddCountChange: (count: number) => void;
   onAdd: () => void;
-}) => (
-  <Grid
+}) {
+  return (
+    <Grid
     container
     justifyContent={"space-between"}
     alignItems={"center"}
@@ -70,7 +73,8 @@ const AddFieldSection = memo(({
       </Button>
     </Grid>
   </Grid>
-));
+  );
+});
 
 interface ElectricNumbersFieldProps {
   control: Control<FormData>;

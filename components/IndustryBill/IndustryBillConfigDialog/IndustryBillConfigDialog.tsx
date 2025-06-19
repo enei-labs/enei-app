@@ -70,77 +70,87 @@ type ActionButtonsProps = {
 };
 
 // Extract reusable components
-const DialogHeader = memo<DialogHeaderProps>(({ variant, onClose }) => (
-  <Grid container justifyContent={"space-between"} alignItems={"center"}>
-    <Typography variant="h4" textAlign={"left"}>
-      {variant === "create" ? DIALOG_TITLES.CREATE : DIALOG_TITLES.EDIT}
+const DialogHeader = memo<DialogHeaderProps>(function DialogHeader({ variant, onClose }) {
+  return (
+    <Grid container justifyContent={"space-between"} alignItems={"center"}>
+      <Typography variant="h4" textAlign={"left"}>
+        {variant === "create" ? DIALOG_TITLES.CREATE : DIALOG_TITLES.EDIT}
+      </Typography>
+      <IconBtn icon={<HighlightOffIcon />} onClick={onClose} />
+    </Grid>
+  );
+});
+
+const SectionHeader = memo<SectionHeaderProps>(function SectionHeader({ title }) {
+  return (
+    <Typography variant="h5" textAlign={"left"}>
+      {title}
     </Typography>
-    <IconBtn icon={<HighlightOffIcon />} onClick={onClose} />
-  </Grid>
-));
+  );
+});
 
-const SectionHeader = memo<SectionHeaderProps>(({ title }) => (
-  <Typography variant="h5" textAlign={"left"}>
-    {title}
-  </Typography>
-));
+const ContactInfoField = memo<ContactInfoFieldProps>(function ContactInfoField({ control, name, label }) {
+  return (
+    <Controller
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <InputText
+          label={label}
+          {...field}
+          placeholder={PLACEHOLDERS.DEFAULT}
+          required
+        />
+      )}
+    />
+  );
+});
 
-const ContactInfoField = memo<ContactInfoFieldProps>(({ control, name, label }) => (
-  <Controller
-    control={control}
-    name={name}
-    render={({ field }) => (
-      <InputText
-        label={label}
-        {...field}
-        placeholder={PLACEHOLDERS.DEFAULT}
-        required
-      />
-    )}
-  />
-));
+const ContactInfoSection = memo<ContactInfoSectionProps>(function ContactInfoSection({ control }) {
+  return (
+    <>
+      <SectionHeader title={SECTION_TITLES.CONTACT_INFO} />
+      <Grid
+        container
+        justifyContent={"flex-start"}
+        alignItems={"center"}
+        flexDirection={"row"}
+        gap={"16px"}
+        flexWrap={"nowrap"}
+      >
+        <ContactInfoField control={control} name="contactName" label="收件人姓名" />
+        <ContactInfoField control={control} name="contactPhone" label="收件人電話" />
+      </Grid>
+      <ContactInfoField control={control} name="contactEmail" label="收件人信箱" />
+      <ContactInfoField control={control} name="address" label="收件人地址" />
+    </>
+  );
+});
 
-const ContactInfoSection = memo<ContactInfoSectionProps>(({ control }) => (
-  <>
-    <SectionHeader title={SECTION_TITLES.CONTACT_INFO} />
+const ActionButtons = memo<ActionButtonsProps>(function ActionButtons({ 
+  currentModifyIndustryBillConfig, 
+  handleSubmit, 
+  onClose 
+}) {
+  return (
     <Grid
       container
       justifyContent={"flex-start"}
       alignItems={"center"}
-      flexDirection={"row"}
-      gap={"16px"}
-      flexWrap={"nowrap"}
+      gap={"10px"}
     >
-      <ContactInfoField control={control} name="contactName" label="收件人姓名" />
-      <ContactInfoField control={control} name="contactPhone" label="收件人電話" />
+      {!currentModifyIndustryBillConfig ? (
+        <CreateIndustryBillBtn handleSubmit={handleSubmit} onClose={onClose} />
+      ) : (
+        <UpdateIndustryBillBtn
+          handleSubmit={handleSubmit}
+          onClose={onClose}
+          industryBillId={currentModifyIndustryBillConfig.id}
+        />
+      )}
     </Grid>
-    <ContactInfoField control={control} name="contactEmail" label="收件人信箱" />
-    <ContactInfoField control={control} name="address" label="收件人地址" />
-  </>
-));
-
-const ActionButtons = memo<ActionButtonsProps>(({ 
-  currentModifyIndustryBillConfig, 
-  handleSubmit, 
-  onClose 
-}) => (
-  <Grid
-    container
-    justifyContent={"flex-start"}
-    alignItems={"center"}
-    gap={"10px"}
-  >
-    {!currentModifyIndustryBillConfig ? (
-      <CreateIndustryBillBtn handleSubmit={handleSubmit} onClose={onClose} />
-    ) : (
-      <UpdateIndustryBillBtn
-        handleSubmit={handleSubmit}
-        onClose={onClose}
-        industryBillId={currentModifyIndustryBillConfig.id}
-      />
-    )}
-  </Grid>
-));
+  );
+});
 
 function IndustryBillConfigDialog(props: IndustryBillDialogProps): JSX.Element {
   const { isOpenDialog, onClose, currentModifyIndustryBillConfig, variant } =
