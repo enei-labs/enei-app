@@ -134,9 +134,9 @@ export const UserBillDialog = ({
       serialNumber: info.number ?? "",
       kwh: info.degree,
       price: info.price ?? 0,
-      amount: (info.price ?? 0) * (info.degree ?? 0),
+      amount: Math.round((info.price ?? 0) * (info.degree ?? 0)),
     }));
-    const totalAmount = Math.round(usage.reduce((acc, info) => acc + info.amount, 0));
+    const totalAmount = usage.reduce((acc, info) => acc + info.amount, 0);
     
     // 費用計算
     const fees = calculateFees(bill.electricNumberInfos, bill.userBillConfig, fee);
