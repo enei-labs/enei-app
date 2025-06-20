@@ -588,6 +588,7 @@ export type IndustryBill = {
   powerPlantAddress: Scalars['String']['output'];
   powerPlantName: Scalars['String']['output'];
   powerPlantNumber: Scalars['String']['output'];
+  powerPlantVolume: Scalars['Float']['output'];
   price: Scalars['Float']['output'];
   status: ElectricBillStatus;
   supplyVolume: Scalars['Float']['output'];
@@ -1022,6 +1023,7 @@ export type Query = {
   powerPlant: PowerPlant;
   powerPlants: PowerPlantPage;
   tpcBill: TpcBill;
+  tpcBillMonthlyTransferDegrees: TpcBillMonthlyTransferDegrees;
   tpcBills: TpcBillPage;
   transferDocument: TransferDocument;
   transferDocuments: TransferDocumentPage;
@@ -1136,6 +1138,12 @@ export type QueryPowerPlantsArgs = {
 
 export type QueryTpcBillArgs = {
   id: Scalars['UUID']['input'];
+};
+
+
+export type QueryTpcBillMonthlyTransferDegreesArgs = {
+  endedAt?: InputMaybe<Scalars['String']['input']>;
+  startedAt?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -1378,6 +1386,11 @@ export type TpcBill = {
   billingDate: Scalars['DateTime']['output'];
   id: Scalars['ID']['output'];
   transferDegrees: Array<TransferDegree>;
+};
+
+export type TpcBillMonthlyTransferDegrees = {
+  __typename?: 'TPCBillMonthlyTransferDegrees';
+  monthlyTotals: Array<Scalars['Int']['output']>;
 };
 
 export type TpcBillPage = {

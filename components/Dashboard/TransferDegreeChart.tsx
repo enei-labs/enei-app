@@ -103,11 +103,12 @@ interface TransferDegreeChartProps {
   name: string;
   data?: number[];
   loading?: boolean;
+  year?: number;
+  setYear?: (year: number) => void;
 }
 
 export default function TransferDegreeChart(props: TransferDegreeChartProps) {
-  const [value, setValue] = useState();
-  const { name, data, loading = false } = props;
+  const { name, data, loading = false, year, setYear } = props;
 
   if (loading) {
     return <ChartSkeleton title={name} />;
@@ -120,9 +121,9 @@ export default function TransferDegreeChart(props: TransferDegreeChartProps) {
         <DatePicker
           views={["year"]}
           label="僅選擇年份"
-          value={value}
+          value={year}
           onChange={(newValue: any) => {
-            setValue(newValue);
+            setYear?.(newValue);
           }}
           slots={{
             textField: (params: any) => (

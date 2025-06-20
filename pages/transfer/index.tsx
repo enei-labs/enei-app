@@ -16,10 +16,9 @@ import { Role } from "@core/graphql/types";
 import TaskOutlinedIcon from "@mui/icons-material/TaskOutlined";
 
 import dynamic from "next/dynamic";
-import { useTransferDocuments } from "@utils/hooks/queries";
+import { useTpcBillMonthlyTransferDegrees, useTransferDocuments } from "@utils/hooks/queries";
 import TransferDocumentPanel from "@components/TransferDocument/TransferDocumentPanel";
 import TransferDegreeChart from "@components/Dashboard/TransferDegreeChart";
-import { useMonthlyTransferDegrees } from "@utils/hooks/queries/useMonthlyTransferDegrees";
 import { useSearch } from "@utils/hooks/useSearch";
 import InfoIcon from "@mui/icons-material/Info";
 
@@ -36,9 +35,14 @@ function TransferDataManagementPage() {
     loading,
     refetch,
   } = useTransferDocuments({ term: searchTerm });
+  
+  const [year, setYear] = useState<Date>(new Date());
 
   const { data: monthlyTpcTransferDegreeData, loading: tpcBillLoading } =
-    useMonthlyTransferDegrees();
+    useTpcBillMonthlyTransferDegrees({
+      startedAt: `${year.getFullYear()}-01-01`,
+      endedAt: `${year.getFullYear()}-12-31`,
+    });
 
   return (
     <>
@@ -61,10 +65,11 @@ function TransferDataManagementPage() {
               <TransferDegreeChart
                 name="每月轉供度數"
                 data={
-                  monthlyTpcTransferDegreeData?.dashboard.tpcBillInfo
-                    .monthlyTPCBillTransferDegrees
+                  monthlyTpcTransferDegreeData?.tpcBillMonthlyTransferDegrees?.monthlyTotals
                 }
                 loading={tpcBillLoading}
+                year={year}
+                setYear={setYear}
               />
             {/* 轉供資料管理表格 */}
           </Card>

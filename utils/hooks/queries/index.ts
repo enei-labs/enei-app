@@ -10,6 +10,7 @@ export { useTransferDocument, useLazyTransferDocument } from "./useTransferDocum
 export * from './useTransferDocuments'
 export * from './useTPCBill';
 export * from './useTPCBills';
+export * from './useTpcBillMonthlyTransferDegrees';
 export * from './useUserBills';
 export * from './useFee';
 export * from './useIndustryBills';
