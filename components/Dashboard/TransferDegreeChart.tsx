@@ -103,8 +103,8 @@ interface TransferDegreeChartProps {
   name: string;
   data?: number[];
   loading?: boolean;
-  year?: number;
-  setYear?: (year: number) => void;
+  year?: Date;
+  setYear?: (year: Date) => void;
 }
 
 export default function TransferDegreeChart(props: TransferDegreeChartProps) {
