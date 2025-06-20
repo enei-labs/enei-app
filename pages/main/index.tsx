@@ -13,7 +13,7 @@ import OverviewCard, { OverviewCardProps } from "@components/OverviewCard";
 import AnnualPrice from "@components/AnnualPrice";
 import { Card, Grid } from "@mui/material";
 import { AuthLayout } from "@components/Layout";
-import { ReactElement, useMemo } from "react";
+import { ReactElement, useMemo, useState } from "react";
 import Head from "next/head";
 import { useDashboard } from "@utils/hooks/queries/useDashboard";
 import TurnoverChart from "@components/Dashboard/TurnoverChart";
@@ -21,6 +21,7 @@ import UserContractExpiredPanel from "@components/Dashboard/UserContractExpiredP
 import TransferDegreeChart from "@components/Dashboard/TransferDegreeChart";
 import RemainingDemandFromUserContractPanel from "@components/Dashboard/RemainingDemandFromUserContractPanel";
 import RemainingDemandFromCompanyContractPanel from "@components/Dashboard/RemainingDemandFromCompanyContractPanel";
+import { useTpcBillMonthlyTransferDegrees } from "@utils/hooks/queries";
 
 // Constants for consistent spacing
 const CARD_PADDING = "36px";
@@ -92,6 +93,13 @@ function useDashboardData(data: any) {
 function MainPage() {
   const { data, loading, error } = useDashboard();
   const { industryOverview, userOverview } = useDashboardData(data);
+
+  const [year, setYear] = useState<Date>(new Date());
+  const { data: monthlyTpcTransferDegreeData, loading: tpcBillLoading } =
+  useTpcBillMonthlyTransferDegrees({
+    startedAt: `${year.getFullYear()}-01-01`,
+    endedAt: `${year.getFullYear()}-12-31`,
+  });
 
   if (error) {
     return (
@@ -166,8 +174,10 @@ function MainPage() {
             <Card sx={{ p: CARD_PADDING }}>
               <TransferDegreeChart
                 name="轉供度數"
-                data={data?.dashboard?.transferDegreeInfo?.monthlyTransferDegree}
-                loading={loading}
+                data={monthlyTpcTransferDegreeData?.tpcBillMonthlyTransferDegrees?.monthlyTotals}
+                loading={tpcBillLoading}
+                year={year}
+                setYear={setYear}
               />
             </Card>
           </Grid>
