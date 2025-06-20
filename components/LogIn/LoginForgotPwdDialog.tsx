@@ -3,9 +3,12 @@ import Dialog from "@components/Dialog";
 import { FieldConfig } from "@core/types";
 import { textValidated } from "@core/types/fieldConfig";
 import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useValidatedForm } from "@utils/hooks";
+import { IconBtn } from "../Button";
+import CloseIcon from "@mui/icons-material/HighlightOff";
 
 type FormData = {
   email: string;
@@ -20,9 +23,8 @@ const configs: FieldConfig[] = [
     validated: textValidated.email("請輸入有效的電子郵件地址"),
     hint: (
       <>
-        If the entered user account is valid, you will receive an email with
-        reset link. Please contact Admin at <b>admin@aegiscustody.com</b> if you
-        need further assistance.
+        如果輸入的用戶帳戶有效，您將收到一封包含重設連結的電子郵件。
+        如需進一步協助，請聯繫管理員 <b>admin@aegiscustody.com</b>。
       </>
     ),
   },
@@ -46,11 +48,15 @@ function LoginForgotPwdDialog(props: LoginForgotPwdDialogProps) {
   };
   return (
     <Dialog open={open} onClose={onClose}>
-      <Stack gap="10px">
-        <Typography variant="h1">忘記密碼?</Typography>
-        <Typography variant="subtitle1">請輸入信箱</Typography>
-      </Stack>
-
+      <Grid container alignItems={"center"}>
+        <Grid item xs={2}></Grid>
+        <Grid item xs={8} textAlign="center">
+          <Typography variant="h4">忘記密碼?</Typography>
+        </Grid>
+        <Grid item xs={2} textAlign="right">
+          <IconBtn icon={<CloseIcon />} onClick={onClose} />
+        </Grid>
+      </Grid>
       <FieldsController configs={configs} form={{ control, errors }} />
 
       <Button variant="contained" onClick={handleSubmit(onSubmit)}>
