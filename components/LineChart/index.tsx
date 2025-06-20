@@ -112,7 +112,7 @@ export default function DemoChart(props: DemoChartProps) {
         <Typography variant="h5">{name}</Typography>
         <DatePicker
           views={["year"]}
-          label="Year only"
+          label="僅選擇年份"
           value={value}
           onChange={(newValue: any) => {
             setValue(newValue);
