@@ -234,6 +234,7 @@ function ExportElectricBillPage() {
         <FeeDialog
           isOpenDialog={showFeeDialog}
           onClose={() => setShowFeeDialog(false)}
+          fee={data?.fee}
         />
       ) : null}
     </>

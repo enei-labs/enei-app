@@ -9,9 +9,16 @@ import { useUpdateFee, useValidatedForm } from "@utils/hooks";
 import { LoadingButton } from "@mui/lab";
 import { toast } from "react-toastify";
 
+type Fee = {
+  substitutionFee: string | number | null | undefined;
+  certificateVerificationFee: string | number | null | undefined;
+  certificateServiceFee: string | number | null | undefined;
+};
+
 type FeeDialogProps = {
   isOpenDialog: boolean;
   onClose: VoidFunction;
+  fee?: Fee;
 };
 
 type FormData = {
@@ -42,15 +49,23 @@ const fieldConfigs: FieldConfig[] = [
 ];
 
 function FeeDialog(props: FeeDialogProps) {
-  const { isOpenDialog, onClose } = props;
+  const { isOpenDialog, onClose, fee } = props;
 
   const [updateFee, { loading }] = useUpdateFee();
+
+  const defaultValues: FormData = {
+    substitutionFee: fee?.substitutionFee?.toString() || "",
+    certificateVerificationFee: fee?.certificateVerificationFee?.toString() || "",
+    certificateServiceFee: fee?.certificateServiceFee?.toString() || "",
+  };
 
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useValidatedForm<FormData>(fieldConfigs);
+  } = useValidatedForm<FormData>(fieldConfigs, {
+    defaultValues,
+  });
 
   const onSubmit = async (formData: FormData) => {
     await updateFee({
