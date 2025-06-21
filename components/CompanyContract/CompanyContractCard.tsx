@@ -25,6 +25,8 @@ import EditCompanyContractBtn from "@components/CompanyContract/CompanyContractD
 import MonthlyTransferDegreeChart from "@components/CompanyContract/MonthlyTransferDegreeChart";
 import { useSearch } from "@utils/hooks/useSearch";
 import InfoIcon from "@mui/icons-material/Info";
+import { useCompanyContractMonthlyTransferDegrees } from "@utils/hooks/queries";
+import TransferDegreeChart from "@components/Dashboard/TransferDegreeChart";
 
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
@@ -98,8 +100,18 @@ function CompanyContractCard(props: CompanyContractCardProps) {
   const router = useRouter();
   const { searchTerm, setInputValue, executeSearch } = useSearch();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+
+  const [year, setYear] = useState<Date>(new Date());
+
+  const { data: monthlyTransferDegreeData, loading: monthlyTransferDegreeLoading } = useCompanyContractMonthlyTransferDegrees(
+    companyContract.id, 
+    `${year.getFullYear()}-01-01`, 
+    `${year.getFullYear()}-12-31`,
+  );
   /** TODO: 改成從 API 取得 */
   const degrees = 20;
+
+  console.log({ monthlyTransferDegreeData })
 
   const [removeCompanyContract] = useRemoveCompanyContract();
   const { companyContractInfo } = companyContractCardInfo(companyContract);
@@ -238,9 +250,12 @@ function CompanyContractCard(props: CompanyContractCardProps) {
         </Box>
 
         <Divider sx={{ margin: "36px 0 " }} />
-        <MonthlyTransferDegreeChart
+        <TransferDegreeChart
           name="月轉供量"
-          data={companyContract.monthlyTransferDegrees}
+          data={monthlyTransferDegreeData?.companyContractMonthlyTransferDegrees?.monthlyTotals.map(x => x?.totalDegrees) ?? []}
+          loading={monthlyTransferDegreeLoading}
+          year={year}
+          setYear={setYear}
         />
         <Divider sx={{ margin: "36px 0 " }} />
 

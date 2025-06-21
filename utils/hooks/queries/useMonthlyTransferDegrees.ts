@@ -1,4 +1,3 @@
-import { Fee } from '@core/graphql/types';
 import useQuery from '../useQuery';
 import { gql } from '@apollo/client';
 

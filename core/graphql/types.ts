@@ -195,7 +195,6 @@ export type CompanyContract = {
   id: Scalars['ID']['output'];
   industryDoc?: Maybe<Scalars['String']['output']>;
   industryDocName?: Maybe<Scalars['String']['output']>;
-  monthlyTransferDegrees: Array<Array<TransferDegree>>;
   name: Scalars['String']['output'];
   /** 合約編號 */
   number: Scalars['String']['output'];
@@ -214,6 +213,11 @@ export type CompanyContract = {
   transferDocName?: Maybe<Scalars['String']['output']>;
   /** 轉供率要求（%） */
   transferRate: Scalars['Int']['output'];
+};
+
+export type CompanyContractMonthlyTransferDegrees = {
+  __typename?: 'CompanyContractMonthlyTransferDegrees';
+  monthlyTotals: Array<MonthlyTransferDegree>;
 };
 
 export type CompanyContractPage = {
@@ -669,6 +673,12 @@ export type ModifyUserInput = {
 
 export type ModifyUserResponse = AccountAlreadyExistsError | User;
 
+export type MonthlyTransferDegree = {
+  __typename?: 'MonthlyTransferDegree';
+  month: Scalars['Int']['output'];
+  totalDegrees: Scalars['Int']['output'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   auditIndustryBill: IndustryBill;
@@ -1009,6 +1019,7 @@ export type Query = {
   companies: CompanyPage;
   company: Company;
   companyContract: CompanyContract;
+  companyContractMonthlyTransferDegrees: CompanyContractMonthlyTransferDegrees;
   companyContracts: CompanyContractPage;
   dashboard: Dashboard;
   fee: Fee;
@@ -1067,6 +1078,13 @@ export type QueryCompanyArgs = {
 
 export type QueryCompanyContractArgs = {
   id: Scalars['UUID']['input'];
+};
+
+
+export type QueryCompanyContractMonthlyTransferDegreesArgs = {
+  companyContractId: Scalars['UUID']['input'];
+  endedAt?: InputMaybe<Scalars['String']['input']>;
+  startedAt?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -1268,7 +1286,6 @@ export type RemainingDemandFromCompanyContract = {
   id: Scalars['ID']['output'];
   industryDoc?: Maybe<Scalars['String']['output']>;
   industryDocName?: Maybe<Scalars['String']['output']>;
-  monthlyTransferDegrees: Array<Array<TransferDegree>>;
   name: Scalars['String']['output'];
   /** 合約編號 */
   number: Scalars['String']['output'];
@@ -1401,6 +1418,7 @@ export type TpcBillPage = {
 
 export type TransferDegree = {
   __typename?: 'TransferDegree';
+  billingDate: Scalars['DateTime']['output'];
   createdAt: Scalars['DateTime']['output'];
   degree: Scalars['Int']['output'];
   electricNumber: Scalars['String']['output'];

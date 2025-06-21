@@ -1,8 +1,7 @@
 import { Box, TextField, Typography } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { useState } from "react";
 import dynamic from "next/dynamic";
-import { TransferDegree } from "@core/graphql/types";
+import { ChartSkeleton } from "@components/Dashboard/ChartSkeleton";
 
 const Chart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
@@ -101,14 +100,21 @@ const styles = {
 
 interface MonthlyTransferDegreeChartProps {
   name: string;
-  data?: TransferDegree[][];
+  data?: number[];
+  year?: Date;
+  setYear?: (year: Date) => void;
+  loading?: boolean;
 }
 
 export default function MonthlyTransferDegreeChart(
   props: MonthlyTransferDegreeChartProps
 ) {
-  const [value, setValue] = useState();
-  const { name, data } = props;
+
+  const { name, data, year, setYear, loading } = props;
+
+  if (loading) {
+    return <ChartSkeleton title={name} />;
+  }
 
   return (
     <Box sx={styles.container}>
@@ -117,9 +123,9 @@ export default function MonthlyTransferDegreeChart(
         <DatePicker
           views={["year"]}
           label="僅選擇年份"
-          value={value}
+          value={year}
           onChange={(newValue: any) => {
-            setValue(newValue);
+            setYear?.(newValue);
           }}
           slots={{
             textField: (params: any) => (
@@ -131,10 +137,8 @@ export default function MonthlyTransferDegreeChart(
       <Chart
         series={[
           {
-            name: "轉供量",
-            data:
-              data?.map((x) => x.reduce((acc, curr) => acc + curr.degree, 0)) ??
-              Array(12).fill(0),
+            name: "轉供度數",
+            data: data ??Array(12).fill(0),
           },
         ]}
         options={options}
