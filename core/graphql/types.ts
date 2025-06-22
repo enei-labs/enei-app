@@ -1046,6 +1046,7 @@ export type Query = {
   userBills: UserBillPage;
   userBillsByMonth: Array<UserBillsByMonth>;
   userContract: UserContract;
+  userContractMonthlyTransferDegrees: UserContractMonthlyTransferDegrees;
   userContracts: UserContractPage;
   users: UserPage;
 };
@@ -1225,6 +1226,13 @@ export type QueryUserBillsByMonthArgs = {
 
 export type QueryUserContractArgs = {
   id: Scalars['UUID']['input'];
+};
+
+
+export type QueryUserContractMonthlyTransferDegreesArgs = {
+  endedAt?: InputMaybe<Scalars['String']['input']>;
+  startedAt?: InputMaybe<Scalars['String']['input']>;
+  userContractId: Scalars['UUID']['input'];
 };
 
 
@@ -1718,6 +1726,11 @@ export type UserContract = {
   upperLimit?: Maybe<Scalars['Int']['output']>;
   user?: Maybe<User>;
   userType: UserType;
+};
+
+export type UserContractMonthlyTransferDegrees = {
+  __typename?: 'UserContractMonthlyTransferDegrees';
+  monthlyTotals: Array<MonthlyTransferDegree>;
 };
 
 export type UserContractPage = {

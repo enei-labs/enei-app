@@ -111,8 +111,6 @@ function CompanyContractCard(props: CompanyContractCardProps) {
   /** TODO: 改成從 API 取得 */
   const degrees = 20;
 
-  console.log({ monthlyTransferDegreeData })
-
   const [removeCompanyContract] = useRemoveCompanyContract();
   const { companyContractInfo } = companyContractCardInfo(companyContract);
 
