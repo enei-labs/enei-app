@@ -55,6 +55,7 @@ export default function TPCBillDialog(props: TPCBillDialogProps) {
           degree: Number(value.degree ?? 0),
           fee: Number(value.fee ?? 0),
           userId: value.userId,
+          userContractId: value.userContractId,
         };
       })
       .filter(

@@ -341,6 +341,7 @@ export type CreateTransferDegreeInput = {
   electricNumber: Scalars['String']['input'];
   fee?: Scalars['Int']['input'];
   powerPlantId: Scalars['ID']['input'];
+  userContractId: Scalars['ID']['input'];
   userId: Scalars['ID']['input'];
 };
 

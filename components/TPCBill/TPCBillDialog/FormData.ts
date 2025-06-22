@@ -17,6 +17,7 @@ export type FormData = {
       fee: string;
       userId: string;
       powerPlantId: string;
+      userContractId: string;
     }
   >;
 }

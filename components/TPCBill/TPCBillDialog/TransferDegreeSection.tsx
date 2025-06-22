@@ -21,34 +21,11 @@ export default function TransferDegreeSection({
   selectedPowerPlant,
   selectPowerPlant,
 }: TransferDegreeSectionProps) {
-  const { control, setValue } = useFormContext<FormData>();
+  const { control } = useFormContext<FormData>();
   const transferDocumentValue = useWatch({ control, name: "transferDocument" });
-  const transferDegreesValue = useWatch({ control, name: "transferDegrees" });
-  // const handleExcelParsed = (
-  //   data: Map<string, { degree: number; fee: number }>
-  // ) => {
-  //   data.forEach((value, key) => {
-  //     const [userNumber, industryNumber] = key.split("-");
-  //     const fieldBase =
-  //       `transferDegrees.${industryNumber}_${userNumber}` as const;
-  //     setValue(fieldBase, {
-  //       ...transferDegreesValue?.[fieldBase],
-  //       degree: value.degree,
-  //       fee: value.fee.toString(),
-  //     });
-  //   });
-  // };
-
-  // console.log({ transferDegreesValue });
 
   return (
     <>
-      {/* <Box display="flex" justifyContent="space-between">
-        <Typography textAlign="left" variant="h5">
-          轉供度數
-        </Typography>
-        <ImportTransferDegreeBtn onExcelParsed={handleExcelParsed} />
-      </Box> */}
       {transferDocumentData?.transferDocument.transferDocumentPowerPlants &&
       transferDocumentValue ? (
         <Box display="flex" flexDirection="column" rowGap="24px">
@@ -103,7 +80,7 @@ export default function TransferDegreeSection({
                       <InputText {...field} type="number" label="代輸費" />
                     )}
                   />
-                  {/* <Controller
+                  <Controller
                     control={control}
                     name={`${fieldBase}.userContractId`}
                     defaultValue={item.userContract?.id ?? ""}
@@ -114,7 +91,7 @@ export default function TransferDegreeSection({
                         value={item.userContract?.id}
                       />
                     )}
-                  /> */}
+                  />
                   <Controller
                     control={control}
                     name={`${fieldBase}.userId`}
