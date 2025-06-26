@@ -1,14 +1,17 @@
 import { Table } from "@components/Table";
 import { IndustryBill } from "@core/graphql/types";
 import { Config } from "../Table/Table";
-import { Box, Typography, Card } from "@mui/material";
+import { Box, Typography, Card, Tooltip } from "@mui/material";
 import { useIndustryBills } from "@utils/hooks/queries";
 import { formatDateTime } from "@utils/format";
 import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
+import InfoIcon from "@mui/icons-material/Info";
 import { IconBtn } from "@components/Button";
 import { IndustryBillDialog } from "./IndustryBillDialog";
 import { useState, useEffect, useMemo } from "react";
 import { ReviewStatusLookup } from "@core/look-up/review-status";
+import { useSearch } from "@utils/hooks/useSearch";
+import { InputSearch } from "@components/Input";
 import { useRouter } from "next/router";
 
 interface IndustryBillPanelProps {
@@ -19,11 +22,13 @@ interface IndustryBillPanelProps {
 
 const IndustryBillPanel = (props: IndustryBillPanelProps) => {
   const router = useRouter();
+  const { setInputValue, searchTerm, executeSearch } = useSearch();
   const [isOpenDialog, setIsOpenDialog] = useState(false);
   const [industryBill, setIndustryBill] = useState<IndustryBill | null>(null);
   const { data, loading, refetch } = useIndustryBills({
     month: props.month,
     industryBillConfigId: props.industryBillConfigId,
+    term: searchTerm,
   });
 
   // Handle industryBillId query parameter
@@ -110,7 +115,16 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
   return (
     <>
       <Card sx={{ mt: "36px", p: "36px" }}>
-        <Typography variant="h4">{title}</Typography>
+        <Typography variant="h4" sx={{ mb: "16px" }}>{title}</Typography>
+        
+        {/* 搜尋 */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: "8px", mb: "16px" }}>
+          <InputSearch onChange={setInputValue} onEnter={executeSearch} />
+          <Tooltip title="可使用電費單名稱搜尋">
+            <InfoIcon />
+          </Tooltip>
+        </Box>
+
         <Table
           configs={configs}
           list={data?.industryBills?.list}
