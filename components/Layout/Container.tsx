@@ -47,11 +47,6 @@ const Container: React.FC<ContainerProps> = ({ children }) => {
       <Box component="main" sx={style.main}>
         {children}
       </Box>
-
-      <Box component="footer" sx={style.footer}>
-        <Typography color="primary">Powered by</Typography>
-        <Logo height="40" />
-      </Box>
     </Box>
   );
 };

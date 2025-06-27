@@ -132,11 +132,6 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
         <Typography color="primary" sx={style.text}>
           {process.env.NEXT_PUBLIC_VERSION}
         </Typography>
-
-        <Box sx={style.logo}>
-          <Typography color="primary">Powered by</Typography>
-          <Logo height="40" />
-        </Box>
       </Box>
     </>
   );
