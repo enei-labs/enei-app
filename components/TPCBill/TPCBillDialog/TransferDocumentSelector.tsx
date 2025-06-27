@@ -31,13 +31,13 @@ export default function TransferDocumentSelector({
         render={({ field }) => (
           <InputAutocomplete
             {...field}
-            onChange={(e, newValue) => {
-              field.onChange(e);
-              if (e?.value) {
-                getTransferDocument({ variables: { id: e.value } });
+            onChange={(value) => {
+              field.onChange(value);
+              if (value?.value) {
+                getTransferDocument({ variables: { id: value.value } });
               }
 
-              if (e === null) {
+              if (value === null) {
                 reset();
               }
             }}

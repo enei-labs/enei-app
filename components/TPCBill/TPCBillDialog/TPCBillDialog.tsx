@@ -25,7 +25,16 @@ interface TPCBillDialogProps {
 
 export default function TPCBillDialog(props: TPCBillDialogProps) {
   const { isOpenDialog, onClose, variant } = props;
-  const methods = useForm<FormData>();
+  const methods = useForm<FormData>({
+    defaultValues: {
+      transferDocument: null,
+      billNumber: "",
+      billReceivedDate: new Date(),
+      billingDate: new Date(),
+      billDoc: null,
+      transferDegrees: {},
+    },
+  });
   const { handleSubmit, reset } = methods;
 
   const { data: transferDocumentsData } = useTransferDocuments();
@@ -39,6 +48,11 @@ export default function TPCBillDialog(props: TPCBillDialogProps) {
   );
 
   const onCreateTPCBill = async (formData: FormData) => {
+    if (!formData.transferDocument?.value) {
+      toast.error("請選擇轉供契約");
+      return;
+    }
+    
     if (!formData.billDoc?.id) {
       /** @TODO 確認是否為必填 */
       toast.error("請上傳台電繳費單");
@@ -75,7 +89,7 @@ export default function TPCBillDialog(props: TPCBillDialogProps) {
           billNumber: formData.billNumber,
           billReceivedDate: formData.billReceivedDate,
           billingDate: formData.billingDate,
-          transferDocumentId: formData.transferDocument.value,
+          transferDocumentId: formData.transferDocument?.value,
           transferDegrees,
         },
       },

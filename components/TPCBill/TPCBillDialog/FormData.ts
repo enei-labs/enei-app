@@ -2,14 +2,14 @@ export type FormData = {
   transferDocument: {
     label: string;
     value: string;
-  };
+  } | null;
   billNumber: string;
   billReceivedDate: Date;
   billingDate: Date;
   billDoc: {
     id: string;
     file: File;
-  };
+  } | null;
   transferDegrees: Record<
     string,
     {
