@@ -44,7 +44,7 @@ function LoginForgotPwdDialog(props: LoginForgotPwdDialogProps) {
   } = useValidatedForm<FormData>(configs);
 
   const onSubmit = async (formData: FormData) => {
-    console.log(formData);
+    // TODO: Implement password reset functionality
   };
   return (
     <Dialog open={open} onClose={onClose}>

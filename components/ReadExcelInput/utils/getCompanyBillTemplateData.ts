@@ -1,7 +1,6 @@
 import { CompanyBillTemplateData } from "@components/ElectricBill/CompanyBillTemplate";
 
 export const getCompanyBillTemplateData = (data: any) => {
-  console.log({ data });
   const companyBillTemplateData: CompanyBillTemplateData= {
     billingMonth: data[1][6],
     // 計費期間

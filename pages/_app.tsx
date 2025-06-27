@@ -34,9 +34,6 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     minimum: 0.3,
     speed: 500,
     showSpinner: false,
-    onStart: (url) => console.log(`Loading: ${url}`),
-    onComplete: () => console.log('Route change completed'),
-    onError: () => console.log('Route change error'),
   });
 
   return (

@@ -125,8 +125,8 @@ export const initialConfigs: FieldConfig[] = [
 
 
 export function updateFormValues({ initialDefaultValues, companyContract }: UpdateFormValuesParams): UpdateFormValuesReturns {
-  let newDefaultValues = { transferRate: 100, ...initialDefaultValues };
-  let newConfigs: FieldConfig[] = [...initialConfigs,   {
+  const newDefaultValues = { transferRate: 100, ...initialDefaultValues };
+  const newConfigs: FieldConfig[] = [...initialConfigs,   {
     type: "SINGLE_SELECT",
     name: "recipientAccount",
     label: "銀行帳號",

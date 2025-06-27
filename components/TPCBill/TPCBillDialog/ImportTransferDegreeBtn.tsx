@@ -87,10 +87,6 @@ export default function ImportTransferDegreeBtn({
         }
       });
 
-      // Log the aggregated and raw sheet data for debugging purposes
-      console.log("Aggregated Data:", aggregatedData);
-      console.log("TPC Bill Data:", tpcBillData);
-
       // Pass the parsed Excel data to the parent component
       onExcelParsed(aggregatedData);
     } catch (error) {

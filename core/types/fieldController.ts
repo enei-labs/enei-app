@@ -4,7 +4,7 @@ import FieldConfig from './fieldConfig'
 interface Form<T extends FieldValues = any> {
   errors?: any
   control: Control<T>
-  setValue?: UseFormSetValue<any>
+  setValue?: UseFormSetValue<T>
 }
 
 interface FieldController<T extends FieldValues = any> extends Omit<FieldConfig, 'type'> {

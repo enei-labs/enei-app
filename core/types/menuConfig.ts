@@ -3,5 +3,5 @@ export interface MenuConfig {
   name: string
   path: string
   isNotify?: boolean
-  component?: React.ComponentType<any>
+  component?: React.ComponentType<Record<string, unknown>>
 }

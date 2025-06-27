@@ -53,18 +53,18 @@ interface FieldConfig {
     | 'RADIO'
   name: string
   label?: string | number | React.ReactNode
-  value?: any
+  value?: unknown
   options?: Option[]
   loading?: boolean
   disabled?: boolean
   required?: boolean
-  validated?: any
+  validated?: yup.Schema<any>
   autoFocus?: boolean
   placeholder?: string
   hint?: React.ReactNode
-  radios?: { label: string, value: any }[]
+  radios?: { label: string, value: unknown }[]
   component?: React.ComponentType<FieldController>
-  fetchMoreData?: () => Promise<ApolloQueryResult<any>>
+  fetchMoreData?: () => Promise<ApolloQueryResult<unknown>>
 }
 
 const requiredMessage = '此為必填欄位'

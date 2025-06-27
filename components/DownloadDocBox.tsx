@@ -163,8 +163,6 @@ const FilePreview: React.FC<{ fileId: string; fileName: string }> = ({ fileId, f
 const DownloadDocBox = (props: DownloadDocBoxProps) => {
   const { label, fileId, fileName } = props;
 
-  console.log("fileId", fileId);
-
   // Render file name with preview tooltip
   const renderFileName = () => {
     if (!fileName || !fileId) {

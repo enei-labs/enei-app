@@ -39,8 +39,6 @@ function TransferDocumentCard(props: TransferDocumentProps) {
     limit: 1000,
   });
 
-  console.log("transferDocument-->\n", transferDocument, data);
-
   return (
     <>
       <Card sx={{ p: "36px", maxWidth: "1208px" }}>

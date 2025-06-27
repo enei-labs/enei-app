@@ -24,7 +24,6 @@ interface IndustryBillConfigPanelProps {
 
 const IndustryBillConfigPanel = (props: IndustryBillConfigPanelProps) => {
   const { fee, searchTerm } = props;
-  console.log("searchTerm", searchTerm);
   const { me } = useAuth();
   const router = useRouter();
 
