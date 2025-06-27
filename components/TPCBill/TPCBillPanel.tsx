@@ -7,10 +7,12 @@ import { handleDownload } from "@utils/download";
 import { IconBtn } from "@components/Button";
 import DeleteOutlined from "@mui/icons-material/DeleteOutlined";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import { useState } from "react";
 import dynamic from "next/dynamic";
 import { toast } from "react-toastify";
 import { useRemoveTPCBill } from "@utils/hooks";
+import { useRouter } from "next/router";
 
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 const TPCBillDialog = dynamic(
@@ -26,6 +28,7 @@ interface TPCBillPanelProps {
 
 const TPCBillPanel = (props: TPCBillPanelProps) => {
   const { tpcBillPage, loading = false, refetchFn } = props;
+  const router = useRouter();
   const [removeTPCBill] = useRemoveTPCBill();
   const [currentTPCBill, setCurrentTPCBill] = useState<TpcBill | null>(null);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
@@ -52,7 +55,15 @@ const TPCBillPanel = (props: TPCBillPanelProps) => {
       header: "繳費單編號",
       accessor: "billNumber",
       render: (rowData) => (
-        <Box>
+        <Box
+          sx={{
+            cursor: "pointer",
+            "&:hover": {
+              color: "primary.main",
+            },
+          }}
+          onClick={() => router.push(`/transfer/detail?tpcBillId=${rowData.id}`)}
+        >
           {rowData.billNumber || "未設定"}
         </Box>
       ),
@@ -124,6 +135,14 @@ const TPCBillPanel = (props: TPCBillPanelProps) => {
             }}
           />
           
+          {/* 查看詳情 */}
+          <IconBtn
+            icon={<VisibilityOutlinedIcon />}
+            onClick={() => {
+              router.push(`/transfer/detail?tpcBillId=${rowData.id}`);
+            }}
+          />
+
           {/* 刪除 */}
           <IconBtn
             icon={<DeleteOutlined />}
