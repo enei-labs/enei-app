@@ -19,7 +19,7 @@ const options = {
   dataLabels: {
     enabled: true,
     formatter: function (val: any) {
-      return Math.round(val) + "度";
+      return Math.round(val).toLocaleString() + "度";
     },
     offsetY: -20,
     style: {
