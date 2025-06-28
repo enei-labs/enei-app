@@ -32,6 +32,23 @@ const TPCPanel = (props: TPCPanelProps) => {
 
   const configs: Config<TpcBill>[] = [
     {
+      header: "繳費單編號",
+      accessor: "billNumber",
+      render: (rowData) => (
+        <Box
+          sx={{
+            cursor: "pointer",
+            "&:hover": {
+              color: "primary.main",
+            },
+          }}
+          onClick={() => router.push(`/transfer/detail?tpcBillId=${rowData.id}`)}
+        >
+          {rowData.billNumber || "未設定"}
+        </Box>
+      ),
+    },
+    {
       header: "收到日期",
       accessor: "",
       render: (rowData) => {
