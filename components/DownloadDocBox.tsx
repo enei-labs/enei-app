@@ -214,8 +214,12 @@ const DownloadDocBox = (props: DownloadDocBoxProps) => {
 
   return (
     <Box sx={styles.box}>
-      <Typography variant="h6">{label}</Typography>
-      {renderFileName()}
+      <Typography variant="h6" sx={{ minWidth: "200px", flex: "0 0 200px" }}>
+        {label}
+      </Typography>
+      <Box sx={{ flex: 1, display: "flex", justifyContent: "center" }}>
+        {renderFileName()}
+      </Box>
       <Box sx={styles.container}>
         <IconBtn
           tooltipText={fileId ? "下載檔案" : "檔案未上傳"}
