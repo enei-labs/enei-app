@@ -113,25 +113,69 @@ const ResetPassword = () => {
           },
         ]}
       />
-      <Box sx={{ paddingTop: "12px" }}>
-        <Card sx={{ p: "36px" }}>
+      <Box 
+        sx={{ 
+          paddingTop: "12px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "flex-start",
+          minHeight: "calc(100vh - 200px)",
+          px: 2,
+        }}
+      >
+        <Card 
+          sx={{ 
+            p: "48px",
+            maxWidth: "500px",
+            width: "100%",
+            boxShadow: 3,
+            borderRadius: 2,
+          }}
+        >
           <Box
             sx={{
               display: "flex",
               flexDirection: "column",
-              rowGap: "12px",
+              alignItems: "center",
+              gap: "24px",
             }}
           >
-            <Typography variant="h4">修改密碼</Typography>
-            <FieldsController configs={configs} form={{ control, errors }} />
+            {/* 標題區域 */}
+            <Box sx={{ textAlign: "center", mb: 2 }}>
+              <AccountCircleOutlinedIcon 
+                sx={{ 
+                  fontSize: 60,
+                  color: "primary.main",
+                  mb: 2,
+                }}
+              />
+              <Typography variant="h4" gutterBottom>
+                修改密碼
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {token ? "設定您的新密碼" : "請輸入舊密碼以繼續"}
+              </Typography>
+            </Box>
 
+            {/* 表單區域 */}
+            <Box sx={{ width: "100%" }}>
+              <FieldsController 
+                configs={configs} 
+                form={{ control, errors }} 
+              />
+            </Box>
+
+            {/* 按鈕區域 */}
             <LoadingButton
               startIcon={<LoginIcon />}
               onClick={handleSubmit(onSubmit)}
               variant="contained"
               loading={token ? resetLoading : loading}
+              fullWidth
+              size="large"
+              sx={{ mt: 2 }}
             >
-              {token ? "儲存" : "下一步"}
+              {token ? "儲存新密碼" : "下一步"}
             </LoadingButton>
           </Box>
         </Card>
