@@ -58,17 +58,36 @@ export const IndustryBillDialog = ({
       if (!data || loading) return null;
       if (error) return null;
 
+      console.log({ data });
+
+      const billingDate = new Date(data.industryBill.billingDate);
+      const year = billingDate.getFullYear();
+      const month = billingDate.getMonth();
+      
+      // 計費年月：原始日期 + 1個月的第一天
+      const nextMonthDate = new Date(year, month, 1);
+      
+      // 計費期間：原始月份的完整範圍 (當月1號到當月最後一天)
+      const startOfCurrentMonth = new Date(year, month - 1 , 1);
+      const endOfCurrentMonth = new Date(year, month, 0);
+      
+      const formatters = {
+        month: new Intl.DateTimeFormat('zh-TW', {
+          year: 'numeric',
+          month: '2-digit'
+        }),
+        date: new Intl.DateTimeFormat('zh-TW', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit'
+        })
+      };
+
       return {
         // 計費年月： 「新增台電代輸繳費單」「計費年月」+1個月
-        billingMonth: `${new Date(data.industryBill.billingDate).getFullYear()}年${
-          new Date(data.industryBill.billingDate).getMonth() + 1 + 1
-        }月`,
+        billingMonth: formatters.month.format(nextMonthDate).replace('/', '年') + '月',
         // 計費期間： 「新增台電代輸繳費單」「計費年月」的起訖日
-        billingDate: `${new Date(data.industryBill.billingDate).getFullYear()}/${
-          new Date(data.industryBill.billingDate).getMonth() + 1
-        }/1 - ${new Date(data.industryBill.billingDate).getFullYear()}/${
-          new Date(data.industryBill.billingDate).getMonth() + 1
-        }/${new Date(new Date(data.industryBill.billingDate).getFullYear(), new Date(data.industryBill.billingDate).getMonth() + 1, 0).getDate()}`,
+        billingDate: `${formatters.date.format(startOfCurrentMonth)} - ${formatters.date.format(endOfCurrentMonth)}`,
         companyName: data.industryBill.industryBillConfig?.industry?.name ?? "",
         // 負責人名稱
         responsibleName:
