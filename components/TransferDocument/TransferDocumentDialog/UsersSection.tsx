@@ -75,8 +75,12 @@ const UsersSection = ({
         expectedYearlyPurchaseDegree: 0,
       });
     }
+    
+    const currentLength = fields.length;
     append(emptyArray);
-    if (!fields.length) setSelectedIndex(0);
+    
+    // 設置選中索引為新增的第一個項目
+    setSelectedIndex(currentLength);
   }, [addUserNumber, append, fields.length]);
 
   // 當電號數量超過一定閾值時，使用虛擬化渲染
