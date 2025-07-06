@@ -1,4 +1,4 @@
-import { InputAutocomplete, InputNumber, InputText } from "@components/Input";
+import { InputAutocomplete, InputNumber, InputText, InputSearch } from "@components/Input";
 import { FormData } from "./FormData";
 import { Box, Button, CircularProgress, Grid, Typography } from "@mui/material";
 import {
@@ -32,6 +32,7 @@ export function ElectricNumbersField(props: ElectricNumbersFieldProps) {
   const [addElectricNumber, setAddElectricNumber] = useState<number>(1);
   const [deleteElectricNumberIndex, setDeleteElectricNumberIndex] =
     useState<number>(-1);
+  const [searchValue, setSearchValue] = useState<string>("");
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -60,13 +61,36 @@ export function ElectricNumbersField(props: ElectricNumbersFieldProps) {
   const shouldVirtualize = fields.length > VIRTUALIZATION_THRESHOLD;
   const [visibleRange, setVisibleRange] = useState({ start: 0, end: 20 });
 
+  // 搜尋匹配的電號
+  const searchResults = useMemo(() => {
+    if (!searchValue.trim()) return [];
+    
+    const searchTerm = searchValue.toLowerCase();
+    const matches: { index: number; matchType: string }[] = [];
+    
+    formData?.forEach((item: any, index: number) => {
+      // 搜尋電號
+      const electricNumber = item?.number?.label || item?.number?.value;
+      if (electricNumber && electricNumber.toLowerCase().includes(searchTerm)) {
+        matches.push({ index, matchType: '電號' });
+      }
+    });
+    
+    return matches;
+  }, [formData, searchValue]);
+
   // 如果需要虛擬化，只渲染當前可見的欄位
   const visibleFields = useMemo(() => {
+    // 如果有搜尋結果，只顯示搜尋結果
+    if (searchValue.trim() && searchResults.length > 0) {
+      return searchResults.map(({ index }) => fields[index]).filter(Boolean);
+    }
+    
     if (!shouldVirtualize) return fields;
     
     const { start, end } = visibleRange;
     return fields.slice(start, Math.min(end, fields.length));
-  }, [fields, shouldVirtualize, visibleRange]);
+  }, [fields, shouldVirtualize, visibleRange, searchValue, searchResults]);
 
   // 處理虛擬化滾動
   const handleRangeChange = useCallback((newStart: number) => {
@@ -93,8 +117,32 @@ export function ElectricNumbersField(props: ElectricNumbersFieldProps) {
 
   return (
     <>
+      {/* 搜尋電號 */}
+      <InputSearch
+        placeholder="搜尋電號..."
+        onChange={(value) => setSearchValue(value)}
+      />
+      
+      {/* 搜尋結果提示 */}
+      {searchValue.trim() && (
+        <Box display="flex" justifyContent="space-between" alignItems="center" mb="16px">
+          <Typography variant="caption" color="text.secondary">
+            {searchResults.length > 0 
+              ? `找到 ${searchResults.length} 個匹配項目` 
+              : "沒有找到匹配的電號"}
+          </Typography>
+          <Button
+            size="small"
+            onClick={() => setSearchValue("")}
+            sx={{ minWidth: "auto", padding: "4px 8px" }}
+          >
+            清空搜尋
+          </Button>
+        </Box>
+      )}
+      
       {/* 如果電號數量過多，顯示導航信息 */}
-      {shouldVirtualize && (
+      {shouldVirtualize && !searchValue.trim() && (
         <Box display="flex" justifyContent="space-between" alignItems="center" mb="16px">
           <Typography variant="caption" color="text.secondary">
             共 {fields.length} 個電號，當前顯示第 {visibleRange.start + 1} - {Math.min(visibleRange.end, fields.length)} 個
@@ -116,9 +164,15 @@ export function ElectricNumbersField(props: ElectricNumbersFieldProps) {
         </Box>
       )}
 
-      {(shouldVirtualize ? visibleFields : fields).map((field, index) => {
-        // 對於虛擬化渲染，需要計算實際的 fieldIndex
-        const fieldIndex = shouldVirtualize ? visibleRange.start + index : index;
+      {/* 如果有搜尋但沒有結果，不顯示任何欄位 */}
+      {!(searchValue.trim() && searchResults.length === 0) && 
+        (shouldVirtualize || Boolean(searchValue.trim()) ? visibleFields : fields).map((field, index) => {
+          // 對於虛擬化渲染或搜尋結果，需要計算實際的 fieldIndex
+          const fieldIndex = shouldVirtualize && !searchValue.trim() 
+            ? visibleRange.start + index 
+            : searchValue.trim() && searchResults.length > 0 
+              ? searchResults[index]?.index 
+              : index;
         
         const selectedNumbers =
           formData
@@ -175,10 +229,11 @@ export function ElectricNumbersField(props: ElectricNumbersFieldProps) {
             />
           </Box>
         );
-      })}
+      })
+      }
 
       {/* 如果使用虛擬化，提供導航按鈕 */}
-      {shouldVirtualize && (
+      {shouldVirtualize && !searchValue.trim() && (
         <Box display="flex" justifyContent="center" gap="8px" my="16px">
           <Button
             size="small"

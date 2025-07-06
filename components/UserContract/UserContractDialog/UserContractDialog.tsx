@@ -26,7 +26,7 @@ import dynamic from "next/dynamic";
 import Dialog from "@components/Dialog";
 import { FormData } from "./FormData";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { InputAutocomplete, InputNumber, InputText } from "@components/Input";
+import { InputAutocomplete, InputNumber, InputText, InputSearch } from "@components/Input";
 import Chip from "@components/Chip";
 import { useUsers } from "@utils/hooks/queries";
 import { useCreateUserContract } from "@utils/hooks/mutations/useCreateUserContract";
@@ -176,6 +176,7 @@ function UserContractDialog(props: UserContractDialogProps) {
   const [electricNumberIndex, setElectricNumberIndex] = useState<number>(
     fields.length ? 0 : -1
   );
+  const [searchValue, setSearchValue] = useState<string>("");
 
   // 獲取所有電號數據用於 Chip 顯示
   const allElectricNumberInfos = watch("electricNumberInfos") || [];
@@ -183,6 +184,8 @@ function UserContractDialog(props: UserContractDialogProps) {
   // 優化事件處理函數，使用 useCallback 避免不必要的重新渲染
   const handleChipClick = useCallback((index: number) => {
     setElectricNumberIndex(index);
+    // 點擊時清空搜尋，讓用戶能夠看到完整的電號列表
+    setSearchValue("");
   }, []);
 
   const handleChipDelete = useCallback((index: number) => {
@@ -206,16 +209,55 @@ function UserContractDialog(props: UserContractDialogProps) {
         tableNumbers: [],
       });
     }
+    
+    const currentLength = fields.length;
     append(emptyArray as unknown as ElectricNumberInfoInput);
-    if (!fields.length) setElectricNumberIndex(0);
+    
+    // 設置選中索引為新增的第一個項目
+    setElectricNumberIndex(currentLength);
   }, [addElectricNumber, append, fields.length, user]);
 
   // 當電號數量超過一定閾值時，使用虛擬化渲染
   const VIRTUALIZATION_THRESHOLD = 50;
   const shouldVirtualize = fields.length > VIRTUALIZATION_THRESHOLD;
 
+  // 搜尋匹配的電號
+  const searchResults = useMemo(() => {
+    if (!searchValue.trim()) return [];
+    
+    const searchTerm = searchValue.toLowerCase();
+    const matches: { index: number; matchType: string }[] = [];
+    
+    allElectricNumberInfos.forEach((item: any, index: number) => {
+      // 搜尋電號
+      if (item?.number && item.number.toLowerCase().includes(searchTerm)) {
+        matches.push({ index, matchType: '電號' });
+      }
+      
+      // 搜尋地址
+      if (item?.address && item.address.toLowerCase().includes(searchTerm)) {
+        matches.push({ index, matchType: '地址' });
+      }
+      
+      // 搜尋聯絡人
+      if (item?.contactName && item.contactName.toLowerCase().includes(searchTerm)) {
+        matches.push({ index, matchType: '聯絡人' });
+      }
+    });
+    
+    return matches;
+  }, [allElectricNumberInfos, searchValue]);
+
   // 如果需要虛擬化，只渲染當前可見的 chips
   const visibleChips = useMemo(() => {
+    // 如果有搜尋結果，只顯示搜尋結果
+    if (searchValue.trim() && searchResults.length > 0) {
+      return searchResults.map(({ index }) => ({
+        ...fields[index],
+        originalIndex: index
+      }));
+    }
+    
     if (!shouldVirtualize) return fields;
     
     // 簡單的虛擬化邏輯：只顯示選中項目周圍的 chips
@@ -227,7 +269,7 @@ function UserContractDialog(props: UserContractDialogProps) {
       ...item,
       originalIndex: start + index
     }));
-  }, [fields, electricNumberIndex, shouldVirtualize]);
+  }, [fields, electricNumberIndex, shouldVirtualize, searchValue, searchResults]);
 
   // 生成 Chip 標籤的函數
   const getChipLabel = useCallback((index: number) => {
@@ -454,29 +496,56 @@ function UserContractDialog(props: UserContractDialogProps) {
           電號資訊
         </Typography>
         <Box display={"flex"} flexDirection="column" rowGap="24px">
+          {/* 搜尋電號 */}
+          <InputSearch
+            placeholder="搜尋電號、地址或聯絡人..."
+            onChange={(value) => setSearchValue(value)}
+          />
+          
+          {/* 搜尋結果提示 */}
+          {searchValue.trim() && (
+            <Box display="flex" justifyContent="space-between" alignItems="center">
+              <Typography variant="caption" color="text.secondary">
+                {searchResults.length > 0 
+                  ? `找到 ${searchResults.length} 個匹配項目` 
+                  : "沒有找到匹配的電號"}
+              </Typography>
+              <Button
+                size="small"
+                onClick={() => setSearchValue("")}
+                sx={{ minWidth: "auto", padding: "4px 8px" }}
+              >
+                清空搜尋
+              </Button>
+            </Box>
+          )}
+          
           <Box display={"flex"} gap="8px" flexWrap={"wrap"}>
             {/* 如果電號數量過多，顯示導航信息 */}
-            {shouldVirtualize && (
+            {shouldVirtualize && !searchValue.trim() && (
               <Typography variant="caption" color="text.secondary" width="100%">
                 共 {fields.length} 個電號，當前顯示第 {electricNumberIndex + 1} 個周圍的電號
               </Typography>
             )}
             
-            {(shouldVirtualize ? visibleChips : fields).map((item, index) => {
-              const actualIndex = shouldVirtualize ? (item as any).originalIndex : index;
-              return (
-                <Chip
-                  key={item.id}
-                  label={getChipLabel(actualIndex)}
-                  handleClick={() => handleChipClick(actualIndex)}
-                  handleDelete={() => handleChipDelete(actualIndex)}
-                  selected={electricNumberIndex === actualIndex}
-                />
-              );
-            })}
+            {/* 如果有搜尋但沒有結果，不顯示任何 Chip */}
+            {!(searchValue.trim() && searchResults.length === 0) && 
+              (shouldVirtualize || Boolean(searchValue.trim()) ? visibleChips : fields).map((item, index) => {
+                const actualIndex = (shouldVirtualize || Boolean(searchValue.trim())) ? (item as any).originalIndex : index;
+                return (
+                  <Chip
+                    key={item.id}
+                    label={getChipLabel(actualIndex)}
+                    handleClick={() => handleChipClick(actualIndex)}
+                    handleDelete={() => handleChipDelete(actualIndex)}
+                    selected={electricNumberIndex === actualIndex}
+                  />
+                );
+              })
+            }
             
             {/* 如果使用虛擬化且有隱藏的項目，提供快速導航 */}
-            {shouldVirtualize && (
+            {shouldVirtualize && !searchValue.trim() && (
               <Box display="flex" gap="4px" alignItems="center" ml="auto">
                 <Typography variant="caption">跳至：</Typography>
                 <InputNumber

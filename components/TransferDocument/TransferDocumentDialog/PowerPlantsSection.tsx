@@ -4,6 +4,7 @@ import { Controller } from "react-hook-form";
 import InputAutocomplete from "@components/Input/InputAutocomplete";
 import InputText from "@components/Input/InputText";
 import InputNumber from "@components/Input/InputNumber";
+import InputSearch from "@components/Input/InputSearch";
 import Chip from "@components/Chip";
 import DialogAlert from "@components/DialogAlert";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
@@ -34,6 +35,7 @@ const PowerPlantsSection = ({
     fields.length ? 0 : -1
   );
   const [deleteIndex, setDeleteIndex] = useState<number>(-1);
+  const [searchValue, setSearchValue] = useState<string>("");
 
   // 取得目前選取電廠的相關資訊
   const currentCompany = watch(
@@ -83,6 +85,8 @@ const PowerPlantsSection = ({
   // 優化事件處理函數，使用 useCallback 避免不必要的重新渲染
   const handleChipClick = useCallback((index: number) => {
     setSelectedIndex(index);
+    // 點擊時清空搜尋，讓用戶能夠看到完整的電廠列表
+    setSearchValue("");
   }, []);
 
   const handleChipDelete = useCallback((index: number) => {
@@ -102,18 +106,52 @@ const PowerPlantsSection = ({
         transferRate: 0,
       });
     }
+    
+    const currentLength = fields.length;
     append(emptyArray);
-    if (!fields.length) {
-      setSelectedIndex(0);
-    }
+    
+    // 設置選中索引為新增的第一個項目
+    setSelectedIndex(currentLength);
   }, [addPowerPlantNumber, append, fields.length]);
 
   // 當電廠數量超過一定閾值時，使用虛擬化渲染
   const VIRTUALIZATION_THRESHOLD = 50;
   const shouldVirtualize = fields.length > VIRTUALIZATION_THRESHOLD;
 
+  // 搜尋匹配的電廠
+  const searchResults = useMemo(() => {
+    if (!searchValue.trim()) return [];
+    
+    const searchTerm = searchValue.toLowerCase();
+    const matches: { index: number; matchType: string }[] = [];
+    
+    allPowerPlants.forEach((item: any, index: number) => {
+      // 搜尋電廠名稱
+      const powerPlantName = item?.powerPlant?.label || item?.powerPlant?.value;
+      if (powerPlantName && powerPlantName.toLowerCase().includes(searchTerm)) {
+        matches.push({ index, matchType: '電廠' });
+      }
+      
+      // 搜尋公司名稱
+      const companyName = item?.company?.label || item?.company?.value;
+      if (companyName && companyName.toLowerCase().includes(searchTerm)) {
+        matches.push({ index, matchType: '公司' });
+      }
+    });
+    
+    return matches;
+  }, [allPowerPlants, searchValue]);
+
   // 如果需要虛擬化，只渲染當前可見的 chips
   const visibleChips = useMemo(() => {
+    // 如果有搜尋結果，只顯示搜尋結果
+    if (searchValue.trim() && searchResults.length > 0) {
+      return searchResults.map(({ index }) => ({
+        ...fields[index],
+        originalIndex: index
+      }));
+    }
+    
     if (!shouldVirtualize) return fields;
     
     // 簡單的虛擬化邏輯：只顯示選中項目周圍的 chips
@@ -125,7 +163,7 @@ const PowerPlantsSection = ({
       ...item,
       originalIndex: start + index
     }));
-  }, [fields, selectedIndex, shouldVirtualize]);
+  }, [fields, selectedIndex, shouldVirtualize, searchValue, searchResults]);
 
   // 生成 Chip 標籤的函數
   const getChipLabel = useCallback((index: number) => {
@@ -157,31 +195,58 @@ const PowerPlantsSection = ({
         電廠
       </Typography>
       <Box display="flex" flexDirection="column" rowGap="24px">
+        {/* 搜尋電廠 */}
+        <InputSearch
+          placeholder="搜尋電廠名稱或公司名稱..."
+          onChange={(value) => setSearchValue(value)}
+        />
+        
+        {/* 搜尋結果提示 */}
+        {searchValue.trim() && (
+          <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Typography variant="caption" color="text.secondary">
+              {searchResults.length > 0 
+                ? `找到 ${searchResults.length} 個匹配項目` 
+                : "沒有找到匹配的電廠"}
+            </Typography>
+            <Button
+              size="small"
+              onClick={() => setSearchValue("")}
+              sx={{ minWidth: "auto", padding: "4px 8px" }}
+            >
+              清空搜尋
+            </Button>
+          </Box>
+        )}
+        
         {/* Chip 列表 - 優化渲染 */}
         <Box display="flex" gap="8px" flexWrap="wrap">
           {/* 如果電廠數量過多，顯示導航信息 */}
-          {shouldVirtualize && (
+          {shouldVirtualize && !searchValue.trim() && (
             <Typography variant="caption" color="text.secondary" width="100%">
               共 {fields.length} 個電廠，當前顯示第 {selectedIndex + 1} 個周圍的電廠
             </Typography>
           )}
           
-          {(shouldVirtualize ? visibleChips : fields).map((item, index) => {
-            const actualIndex = shouldVirtualize ? (item as any).originalIndex : index;
-            return (
-              <Chip
-                key={item.id}
-                label={getChipLabel(actualIndex)}
-                aria-label={`電廠${actualIndex + 1}`}
-                handleClick={() => handleChipClick(actualIndex)}
-                handleDelete={() => handleChipDelete(actualIndex)}
-                selected={selectedIndex === actualIndex}
-              />
-            );
-          })}
+          {/* 如果有搜尋但沒有結果，不顯示任何 Chip */}
+          {!(searchValue.trim() && searchResults.length === 0) && 
+            (shouldVirtualize || Boolean(searchValue.trim()) ? visibleChips : fields).map((item, index) => {
+              const actualIndex = (shouldVirtualize || Boolean(searchValue.trim())) ? (item as any).originalIndex : index;
+              return (
+                <Chip
+                  key={item.id}
+                  label={getChipLabel(actualIndex)}
+                  aria-label={`電廠${actualIndex + 1}`}
+                  handleClick={() => handleChipClick(actualIndex)}
+                  handleDelete={() => handleChipDelete(actualIndex)}
+                  selected={selectedIndex === actualIndex}
+                />
+              );
+            })
+          }
           
           {/* 如果使用虛擬化且有隱藏的項目，提供快速導航 */}
-          {shouldVirtualize && (
+          {shouldVirtualize && !searchValue.trim() && (
             <Box display="flex" gap="4px" alignItems="center" ml="auto">
               <Typography variant="caption">跳至：</Typography>
               <InputNumber
