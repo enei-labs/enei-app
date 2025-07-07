@@ -13,6 +13,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import Snackbar from "@components/Snackbar";
 import "@styles/nprogress.css";
 import { useNProgress } from "@utils/hooks/useNProgress";
+import { ErrorBoundary } from "@components/ErrorBoundary";
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;
@@ -40,7 +41,9 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <ApolloProvider client={client}>
         <AuthProvider>
-          <ThemeProvider theme={theme}>{component}</ThemeProvider>
+          <ErrorBoundary>
+            <ThemeProvider theme={theme}>{component}</ThemeProvider>
+          </ErrorBoundary>
           <Snackbar />
         </AuthProvider>
       </ApolloProvider>

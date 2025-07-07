@@ -7,6 +7,7 @@ import { AuthLayout } from "@components/Layout";
 import { ReactElement } from "react";
 import InboxOutlinedIcon from "@mui/icons-material/InboxOutlined";
 import IndustryBillPanel from "@components/IndustryBill/IndustryBillPanel";
+import { PageErrorBoundary } from "@components/ErrorBoundary";
 function IndustryBillPage() {
   const router = useRouter();
   const month = router.query.month as string;
@@ -34,7 +35,9 @@ function IndustryBillPage() {
             ]}
           />
           <Box sx={{ paddingTop: "12px" }}>
-            <IndustryBillPanel month={month} />
+            <PageErrorBoundary>
+              <IndustryBillPanel month={month} />
+            </PageErrorBoundary>
           </Box>
         </>
       ) : null}

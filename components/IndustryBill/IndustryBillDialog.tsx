@@ -16,6 +16,7 @@ import { useReactToPrint } from "react-to-print";
 import { useAuditIndustryBill } from "@utils/hooks/mutations";
 import { toast } from "react-toastify";
 import { CompanyBillTemplateData } from "@components/ElectricBill/CompanyBillTemplate";
+import { DialogErrorBoundary } from "@components/ErrorBoundary";
 
 interface IndustryBillDialogProps {
   isOpenDialog: boolean;
@@ -162,82 +163,84 @@ export const IndustryBillDialog = ({
 
   return (
     <Dialog open={isOpenDialog} onClose={onClose} maxWidth="md">
-      <Box padding="36px">
-        <Typography textAlign={"left"} variant="h4">
-          發電業電費單
-        </Typography>
-        <Typography textAlign={"left"} variant="h6">
-          電費單組合： {industryBill.industryBillConfig?.name ?? ""}
-        </Typography>
-        {!industryBillTemplateData ? (
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            height="100%"
-          >
-            <CircularProgress />
-          </Box>
-        ) : (
-          <PrintWrapper
-            ref={componentRef}
-            userBillTemplatesData={[]}
-            companyBillTemplatesData={[industryBillTemplateData]}
-          />
-        )}
+      <DialogErrorBoundary onClose={onClose}>
+        <Box padding="36px">
+          <Typography textAlign={"left"} variant="h4">
+            發電業電費單
+          </Typography>
+          <Typography textAlign={"left"} variant="h6">
+            電費單組合： {industryBill.industryBillConfig?.name ?? ""}
+          </Typography>
+          {!industryBillTemplateData ? (
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              height="100%"
+            >
+              <CircularProgress />
+            </Box>
+          ) : (
+            <PrintWrapper
+              ref={componentRef}
+              userBillTemplatesData={[]}
+              companyBillTemplatesData={[industryBillTemplateData]}
+            />
+          )}
 
-        {reviewStatus && (
-          <Box sx={{ mt: 3, mb: 2, display: "flex", alignItems: "center" }}>
-            <Typography>當前審核狀態：</Typography>
-            {auditIndustryBillLoading ? (
-              <CircularProgress size="16px" />
-            ) : (
-              <Typography>{ReviewStatusLookup[reviewStatus]}</Typography>
+          {reviewStatus && (
+            <Box sx={{ mt: 3, mb: 2, display: "flex", alignItems: "center" }}>
+              <Typography>當前審核狀態：</Typography>
+              {auditIndustryBillLoading ? (
+                <CircularProgress size="16px" />
+              ) : (
+                <Typography>{ReviewStatusLookup[reviewStatus]}</Typography>
+              )}
+            </Box>
+          )}
+
+          <Box sx={{ mt: 3, mb: 2 }}>
+            <ToggleButtonGroup
+              value={reviewStatus}
+              exclusive
+              onChange={handleReviewChange}
+              aria-label="審核狀態"
+              fullWidth
+            >
+              <ToggleButton
+                value={ElectricBillStatus.Approved}
+                aria-label="審核通過"
+              >
+                審核通過
+              </ToggleButton>
+              <ToggleButton
+                value={ElectricBillStatus.Manual}
+                aria-label="選擇手動輸入"
+              >
+                選擇手動輸入
+              </ToggleButton>
+            </ToggleButtonGroup>
+          </Box>
+
+          <Box display="flex" justifyContent="flex-end" gap={2}>
+            {reviewStatus === ElectricBillStatus.Approved && (
+              <Button variant="contained" color="primary" onClick={handlePrint}>
+                列印
+              </Button>
+            )}
+
+            {reviewStatus === ElectricBillStatus.Manual && (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleManualImport}
+              >
+                手動輸入
+              </Button>
             )}
           </Box>
-        )}
-
-        <Box sx={{ mt: 3, mb: 2 }}>
-          <ToggleButtonGroup
-            value={reviewStatus}
-            exclusive
-            onChange={handleReviewChange}
-            aria-label="審核狀態"
-            fullWidth
-          >
-            <ToggleButton
-              value={ElectricBillStatus.Approved}
-              aria-label="審核通過"
-            >
-              審核通過
-            </ToggleButton>
-            <ToggleButton
-              value={ElectricBillStatus.Manual}
-              aria-label="選擇手動輸入"
-            >
-              選擇手動輸入
-            </ToggleButton>
-          </ToggleButtonGroup>
         </Box>
-
-        <Box display="flex" justifyContent="flex-end" gap={2}>
-          {reviewStatus === ElectricBillStatus.Approved && (
-            <Button variant="contained" color="primary" onClick={handlePrint}>
-              列印
-            </Button>
-          )}
-
-          {reviewStatus === ElectricBillStatus.Manual && (
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleManualImport}
-            >
-              手動輸入
-            </Button>
-          )}
-        </Box>
-      </Box>
+      </DialogErrorBoundary>
     </Dialog>
   );
 };
