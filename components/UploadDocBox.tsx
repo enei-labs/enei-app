@@ -9,6 +9,7 @@ import axios from "axios";
 import { IconBtn } from "./Button";
 import { toast } from "react-toastify";
 import React, { useState, useCallback, useRef, useMemo } from "react";
+import Image from "next/image";
 import { LoadingButton } from "@mui/lab";
 
 const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "";
@@ -191,9 +192,11 @@ const FilePreview: React.FC<{ file: File; fileId?: string }> = ({ file, fileId }
             </Typography>
           </Box>
         ) : imageUrl ? (
-          <img 
+          <Image 
             src={imageUrl} 
             alt={file.name}
+            width={300}
+            height={150}
             style={{ 
               width: '100%', 
               height: 'auto', 

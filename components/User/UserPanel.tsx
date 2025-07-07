@@ -7,7 +7,7 @@ import { IconBtn } from "@components/Button";
 import { useAuth } from "@core/context/auth";
 import { Box } from "@mui/material";
 import { useRouter } from "next/router";
-import ErrorBoundary from "@components/ErrorBoundary";
+import { ErrorBoundary } from "@components/ErrorBoundary";
 
 enum ActionTypeEnum {
   CREATE = "create",

@@ -52,7 +52,10 @@ const UsersSection = ({
   }, [userContractsData, currentUserContract]);
 
   // 獲取所有電號數據用於 Chip 顯示
-  const allElectricNumbers = watch("transferDocumentUsers") || [];
+  const allElectricNumbers = useMemo(() => 
+    watch("transferDocumentUsers") || [], 
+    [watch]
+  );
 
   // 優化事件處理函數，使用 useCallback 避免不必要的重新渲染
   const handleChipClick = useCallback((index: number) => {

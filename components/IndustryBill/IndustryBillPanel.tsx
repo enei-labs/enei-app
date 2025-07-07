@@ -13,7 +13,7 @@ import { ReviewStatusLookup } from "@core/look-up/review-status";
 import { useSearch } from "@utils/hooks/useSearch";
 import { InputSearch } from "@components/Input";
 import { useRouter } from "next/router";
-import ErrorBoundary from "@components/ErrorBoundary";
+import { ErrorBoundary } from "@components/ErrorBoundary";
 
 interface IndustryBillPanelProps {
   month?: string;

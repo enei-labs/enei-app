@@ -11,7 +11,7 @@ import { useRemoveCompany } from "@utils/hooks";
 import DialogAlert from "@components/DialogAlert";
 import { toast } from "react-toastify";
 import CompanyDialog from "@components/Company/CompanyDialog";
-import ErrorBoundary from "@components/ErrorBoundary";
+import { ErrorBoundary } from "@components/ErrorBoundary";
 
 interface CompanyPanelProps {
   setCompanyFn: (company: Company) => void;

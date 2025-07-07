@@ -6,7 +6,7 @@ export default function RedirectPage() {
 
   useEffect(() => {
     router.push("/electric-bill");
-  }, []);
+  }, [router]);
 
   return <p>redirecting...</p>;
 }

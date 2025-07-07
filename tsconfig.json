@@ -25,5 +25,5 @@
     },
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.json"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "jest.setup.ts", "**/*.test.ts", "**/*.test.tsx", "**/__tests__/**/*"]
 }

@@ -13,7 +13,7 @@ import dynamic from "next/dynamic";
 import { toast } from "react-toastify";
 import { useRemoveTPCBill } from "@utils/hooks";
 import { useRouter } from "next/router";
-import ErrorBoundary from "@components/ErrorBoundary";
+import { ErrorBoundary } from "@components/ErrorBoundary";
 
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 const TPCBillDialog = dynamic(

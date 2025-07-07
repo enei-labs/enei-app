@@ -4,7 +4,7 @@ import { Config, Page } from "../Table/Table";
 import { Box } from "@mui/material";
 import { useRouter } from "next/router";
 import { formatDateTime } from "@utils/format";
-import ErrorBoundary from "@components/ErrorBoundary";
+import { ErrorBoundary } from "@components/ErrorBoundary";
 
 interface TransferDocumentPanelProps {
   transferDocuments?: TransferDocumentPage;

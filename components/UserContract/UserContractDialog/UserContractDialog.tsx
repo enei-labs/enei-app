@@ -28,6 +28,7 @@ import { FormData } from "./FormData";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { InputAutocomplete, InputNumber, InputText, InputSearch } from "@components/Input";
 import Chip from "@components/Chip";
+import { DialogErrorBoundary } from "@components/ErrorBoundary";
 import { useUsers } from "@utils/hooks/queries";
 import { useCreateUserContract } from "@utils/hooks/mutations/useCreateUserContract";
 import { useUpdateUserContract } from "@utils/hooks/mutations/useUpdateUserContract";
@@ -179,7 +180,10 @@ function UserContractDialog(props: UserContractDialogProps) {
   const [searchValue, setSearchValue] = useState<string>("");
 
   // 獲取所有電號數據用於 Chip 顯示
-  const allElectricNumberInfos = watch("electricNumberInfos") || [];
+  const allElectricNumberInfos = useMemo(() => 
+    watch("electricNumberInfos") || [], 
+    [watch]
+  );
 
   // 優化事件處理函數，使用 useCallback 避免不必要的重新渲染
   const handleChipClick = useCallback((index: number) => {
@@ -437,7 +441,8 @@ function UserContractDialog(props: UserContractDialogProps) {
 
   return (
     <Dialog open={isOpenDialog} onClose={onClose}>
-      <>
+      <DialogErrorBoundary onClose={onClose}>
+        <>
         <Grid container justifyContent={"space-between"} alignItems={"center"}>
           <Typography variant="h4" textAlign={"left"}>
             {variant === "create" ? "新增用戶契約" : "修改用戶契約"}
@@ -762,28 +767,28 @@ function UserContractDialog(props: UserContractDialogProps) {
             儲存
           </LoadingButton>
         </Grid>
-        </>
 
         {deleteElectricNumberIndex !== -1 ? (
-        <DialogAlert
-          open={deleteElectricNumberIndex !== -1}
-          title={"刪除電號"}
-          content={"是否確認要刪除電號？"}
-          onConfirm={() => {
-            remove(deleteElectricNumberIndex);
-            setDeleteElectricNumberIndex(-1);
-            // 如果刪除的是當前選中的項目，調整選中索引
-            if (deleteElectricNumberIndex === electricNumberIndex) {
-              setElectricNumberIndex(Math.max(0, Math.min(electricNumberIndex, fields.length - 2)));
-            } else if (deleteElectricNumberIndex < electricNumberIndex) {
-              setElectricNumberIndex(electricNumberIndex - 1);
-            }
-          }}
-          onClose={() => {
-            setDeleteElectricNumberIndex(-1);
-          }}
-        />
+          <DialogAlert
+            open={deleteElectricNumberIndex !== -1}
+            title={"刪除電號"}
+            content={"是否確認要刪除電號？"}
+            onConfirm={() => {
+              remove(deleteElectricNumberIndex);
+              setDeleteElectricNumberIndex(-1);
+              // 如果刪除的是當前選中的項目，調整選中索引
+              if (deleteElectricNumberIndex === electricNumberIndex) {
+                setElectricNumberIndex(Math.max(0, Math.min(electricNumberIndex, fields.length - 2)));
+              } else if (deleteElectricNumberIndex < electricNumberIndex) {
+                setElectricNumberIndex(electricNumberIndex - 1);
+              }
+            }}
+            onClose={() => {
+              setDeleteElectricNumberIndex(-1);
+            }}
+          />
         ) : null}
+        </>
       </DialogErrorBoundary>
     </Dialog>
   );

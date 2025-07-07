@@ -7,7 +7,7 @@ import { BasicSelect } from "../Select";
 import CircularProgress from "@mui/material/CircularProgress";
 import CompanyContractBox from "@components/ContractBox/CompanyContractBox";
 import { useSearch } from "@utils/hooks/useSearch";
-import ErrorBoundary from "@components/ErrorBoundary";
+import { ErrorBoundary } from "@components/ErrorBoundary";
 
 interface CompanyContractPanelProps {
   company: Company;

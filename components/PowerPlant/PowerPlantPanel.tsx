@@ -10,7 +10,7 @@ import dynamic from "next/dynamic";
 import { useRemovePowerPlant } from "@utils/hooks/mutations/useRemovePowerPlant";
 import { toast } from "react-toastify";
 import { formatDateTime } from "@utils/format";
-import ErrorBoundary from "@components/ErrorBoundary";
+import { ErrorBoundary } from "@components/ErrorBoundary";
 
 const PowerPlantDialog = dynamic(() => import("./PowerPlantDialog"));
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));

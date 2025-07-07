@@ -7,7 +7,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import UserContractBox from "@components/ContractBox/UserContractBox";
 import { AddUserContractBtn } from "@components/UserContract/UserContractDialog/AddUserContractBtn";
 import { useSearch } from "@utils/hooks/useSearch";
-import ErrorBoundary from "@components/ErrorBoundary";
+import { ErrorBoundary } from "@components/ErrorBoundary";
 
 interface UserContractPanelProps {
   user: User;

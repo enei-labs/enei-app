@@ -49,7 +49,10 @@ const PowerPlantsSection = ({
   );
 
   // 獲取所有電廠數據用於 Chip 顯示
-  const allPowerPlants = watch("transferDocumentPowerPlants") || [];
+  const allPowerPlants = useMemo(() => 
+    watch("transferDocumentPowerPlants") || [], 
+    [watch]
+  );
 
   const currentCompanyInfo = useMemo(() => {
     return companiesData?.companies.list.find(

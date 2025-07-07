@@ -6,6 +6,7 @@ import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import { IconBtn } from "./Button";
 import { handleDownload } from "@utils/download";
 import React, { useState } from "react";
+import Image from "next/image";
 import axios from "axios";
 
 const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || "";
@@ -99,9 +100,11 @@ const FilePreview: React.FC<{ fileId: string; fileName: string }> = ({ fileId, f
             </Typography>
           </Box>
         ) : imageUrl ? (
-          <img 
+          <Image 
             src={imageUrl} 
             alt={fileName}
+            width={300}
+            height={150}
             style={{ 
               width: '100%', 
               height: 'auto', 
