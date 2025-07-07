@@ -13,6 +13,7 @@ import { Role } from "@core/graphql/types";
 import { reducer } from "@core/context/account-dialog/reducer";
 import { useSearch } from "@utils/hooks/useSearch";
 import InfoIcon from "@mui/icons-material/Info";
+import PageErrorBoundary from "@components/ErrorBoundary/PageErrorBoundary";
 
 const Permissions = () => {
   const { searchTerm, setInputValue, executeSearch } = useSearch();
@@ -24,7 +25,7 @@ const Permissions = () => {
   const [state, dispatch] = useReducer(reducer, { status: "closed" });
 
   return (
-    <>
+    <PageErrorBoundary>
       <Head>
         <title>權限管理</title>
         <meta name="description" content="權限管理" />
@@ -82,7 +83,7 @@ const Permissions = () => {
           <Divider sx={{ my: "24px" }} />
         </AuthGuard>
       </Box>
-    </>
+    </PageErrorBoundary>
   );
 };
 

@@ -17,6 +17,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import { useAuditUserBill } from "@utils/hooks/mutations";
 import { toast } from "react-toastify";
+import { DialogErrorBoundary } from "@components/ErrorBoundary";
 
 interface UserBillDialogProps {
   isOpenDialog: boolean;
@@ -216,7 +217,8 @@ export const UserBillDialog = ({
 
   return (
     <Dialog open={isOpenDialog} onClose={onClose} maxWidth="md">
-      <Box padding="36px">
+      <DialogErrorBoundary onClose={onClose}>
+        <Box padding="36px">
         <Typography textAlign={"left"} variant="h4">
           用戶電費單
         </Typography>
@@ -282,7 +284,8 @@ export const UserBillDialog = ({
           )}
         </Box>
         {reviewStatus === ElectricBillStatus.Manual && <ReadExcelInput />}
-      </Box>
+        </Box>
+      </DialogErrorBoundary>
     </Dialog>
   );
 };

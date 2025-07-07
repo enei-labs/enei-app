@@ -8,6 +8,7 @@ import CloseIcon from "@mui/icons-material/HighlightOff";
 import { IconBtn } from "@components/Button";
 import { Form } from "@core/types/fieldController";
 import { InputText } from "@components/Input";
+import { DialogErrorBoundary } from "@components/ErrorBoundary";
 
 interface CompanyContractProps {
   variant: "edit" | "create";
@@ -37,6 +38,7 @@ const CompanyContractDialog = (props: CompanyContractProps) => {
 
   return (
     <Dialog key="form" open={open} onClose={closeFn}>
+      <DialogErrorBoundary onClose={closeFn}>
       <Grid container justifyContent={"space-between"} alignItems={"center"}>
         <Typography variant="h4" textAlign={"left"}>
           {variant === "create" ? "新增合約" : "編輯合約"}
@@ -68,6 +70,7 @@ const CompanyContractDialog = (props: CompanyContractProps) => {
       >
         儲存
       </LoadingButton>
+      </DialogErrorBoundary>
     </Dialog>
   );
 };

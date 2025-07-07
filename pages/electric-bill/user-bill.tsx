@@ -7,13 +7,14 @@ import { AuthLayout } from "@components/Layout";
 import { ReactElement } from "react";
 import InboxOutlinedIcon from "@mui/icons-material/InboxOutlined";
 import UserBillPanel from "@components/UserBill/UserBillPanel";
+import PageErrorBoundary from "@components/ErrorBoundary/PageErrorBoundary";
 
 function UserBillPage() {
   const router = useRouter();
   const month = router.query.month as string;
 
   return (
-    <>
+    <PageErrorBoundary>
       <Head>
         <title>用戶電費單</title>
         <meta name="description" content="用戶電費單" />
@@ -39,7 +40,7 @@ function UserBillPage() {
           </Box>
         </>
       ) : null}
-    </>
+    </PageErrorBoundary>
   );
 }
 

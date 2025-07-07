@@ -17,6 +17,7 @@ import { useRemoveUser } from "@utils/hooks";
 import { toast } from "react-toastify";
 import InfoIcon from "@mui/icons-material/Info";
 import { useSearch } from "@utils/hooks/useSearch";
+import PageErrorBoundary from "@components/ErrorBoundary/PageErrorBoundary";
 
 const UsersPage = () => {
   const { setInputValue, searchTerm, executeSearch } = useSearch();
@@ -40,7 +41,7 @@ const UsersPage = () => {
   const [removeUser] = useRemoveUser();
 
   return (
-    <>
+    <PageErrorBoundary>
       <Head>
         <title>用戶管理</title>
         <meta name="description" content="用戶管理" />
@@ -131,7 +132,7 @@ const UsersPage = () => {
         }}
         onClose={() => onAction(ActionTypeEnum.CLOSE)}
       />
-    </>
+    </PageErrorBoundary>
   );
 };
 

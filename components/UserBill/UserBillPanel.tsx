@@ -13,6 +13,7 @@ import { ReviewStatusLookup } from "@core/look-up/review-status";
 import { useSearch } from "@utils/hooks/useSearch";
 import { InputSearch } from "@components/Input";
 import { useRouter } from "next/router";
+import ErrorBoundary from "@components/ErrorBoundary";
 
 interface UserBillPanelProps {
   month?: string;
@@ -113,7 +114,7 @@ const UserBillPanel = (props: UserBillPanelProps) => {
   }, [props.userBillConfigName, props.month]);
 
   return (
-    <>
+    <ErrorBoundary>
       <Card sx={{ mt: "36px", p: "36px" }}>
         <Typography variant="h4" sx={{ mb: "16px" }}>{title}</Typography>
         
@@ -145,7 +146,7 @@ const UserBillPanel = (props: UserBillPanelProps) => {
           onClose={handleCloseDialog}
         />
       )}
-    </>
+    </ErrorBoundary>
   );
 };
 

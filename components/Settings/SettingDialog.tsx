@@ -18,6 +18,7 @@ import { useMemo, useState } from "react";
 import { InputAutocomplete, InputNumber, InputText } from "@components/Input";
 import bankJson from "@public/bank_with_branchs_remix_version.json";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
+import { DialogErrorBoundary } from "@components/ErrorBoundary";
 
 type FormData = {
   name: string;
@@ -157,6 +158,7 @@ function SettingDialog(props: SettingDialogProps) {
 
   return (
     <Dialog open={isOpenDialog} onClose={onClose}>
+      <DialogErrorBoundary onClose={onClose}>
       <Box
         sx={{
           display: "flex",
@@ -409,6 +411,7 @@ function SettingDialog(props: SettingDialogProps) {
           取消
         </Button>
       </Box>
+      </DialogErrorBoundary>
     </Dialog>
   );
 }

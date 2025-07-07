@@ -4,6 +4,7 @@ import { Config, Page } from "../Table/Table";
 import { Box } from "@mui/material";
 import { useRouter } from "next/router";
 import { formatDateTime } from "@utils/format";
+import ErrorBoundary from "@components/ErrorBoundary";
 
 interface TransferDocumentPanelProps {
   transferDocuments?: TransferDocumentPage;
@@ -49,7 +50,7 @@ const TransferDocumentPanel = (props: TransferDocumentPanelProps) => {
   ];
 
   return (
-    <>
+    <ErrorBoundary>
       <Table
         configs={configs}
         list={transferDocuments?.list}
@@ -57,7 +58,7 @@ const TransferDocumentPanel = (props: TransferDocumentPanelProps) => {
         loading={loading}
         onPageChange={refetchFn}
       />
-    </>
+    </ErrorBoundary>
   );
 };
 

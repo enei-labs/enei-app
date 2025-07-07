@@ -16,6 +16,7 @@ import {
 import { useCreateTPCBill } from "@utils/hooks";
 import { FormData } from "@components/TPCBill/TPCBillDialog/FormData";
 import { PowerPlant } from "@core/graphql/types";
+import { DialogErrorBoundary } from "@components/ErrorBoundary";
 
 interface TPCBillDialogProps {
   isOpenDialog: boolean;
@@ -102,31 +103,33 @@ export default function TPCBillDialog(props: TPCBillDialogProps) {
 
   return (
     <Dialog open={isOpenDialog} onClose={onClose}>
-      <FormProvider {...methods}>
-        <TPCBillHeader variant={variant} onClose={onClose} />
-        <TransferDocumentSelector
-          getTransferDocument={getTransferDocument}
-          transferDocumentsData={transferDocumentsData}
-          reset={() => {
-            reset();
-            selectPowerPlant(null);
-          }}
-        />
-        <BasicInfoFields />
-        <DocumentFields />
-        <TransferDegreeSection
-          transferDocumentData={transferDocumentData}
-          selectedPowerPlant={selectedPowerPlant}
-          selectPowerPlant={selectPowerPlant}
-        />
-        <LoadingButton
-          loading={createLoading}
-          startIcon={<AddIcon />}
-          onClick={handleSubmit(onCreateTPCBill)}
-        >
-          儲存
-        </LoadingButton>
-      </FormProvider>
+      <DialogErrorBoundary onClose={onClose}>
+        <FormProvider {...methods}>
+          <TPCBillHeader variant={variant} onClose={onClose} />
+          <TransferDocumentSelector
+            getTransferDocument={getTransferDocument}
+            transferDocumentsData={transferDocumentsData}
+            reset={() => {
+              reset();
+              selectPowerPlant(null);
+            }}
+          />
+          <BasicInfoFields />
+          <DocumentFields />
+          <TransferDegreeSection
+            transferDocumentData={transferDocumentData}
+            selectedPowerPlant={selectedPowerPlant}
+            selectPowerPlant={selectPowerPlant}
+          />
+          <LoadingButton
+            loading={createLoading}
+            startIcon={<AddIcon />}
+            onClick={handleSubmit(onCreateTPCBill)}
+          >
+            儲存
+          </LoadingButton>
+        </FormProvider>
+      </DialogErrorBoundary>
     </Dialog>
   );
 }

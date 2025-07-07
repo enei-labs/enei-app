@@ -16,6 +16,7 @@ import { useUsers } from "@utils/hooks/queries";
 import { useCallback, useState } from "react";
 import UpdateUserBillConfigBtn from "@components/UserBill/UserBillConfigDialog/UpdateUserBillConfigBtn";
 import CreateUserBillConfigBtn from "@components/UserBill/UserBillConfigDialog/CreateUserBillConfigBtn";
+import { DialogErrorBoundary } from "@components/ErrorBoundary";
 
 interface UserBillConfigDialogProps {
   isOpenDialog: boolean;
@@ -186,7 +187,8 @@ function UserBillConfigDialog(props: UserBillConfigDialogProps) {
 
   return (
     <Dialog open={isOpenDialog} onClose={onClose}>
-      <>
+      <DialogErrorBoundary onClose={onClose}>
+        <>
         <Grid container justifyContent={"space-between"} alignItems={"center"}>
           <Typography variant="h4" textAlign={"left"}>
             {variant === "create" ? "新增用戶電費單組合" : "修改用戶電費單組合"}
@@ -375,23 +377,24 @@ function UserBillConfigDialog(props: UserBillConfigDialogProps) {
             />
           )}
         </Grid>
-      </>
+        </>
 
-      {/* 刪除付款帳號 Dialog */}
-      {/* {deleteAccountIndex !== -1 ? (
-        <DialogAlert
-          open={deleteAccountIndex !== -1}
-          title={"刪除付款帳號"}
-          content={"是否確認要刪除付款帳號？"}
-          onConfirm={() => {
-            remove(deleteAccountIndex);
-            setDeleteAccountIndex(-1);
-          }}
-          onClose={() => {
-            setDeleteAccountIndex(-1);
-          }}
-        />
-      ) : null} */}
+        {/* 刪除付款帳號 Dialog */}
+        {/* {deleteAccountIndex !== -1 ? (
+          <DialogAlert
+            open={deleteAccountIndex !== -1}
+            title={"刪除付款帳號"}
+            content={"是否確認要刪除付款帳號？"}
+            onConfirm={() => {
+              remove(deleteAccountIndex);
+              setDeleteAccountIndex(-1);
+            }}
+            onClose={() => {
+              setDeleteAccountIndex(-1);
+            }}
+          />
+        ) : null} */}
+      </DialogErrorBoundary>
     </Dialog>
   );
 }

@@ -24,6 +24,7 @@ import { useFieldArray } from "react-hook-form";
 import { useMemo, useState } from "react";
 import bankJson from "@public/bank_with_branchs_remix_version.json";
 import DialogAlert from "@components/DialogAlert";
+import { DialogErrorBoundary } from "@components/ErrorBoundary";
 
 type FormData = {
   name: string;
@@ -210,6 +211,7 @@ const CompanyDialog = (props: CompanyDialogProps) => {
 
   return (
     <Dialog key="form" open={open} onClose={onClose}>
+      <DialogErrorBoundary onClose={onClose}>
       <Grid container justifyContent={"space-between"} alignItems={"center"}>
         <Typography variant="h4" textAlign={"left"}>
           公司資訊
@@ -410,7 +412,7 @@ const CompanyDialog = (props: CompanyDialogProps) => {
         </Grid>
       </Grid>
 
-      {deleteBankAccountIndex !== -1 ? (
+        {deleteBankAccountIndex !== -1 ? (
         <DialogAlert
           open={deleteBankAccountIndex !== -1}
           title={"刪除收款帳號"}
@@ -423,9 +425,9 @@ const CompanyDialog = (props: CompanyDialogProps) => {
             setDeleteBankAccountIndex(-1);
           }}
         />
-      ) : null}
+        ) : null}
 
-      <LoadingButton
+        <LoadingButton
         startIcon={<AddIcon />}
         variant="contained"
         loading={loading}
@@ -433,6 +435,7 @@ const CompanyDialog = (props: CompanyDialogProps) => {
       >
         儲存
       </LoadingButton>
+      </DialogErrorBoundary>
     </Dialog>
   );
 };

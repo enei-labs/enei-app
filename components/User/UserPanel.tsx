@@ -7,6 +7,7 @@ import { IconBtn } from "@components/Button";
 import { useAuth } from "@core/context/auth";
 import { Box } from "@mui/material";
 import { useRouter } from "next/router";
+import ErrorBoundary from "@components/ErrorBoundary";
 
 enum ActionTypeEnum {
   CREATE = "create",
@@ -104,7 +105,7 @@ const UserPanel = (props: UserPanelProps) => {
   ];
 
   return (
-    <>
+    <ErrorBoundary>
       <Table
         configs={configs}
         list={users?.list}
@@ -112,7 +113,7 @@ const UserPanel = (props: UserPanelProps) => {
         loading={loading}
         onPageChange={refetchFn}
       />
-    </>
+    </ErrorBoundary>
   );
 };
 

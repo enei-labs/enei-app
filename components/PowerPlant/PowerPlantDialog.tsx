@@ -8,6 +8,7 @@ import { IconBtn } from "../Button";
 import CloseIcon from "@mui/icons-material/HighlightOff";
 import { useCreatePowerPlant } from "@utils/hooks/mutations/useCreatePowerPlant";
 import { toast } from "react-toastify";
+import { DialogErrorBoundary } from "@components/ErrorBoundary";
 import {
   CompanyContract,
   EnergyType,
@@ -156,6 +157,7 @@ const PowerPlantDialog = (props: PowerPlantDialogProps) => {
 
   return (
     <Dialog key="form" open={open} onClose={onClose}>
+      <DialogErrorBoundary onClose={onClose}>
       <Grid container justifyContent={"space-between"} alignItems={"center"}>
         <Typography variant="h4" textAlign={"left"}>
           電廠資訊
@@ -171,6 +173,7 @@ const PowerPlantDialog = (props: PowerPlantDialogProps) => {
       >
         儲存
       </LoadingButton>
+      </DialogErrorBoundary>
     </Dialog>
   );
 };

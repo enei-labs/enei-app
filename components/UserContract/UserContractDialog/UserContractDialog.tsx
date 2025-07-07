@@ -762,9 +762,9 @@ function UserContractDialog(props: UserContractDialogProps) {
             儲存
           </LoadingButton>
         </Grid>
-      </>
+        </>
 
-      {deleteElectricNumberIndex !== -1 ? (
+        {deleteElectricNumberIndex !== -1 ? (
         <DialogAlert
           open={deleteElectricNumberIndex !== -1}
           title={"刪除電號"}
@@ -783,7 +783,8 @@ function UserContractDialog(props: UserContractDialogProps) {
             setDeleteElectricNumberIndex(-1);
           }}
         />
-      ) : null}
+        ) : null}
+      </DialogErrorBoundary>
     </Dialog>
   );
 }

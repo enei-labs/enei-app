@@ -16,6 +16,7 @@ import CreateUserBtn from "@components/User/UserDialog/CreateUserBtn";
 import EditUserBtns from "@components/User/UserDialog/EditUserBtns";
 import bankJson from "@public/bank_with_branchs_remix_version.json";
 import Chip from "@components/Chip";
+import { DialogErrorBoundary } from "@components/ErrorBoundary";
 
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
@@ -132,7 +133,8 @@ function UserDialog(props: UserDialogProps) {
 
   return (
     <Dialog open={isOpenDialog} onClose={onClose}>
-      <>
+      <DialogErrorBoundary onClose={onClose}>
+        <>
         <Grid container justifyContent={"space-between"} alignItems={"center"}>
           <Typography variant="h4" textAlign={"left"}>
             {variant === "create" ? "新增用戶" : "修改用戶"}
@@ -438,10 +440,10 @@ function UserDialog(props: UserDialogProps) {
             />
           )}
         </Grid>
-      </>
+        </>
 
-      {/* 刪除付款帳號 Dialog */}
-      {deleteBankAccountIndex !== -1 ? (
+        {/* 刪除付款帳號 Dialog */}
+        {deleteBankAccountIndex !== -1 ? (
         <DialogAlert
           open={deleteBankAccountIndex !== -1}
           title={"刪除付款帳號"}
@@ -454,7 +456,8 @@ function UserDialog(props: UserDialogProps) {
             setDeleteBankAccountIndex(-1);
           }}
         />
-      ) : null}
+        ) : null}
+      </DialogErrorBoundary>
     </Dialog>
   );
 }

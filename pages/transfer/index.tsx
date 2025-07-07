@@ -13,6 +13,7 @@ import { InputSearch } from "@components/Input";
 import { AuthGuard } from "@components/AuthGuard";
 import { Role } from "@core/graphql/types";
 import TaskOutlinedIcon from "@mui/icons-material/TaskOutlined";
+import PageErrorBoundary from "@components/ErrorBoundary/PageErrorBoundary";
 
 import dynamic from "next/dynamic";
 import { useTpcBillMonthlyTransferDegrees, useTransferDocuments, useTpcBills } from "@utils/hooks/queries";
@@ -55,7 +56,7 @@ function TransferDataManagementPage() {
     });
 
   return (
-    <>
+    <PageErrorBoundary>
       <Head>
         <title>轉供資料管理</title>
         <meta name="description" content="轉供資料管理" />
@@ -164,7 +165,7 @@ function TransferDataManagementPage() {
           variant="create"
         />
       ) : null}
-    </>
+    </PageErrorBoundary>
   );
 }
 

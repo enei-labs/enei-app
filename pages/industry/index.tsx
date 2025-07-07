@@ -13,6 +13,7 @@ import CompanyPanel from "@components/Company/CompanyPanel";
 import dynamic from "next/dynamic";
 import { useSearch } from "@utils/hooks/useSearch";
 import InfoIcon from "@mui/icons-material/Info";
+import PageErrorBoundary from "@components/ErrorBoundary/PageErrorBoundary";
 
 const CompanyContractPanel = dynamic(
   () => import("@components/CompanyContract/CompanyContractPanel"),
@@ -36,7 +37,7 @@ function IndustryPage() {
   }, [company]);
 
   return (
-    <>
+    <PageErrorBoundary>
       <Head>
         <title>發電業管理</title>
         <meta name="description" content="發電業管理" />
@@ -82,7 +83,7 @@ function IndustryPage() {
           {company ? <CompanyContractPanel company={company} /> : null}
         </Box>
       </Box>
-    </>
+    </PageErrorBoundary>
   );
 }
 

@@ -29,6 +29,7 @@ import { formatDateTime } from "@utils/format";
 import { IconBtn } from "@components/Button";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import { handleDownload } from "@utils/download";
+import PageErrorBoundary from "@components/ErrorBoundary/PageErrorBoundary";
 
 function TPCBillDetailPage() {
   const router = useRouter();
@@ -39,7 +40,7 @@ function TPCBillDetailPage() {
 
   if (loading) {
     return (
-      <>
+      <PageErrorBoundary>
         <Head>
           <title>台電代輸繳費單詳細資訊</title>
           <meta name="description" content="台電代輸繳費單詳細資訊" />
@@ -47,13 +48,13 @@ function TPCBillDetailPage() {
         <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "50vh" }}>
           <CircularProgress />
         </Box>
-      </>
+      </PageErrorBoundary>
     );
   }
 
   if (error || !tpcBill) {
     return (
-      <>
+      <PageErrorBoundary>
         <Head>
           <title>台電代輸繳費單詳細資訊</title>
           <meta name="description" content="台電代輸繳費單詳細資訊" />
@@ -63,7 +64,7 @@ function TPCBillDetailPage() {
             {error ? "載入資料時發生錯誤" : "找不到該台電代輸繳費單"}
           </Alert>
         </Box>
-      </>
+      </PageErrorBoundary>
     );
   }
 
@@ -79,7 +80,7 @@ function TPCBillDetailPage() {
   const uniquePowerPlants = Array.from(new Map(relatedPowerPlants.map(plant => [plant?.id, plant])).values());
 
   return (
-    <>
+    <PageErrorBoundary>
       <Head>
         <title>台電代輸繳費單詳細資訊</title>
         <meta name="description" content="台電代輸繳費單詳細資訊" />
@@ -286,7 +287,7 @@ function TPCBillDetailPage() {
           </Card>
         </AuthGuard>
       </Box>
-    </>
+    </PageErrorBoundary>
   );
 }
 

@@ -7,6 +7,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import UserContractBox from "@components/ContractBox/UserContractBox";
 import { AddUserContractBtn } from "@components/UserContract/UserContractDialog/AddUserContractBtn";
 import { useSearch } from "@utils/hooks/useSearch";
+import ErrorBoundary from "@components/ErrorBoundary";
 
 interface UserContractPanelProps {
   user: User;
@@ -20,7 +21,7 @@ function UserContractPanel(props: UserContractPanelProps) {
   });
 
   return (
-    <>
+    <ErrorBoundary>
       <Box
         sx={{
           display: "flex",
@@ -48,7 +49,7 @@ function UserContractPanel(props: UserContractPanelProps) {
           <Box sx={{ width: "100%", textAlign: "center" }}>沒有資料</Box>
         )}
       </Grid>
-    </>
+    </ErrorBoundary>
   );
 }
 

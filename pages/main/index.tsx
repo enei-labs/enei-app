@@ -22,6 +22,7 @@ import TransferDegreeChart from "@components/Dashboard/TransferDegreeChart";
 import RemainingDemandFromUserContractPanel from "@components/Dashboard/RemainingDemandFromUserContractPanel";
 import RemainingDemandFromCompanyContractPanel from "@components/Dashboard/RemainingDemandFromCompanyContractPanel";
 import { useTpcBillMonthlyTransferDegrees } from "@utils/hooks/queries";
+import PageErrorBoundary from "@components/ErrorBoundary/PageErrorBoundary";
 
 // Constants for consistent spacing
 const CARD_PADDING = "36px";
@@ -104,19 +105,21 @@ function MainPage() {
   if (error) {
     return (
       <AuthLayout>
-        <Head>
-          <title>戰情總版</title>
-          <meta name="description" content="戰情總版" />
-        </Head>
-        <Alert severity="error">
-          載入戰情總版資料時發生錯誤，請稍後再試。
-        </Alert>
+        <PageErrorBoundary>
+          <Head>
+            <title>戰情總版</title>
+            <meta name="description" content="戰情總版" />
+          </Head>
+          <Alert severity="error">
+            載入戰情總版資料時發生錯誤，請稍後再試。
+          </Alert>
+        </PageErrorBoundary>
       </AuthLayout>
     );
   }
 
   return (
-    <>
+    <PageErrorBoundary>
       <Head>
         <title>戰情總版</title>
         <meta name="description" content="戰情總版" />
@@ -239,7 +242,7 @@ function MainPage() {
           </Grid>
         </Grid>
       </>
-    </>
+    </PageErrorBoundary>
   );
 }
 

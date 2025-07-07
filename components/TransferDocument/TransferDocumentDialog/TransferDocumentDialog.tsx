@@ -18,13 +18,18 @@ import {
 import EditTransferDocumentBtn from "@components/TransferDocument/TransferDocumentDialog/EditTransferDocumentBtn";
 import PowerPlantsSection from "./PowerPlantsSection";
 import UsersSection from "./UsersSection";
+import { DialogErrorBoundary } from "@components/ErrorBoundary";
 
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 const CreateTransferDocumentBtn = dynamic(
   () =>
     import(
       "@components/TransferDocument/TransferDocumentDialog/CreateTransferDocumentBtn"
-    )
+    ),
+  {
+    loading: () => <div>Loading...</div>,
+    ssr: false
+  }
 );
 
 interface TransferDocumentDialogProps {
@@ -188,7 +193,7 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
 
   return (
     <Dialog open={isOpenDialog} onClose={onClose}>
-      <>
+      <DialogErrorBoundary onClose={onClose}>
         <Grid container justifyContent="space-between" alignItems="center">
           <Typography variant="h4" textAlign="left">
             {variant === "create" ? "新增轉供合約" : "修改轉供合約"}
@@ -253,7 +258,7 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
             />
           )}
         </Grid>
-      </>
+      </DialogErrorBoundary>
     </Dialog>
   );
 }
