@@ -1,6 +1,18 @@
 import { CompanyBillTemplateData } from "@components/ElectricBill/CompanyBillTemplate";
 
+// Helper function to convert capacity string to number
+const parseCapacityToWatts = (capacityStr: string): number => {
+  if (!capacityStr || typeof capacityStr !== 'string') return 0;
+  
+  // Remove 'kW' and any whitespace, then parse the number
+  const numericValue = parseFloat(capacityStr.replace(/kW/i, '').trim());
+  
+  // Convert kW to W by multiplying by 1000
+  return isNaN(numericValue) ? 0 : numericValue * 1000;
+};
+
 export const getCompanyBillTemplateData = (data: any) => {
+  console.log(data);
   const companyBillTemplateData: CompanyBillTemplateData= {
     billingMonth: data[1][6],
     // 計費期間
@@ -20,9 +32,9 @@ export const getCompanyBillTemplateData = (data: any) => {
     // 基本資訊
     basicInfo: {
       // 併聯容量
-      totalCapacity: data[10][2],
+      totalCapacity: parseCapacityToWatts(data[10][2]),
       // 轉供容量
-      transferCapacity: data[11][2],
+      transferCapacity: parseCapacityToWatts(data[11][2]),
     },
     // 廠址
     city: data[14][1],
