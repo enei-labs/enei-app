@@ -84,6 +84,10 @@ export const IndustryBillDialog = ({
         })
       };
 
+      const amount = Math.round(data.industryBill.price * data.industryBill.transferDegree);
+      const tax = Math.round(amount * 0.05);
+      const totalIncludeTax = amount + tax;
+
       return {
         // 計費年月： 「新增台電代輸繳費單」「計費年月」+1個月
         billingMonth: formatters.month.format(nextMonthDate).replace('/', '年') + '月',
@@ -119,14 +123,11 @@ export const IndustryBillDialog = ({
           // 費率
           price: data.industryBill.price,
           // 電費（未稅）
-          amount: data.industryBill.price * data.industryBill.transferDegree,
-          // 營業稅
-          tax:
-            data.industryBill.price * data.industryBill.transferDegree * 0.05,
+          amount: amount,
+          // 營業稅 
+          tax: tax,
           // 總金額
-          totalIncludeTax:
-            data.industryBill.price * data.industryBill.transferDegree +
-            data.industryBill.price * data.industryBill.transferDegree * 0.05,
+          totalIncludeTax: totalIncludeTax,
         },
       };
     }, [data, loading, error]);
