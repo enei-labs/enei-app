@@ -9,6 +9,7 @@ export const TPC_BILL_FIELDS = gql`
     billDoc
     transferDegrees {
       id
+      electricNumber
       degree
       user {
         id
@@ -17,6 +18,7 @@ export const TPC_BILL_FIELDS = gql`
       powerPlant {
         id
         name
+        number
       }
       createdAt
     }

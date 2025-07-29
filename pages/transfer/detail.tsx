@@ -1,4 +1,4 @@
-import { ReactElement, useState } from "react";
+import { ReactElement } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { 
@@ -194,6 +194,7 @@ function TPCBillDetailPage() {
                   <TableHead>
                     <TableRow>
                       <TableCell>用戶姓名</TableCell>
+                      <TableCell>用戶電號</TableCell>
                       <TableCell>轉供度數</TableCell>
                       <TableCell>建立時間</TableCell>
                     </TableRow>
@@ -205,6 +206,11 @@ function TPCBillDetailPage() {
                           <TableCell>
                             <Typography variant="body2">
                               {transfer.user.name}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography variant="body2">
+                              {transfer.electricNumber}
                             </Typography>
                           </TableCell>
                           <TableCell>
@@ -247,6 +253,7 @@ function TPCBillDetailPage() {
                   <TableHead>
                     <TableRow>
                       <TableCell>電廠名稱</TableCell>
+                      <TableCell>電廠電號</TableCell>
                       <TableCell>轉供度數</TableCell>
                       <TableCell>建立時間</TableCell>
                     </TableRow>
@@ -258,6 +265,11 @@ function TPCBillDetailPage() {
                           <TableCell>
                             <Typography variant="body2">
                               {transfer.powerPlant.name}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>
+                            <Typography variant="body2">
+                              {transfer.powerPlant.number}
                             </Typography>
                           </TableCell>
                           <TableCell>
