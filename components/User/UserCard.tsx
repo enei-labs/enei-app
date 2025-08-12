@@ -94,7 +94,8 @@ function UserCard(props: UserCardProps) {
 
         {/* 總覽區 */}
         <Grid container>
-          <Grid item sm={4} sx={{ padding: "36px 36px 36px 0" }}>
+          {/** temporary hide degrees */}
+          {/* <Grid item sm={4} sx={{ padding: "36px 36px 36px 0" }}>
             <Box sx={{ display: "flex", columnGap: "12px" }}>
               <InboxOutlinedIcon width="20px" />
               <Typography variant="body2">用戶預計年採購度數</Typography>
@@ -162,7 +163,7 @@ function UserCard(props: UserCardProps) {
                 </Typography>
               </Box>
             </Box>
-          </Grid>
+          </Grid> */}
 
           <Divider sx={{ margin: "36px 0" }} />
 

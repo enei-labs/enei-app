@@ -27,15 +27,16 @@ export default function AnnualPrice(props: AnnualPriceProps) {
 
   return (
     <Grid container spacing={2}>
-      <Grid item sm={6}>
+      {/* temporary hide average purchase price */}
+      {/* <Grid item sm={6}>
         <PriceBox
           icon={MonetizationOnOutlinedIcon}
           name="平均購電價格"
           price={averagePurchasePrice}
           unit="元/kWh"
         />
-      </Grid>
-      <Grid item sm={6}>
+      </Grid> */}
+      <Grid item sm={12}>
         <PriceBox
           icon={PaymentOutlinedIcon}
           name="平均售電價格"

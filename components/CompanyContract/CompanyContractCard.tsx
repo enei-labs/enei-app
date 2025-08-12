@@ -135,7 +135,8 @@ function CompanyContractCard(props: CompanyContractCardProps) {
         </Box>
         <Grid container sx={{ height: "264px" }}>
           <Grid item sm={4} sx={{ padding: "36px 36px 36px 0" }}>
-            <Box sx={{ display: "flex", columnGap: "12px" }}>
+            {/** temporary hide degrees */}
+            {/* <Box sx={{ display: "flex", columnGap: "12px" }}>
               <FlagIcon width="20px" />
               <Typography variant="body2">一年內待銷售度數</Typography>
             </Box>
@@ -155,7 +156,7 @@ function CompanyContractCard(props: CompanyContractCardProps) {
                   MWh/年
                 </Typography>
               </Box>
-            </Box>
+            </Box> */}
           </Grid>
           <Grid
             item
