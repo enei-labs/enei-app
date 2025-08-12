@@ -78,7 +78,7 @@ function useDashboardData(data: any) {
               icon: ShoppingCartOutlinedIcon,
               name: "今年總綠電需求度數",
               count: data.dashboard.userInfo.totalRequireDegree,
-              unit: "MW",
+              unit: "度",
             },
           ]
         : [],
