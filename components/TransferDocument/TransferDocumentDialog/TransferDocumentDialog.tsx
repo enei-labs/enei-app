@@ -184,9 +184,10 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
   /** component-state */
   const [addPowerPlantNumber, setAddPowerPlantNumber] = useState<number>(1);
   const [addUserNumber, setAddUserNumber] = useState<number>(1);
+  const [isUsersLoadingMore, setIsUsersLoadingMore] = useState<boolean>(false);
 
   /** apis */
-  const { data: usersData } = useUsers({ onlyBasicInformation: true });
+  const { data: usersData, fetchMore: usersFetchMore, loading: usersLoading } = useUsers({ onlyBasicInformation: true });
   const { data: companiesData } = useFetchCompaniesAllData();
   const [getUserContracts, { data: userContractsData }] =
     useLazyUserContracts();
@@ -230,6 +231,10 @@ function TransferDocumentDialog(props: TransferDocumentDialogProps) {
           append={userAppend}
           remove={userRemove}
           usersData={usersData}
+          usersFetchMore={usersFetchMore}
+          usersLoading={usersLoading}
+          isUsersLoadingMore={isUsersLoadingMore}
+          setIsUsersLoadingMore={setIsUsersLoadingMore}
           getUserContracts={getUserContracts}
           userContractsData={userContractsData}
           addUserNumber={addUserNumber}

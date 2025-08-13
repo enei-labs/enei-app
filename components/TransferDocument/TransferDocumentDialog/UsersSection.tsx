@@ -16,6 +16,10 @@ interface UsersSectionProps {
   append: (data: any) => void;
   remove: (index: number) => void;
   usersData: any;
+  usersFetchMore?: any;
+  usersLoading?: boolean;
+  isUsersLoadingMore?: boolean;
+  setIsUsersLoadingMore?: (loading: boolean) => void;
   getUserContracts: (options: any) => void;
   userContractsData: any;
   addUserNumber: number;
@@ -29,6 +33,10 @@ const UsersSection = ({
   append,
   remove,
   usersData,
+  usersFetchMore,
+  usersLoading,
+  isUsersLoadingMore,
+  setIsUsersLoadingMore,
   getUserContracts,
   userContractsData,
   addUserNumber,
@@ -67,6 +75,32 @@ const UsersSection = ({
   const handleChipDelete = useCallback((index: number) => {
     setDeleteIndex(index);
   }, []);
+
+  // 用戶分頁載入
+  const usersLoadMore = useCallback(
+    () => {
+      // Check if there's more data to load
+      if (!usersData?.users || usersData.users.list.length >= usersData.users.total) {
+        return Promise.resolve({ data: { users: usersData?.users || { total: 0, list: [] } } } as any);
+      }
+
+      setIsUsersLoadingMore?.(true);
+
+      return usersFetchMore?.({
+        variables: {
+          onlyBasicInformation: true,
+          offset: usersData.users.list.length,
+          limit: 10,
+        },
+      }).catch((error: any) => {
+        console.error('Failed to load more users:', error);
+        throw error;
+      }).finally(() => {
+        setIsUsersLoadingMore?.(false);
+      });
+    },
+    [usersData, usersFetchMore, setIsUsersLoadingMore]
+  );
 
   // 優化新增用戶邏輯
   const handleAddUsers = useCallback(() => {
@@ -265,6 +299,8 @@ const UsersSection = ({
                       value: o.id,
                     })) || []
                   }
+                  fetchMoreData={usersFetchMore ? usersLoadMore : undefined}
+                  loading={usersLoading || isUsersLoadingMore}
                   label="用戶名稱"
                   aria-label="用戶名稱"
                   placeholder="請填入"

@@ -42,5 +42,6 @@ export const useUsers = ({
   return useQuery<{ users: UserPage }>(onlyBasicInformation ? BASE_USERS : USERS, {
     variables: { ...variables, term: debouncedTerm },
     skip,
+    fetchPolicy: 'cache-and-network',
   });
 };
