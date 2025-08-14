@@ -24,6 +24,20 @@ interface IndustryBillDialogProps {
   industryBill: IndustryBill;
 }
 
+// 日期格式化
+const formatBillingInfo = (billingDate: string) => {
+  const date = new Date(billingDate);
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  
+  const lastDay = new Date(year, month, 0).getDate();
+  
+  return {
+    billingMonth: `${year}年${month + 1}月`,
+    billingDateRange: `${year}/${month}/1 - ${year}/${month}/${lastDay}`,
+  };
+};
+
 export const IndustryBillDialog = ({
   industryBill,
   isOpenDialog,
@@ -53,46 +67,21 @@ export const IndustryBillDialog = ({
       setReviewStatus(ElectricBillStatus.Rejected);
     }
   }, [data]);
+  
 
   const industryBillTemplateData: CompanyBillTemplateData | null =
     useMemo(() => {
       if (!data || loading) return null;
       if (error) return null;
 
-      console.log({ data });
-
-      const billingDate = new Date(data.industryBill.billingDate);
-      const year = billingDate.getFullYear();
-      const month = billingDate.getMonth();
-      
-      // 計費年月：原始日期 + 1個月的第一天
-      const nextMonthDate = new Date(year, month, 1);
-      
-      // 計費期間：原始月份的完整範圍 (當月1號到當月最後一天)
-      const startOfCurrentMonth = new Date(year, month - 1 , 1);
-      const endOfCurrentMonth = new Date(year, month, 0);
-      
-      const formatters = {
-        month: new Intl.DateTimeFormat('zh-TW', {
-          year: 'numeric',
-          month: '2-digit'
-        }),
-        date: new Intl.DateTimeFormat('zh-TW', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit'
-        })
-      };
-
+      const { billingMonth, billingDateRange } = formatBillingInfo(data.industryBill.billingDate);
       const amount = Math.round(data.industryBill.price * data.industryBill.transferDegree);
       const tax = Math.round(amount * 0.05);
       const totalIncludeTax = amount + tax;
 
       return {
-        // 計費年月： 「新增台電代輸繳費單」「計費年月」+1個月
-        billingMonth: formatters.month.format(nextMonthDate).replace('/', '年') + '月',
-        // 計費期間： 「新增台電代輸繳費單」「計費年月」的起訖日
-        billingDate: `${formatters.date.format(startOfCurrentMonth)} - ${formatters.date.format(endOfCurrentMonth)}`,
+        billingMonth: billingMonth,
+        billingDate: billingDateRange,
         companyName: data.industryBill.industryBillConfig?.industry?.name ?? "",
         // 負責人名稱
         responsibleName:
