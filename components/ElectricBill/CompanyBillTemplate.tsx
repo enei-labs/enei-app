@@ -174,9 +174,9 @@ const CompanyBillTemplate = forwardRef((props: CompanyBillProps, ref) => {
           <Typography variant="h5" sx={{ fontWeight: 700, color: "#000" }}>
             {data.companyName}
           </Typography>
-          <Typography variant="h6" sx={{ fontWeight: 500, color: "#000" }}>
+          {/* <Typography variant="h6" sx={{ fontWeight: 500, color: "#000" }}>
             {data.responsibleName}
-          </Typography>
+          </Typography> */}
         </Box>
       </Box>
       <Box display="flex" justifyContent="flex-end" marginY="24px">
