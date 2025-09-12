@@ -21,14 +21,14 @@ const EditTransferDocumentBtn = (props: EditTransferDocumentBtnProps) => {
       variables: {
         id: transferDocumentId,
         input: {
-          // number: formData.number,
+          number: formData.number,
           name: formData.name,
           receptionAreas: formData.receptionAreas,
           expectedTime: formData.expectedTime,
-          printingDoc: formData.printingDoc.id,
-          replyDoc: formData.replyDoc.id,
-          wordDoc: formData.wordDoc.id,
-          formalDoc: formData.formalDoc.id,
+          printingDoc: formData.printingDoc?.id ?? undefined,
+          replyDoc: formData.replyDoc?.id ?? undefined,
+          wordDoc: formData.wordDoc?.id ?? undefined,
+          formalDoc: formData.formalDoc?.id ?? undefined,
           powerPlants: formData.transferDocumentPowerPlants.map((t) => ({
             estimateAnnualSupply: Number(t.estimateAnnualSupply),
             powerPlantId: t.powerPlant.value,

@@ -76,25 +76,21 @@ const docConfigs: FieldConfig[] = [
   {
     type: "FILE",
     name: "printingDoc",
-    required: true,
     label: "轉供計畫書用印版",
   },
   {
     type: "FILE",
     name: "replyDoc",
-    required: true,
     label: "轉供函覆文",
   },
   {
     type: "FILE",
     name: "wordDoc",
-    required: true,
     label: "轉供契約Word版",
   },
   {
     type: "FILE",
     name: "formalDoc",
-    required: true,
     label: "正式轉供契約",
   },
 ];

@@ -347,15 +347,15 @@ export type CreateTransferDegreeInput = {
 
 export type CreateTransferDocumentInput = {
   expectedTime: Scalars['DateTime']['input'];
-  formalDoc: Scalars['String']['input'];
+  formalDoc?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
   number: Scalars['String']['input'];
   powerPlants: Array<CreateTransferDocumentPowerPlantInput>;
-  printingDoc: Scalars['String']['input'];
+  printingDoc?: InputMaybe<Scalars['String']['input']>;
   receptionAreas: Scalars['String']['input'];
-  replyDoc: Scalars['String']['input'];
+  replyDoc?: InputMaybe<Scalars['String']['input']>;
   users: Array<CreateTransferDocumentUserInput>;
-  wordDoc: Scalars['String']['input'];
+  wordDoc?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type CreateTransferDocumentPowerPlantInput = {
@@ -1444,20 +1444,20 @@ export type TransferDocument = {
   contractReviewDate?: Maybe<Scalars['DateTime']['output']>;
   /** 期望完成日：這份轉供合約涵蓋的用戶契約，在契約中約定的約定轉供日 */
   expectedTime: Scalars['DateTime']['output'];
-  formalDoc: Scalars['String']['output'];
+  formalDoc?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
   /** 轉供契約編號 */
   number?: Maybe<Scalars['String']['output']>;
   officialTransferDate?: Maybe<Scalars['DateTime']['output']>;
   planSubmissionDate?: Maybe<Scalars['DateTime']['output']>;
-  printingDoc: Scalars['String']['output'];
+  printingDoc?: Maybe<Scalars['String']['output']>;
   receptionAreas: Scalars['String']['output'];
-  replyDoc: Scalars['String']['output'];
+  replyDoc?: Maybe<Scalars['String']['output']>;
   responseAcquisitionDate?: Maybe<Scalars['DateTime']['output']>;
   transferDocumentPowerPlants: Array<TransferDocumentPowerPlant>;
   transferDocumentUsers: Array<TransferDocumentUser>;
-  wordDoc: Scalars['String']['output'];
+  wordDoc?: Maybe<Scalars['String']['output']>;
 };
 
 export type TransferDocumentPage = {
@@ -1553,14 +1553,15 @@ export type UpdatePowerPlantInput = {
 
 export type UpdateTransferDocumentInput = {
   expectedTime: Scalars['DateTime']['input'];
-  formalDoc: Scalars['String']['input'];
+  formalDoc?: InputMaybe<Scalars['String']['input']>;
   name: Scalars['String']['input'];
+  number?: InputMaybe<Scalars['String']['input']>;
   powerPlants: Array<CreateTransferDocumentPowerPlantInput>;
-  printingDoc: Scalars['String']['input'];
+  printingDoc?: InputMaybe<Scalars['String']['input']>;
   receptionAreas: Scalars['String']['input'];
-  replyDoc: Scalars['String']['input'];
+  replyDoc?: InputMaybe<Scalars['String']['input']>;
   users: Array<CreateTransferDocumentUserInput>;
-  wordDoc: Scalars['String']['input'];
+  wordDoc?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateTransferDocumentStageInput = {
