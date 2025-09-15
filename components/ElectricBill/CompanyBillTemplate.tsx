@@ -233,7 +233,7 @@ const CompanyBillTemplate = forwardRef((props: CompanyBillProps, ref) => {
                 </Grid>
                 <Grid item xs={6}>
                   <Typography fontSize="12px">
-                    {(data.basicInfo.totalCapacity / 1000).toFixed(2)} kW
+                    {(data.basicInfo.totalCapacity / 1000).toFixed(3)} kW
                   </Typography>
                 </Grid>
                 <Grid item xs={6}>
@@ -241,7 +241,7 @@ const CompanyBillTemplate = forwardRef((props: CompanyBillProps, ref) => {
                 </Grid>
                 <Grid item xs={6}>
                   <Typography fontSize="12px">
-                    {(data.basicInfo.transferCapacity / 1000).toFixed(2)} kW
+                    {(data.basicInfo.transferCapacity / 1000).toFixed(3)} kW
                   </Typography>
                 </Grid>
               </Grid>
