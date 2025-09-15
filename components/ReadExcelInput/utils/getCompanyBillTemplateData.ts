@@ -4,15 +4,14 @@ import { CompanyBillTemplateData } from "@components/ElectricBill/CompanyBillTem
 const parseCapacityToWatts = (capacityStr: string): number => {
   if (!capacityStr || typeof capacityStr !== 'string') return 0;
   
-  // Remove 'kW' and any whitespace, then parse the number
-  const numericValue = parseFloat(capacityStr.replace(/kW/i, '').trim());
+  // Remove 'kW', commas, spaces, and parse
+  const cleanStr = capacityStr.replace(/kW/i, '').replace(/,/g, '').trim();
+  const numericValue = parseFloat(cleanStr);
   
-  // Convert kW to W by multiplying by 1000
   return isNaN(numericValue) ? 0 : numericValue * 1000;
 };
 
 export const getCompanyBillTemplateData = (data: any) => {
-  console.log(data);
   const companyBillTemplateData: CompanyBillTemplateData= {
     billingMonth: data[1][6],
     // 計費期間
