@@ -1,11 +1,13 @@
 import { InputDate } from "@components/Input";
 import Table, { Config } from "@components/Table/Table";
-import { ElectricBillStatus, IndustryBillsByMonth } from "@core/graphql/types";
-import { Box, Card, Typography } from "@mui/material";
+import { ElectricBillStatus, IndustryBill, IndustryBillsByMonth } from "@core/graphql/types";
+import { Box, Card, Typography, IconButton, Tooltip, Badge } from "@mui/material";
 import { formatDateTime } from "@utils/format";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { useIndustryBillsByMonth } from "@utils/hooks/queries/useIndustryBillsByMonth";
+import EmailIcon from "@mui/icons-material/Email";
+import { IndustryBillEmailModal } from "./IndustryBillEmailModal";
 
 export const IndustryBillsByMonthPanel = () => {
   const router = useRouter();
@@ -25,6 +27,16 @@ export const IndustryBillsByMonthPanel = () => {
   }>({
     startDate: formatDateToString(oneYearAgo),
     endDate: formatDateToString(currentDate),
+  });
+
+  const [emailModalState, setEmailModalState] = useState<{
+    open: boolean;
+    month: string;
+    bills: IndustryBill[];
+  }>({
+    open: false,
+    month: "",
+    bills: [],
   });
 
   const { data, loading } = useIndustryBillsByMonth(
@@ -109,6 +121,46 @@ export const IndustryBillsByMonthPanel = () => {
         </Box>
       ),
     },
+    {
+      header: "寄信",
+      accessor: "bills",
+      render: (rowData) => {
+        const approvedCount = rowData.bills.filter(
+          (bill) => bill.status === ElectricBillStatus.Approved
+        ).length;
+        const totalCount = rowData.bills.length;
+        const allApproved = approvedCount === totalCount && totalCount > 0;
+
+        return (
+          <Tooltip
+            title={allApproved ? "寄送電費單" : `尚有 ${totalCount - approvedCount} 筆未審核`}
+          >
+            <span>
+              <IconButton
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setEmailModalState({
+                    open: true,
+                    month: formatDateTime(rowData.month, "yyyy-MM"),
+                    bills: rowData.bills,
+                  });
+                }}
+                disabled={totalCount === 0}
+                color={allApproved ? "primary" : "default"}
+              >
+                <Badge
+                  badgeContent={totalCount - approvedCount}
+                  color="error"
+                  invisible={allApproved || totalCount === 0}
+                >
+                  <EmailIcon />
+                </Badge>
+              </IconButton>
+            </span>
+          </Tooltip>
+        );
+      },
+    },
   ];
 
   return (
@@ -163,6 +215,14 @@ export const IndustryBillsByMonthPanel = () => {
         total={data?.industryBillsByMonth?.length}
         loading={loading}
       />
+      {emailModalState.open && (
+        <IndustryBillEmailModal
+          open={emailModalState.open}
+          onClose={() => setEmailModalState({ open: false, month: "", bills: [] })}
+          month={emailModalState.month}
+          bills={emailModalState.bills}
+        />
+      )}
     </Card>
   );
 };

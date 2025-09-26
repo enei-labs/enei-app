@@ -9,7 +9,10 @@ export const INDUSTRY_BILLS_BY_MONTH = gql`
       month
       bills {
         id
+        name
         status
+        powerPlantName
+        powerPlantNumber
       }
     }
   }
