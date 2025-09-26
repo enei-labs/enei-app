@@ -106,7 +106,7 @@ export const IndustryBillEmailModal = ({
       }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <EmailIcon color="primary" />
-          <Typography variant="h6">發電業電費單 - {month}</Typography>
+          <Typography variant="h6">發電業電費單  {month}</Typography>
         </Box>
         <IconButton edge="end" color="inherit" onClick={onClose} aria-label="close">
           <CloseIcon />

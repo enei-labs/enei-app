@@ -103,11 +103,11 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
 
   const title = useMemo(() => {
     if (props.industryBillConfigName) {
-      return `發電業電費單 - ${props.industryBillConfigName}`;
+      return `發電業電費單 ${props.industryBillConfigName}`;
     }
 
     if (props.month) {
-      return `發電業電費單 - ${formatDateTime(props.month, "yyyy-MM")}`;
+      return `發電業電費單 ${formatDateTime(props.month, "yyyy-MM")}`;
     }
     
     return `發電業電費單`;
