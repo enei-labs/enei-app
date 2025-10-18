@@ -1,6 +1,6 @@
 import InputText from "@components/Input/InputText";
 import { Option } from "@core/types";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, InputAdornment } from "@mui/material";
 import Autocomplete, {
   AutocompleteRenderInputParams,
 } from "@mui/material/Autocomplete";
@@ -18,6 +18,8 @@ interface InputAutocompleteProps {
   onChange?: ControllerRenderProps["onChange"];
   loading?: boolean;
   fetchMoreData?: () => void;
+  onInputChange?: (value: string) => void; // 搜尋輸入變化回調
+  filterOptions?: boolean; // 是否使用客戶端過濾，預設 false（使用伺服器端搜尋）
   sx?: CSSProperties;
 }
 
@@ -48,6 +50,8 @@ const InputAutocomplete = forwardRef<HTMLDivElement, InputAutocompleteProps>(
       onChange,
       loading,
       fetchMoreData,
+      onInputChange,
+      filterOptions = false,
       ...otherProps
     } = props;
 
@@ -70,11 +74,24 @@ const InputAutocomplete = forwardRef<HTMLDivElement, InputAutocompleteProps>(
           {...otherProps}
           options={options}
           loading={loading}
-          loadingText={<CircularProgress size="16px" />}
+          loadingText={
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px' }}>
+              <CircularProgress size="16px" />
+              <span>搜尋中...</span>
+            </div>
+          }
           getOptionLabel={(option) => option.label}
           onChange={(e, value) => {
             onChange?.(value);
           }}
+          onInputChange={(event, value, reason) => {
+            // 當使用者輸入時觸發搜尋
+            if (reason === "input") {
+              onInputChange?.(value);
+            }
+          }}
+          // 控制是否使用客戶端過濾（預設 false，使用伺服器端搜尋）
+          filterOptions={filterOptions ? undefined : (x) => x}
           renderInput={(params: AutocompleteRenderInputParams) => (
             <InputText
               {...params}
@@ -82,6 +99,19 @@ const InputAutocomplete = forwardRef<HTMLDivElement, InputAutocompleteProps>(
               required={required}
               helperText={helperText}
               placeholder={placeholder}
+              InputProps={{
+                ...params.InputProps,
+                endAdornment: (
+                  <>
+                    {loading && (
+                      <InputAdornment position="end" sx={{ mr: 1 }}>
+                        <CircularProgress size={20} />
+                      </InputAdornment>
+                    )}
+                    {params.InputProps.endAdornment}
+                  </>
+                ),
+              }}
             />
           )}
           ListboxProps={{
