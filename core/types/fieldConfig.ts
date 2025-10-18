@@ -65,6 +65,7 @@ interface FieldConfig {
   radios?: { label: string, value: unknown }[]
   component?: React.ComponentType<FieldController>
   fetchMoreData?: () => Promise<ApolloQueryResult<unknown>>
+  onInputChange?: (value: string) => void // 搜尋輸入變化回調（用於下拉選擇框即時搜尋）
 }
 
 const requiredMessage = '此為必填欄位'

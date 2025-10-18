@@ -15,6 +15,7 @@ import { useCompanies } from "@utils/hooks/queries";
 import CreateIndustryBillBtn from "@components/IndustryBill/IndustryBillConfigDialog/CreateIndustryBillConfigBtn";
 import UpdateIndustryBillBtn from "@components/IndustryBill/IndustryBillConfigDialog/UpdateIndustryBillConfigBtn";
 import { useCallback, useMemo, memo } from "react";
+import { useAutoSearch } from "@utils/hooks/useAutoSearch";
 
 interface IndustryBillDialogProps {
   isOpenDialog: boolean;
@@ -156,7 +157,23 @@ function IndustryBillConfigDialog(props: IndustryBillDialogProps): JSX.Element {
   const { isOpenDialog, onClose, currentModifyIndustryBillConfig, variant } =
     props;
 
-  const { data, loading, fetchMore } = useCompanies();
+  // 使用 useAutoSearch hook 管理搜尋狀態（帶 debounce）
+  const {
+    setInputValue: setCompanySearchInput,
+    searchTerm: companySearchTerm,
+    isDebouncing
+  } = useAutoSearch(500);
+
+  const { data, loading, fetchMore } = useCompanies({
+    variables: {
+      term: companySearchTerm || undefined,
+      limit: 10,
+      offset: 0,
+    },
+  });
+
+  // 合併 debounce 等待和 API 查詢狀態
+  const isSearching = isDebouncing || loading;
 
   const defaultValues = useMemo(() => {
     if (!currentModifyIndustryBillConfig) return {};
@@ -201,7 +218,9 @@ function IndustryBillConfigDialog(props: IndustryBillDialogProps): JSX.Element {
     () =>
       fetchMore({
         variables: {
+          term: companySearchTerm || undefined,
           offset: data?.companies.list.length,
+          limit: 10,
         },
         updateQuery: (prev, { fetchMoreResult }) => {
           if (!fetchMoreResult) return prev;
@@ -216,7 +235,7 @@ function IndustryBillConfigDialog(props: IndustryBillDialogProps): JSX.Element {
           };
         },
       }),
-    [data, fetchMore]
+    [data, fetchMore, companySearchTerm]
   );
 
   const industryInformationConfig: FieldConfig[] = useMemo(
@@ -240,8 +259,9 @@ function IndustryBillConfigDialog(props: IndustryBillDialogProps): JSX.Element {
             value: company.id,
           })) ?? [],
         validated: textValidated,
-        loading: loading,
+        loading: isSearching, // 顯示搜尋動畫（包含 debounce 等待 + API 查詢）
         fetchMoreData: companiesLoadMore,
+        onInputChange: setCompanySearchInput, // 添加搜尋回調（支援 debounce）
         required: true,
       },
       {
@@ -260,7 +280,7 @@ function IndustryBillConfigDialog(props: IndustryBillDialogProps): JSX.Element {
         required: true,
       },
     ],
-    [data?.companies.list, loading, companiesLoadMore]
+    [data?.companies.list, isSearching, companiesLoadMore, setCompanySearchInput]
   );
 
   return (
