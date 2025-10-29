@@ -16,8 +16,10 @@ import { useUserBill } from "@utils/hooks/queries";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import { useAuditUserBill } from "@utils/hooks/mutations";
+import { useSendUserBillEmail } from "@utils/hooks/mutations/useSendUserBillEmail";
 import { toast } from "react-toastify";
 import { DialogErrorBoundary } from "@components/ErrorBoundary";
+import EmailIcon from "@mui/icons-material/Email";
 
 interface UserBillDialogProps {
   isOpenDialog: boolean;
@@ -102,6 +104,7 @@ export const UserBillDialog = ({
 }: UserBillDialogProps) => {
   const { data, loading, error } = useUserBill(userBill.id);
   const [auditUserBill, { loading: auditUserBillLoading }] = useAuditUserBill();
+  const [sendUserBillEmail, { loading: sendingEmail }] = useSendUserBillEmail();
   const [reviewStatus, setReviewStatus] = useState<ElectricBillStatus | null>(
     null
   );
@@ -215,6 +218,23 @@ export const UserBillDialog = ({
     onClose();
   };
 
+  const handleSendEmail = async () => {
+    try {
+      const { data: sendData } = await sendUserBillEmail({
+        variables: { userBillId: userBill.id },
+      });
+
+      if (sendData?.sendUserBillEmail?.success) {
+        toast.success(sendData.sendUserBillEmail.message || "電費單已成功寄出");
+      } else {
+        toast.error(sendData?.sendUserBillEmail?.message || "寄送失敗");
+      }
+    } catch (err) {
+      console.error("Send email error:", err);
+      toast.error("寄送電費單時發生錯誤");
+    }
+  };
+
   return (
     <Dialog open={isOpenDialog} onClose={onClose} maxWidth="md">
       <DialogErrorBoundary onClose={onClose}>
@@ -278,9 +298,20 @@ export const UserBillDialog = ({
 
         <Box display="flex" justifyContent="flex-start" gap={2}>
           {reviewStatus === ElectricBillStatus.Approved && (
-            <Button variant="contained" color="primary" onClick={handlePrint}>
-              列印
-            </Button>
+            <>
+              <Button variant="contained" color="primary" onClick={handlePrint}>
+                列印
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleSendEmail}
+                disabled={sendingEmail}
+                startIcon={sendingEmail ? <CircularProgress size={20} /> : <EmailIcon />}
+              >
+                {sendingEmail ? "寄送中..." : "寄送電費單"}
+              </Button>
+            </>
           )}
         </Box>
         {reviewStatus === ElectricBillStatus.Manual && <ReadExcelInput />}
