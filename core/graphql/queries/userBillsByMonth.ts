@@ -10,6 +10,7 @@ export const USER_BILLS_BY_MONTH = gql`
       bills {
         id
         status
+        billSource
       }
     }
   }

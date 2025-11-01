@@ -1,4 +1,4 @@
-import { PrintWrapper } from "@components/ReadExcelInput";
+import { PrintWrapper, ReadExcelInput } from "@components/ReadExcelInput";
 import { IndustryBill, ElectricBillStatus } from "@core/graphql/types";
 import { ReviewStatusLookup } from "@core/look-up/review-status";
 import {
@@ -19,6 +19,7 @@ import { toast } from "react-toastify";
 import { CompanyBillTemplateData } from "@components/ElectricBill/CompanyBillTemplate";
 import { DialogErrorBoundary } from "@components/ErrorBoundary";
 import EmailIcon from "@mui/icons-material/Email";
+import { ManualImportInfoCard } from "@components/ElectricBill/ManualImportInfoCard";
 
 interface IndustryBillDialogProps {
   isOpenDialog: boolean;
@@ -181,6 +182,17 @@ export const IndustryBillDialog = ({
           <Typography textAlign={"left"} variant="h6">
             電費單組合： {industryBill.industryBillConfig?.name ?? ""}
           </Typography>
+
+          {/* 手動匯入資訊卡片 */}
+          {data?.industryBill && (
+            <ManualImportInfoCard
+              billSource={data.industryBill.billSource as any}
+              originalFileDownloadUrl={data.industryBill.originalFileDownloadUrl}
+              importedBy={data.industryBill.importedBy}
+              importedAt={data.industryBill.importedAt}
+            />
+          )}
+
           {!industryBillTemplateData ? (
             <Box
               display="flex"
@@ -260,6 +272,12 @@ export const IndustryBillDialog = ({
               </Button>
             )}
           </Box>
+
+          {reviewStatus === ElectricBillStatus.Manual && (
+            <Box sx={{ mt: 3 }}>
+              <ReadExcelInput singleTabMode={true} />
+            </Box>
+          )}
         </Box>
       </DialogErrorBoundary>
     </Dialog>

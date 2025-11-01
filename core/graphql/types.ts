@@ -164,6 +164,32 @@ export type BankAccountInput = {
   taxId?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type BankInfoInput = {
+  accountName: Scalars['String']['input'];
+  accountNumber: Scalars['String']['input'];
+  bankName: Scalars['String']['input'];
+};
+
+export type BasicInfoInput = {
+  /** 併聯容量（Watts） */
+  totalCapacity: Scalars['Float']['input'];
+  /** 轉供容量（Watts） */
+  transferCapacity: Scalars['Float']['input'];
+};
+
+export type BillingInfoInput = {
+  /** 電費（未稅） */
+  amount: Scalars['Float']['input'];
+  /** 費率（元/kWh） */
+  price: Scalars['Float']['input'];
+  /** 營業稅 */
+  tax: Scalars['Float']['input'];
+  /** 總金額（含稅） */
+  totalIncludeTax: Scalars['Float']['input'];
+  /** 轉供度數（kWh） */
+  transferKwh: Scalars['Float']['input'];
+};
+
 export type ChangePasswordResponse = Admin | InvalidCurrentPasswordError;
 
 export type Company = {
@@ -579,17 +605,112 @@ export type GuestPage = {
   total: Scalars['Int']['output'];
 };
 
+export type ImportManualBillResponse = {
+  __typename?: 'ImportManualBillResponse';
+  billId?: Maybe<Scalars['String']['output']>;
+  message: Scalars['String']['output'];
+  success: Scalars['Boolean']['output'];
+};
+
+export type ImportManualIndustryBillInput = {
+  /** 廠址 */
+  address: Scalars['String']['input'];
+  /** 基本資訊 */
+  basicInfo: BasicInfoInput;
+  /** 電費計算 */
+  billing: BillingInfoInput;
+  /** 計費期間 */
+  billingDate: Scalars['String']['input'];
+  /** 計費年月 */
+  billingMonth: Scalars['String']['input'];
+  /** 城市 */
+  city: Scalars['String']['input'];
+  /** 公司名稱 */
+  companyName: Scalars['String']['input'];
+  /** 契約編號 */
+  contractNumber: Scalars['String']['input'];
+  /** Excel 檔案內容（base64 encoded） */
+  fileContent: Scalars['String']['input'];
+  /** Excel 檔名 */
+  fileName: Scalars['String']['input'];
+  /** 發電業電費單設定 ID */
+  industryBillConfigId: Scalars['String']['input'];
+  /** 電廠名稱 */
+  powerPlantName: Scalars['String']['input'];
+  /** 負責人名稱 */
+  responsibleName: Scalars['String']['input'];
+  /** 電號 */
+  serialNumber: Scalars['String']['input'];
+  /** 台電轉供單編號 */
+  transferNumber: Scalars['String']['input'];
+};
+
+export type ImportManualUserBillInput = {
+  /** 客戶地址 */
+  address: Scalars['String']['input'];
+  /** 應繳金額 */
+  amount: Scalars['Float']['input'];
+  /** 銀行資訊 */
+  bank: BankInfoInput;
+  /** 計費期間 */
+  billingDate: Scalars['String']['input'];
+  /** 計費年月 */
+  billingMonth: Scalars['String']['input'];
+  /** 憑證審查費 */
+  certificationFee: Scalars['Float']['input'];
+  /** 憑證服務費 */
+  certificationServiceFee: Scalars['Float']['input'];
+  /** 公司名稱 */
+  companyName: Scalars['String']['input'];
+  /** 客戶名稱 */
+  customerName: Scalars['String']['input'];
+  /** 台電轉供單編號 */
+  customerNumber: Scalars['String']['input'];
+  /** 繳費期限 */
+  dueDate: Scalars['String']['input'];
+  /** Excel 檔案內容（base64 encoded） */
+  fileContent: Scalars['String']['input'];
+  /** Excel 檔名 */
+  fileName: Scalars['String']['input'];
+  /** 代輸費 */
+  substitutionFee: Scalars['Float']['input'];
+  /** 營業稅 */
+  tax: Scalars['Float']['input'];
+  /** 合計（未稅） */
+  total: Scalars['Float']['input'];
+  /** 電費合計 */
+  totalAmount: Scalars['Float']['input'];
+  /** 規費合計 */
+  totalFee: Scalars['Float']['input'];
+  /** 總計（含稅） */
+  totalIncludeTax: Scalars['Float']['input'];
+  /** 度數合計 */
+  totalKwh: Scalars['Float']['input'];
+  /** 轉供資料 */
+  usage: Array<UsageDataInput>;
+  /** 用戶電費單設定 ID */
+  userBillConfigId: Scalars['String']['input'];
+};
+
 export type IndustryBill = {
   __typename?: 'IndustryBill';
   auditBy?: Maybe<User>;
+  /** 電費單來源 */
+  billSource?: Maybe<Scalars['String']['output']>;
   billingDate: Scalars['DateTime']['output'];
   companyContractNumber?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   deletedBy?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
+  /** 手動匯入時間 */
+  importedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** 手動匯入者 ID */
+  importedBy?: Maybe<Scalars['String']['output']>;
   industryBillConfig?: Maybe<IndustryBillConfig>;
   name: Scalars['String']['output'];
+  /** 手動匯入原始檔案下載 URL */
+  originalFileDownloadUrl?: Maybe<Scalars['String']['output']>;
   powerPlantAddress: Scalars['String']['output'];
   powerPlantName: Scalars['String']['output'];
   powerPlantNumber: Scalars['String']['output'];
@@ -696,6 +817,10 @@ export type Mutation = {
   createUser: User;
   createUserBillConfig: UserBillConfig;
   createUserContract: UserContract;
+  /** 手動匯入發電業電費單（需要 Admin 權限） */
+  importManualIndustryBill: ImportManualBillResponse;
+  /** 手動匯入用戶電費單（需要 Admin 權限） */
+  importManualUserBill: ImportManualBillResponse;
   modifyAccount: Account;
   modifyProfile: Account;
   modifyUser: ModifyUserResponse;
@@ -713,7 +838,10 @@ export type Mutation = {
   removeUserContract: UserContract;
   requestResetPassword: RequestResetPasswordResponse;
   resetPassword: ResetPasswordResponse;
+  sendIndustryBillEmail: SendIndustryBillEmailResponse;
+  sendIndustryBillsEmail: SendIndustryBillsEmailResponse;
   sendResetPasswordEmail: SendResetPasswordEmailResponse;
+  sendUserBillEmail: SendUserBillEmailResponse;
   setPassword: Account;
   signIn: SignInResponse;
   signOut: Success;
@@ -800,6 +928,16 @@ export type MutationCreateUserBillConfigArgs = {
 export type MutationCreateUserContractArgs = {
   input: CreateUserContractInput;
   userId: Scalars['String']['input'];
+};
+
+
+export type MutationImportManualIndustryBillArgs = {
+  input: ImportManualIndustryBillInput;
+};
+
+
+export type MutationImportManualUserBillArgs = {
+  input: ImportManualUserBillInput;
 };
 
 
@@ -898,8 +1036,23 @@ export type MutationResetPasswordArgs = {
 };
 
 
+export type MutationSendIndustryBillEmailArgs = {
+  industryBillId: Scalars['String']['input'];
+};
+
+
+export type MutationSendIndustryBillsEmailArgs = {
+  month: Scalars['String']['input'];
+};
+
+
 export type MutationSendResetPasswordEmailArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+export type MutationSendUserBillEmailArgs = {
+  userBillId: Scalars['String']['input'];
 };
 
 
@@ -1024,6 +1177,8 @@ export type Query = {
   companyContracts: CompanyContractPage;
   dashboard: Dashboard;
   fee: Fee;
+  findIndustryBillConfigByElectricNumber: Array<IndustryBillConfig>;
+  findUserBillConfigByElectricNumbers: Array<UserBillConfig>;
   guest: Guest;
   guests: GuestPage;
   industryBill: IndustryBill;
@@ -1095,6 +1250,16 @@ export type QueryCompanyContractsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   term?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryFindIndustryBillConfigByElectricNumberArgs = {
+  electricNumber: Scalars['String']['input'];
+};
+
+
+export type QueryFindUserBillConfigByElectricNumbersArgs = {
+  electricNumbers: Array<Scalars['String']['input']>;
 };
 
 
@@ -1391,7 +1556,25 @@ export type RoleInfo = {
   role: Role;
 };
 
+export type SendIndustryBillEmailResponse = {
+  __typename?: 'SendIndustryBillEmailResponse';
+  message?: Maybe<Scalars['String']['output']>;
+  success: Scalars['Boolean']['output'];
+};
+
+export type SendIndustryBillsEmailResponse = {
+  __typename?: 'SendIndustryBillsEmailResponse';
+  message?: Maybe<Scalars['String']['output']>;
+  success: Scalars['Boolean']['output'];
+};
+
 export type SendResetPasswordEmailResponse = AccountNotFoundError | Success;
+
+export type SendUserBillEmailResponse = {
+  __typename?: 'SendUserBillEmailResponse';
+  message?: Maybe<Scalars['String']['output']>;
+  success: Scalars['Boolean']['output'];
+};
 
 export type SignInResponse = Admin | Guest | InvalidSignInInputError;
 
@@ -1608,6 +1791,17 @@ export type UpdateUserContractInput = {
   userType?: InputMaybe<UserType>;
 };
 
+export type UsageDataInput = {
+  /** 電費（元） */
+  amount: Scalars['Float']['input'];
+  /** 轉供度數（kWh） */
+  kwh: Scalars['Float']['input'];
+  /** 每度電單價（元/kWh） */
+  price: Scalars['Float']['input'];
+  /** 電號 */
+  serialNumber: Scalars['String']['input'];
+};
+
 export type User = {
   __typename?: 'User';
   bankAccounts: Array<BankAccount>;
@@ -1629,13 +1823,21 @@ export type User = {
 export type UserBill = {
   __typename?: 'UserBill';
   auditBy?: Maybe<User>;
+  /** 電費單來源 */
+  billSource?: Maybe<Scalars['String']['output']>;
   billingDate: Scalars['DateTime']['output'];
   createdAt: Scalars['DateTime']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   deletedBy?: Maybe<Scalars['String']['output']>;
   electricNumberInfos: Array<UserBillElectricNumberInfo>;
   id: Scalars['ID']['output'];
+  /** 手動匯入時間 */
+  importedAt?: Maybe<Scalars['DateTime']['output']>;
+  /** 手動匯入者 ID */
+  importedBy?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
+  /** 手動匯入原始檔案下載 URL */
+  originalFileDownloadUrl?: Maybe<Scalars['String']['output']>;
   status: ElectricBillStatus;
   /** 轉供契約編號 */
   transferDocumentNumbers: Array<Scalars['String']['output']>;

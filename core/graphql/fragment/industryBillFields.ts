@@ -15,6 +15,10 @@ export const INDUSTRY_BILL_FIELDS = gql`
     transferDocumentNumber
     billingDate
     status
+    billSource
+    originalFileDownloadUrl
+    importedBy
+    importedAt
     industryBillConfig {
       id
       industry {

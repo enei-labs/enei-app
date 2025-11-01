@@ -1,11 +1,12 @@
 import { Table } from "@components/Table";
 import { IndustryBill } from "@core/graphql/types";
 import { Config } from "../Table/Table";
-import { Box, Typography, Card, Tooltip } from "@mui/material";
+import { Box, Typography, Card, Tooltip, Button } from "@mui/material";
 import { useIndustryBills } from "@utils/hooks/queries";
 import { formatDateTime } from "@utils/format";
 import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import InfoIcon from "@mui/icons-material/Info";
+import DownloadIcon from "@mui/icons-material/Download";
 import { IconBtn } from "@components/Button";
 import { IndustryBillDialog } from "./IndustryBillDialog";
 import { useState, useEffect, useMemo } from "react";
@@ -14,6 +15,8 @@ import { useSearch } from "@utils/hooks/useSearch";
 import { InputSearch } from "@components/Input";
 import { useRouter } from "next/router";
 import { ErrorBoundary } from "@components/ErrorBoundary";
+import { BillStatusBadge } from "@components/ElectricBill/BillStatusBadge";
+import { BillSourceTag } from "@components/ElectricBill/BillSourceTag";
 
 interface IndustryBillPanelProps {
   month?: string;
@@ -88,7 +91,40 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
     {
       header: "狀態",
       accessor: "status",
-      render: (rowData) => <Box>{ReviewStatusLookup[rowData.status]}</Box>,
+      render: (rowData) => (
+        <BillStatusBadge
+          status={rowData.status}
+          billSource={rowData.billSource as any}
+        />
+      ),
+    },
+    {
+      header: "來源",
+      accessor: "billSource",
+      render: (rowData) => (
+        <BillSourceTag billSource={rowData.billSource as any} />
+      ),
+    },
+    {
+      header: "原始檔案",
+      accessor: "originalFileDownloadUrl",
+      render: (rowData) => (
+        rowData.originalFileDownloadUrl ? (
+          <Button
+            size="small"
+            variant="outlined"
+            startIcon={<DownloadIcon />}
+            onClick={(e) => {
+              e.stopPropagation();
+              window.open(rowData.originalFileDownloadUrl!, '_blank');
+            }}
+          >
+            下載
+          </Button>
+        ) : (
+          <Typography variant="body2" color="text.secondary">-</Typography>
+        )
+      ),
     },
     {
       header: "檢視 / 審核",

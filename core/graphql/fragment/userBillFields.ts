@@ -13,6 +13,10 @@ export const USER_BILL_FIELDS = gql`
     billingDate
     status
     transferDocumentNumbers
+    billSource
+    originalFileDownloadUrl
+    importedBy
+    importedAt
     userBillConfig {
       id
       user {

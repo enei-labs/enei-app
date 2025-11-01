@@ -122,6 +122,19 @@ export const IndustryBillsByMonthPanel = () => {
       ),
     },
     {
+      header: "來源（手動匯入）",
+      accessor: "bills",
+      render: (rowData) => (
+        <Box>
+          {
+            rowData.bills.filter(
+              (bill) => bill.billSource === 'MANUAL_IMPORT'
+            ).length
+          }
+        </Box>
+      ),
+    },
+    {
       header: "寄信",
       accessor: "bills",
       render: (rowData) => {

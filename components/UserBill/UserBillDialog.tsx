@@ -20,6 +20,7 @@ import { useSendUserBillEmail } from "@utils/hooks/mutations/useSendUserBillEmai
 import { toast } from "react-toastify";
 import { DialogErrorBoundary } from "@components/ErrorBoundary";
 import EmailIcon from "@mui/icons-material/Email";
+import { ManualImportInfoCard } from "@components/ElectricBill/ManualImportInfoCard";
 
 interface UserBillDialogProps {
   isOpenDialog: boolean;
@@ -245,6 +246,17 @@ export const UserBillDialog = ({
         <Typography textAlign={"left"} variant="h6">
           電費單組合： {userBill.userBillConfig?.name ?? ""}
         </Typography>
+
+        {/* 手動匯入資訊卡片 */}
+        {data?.userBill && (
+          <ManualImportInfoCard
+            billSource={data.userBill.billSource as any}
+            originalFileDownloadUrl={data.userBill.originalFileDownloadUrl}
+            importedBy={data.userBill.importedBy}
+            importedAt={data.userBill.importedAt}
+          />
+        )}
+
         {!userBillTemplateData ? (
           <Box
             display="flex"

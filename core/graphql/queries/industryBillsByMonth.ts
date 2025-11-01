@@ -11,6 +11,7 @@ export const INDUSTRY_BILLS_BY_MONTH = gql`
         id
         name
         status
+        billSource
         powerPlantName
         powerPlantNumber
       }
