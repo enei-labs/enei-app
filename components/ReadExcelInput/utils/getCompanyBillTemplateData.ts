@@ -12,6 +12,10 @@ const parseCapacityToWatts = (capacityStr: string): number => {
 };
 
 export const getCompanyBillTemplateData = (data: any) => {
+  // Debug logging
+  console.log('🔍 getCompanyBillTemplateData - Row 7:', data[7]);
+  console.log('🔍 契約編號 (data[7][5]):', data[7]?.[5]);
+
   const companyBillTemplateData: CompanyBillTemplateData= {
     billingMonth: data[1][6],
     // 計費期間

@@ -40,3 +40,5 @@ export * from './updateIndustryBillConfig';
 export * from './removeIndustryBillConfig';
 export * from './auditUserBill';
 export * from './auditIndustryBill';
+export * from './importManualUserBill';
+export * from './importManualIndustryBill';
