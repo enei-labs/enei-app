@@ -13,7 +13,10 @@ import { forwardRef, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import { useMutation, useLazyQuery } from "@apollo/client";
 import { IMPORT_MANUAL_USER_BILL, IMPORT_MANUAL_INDUSTRY_BILL } from "@core/graphql/mutations";
+import { SEND_USER_BILL_EMAIL } from "@core/graphql/mutations/sendUserBillEmail";
+import { SEND_INDUSTRY_BILL_EMAIL } from "@core/graphql/mutations/sendIndustryBillEmail";
 import { FIND_USER_BILL_CONFIG_BY_ELECTRIC_NUMBERS, FIND_INDUSTRY_BILL_CONFIG_BY_ELECTRIC_NUMBER } from "@core/graphql/queries";
+import { toast } from "react-toastify";
 
 export const excelDateToJSDate = (serial: number) => {
   const utc_days = Math.floor(serial - 25569);
@@ -84,10 +87,19 @@ export function ReadExcelInput({ singleTabMode = false }: ReadExcelInputProps) {
     type: "success" | "error" | null;
     message: string;
   }>({ type: null, message: "" });
+  const [importedBills, setImportedBills] = useState<Array<{
+    id: string;
+    type: 'user' | 'industry';
+    name: string;
+    configName?: string;
+  }>>([]);
+  const [showSendEmailButtons, setShowSendEmailButtons] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [importUserBill, { loading: loadingUserBill }] = useMutation(IMPORT_MANUAL_USER_BILL);
   const [importIndustryBill, { loading: loadingIndustryBill }] = useMutation(IMPORT_MANUAL_INDUSTRY_BILL);
+  const [sendUserBillEmail, { loading: sendingUserBill }] = useMutation(SEND_USER_BILL_EMAIL);
+  const [sendIndustryBillEmail, { loading: sendingIndustryBill }] = useMutation(SEND_INDUSTRY_BILL_EMAIL);
 
   const [findUserBillConfig] = useLazyQuery(FIND_USER_BILL_CONFIG_BY_ELECTRIC_NUMBERS);
   const [findIndustryBillConfig] = useLazyQuery(FIND_INDUSTRY_BILL_CONFIG_BY_ELECTRIC_NUMBER);
@@ -137,12 +149,44 @@ export function ReadExcelInput({ singleTabMode = false }: ReadExcelInputProps) {
     documentTitle: fileName.replace(/\.[^/.]+$/, ""), // Remove file extension
   });
 
+  const handleSendEmail = async (bill: typeof importedBills[0]) => {
+    try {
+      if (bill.type === 'user') {
+        const result = await sendUserBillEmail({
+          variables: { userBillId: bill.id }
+        });
+
+        if (result.data?.sendUserBillEmail.success) {
+          toast.success(`${bill.name} 已成功寄出！`);
+          setImportedBills(prev => prev.filter(b => b.id !== bill.id));
+        } else {
+          toast.error(`寄送失敗：${result.data?.sendUserBillEmail.message || '未知錯誤'}`);
+        }
+      } else {
+        const result = await sendIndustryBillEmail({
+          variables: { industryBillId: bill.id }
+        });
+
+        if (result.data?.sendIndustryBillEmail.success) {
+          toast.success(`${bill.name} 已成功寄出！`);
+          setImportedBills(prev => prev.filter(b => b.id !== bill.id));
+        } else {
+          toast.error(`寄送失敗：${result.data?.sendIndustryBillEmail.message || '未知錯誤'}`);
+        }
+      }
+    } catch (error: any) {
+      toast.error(`寄送失敗：${error.message}`);
+    }
+  };
+
   const handleClear = () => {
     setUserBillTemplatesData([]);
     setCompanyBillTemplatesData([]);
     setFileName("");
     setUploadedFile(null);
     setSaveStatus({ type: null, message: "" });
+    setImportedBills([]);
+    setShowSendEmailButtons(false);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -161,6 +205,7 @@ export function ReadExcelInput({ singleTabMode = false }: ReadExcelInputProps) {
       let successCount = 0;
       let errorCount = 0;
       const errors: string[] = [];
+      const successfulBills: typeof importedBills = [];
 
       // Save user bills
       for (const userBillData of userBillTemplatesData) {
@@ -206,6 +251,12 @@ export function ReadExcelInput({ singleTabMode = false }: ReadExcelInputProps) {
 
           if (data?.importManualUserBill?.success) {
             successCount++;
+            successfulBills.push({
+              id: data.importManualUserBill.billId!,
+              type: 'user',
+              name: `${userBillData.customerName} - ${userBillData.billingMonth}`,
+              configName: '用戶電費單'
+            });
           } else {
             errorCount++;
             errors.push(`用戶電費單: ${data?.importManualUserBill?.message || "未知錯誤"}`);
@@ -268,6 +319,12 @@ export function ReadExcelInput({ singleTabMode = false }: ReadExcelInputProps) {
 
           if (data?.importManualIndustryBill?.success) {
             successCount++;
+            successfulBills.push({
+              id: data.importManualIndustryBill.billId!,
+              type: 'industry',
+              name: `${industryBillData.powerPlantName} - ${industryBillData.billingMonth}`,
+              configName: '發電業電費單'
+            });
           } else {
             errorCount++;
             errors.push(
@@ -288,11 +345,19 @@ export function ReadExcelInput({ singleTabMode = false }: ReadExcelInputProps) {
           type: "success",
           message: `成功儲存 ${successCount} 筆電費單到資料庫`,
         });
+        if (successfulBills.length > 0) {
+          setImportedBills(successfulBills);
+          setShowSendEmailButtons(true);
+        }
       } else {
         setSaveStatus({
           type: "error",
           message: `儲存完成：成功 ${successCount} 筆，失敗 ${errorCount} 筆。錯誤：${errors.join("; ")}`,
         });
+        if (successfulBills.length > 0) {
+          setImportedBills(successfulBills);
+          setShowSendEmailButtons(true);
+        }
       }
     } catch (error: any) {
       setSaveStatus({
@@ -343,6 +408,55 @@ export function ReadExcelInput({ singleTabMode = false }: ReadExcelInputProps) {
             <Alert severity={saveStatus.type} sx={{ marginTop: 2, marginBottom: 2 }}>
               {saveStatus.message}
             </Alert>
+          )}
+
+          {showSendEmailButtons && importedBills.length > 0 && (
+            <div style={{ marginTop: 16, padding: 16, border: '1px solid #e0e0e0', borderRadius: 4, backgroundColor: '#f5f5f5' }}>
+              <h3 style={{ fontSize: 18, fontWeight: 600, marginBottom: 12 }}>
+                ✅ 匯入成功！選擇要寄送的電費單：
+              </h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {importedBills.map((bill) => (
+                  <div
+                    key={bill.id}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      padding: 12,
+                      border: '1px solid #d0d0d0',
+                      borderRadius: 4,
+                      backgroundColor: '#ffffff',
+                      transition: 'background-color 0.2s'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#fafafa'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#ffffff'}
+                  >
+                    <div>
+                      <div style={{ fontWeight: 500 }}>{bill.name}</div>
+                      <div style={{ fontSize: 14, color: '#666' }}>
+                        {bill.type === 'user' ? '用戶電費單' : '發電業電費單'}
+                      </div>
+                    </div>
+                    <Button
+                      onClick={() => handleSendEmail(bill)}
+                      disabled={sendingUserBill || sendingIndustryBill}
+                      variant="contained"
+                      color="primary"
+                    >
+                      {(sendingUserBill || sendingIndustryBill) ? (
+                        <>
+                          <CircularProgress size={16} sx={{ marginRight: 1 }} />
+                          寄送中...
+                        </>
+                      ) : (
+                        '寄送電費單'
+                      )}
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
 
           <Divider sx={{ margin: 2 }} />
