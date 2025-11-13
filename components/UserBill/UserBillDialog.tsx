@@ -22,6 +22,9 @@ import { DialogErrorBoundary } from "@components/ErrorBoundary";
 import EmailIcon from "@mui/icons-material/Email";
 import { ManualImportInfoCard } from "@components/ElectricBill/ManualImportInfoCard";
 
+// 操作模式：使用者在 UI 上的選擇
+type OperationMode = 'review' | 'manual-import';
+
 interface UserBillDialogProps {
   isOpenDialog: boolean;
   onClose: () => void;
@@ -106,21 +109,22 @@ export const UserBillDialog = ({
   const { data, loading, error } = useUserBill(userBill.id);
   const [auditUserBill, { loading: auditUserBillLoading }] = useAuditUserBill();
   const [sendUserBillEmail, { loading: sendingEmail }] = useSendUserBillEmail();
-  const [reviewStatus, setReviewStatus] = useState<ElectricBillStatus | null>(
-    null
-  );
+
+  // UI 操作模式（前端狀態）
+  const [operationMode, setOperationMode] = useState<OperationMode>('review');
+
+  // 電費單實際狀態（後端狀態）
+  const [reviewStatus, setReviewStatus] = useState<ElectricBillStatus | null>(null);
 
   useEffect(() => {
-    if (data?.userBill.status === ElectricBillStatus.Approved) {
-      setReviewStatus(ElectricBillStatus.Approved);
+    // 初始化電費單狀態
+    if (data?.userBill.status) {
+      setReviewStatus(data.userBill.status);
     }
 
-    if (data?.userBill.status === ElectricBillStatus.Pending) {
-      setReviewStatus(ElectricBillStatus.Pending);
-    }
-
-    if (data?.userBill.status === ElectricBillStatus.Rejected) {
-      setReviewStatus(ElectricBillStatus.Rejected);
+    // 如果是手動匯入的電費單，預設顯示審核模式（因為已經是 APPROVED）
+    if (data?.userBill.billSource === 'MANUAL_IMPORT') {
+      setOperationMode('review');
     }
   }, [data]);
 
@@ -191,20 +195,21 @@ export const UserBillDialog = ({
     documentTitle: userBill.name,
   });
 
-  const handleReviewChange = async (
+  // 處理操作模式切換
+  const handleModeChange = (
     event: React.MouseEvent<HTMLElement>,
-    newStatus: ElectricBillStatus | null
+    newMode: OperationMode | null
   ) => {
-    if (!newStatus) return;
-    const variables = { id: userBill.id, status: newStatus };
+    if (!newMode) return;
+    setOperationMode(newMode);
+  };
 
+  // 處理審核狀態變更（只在 review 模式下使用）
+  const handleApprove = async () => {
+    const variables = { id: userBill.id, status: ElectricBillStatus.Approved };
     await auditUserBill({ variables });
-    setReviewStatus(newStatus);
-    switch (newStatus) {
-      case ElectricBillStatus.Approved:
-        toast.success(`已調整審核狀態: ${ReviewStatusLookup[newStatus]}`);
-        break;
-    }
+    setReviewStatus(ElectricBillStatus.Approved);
+    toast.success(`已調整審核狀態: ${ReviewStatusLookup[ElectricBillStatus.Approved]}`);
   };
 
 
@@ -274,41 +279,71 @@ export const UserBillDialog = ({
           </Box>
         )}
 
+        {/* 操作模式選擇：審核 vs 手動匯入 */}
         <Box sx={{ mt: 3, mb: 2 }}>
+          <Typography variant="subtitle2" sx={{ mb: 1 }}>
+            選擇操作方式：
+          </Typography>
           <ToggleButtonGroup
-            value={reviewStatus}
+            value={operationMode}
             exclusive
-            onChange={handleReviewChange}
-            aria-label="審核狀態"
+            onChange={handleModeChange}
+            aria-label="操作方式"
             fullWidth
           >
             <ToggleButton
-              value={ElectricBillStatus.Approved}
-              aria-label="審核通過"
+              value="review"
+              aria-label="審核電費單"
             >
-              審核通過
+              審核電費單
+            </ToggleButton>
+            <ToggleButton
+              value="manual-import"
+              aria-label="手動匯入"
+            >
+              手動匯入
             </ToggleButton>
           </ToggleButtonGroup>
         </Box>
 
-        <Box display="flex" justifyContent="flex-start" gap={2}>
-          {reviewStatus === ElectricBillStatus.Approved && (
-            <>
-              <Button variant="contained" color="primary" onClick={handlePrint}>
-                列印
-              </Button>
+        {/* 審核模式 */}
+        {operationMode === 'review' && (
+          <Box display="flex" justifyContent="flex-end" gap={2}>
+            {reviewStatus !== ElectricBillStatus.Approved && (
               <Button
                 variant="contained"
-                color="secondary"
-                onClick={handleSendEmail}
-                disabled={sendingEmail}
-                startIcon={sendingEmail ? <CircularProgress size={20} /> : <EmailIcon />}
+                color="success"
+                onClick={handleApprove}
+                disabled={auditUserBillLoading}
               >
-                {sendingEmail ? "寄送中..." : "寄送電費單"}
+                {auditUserBillLoading ? <CircularProgress size={20} /> : "審核通過"}
               </Button>
-            </>
-          )}
-        </Box>
+            )}
+            {reviewStatus === ElectricBillStatus.Approved && (
+              <>
+                <Button variant="contained" color="primary" onClick={handlePrint}>
+                  列印
+                </Button>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleSendEmail}
+                  disabled={sendingEmail}
+                  startIcon={sendingEmail ? <CircularProgress size={20} /> : <EmailIcon />}
+                >
+                  {sendingEmail ? "寄送中..." : "寄送電費單"}
+                </Button>
+              </>
+            )}
+          </Box>
+        )}
+
+        {/* 手動匯入模式 */}
+        {operationMode === 'manual-import' && (
+          <Box sx={{ mt: 3 }}>
+            <ReadExcelInput singleTabMode={true} />
+          </Box>
+        )}
         </Box>
       </DialogErrorBoundary>
     </Dialog>
