@@ -113,14 +113,9 @@ describe('UserBillDialog', () => {
       expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
     })
 
-    it('選擇"選擇手動輸入"時應該顯示Excel輸入元件', async () => {
+    it('選擇"手動匯入"時應該顯示Excel輸入元件', async () => {
       const mocks = [
-        createMockResponse(USER_BILL, { id: '1' }, mockUserBillResponse),
-        createMockResponse(
-          AUDIT_USER_BILL,
-          { id: '1', status: ElectricBillStatus.Manual },
-          { auditUserBill: { id: '1', status: ElectricBillStatus.Manual } }
-        )
+        createMockResponse(USER_BILL, { id: '1' }, mockUserBillResponse)
       ]
 
       render(<UserBillDialog {...mockProps} />, { mocks })
@@ -129,8 +124,8 @@ describe('UserBillDialog', () => {
         expect(screen.getByText('用戶電費單')).toBeInTheDocument()
       })
 
-      // 點擊手動輸入按鈕
-      const manualButton = screen.getByRole('button', { name: '選擇手動輸入' })
+      // 點擊手動匯入按鈕（操作模式切換，不是狀態變更）
+      const manualButton = screen.getByRole('button', { name: '手動匯入' })
       fireEvent.click(manualButton)
 
       await waitFor(() => {
@@ -234,18 +229,13 @@ describe('UserBillDialog', () => {
   })
 
   describe('互動流程測試', () => {
-    it('應該正確處理審核狀態切換', async () => {
+    it('應該正確處理操作模式切換', async () => {
       const mocks = [
         createMockResponse(USER_BILL, { id: '1' }, mockUserBillResponse),
         createMockResponse(
           AUDIT_USER_BILL,
           { id: '1', status: ElectricBillStatus.Approved },
           { auditUserBill: { id: '1', status: ElectricBillStatus.Approved } }
-        ),
-        createMockResponse(
-          AUDIT_USER_BILL,
-          { id: '1', status: ElectricBillStatus.Manual },
-          { auditUserBill: { id: '1', status: ElectricBillStatus.Manual } }
         )
       ]
 
@@ -263,8 +253,8 @@ describe('UserBillDialog', () => {
         expect(screen.getByText('列印')).toBeInTheDocument()
       })
 
-      // 再切換到手動輸入
-      const manualButton = screen.getByRole('button', { name: '選擇手動輸入' })
+      // 再切換到手動匯入模式（這是操作模式切換，不影響資料庫狀態）
+      const manualButton = screen.getByRole('button', { name: '手動匯入' })
       fireEvent.click(manualButton)
 
       await waitFor(() => {

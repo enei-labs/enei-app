@@ -85,8 +85,6 @@ export const IndustryBillEmailModal = ({
         return { label: "已拒絕", color: "error" as const };
       case ElectricBillStatus.Approved:
         return { label: "已審核", color: "success" as const };
-      case ElectricBillStatus.Manual:
-        return { label: "已手動", color: "success" as const };
       default:
         return { label: status, color: "default" as const };
     }

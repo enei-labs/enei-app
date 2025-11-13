@@ -89,14 +89,9 @@ describe('IndustryBillDialog', () => {
       expect(screen.queryByText('手動輸入')).not.toBeInTheDocument()
     })
 
-    it('選擇"選擇手動輸入"時應該顯示手動輸入按鈕', async () => {
+    it('選擇"手動匯入"時應該顯示Excel輸入元件', async () => {
       const mocks = [
-        createMockResponse(INDUSTRY_BILL, { id: '1' }, mockIndustryBillResponse),
-        createMockResponse(
-          AUDIT_INDUSTRY_BILL,
-          { id: '1', status: ElectricBillStatus.Manual },
-          { auditIndustryBill: { id: '1', status: ElectricBillStatus.Manual } }
-        )
+        createMockResponse(INDUSTRY_BILL, { id: '1' }, mockIndustryBillResponse)
       ]
 
       render(<IndustryBillDialog {...mockProps} />, { mocks })
@@ -105,16 +100,14 @@ describe('IndustryBillDialog', () => {
         expect(screen.getByText('發電業電費單')).toBeInTheDocument()
       })
 
-      // 點擊手動輸入按鈕
-      const manualButton = screen.getByRole('button', { name: '選擇手動輸入' })
+      // 點擊手動匯入按鈕（操作模式切換，不是狀態變更）
+      const manualButton = screen.getByRole('button', { name: '手動匯入' })
       fireEvent.click(manualButton)
 
       await waitFor(() => {
-        expect(screen.getByText('手動輸入')).toBeInTheDocument()
+        // 應該顯示ReadExcelInput元件
+        expect(screen.queryByText('列印')).not.toBeInTheDocument()
       })
-
-      // 確認列印按鈕不存在
-      expect(screen.queryByText('列印')).not.toBeInTheDocument()
     })
 
     it('應該根據不同的電費單狀態設置正確的初始審核狀態', async () => {
@@ -207,18 +200,13 @@ describe('IndustryBillDialog', () => {
   })
 
   describe('互動流程測試', () => {
-    it('應該正確處理審核狀態切換', async () => {
+    it('應該正確處理操作模式切換', async () => {
       const mocks = [
         createMockResponse(INDUSTRY_BILL, { id: '1' }, mockIndustryBillResponse),
         createMockResponse(
           AUDIT_INDUSTRY_BILL,
           { id: '1', status: ElectricBillStatus.Approved },
           { auditIndustryBill: { id: '1', status: ElectricBillStatus.Approved } }
-        ),
-        createMockResponse(
-          AUDIT_INDUSTRY_BILL,
-          { id: '1', status: ElectricBillStatus.Manual },
-          { auditIndustryBill: { id: '1', status: ElectricBillStatus.Manual } }
         )
       ]
 
@@ -236,45 +224,13 @@ describe('IndustryBillDialog', () => {
         expect(screen.getByText('列印')).toBeInTheDocument()
       })
 
-      // 再切換到手動輸入
-      const manualButton = screen.getByRole('button', { name: '選擇手動輸入' })
+      // 再切換到手動匯入模式（這是操作模式切換，不影響資料庫狀態）
+      const manualButton = screen.getByRole('button', { name: '手動匯入' })
       fireEvent.click(manualButton)
 
       await waitFor(() => {
-        expect(screen.getByText('手動輸入')).toBeInTheDocument()
         expect(screen.queryByText('列印')).not.toBeInTheDocument()
       })
-    })
-
-    it('點擊手動輸入按鈕應該關閉對話框', async () => {
-      const mocks = [
-        createMockResponse(INDUSTRY_BILL, { id: '1' }, mockIndustryBillResponse),
-        createMockResponse(
-          AUDIT_INDUSTRY_BILL,
-          { id: '1', status: ElectricBillStatus.Manual },
-          { auditIndustryBill: { id: '1', status: ElectricBillStatus.Manual } }
-        )
-      ]
-
-      render(<IndustryBillDialog {...mockProps} />, { mocks })
-
-      await waitFor(() => {
-        expect(screen.getByText('發電業電費單')).toBeInTheDocument()
-      })
-
-      // 選擇手動輸入
-      const manualToggleButton = screen.getByRole('button', { name: '選擇手動輸入' })
-      fireEvent.click(manualToggleButton)
-
-      await waitFor(() => {
-        expect(screen.getByText('手動輸入')).toBeInTheDocument()
-      })
-
-      // 點擊手動輸入按鈕
-      const manualActionButton = screen.getByText('手動輸入')
-      fireEvent.click(manualActionButton)
-
-      expect(mockProps.onClose).toHaveBeenCalled()
     })
 
     it('應該在載入時顯示載入指示器', () => {

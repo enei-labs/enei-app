@@ -97,19 +97,6 @@ export const UserBillsByMonthPanel = () => {
       ),
     },
     {
-      header: "狀態（手動輸入）",
-      accessor: "bills",
-      render: (rowData) => (
-        <Box>
-          {
-            rowData.bills.filter(
-              (bill) => bill.status === ElectricBillStatus.Manual
-            ).length
-          }
-        </Box>
-      ),
-    },
-    {
       header: "來源（手動匯入）",
       accessor: "bills",
       render: (rowData) => (
