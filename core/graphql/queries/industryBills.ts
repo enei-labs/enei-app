@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client'
-import { INDUSTRY_BILL_FIELDS } from '../fragment'
+import { INDUSTRY_BILL_BASE_FIELDS } from '../fragment'
 
 export const INDUSTRY_BILLS = gql`
-  ${INDUSTRY_BILL_FIELDS}
+  ${INDUSTRY_BILL_BASE_FIELDS}
   query industryBills(
     $limit: Int = 10
     $offset: Int = 0
@@ -19,7 +19,7 @@ export const INDUSTRY_BILLS = gql`
     ) {
       total
       list {
-        ...industryBillFields
+        ...industryBillBaseFields
       }
     }
   }

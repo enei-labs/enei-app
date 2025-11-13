@@ -1,6 +1,6 @@
 import { Chip } from '@mui/material';
 
-type ElectricBillStatus = 'DRAFT' | 'PENDING' | 'APPROVED' | 'MANUAL' | 'REJECTED';
+type ElectricBillStatus = 'DRAFT' | 'PENDING' | 'APPROVED' | 'REJECTED';
 type BillSource = 'AUTO_GENERATED' | 'MANUAL_IMPORT' | null;
 
 interface BillStatusBadgeProps {
@@ -9,10 +9,6 @@ interface BillStatusBadgeProps {
 }
 
 const STATUS_CONFIG = {
-  MANUAL: {
-    label: '手動匯入',
-    color: 'secondary' as const,
-  },
   DRAFT: {
     label: '草稿',
     color: 'default' as const,

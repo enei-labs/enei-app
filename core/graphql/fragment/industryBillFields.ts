@@ -17,8 +17,19 @@ export const INDUSTRY_BILL_FIELDS = gql`
     status
     billSource
     originalFileDownloadUrl
-    importedBy
+    generatedPdfDownloadUrl
+    importedBy {
+      id
+      name
+    }
     importedAt
+    manualImportRecord {
+      id
+      fileName
+      importedAt
+      originalFileDownloadUrl
+      generatedPdfDownloadUrl
+    }
     industryBillConfig {
       id
       industry {
@@ -50,3 +61,47 @@ export const INDUSTRY_BILL_FIELDS = gql`
     }
   }
 `;
+
+export const INDUSTRY_BILL_BASE_FIELDS = gql`
+  fragment industryBillBaseFields on IndustryBill {
+    id
+    name
+    powerPlantNumber
+    powerPlantName
+    powerPlantAddress
+    powerPlantVolume
+    companyContractNumber
+    transferDegree
+    price
+    supplyVolume
+    transferDocumentNumber
+    billingDate
+    status
+    billSource
+    originalFileDownloadUrl
+    generatedPdfDownloadUrl
+    importedAt
+    manualImportRecord {
+      id
+      fileName
+      importedAt
+      generatedPdfDownloadUrl
+    }
+    industryBillConfig {
+      id
+      name
+      estimatedBillDeliverDate
+      paymentDeadline
+      recipientAccount {
+        bankCode
+        bankBranchCode
+        account
+      }
+      noticeForTPCBill
+      contactName
+      contactPhone
+      contactEmail
+      address
+    }
+  }
+`

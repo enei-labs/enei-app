@@ -15,7 +15,11 @@ export const USER_BILL_FIELDS = gql`
     transferDocumentNumbers
     billSource
     originalFileDownloadUrl
-    importedBy
+    generatedPdfDownloadUrl
+    importedBy {
+      id
+      name
+    }
     importedAt
     userBillConfig {
       id
@@ -55,3 +59,59 @@ export const USER_BILL_FIELDS = gql`
     }
   }
 `;
+
+export const USER_BILL_BASE_FIELDS = gql`
+  fragment userBillBaseFields on UserBill {
+    id
+    name
+    electricNumberInfos {
+      number
+      price
+      degree
+      fee
+    }
+    billingDate
+    status
+    transferDocumentNumbers
+    billSource
+    originalFileDownloadUrl
+    generatedPdfDownloadUrl
+    importedAt
+    userBillConfig {
+      id
+      user {
+        id
+        name
+        contactName
+        contactEmail
+        bankAccounts {
+          bankCode
+          bankName
+          bankBranchCode
+          bankBranchName
+          accountName
+          account
+          taxId
+        }
+        companyAddress
+      }
+      name
+      estimatedBillDeliverDate
+      paymentDeadline
+      recipientAccount {
+        bankCode
+        bankBranchCode
+        account
+      }
+      electricNumbers
+      transportationFee
+      credentialInspectionFee
+      credentialServiceFee
+      noticeForTPCBill
+      contactName
+      contactPhone
+      contactEmail
+      address
+    }
+  }
+`

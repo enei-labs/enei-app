@@ -59,10 +59,6 @@ export const IndustryBillDialog = ({
       setReviewStatus(ElectricBillStatus.Approved);
     }
 
-    if (data?.industryBill.status === ElectricBillStatus.Manual) {
-      setReviewStatus(ElectricBillStatus.Manual);
-    }
-
     if (data?.industryBill.status === ElectricBillStatus.Pending) {
       setReviewStatus(ElectricBillStatus.Pending);
     }
@@ -144,15 +140,7 @@ export const IndustryBillDialog = ({
       case ElectricBillStatus.Approved:
         toast.success(`已調整審核狀態: ${ReviewStatusLookup[newStatus]}`);
         break;
-      case ElectricBillStatus.Manual:
-        toast.success(`已調整審核狀態: ${ReviewStatusLookup[newStatus]}`);
-        break;
     }
-  };
-
-  const handleManualImport = () => {
-    // TODO: 實作手動匯入邏輯
-    onClose();
   };
 
   const handleSendEmail = async () => {
@@ -186,9 +174,10 @@ export const IndustryBillDialog = ({
           {/* 手動匯入資訊卡片 */}
           {data?.industryBill && (
             <ManualImportInfoCard
-              billSource={data.industryBill.billSource as any}
+              billSource={data.industryBill.billSource ?? null}
               originalFileDownloadUrl={data.industryBill.originalFileDownloadUrl}
-              importedBy={data.industryBill.importedBy}
+              generatedPdfDownloadUrl={data.industryBill.generatedPdfDownloadUrl}
+              importedBy={data.industryBill.importedBy?.name ?? null}
               importedAt={data.industryBill.importedAt}
             />
           )}
@@ -235,12 +224,6 @@ export const IndustryBillDialog = ({
               >
                 審核通過
               </ToggleButton>
-              <ToggleButton
-                value={ElectricBillStatus.Manual}
-                aria-label="選擇手動輸入"
-              >
-                選擇手動輸入
-              </ToggleButton>
             </ToggleButtonGroup>
           </Box>
 
@@ -261,23 +244,7 @@ export const IndustryBillDialog = ({
                 </Button>
               </>
             )}
-
-            {reviewStatus === ElectricBillStatus.Manual && (
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleManualImport}
-              >
-                手動輸入
-              </Button>
-            )}
           </Box>
-
-          {reviewStatus === ElectricBillStatus.Manual && (
-            <Box sx={{ mt: 3 }}>
-              <ReadExcelInput singleTabMode={true} />
-            </Box>
-          )}
         </Box>
       </DialogErrorBoundary>
     </Dialog>

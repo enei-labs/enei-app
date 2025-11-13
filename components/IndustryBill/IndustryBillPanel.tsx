@@ -112,7 +112,6 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
         rowData.originalFileDownloadUrl ? (
           <Button
             size="small"
-            variant="outlined"
             startIcon={<DownloadIcon />}
             onClick={(e) => {
               e.stopPropagation();

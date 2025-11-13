@@ -1,13 +1,14 @@
 import { Card, CardContent, Typography, Box, Button, Grid } from '@mui/material';
-import { Download, Person, AccessTime } from '@mui/icons-material';
+import { Download, Person, AccessTime, Upload } from '@mui/icons-material';
 import { format } from 'date-fns';
 import { zhTW } from 'date-fns/locale';
 
 type BillSource = 'AUTO_GENERATED' | 'MANUAL_IMPORT' | null;
 
 interface ManualImportInfoCardProps {
-  billSource: BillSource;
+  billSource: BillSource | null;
   originalFileDownloadUrl?: string | null;
+  generatedPdfDownloadUrl?: string | null;
   importedBy?: string | null;
   importedAt?: Date | string | null;
 }
@@ -15,9 +16,11 @@ interface ManualImportInfoCardProps {
 export function ManualImportInfoCard({
   billSource,
   originalFileDownloadUrl,
+  generatedPdfDownloadUrl,
   importedBy,
   importedAt,
 }: ManualImportInfoCardProps) {
+  console.log({ originalFileDownloadUrl, generatedPdfDownloadUrl })
   // 只在手動匯入時顯示
   if (billSource !== 'MANUAL_IMPORT') {
     return null;
@@ -66,14 +69,13 @@ export function ManualImportInfoCard({
             </Box>
           </Grid>
 
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={6}>
             <Box>
               <Typography variant="caption" color="text.secondary" display="block" sx={{ mb: 0.5 }}>
                 原始檔案
               </Typography>
               {originalFileDownloadUrl ? (
                 <Button
-                  variant="outlined"
                   size="small"
                   startIcon={<Download />}
                   onClick={() => window.open(originalFileDownloadUrl, '_blank')}
@@ -87,11 +89,29 @@ export function ManualImportInfoCard({
               )}
             </Box>
           </Grid>
+
+          <Grid item xs={12} md={6}>
+            <Box>
+              <Typography variant="caption" color="text.secondary" display="block" sx={{ mb: 0.5 }}>
+                系統生成的 PDF
+              </Typography>
+              {generatedPdfDownloadUrl ? (
+                <Button
+                  size="small"
+                  startIcon={<Download />}
+                  onClick={() => window.open(generatedPdfDownloadUrl, '_blank')}
+                >
+                  下載 PDF
+                </Button>
+              ) : (
+                <Typography variant="body2" color="text.secondary">
+                  無檔案
+                </Typography>
+              )}
+            </Box>
+          </Grid>
         </Grid>
       </CardContent>
     </Card>
   );
 }
-
-// 修正 import
-import { Upload } from '@mui/icons-material';

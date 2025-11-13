@@ -10,7 +10,6 @@ import DownloadIcon from "@mui/icons-material/Download";
 import { IconBtn } from "@components/Button";
 import { UserBillDialog } from "./UserBillDialog";
 import { useState, useEffect, useMemo } from "react";
-import { ReviewStatusLookup } from "@core/look-up/review-status";
 import { useSearch } from "@utils/hooks/useSearch";
 import { InputSearch } from "@components/Input";
 import { useRouter } from "next/router";
@@ -112,7 +111,6 @@ const UserBillPanel = (props: UserBillPanelProps) => {
         rowData.originalFileDownloadUrl ? (
           <Button
             size="small"
-            variant="outlined"
             startIcon={<DownloadIcon />}
             onClick={(e) => {
               e.stopPropagation();

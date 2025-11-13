@@ -15,7 +15,7 @@ import { useMutation, useLazyQuery } from "@apollo/client";
 import { IMPORT_MANUAL_USER_BILL, IMPORT_MANUAL_INDUSTRY_BILL } from "@core/graphql/mutations";
 import { SEND_USER_BILL_EMAIL } from "@core/graphql/mutations/sendUserBillEmail";
 import { SEND_INDUSTRY_BILL_EMAIL } from "@core/graphql/mutations/sendIndustryBillEmail";
-import { FIND_USER_BILL_CONFIG_BY_ELECTRIC_NUMBERS, FIND_INDUSTRY_BILL_CONFIG_BY_ELECTRIC_NUMBER } from "@core/graphql/queries";
+import { FIND_USER_BILL_CONFIG_BY_ELECTRIC_NUMBERS, FIND_INDUSTRY_BILL_CONFIG_BY_ELECTRIC_NUMBER, FIND_INDUSTRY_BILL_BY_ELECTRIC_NUMBER_AND_MONTH } from "@core/graphql/queries";
 import { toast } from "react-toastify";
 
 export const excelDateToJSDate = (serial: number) => {
@@ -103,6 +103,7 @@ export function ReadExcelInput({ singleTabMode = false }: ReadExcelInputProps) {
 
   const [findUserBillConfig] = useLazyQuery(FIND_USER_BILL_CONFIG_BY_ELECTRIC_NUMBERS);
   const [findIndustryBillConfig] = useLazyQuery(FIND_INDUSTRY_BILL_CONFIG_BY_ELECTRIC_NUMBER);
+  const [findIndustryBill] = useLazyQuery(FIND_INDUSTRY_BILL_BY_ELECTRIC_NUMBER_AND_MONTH);
 
   const handleFileUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -298,6 +299,34 @@ export function ReadExcelInput({ singleTabMode = false }: ReadExcelInputProps) {
           const industryBillConfigId = configs[0].id;
           const config = configs[0];
 
+          // Find existing bill by electric number and month
+          // Convert billing month to YYYY-MM format if needed
+          let billingMonthParam = industryBillData.billingMonth;
+          const chineseMatch = industryBillData.billingMonth.match(/^(\d{4})年(\d{1,2})月?$/);
+          if (chineseMatch) {
+            const year = chineseMatch[1];
+            const month = chineseMatch[2].padStart(2, '0');
+            billingMonthParam = `${year}-${month}`;
+          }
+
+          const { data: billData } = await findIndustryBill({
+            variables: {
+              electricNumber: industryBillData.serialNumber,
+              billingMonth: billingMonthParam,
+              industryBillConfigId,
+            },
+          });
+
+          const existingBill = billData?.findIndustryBillByElectricNumberAndMonth;
+
+          if (!existingBill) {
+            errorCount++;
+            errors.push(
+              `發電業電費單 (${industryBillData.powerPlantName}): 找不到對應的電費單記錄（電號: ${industryBillData.serialNumber}, 月份: ${industryBillData.billingMonth})`
+            );
+            continue;
+          }
+
           // Use contactName or industry name as responsibleName if not provided in Excel
           const responsibleName =
             industryBillData.responsibleName ||
@@ -309,6 +338,7 @@ export function ReadExcelInput({ singleTabMode = false }: ReadExcelInputProps) {
             variables: {
               input: {
                 ...industryBillData,
+                industryBillId: existingBill.id,
                 responsibleName,
                 fileContent,
                 fileName: uploadedFile.name,

@@ -115,10 +115,6 @@ export const UserBillDialog = ({
       setReviewStatus(ElectricBillStatus.Approved);
     }
 
-    if (data?.userBill.status === ElectricBillStatus.Manual) {
-      setReviewStatus(ElectricBillStatus.Manual);
-    }
-
     if (data?.userBill.status === ElectricBillStatus.Pending) {
       setReviewStatus(ElectricBillStatus.Pending);
     }
@@ -208,16 +204,9 @@ export const UserBillDialog = ({
       case ElectricBillStatus.Approved:
         toast.success(`已調整審核狀態: ${ReviewStatusLookup[newStatus]}`);
         break;
-      case ElectricBillStatus.Manual:
-        toast.success(`已調整審核狀態: ${ReviewStatusLookup[newStatus]}`);
-        break;
     }
   };
 
-  const handleManualImport = () => {
-    // TODO: 實作手動匯入邏輯
-    onClose();
-  };
 
   const handleSendEmail = async () => {
     try {
@@ -250,9 +239,9 @@ export const UserBillDialog = ({
         {/* 手動匯入資訊卡片 */}
         {data?.userBill && (
           <ManualImportInfoCard
-            billSource={data.userBill.billSource as any}
+            billSource={data.userBill.billSource ?? null}
             originalFileDownloadUrl={data.userBill.originalFileDownloadUrl}
-            importedBy={data.userBill.importedBy}
+            importedBy={data.userBill.importedBy?.name ?? null}
             importedAt={data.userBill.importedAt}
           />
         )}
@@ -299,12 +288,6 @@ export const UserBillDialog = ({
             >
               審核通過
             </ToggleButton>
-            <ToggleButton
-              value={ElectricBillStatus.Manual}
-              aria-label="選擇手動輸入"
-            >
-              選擇手動輸入
-            </ToggleButton>
           </ToggleButtonGroup>
         </Box>
 
@@ -326,7 +309,6 @@ export const UserBillDialog = ({
             </>
           )}
         </Box>
-        {reviewStatus === ElectricBillStatus.Manual && <ReadExcelInput />}
         </Box>
       </DialogErrorBoundary>
     </Dialog>
