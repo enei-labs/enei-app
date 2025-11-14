@@ -22,7 +22,7 @@ export const generateBillPdf = async (
 
   // Convert HTML element to canvas
   const canvas = await html2canvas(componentRef.current, {
-    scale: 1.2, // Reduced from 2 to balance quality and file size
+    scale: 1.8, // Reduced from 2 to balance quality and file size
     useCORS: true, // Enable CORS for external images
     logging: false, // Disable console logs
     backgroundColor: "#ffffff", // Set white background
@@ -43,12 +43,12 @@ export const generateBillPdf = async (
   // Convert canvas to WebP with quality compression
   // WebP provides 25-35% better compression than JPEG while maintaining quality
   // Supported by all modern browsers (Chrome, Firefox, Safari 14+, Edge)
-  const imgData = canvas.toDataURL("image/webp", 0.75); // 75% quality
+  const imgData = canvas.toDataURL("image/webp", 0.8); // 80% quality
 
   // Add image to PDF with MEDIUM compression
   // Compression modes: "NONE" | "FAST" | "MEDIUM" | "SLOW"
   // MEDIUM provides better compression than FAST while maintaining reasonable speed
-  pdf.addImage(imgData, "WEBP", 0, 0, imgWidth, imgHeight, undefined, "MEDIUM");
+  pdf.addImage(imgData, "WEBP", 0, 0, imgWidth, imgHeight, undefined, "FAST");
 
   // Get PDF as base64
   const pdfBase64 = pdf.output("datauristring");
