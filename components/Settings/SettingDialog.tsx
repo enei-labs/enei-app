@@ -227,6 +227,7 @@ function SettingDialog(props: SettingDialogProps) {
                   render={({ field }) => (
                     <InputAutocomplete
                       {...field}
+                      filterOptions={true}
                       options={(Object.entries(bankJson) ?? []).map(
                         ([bankCode, bankData]) => ({
                           label: `${bankCode} ${bankData.name}`,
@@ -256,6 +257,7 @@ function SettingDialog(props: SettingDialogProps) {
                   render={({ field }) => (
                     <InputAutocomplete
                       {...field}
+                      filterOptions={true}
                       options={
                         currentBankCode
                           ? (currentBank?.branchs ?? []).map(

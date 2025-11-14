@@ -21,6 +21,7 @@ import { toast } from "react-toastify";
 import { DialogErrorBoundary } from "@components/ErrorBoundary";
 import EmailIcon from "@mui/icons-material/Email";
 import { ManualImportInfoCard } from "@components/ElectricBill/ManualImportInfoCard";
+import { generateBillPdf } from "@utils/generateBillPdf";
 
 // 操作模式：使用者在 UI 上的選擇
 type OperationMode = 'review' | 'manual-import';
@@ -215,8 +216,18 @@ export const UserBillDialog = ({
 
   const handleSendEmail = async () => {
     try {
+      // Generate PDF from the current bill template
+      const { base64, fileName } = await generateBillPdf(
+        componentRef,
+        `user_bill_${userBill.id}_${new Date().getTime()}.pdf`
+      );
+
       const { data: sendData } = await sendUserBillEmail({
-        variables: { userBillId: userBill.id },
+        variables: {
+          userBillId: userBill.id,
+          pdfContent: base64,
+          fileName: fileName,
+        },
       });
 
       if (sendData?.sendUserBillEmail?.success) {

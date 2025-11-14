@@ -256,6 +256,7 @@ function UserDialog(props: UserDialogProps) {
                 render={({ field }) => (
                   <InputAutocomplete
                     {...field}
+                    filterOptions={true}
                     options={(Object.entries(bankJson) ?? []).map(
                       ([bankCode, bankData]) => ({
                         label: `${bankCode} ${bankData.name}`,
@@ -285,6 +286,7 @@ function UserDialog(props: UserDialogProps) {
                 render={({ field }) => (
                   <InputAutocomplete
                     {...field}
+                    filterOptions={true}
                     options={
                       currentBankCode
                         ? (currentBank?.branchs ?? []).map(

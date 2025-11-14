@@ -3,6 +3,7 @@ import { Option } from "@core/types";
 import { CircularProgress, InputAdornment } from "@mui/material";
 import Autocomplete, {
   AutocompleteRenderInputParams,
+  createFilterOptions,
 } from "@mui/material/Autocomplete";
 import { CSSProperties, forwardRef, UIEventHandler } from "react";
 import { ControllerRenderProps } from "react-hook-form";
@@ -91,7 +92,7 @@ const InputAutocomplete = forwardRef<HTMLDivElement, InputAutocompleteProps>(
             }
           }}
           // 控制是否使用客戶端過濾（預設 false，使用伺服器端搜尋）
-          filterOptions={filterOptions ? undefined : (x) => x}
+          filterOptions={filterOptions ? createFilterOptions() : undefined}
           renderInput={(params: AutocompleteRenderInputParams) => (
             <InputText
               {...params}

@@ -613,6 +613,7 @@ function UserContractDialog(props: UserContractDialogProps) {
                 render={({ field }) => (
                   <InputAutocomplete
                     {...field}
+                    filterOptions={true}
                     onChange={(e) => field.onChange(e)}
                     options={
                       user.bankAccounts?.map((bankAccount) => ({

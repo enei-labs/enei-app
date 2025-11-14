@@ -20,6 +20,7 @@ import { CompanyBillTemplateData } from "@components/ElectricBill/CompanyBillTem
 import { DialogErrorBoundary } from "@components/ErrorBoundary";
 import EmailIcon from "@mui/icons-material/Email";
 import { ManualImportInfoCard } from "@components/ElectricBill/ManualImportInfoCard";
+import { generateBillPdf } from "@utils/generateBillPdf";
 
 interface IndustryBillDialogProps {
   isOpenDialog: boolean;
@@ -150,8 +151,18 @@ export const IndustryBillDialog = ({
 
   const handleSendEmail = async () => {
     try {
+      // Generate PDF from the current bill template
+      const { base64, fileName } = await generateBillPdf(
+        componentRef,
+        `industry_bill_${industryBill.id}_${new Date().getTime()}.pdf`
+      );
+
       const { data: sendData } = await sendIndustryBillEmail({
-        variables: { industryBillId: industryBill.id },
+        variables: {
+          industryBillId: industryBill.id,
+          pdfContent: base64,
+          fileName: fileName,
+        },
       });
 
       if (sendData?.sendIndustryBillEmail?.success) {
