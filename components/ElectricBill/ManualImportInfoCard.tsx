@@ -20,7 +20,6 @@ export function ManualImportInfoCard({
   importedBy,
   importedAt,
 }: ManualImportInfoCardProps) {
-  console.log({ originalFileDownloadUrl, generatedPdfDownloadUrl })
   // 只在手動匯入時顯示
   if (billSource !== 'MANUAL_IMPORT') {
     return null;
