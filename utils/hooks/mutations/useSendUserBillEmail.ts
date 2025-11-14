@@ -6,9 +6,15 @@ interface SendUserBillEmailResponse {
   message?: string;
 }
 
+export interface SendUserBillEmailVariables {
+  userBillId: string;
+  pdfContent?: string;
+  fileName?: string;
+}
+
 export const useSendUserBillEmail = () => {
   return useMutation<
     { sendUserBillEmail: SendUserBillEmailResponse },
-    { userBillId: string }
+    SendUserBillEmailVariables
   >(SEND_USER_BILL_EMAIL);
 };

@@ -1088,6 +1088,8 @@ export type MutationResetPasswordArgs = {
 
 export type MutationSendIndustryBillEmailArgs = {
   industryBillId: Scalars['String']['input'];
+  pdfContent?: Maybe<Scalars['String']['input']>;
+  fileName?: Maybe<Scalars['String']['input']>;
 };
 
 
@@ -1103,6 +1105,8 @@ export type MutationSendResetPasswordEmailArgs = {
 
 export type MutationSendUserBillEmailArgs = {
   userBillId: Scalars['String']['input'];
+  pdfContent?: Maybe<Scalars['String']['input']>;
+  fileName?: Maybe<Scalars['String']['input']>;
 };
 
 
