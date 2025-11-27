@@ -11,8 +11,13 @@ interface Variables {
   userBillConfigId?: string;
 }
 
-export const useUserBills = (variables?: Variables) => {
+interface Options {
+  skip?: boolean;
+}
+
+export const useUserBills = (variables?: Variables, options?: Options) => {
   return useQuery<{ userBills: UserBillPage }>(USER_BILLS, {
     variables: variables,
+    skip: options?.skip,
   });
 };

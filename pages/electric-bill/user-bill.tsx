@@ -19,27 +19,23 @@ function UserBillPage() {
         <title>用戶電費單</title>
         <meta name="description" content="用戶電費單" />
       </Head>
-      {month ? (
-        <>
-          <IconBreadcrumbs
-            items={[
-              {
-                name: "電費單匯出",
-                icon: InboxOutlinedIcon,
-                href: "/electric-bill",
-              },
-              {
-                name: "用戶電費單",
-                icon: Person2OutlinedIcon,
-                href: `/electric-bill/user-bill?month=${month}`,
-              },
-            ]}
-          />
-          <Box sx={{ paddingTop: "12px" }}>
-            <UserBillPanel month={month} />
-          </Box>
-        </>
-      ) : null}
+      <IconBreadcrumbs
+        items={[
+          {
+            name: "電費單匯出",
+            icon: InboxOutlinedIcon,
+            href: "/electric-bill",
+          },
+          {
+            name: "用戶電費單",
+            icon: Person2OutlinedIcon,
+            href: `/electric-bill/user-bill${month ? `?month=${month}` : ""}`,
+          },
+        ]}
+      />
+      <Box sx={{ paddingTop: "12px" }}>
+        <UserBillPanel month={month} />
+      </Box>
     </PageErrorBoundary>
   );
 }

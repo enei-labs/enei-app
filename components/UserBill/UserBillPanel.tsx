@@ -11,7 +11,7 @@ import { IconBtn } from "@components/Button";
 import { UserBillDialog } from "./UserBillDialog";
 import { useState, useEffect, useMemo } from "react";
 import { useSearch } from "@utils/hooks/useSearch";
-import { InputSearch } from "@components/Input";
+import { InputSearch, InputDate } from "@components/Input";
 import { useRouter } from "next/router";
 import { ErrorBoundary } from "@components/ErrorBoundary";
 import { BillStatusBadge } from "@components/ElectricBill/BillStatusBadge";
@@ -28,11 +28,15 @@ const UserBillPanel = (props: UserBillPanelProps) => {
   const { setInputValue, searchTerm, executeSearch } = useSearch();
   const [isOpenDialog, setIsOpenDialog] = useState(false);
   const [userBill, setUserBill] = useState<UserBill | null>(null);
-  const { data, loading, refetch } = useUserBills({
-    month: props.month,
-    userBillConfigId: props.userBillConfigId,
-    term: searchTerm,
-  });
+  const shouldSkipQuery = !props.month && !props.userBillConfigId;
+  const { data, loading, refetch } = useUserBills(
+    {
+      month: props.month,
+      userBillConfigId: props.userBillConfigId,
+      term: searchTerm,
+    },
+    { skip: shouldSkipQuery }
+  );
 
   // Handle userBillId query parameter
   useEffect(() => {
@@ -152,26 +156,60 @@ const UserBillPanel = (props: UserBillPanelProps) => {
       <Card sx={{ mt: "36px", p: "36px" }}>
         <Typography variant="h4" sx={{ mb: "16px" }}>{title}</Typography>
         
-        {/* 搜尋 */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: "8px", mb: "16px" }}>
+        {/* 月份選擇與搜尋 */}
+        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: "16px", mb: "16px" }}>
+          <Box sx={{ width: 180, mr: "16px" }}>
+            <InputDate
+              label="選擇月份"
+              value={props.month}
+              openTo="month"
+              views={["year", "month"]}
+              onChange={(newValue) => {
+                if (newValue) {
+                  const dateObj = new Date(newValue);
+                  const year = dateObj.getFullYear();
+                  const monthNum = dateObj.getMonth() + 1;
+                  const formatted = `${year}-${monthNum.toString().padStart(2, "0")}`;
+                  router.push({
+                    pathname: router.pathname,
+                    query: { ...router.query, month: formatted },
+                  });
+                }
+              }}
+            />
+          </Box>
           <InputSearch onChange={setInputValue} onEnter={executeSearch} />
           <Tooltip title="可使用電費單名稱搜尋">
             <InfoIcon />
           </Tooltip>
         </Box>
 
-        <Table
-          configs={configs}
-          list={data?.userBills?.list}
-          total={data?.userBills?.total}
-          loading={loading}
-          onPageChange={(page) => {
-            refetch({
-              limit: page.rows,
-              offset: page.rows * page.index,
-            });
-          }}
-        />
+        {shouldSkipQuery ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              py: "64px",
+              color: "text.secondary",
+            }}
+          >
+            <Typography>請選擇月份以查看電費單</Typography>
+          </Box>
+        ) : (
+          <Table
+            configs={configs}
+            list={data?.userBills?.list}
+            total={data?.userBills?.total}
+            loading={loading}
+            onPageChange={(page) => {
+              refetch({
+                limit: page.rows,
+                offset: page.rows * page.index,
+              });
+            }}
+          />
+        )}
       </Card>
       {userBill && (
         <UserBillDialog
