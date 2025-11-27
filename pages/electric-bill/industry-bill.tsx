@@ -18,29 +18,25 @@ function IndustryBillPage() {
         <title>發電業電費單</title>
         <meta name="description" content="發電業電費單" />
       </Head>
-      {month ? (
-        <>
-          <IconBreadcrumbs
-            items={[
-              {
-                name: "電費單匯出",
-                icon: InboxOutlinedIcon,
-                href: "/electric-bill",
-              },
-              {
-                name: "發電業電費單",
-                icon: Person2OutlinedIcon,
-                href: `/electric-bill/industry-bill?month=${month}`,
-              },
-            ]}
-          />
-          <Box sx={{ paddingTop: "12px" }}>
-            <PageErrorBoundary>
-              <IndustryBillPanel month={month} />
-            </PageErrorBoundary>
-          </Box>
-        </>
-      ) : null}
+      <IconBreadcrumbs
+        items={[
+          {
+            name: "電費單匯出",
+            icon: InboxOutlinedIcon,
+            href: "/electric-bill",
+          },
+          {
+            name: "發電業電費單",
+            icon: Person2OutlinedIcon,
+            href: `/electric-bill/industry-bill${month ? `?month=${month}` : ""}`,
+          },
+        ]}
+      />
+      <Box sx={{ paddingTop: "12px" }}>
+        <PageErrorBoundary>
+          <IndustryBillPanel month={month} />
+        </PageErrorBoundary>
+      </Box>
     </>
   );
 }

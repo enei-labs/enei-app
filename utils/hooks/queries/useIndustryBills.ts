@@ -11,8 +11,13 @@ interface Variables {
   industryBillConfigId?: string;
 }
 
-export const useIndustryBills = (variables?: Variables) => {
+interface Options {
+  skip?: boolean;
+}
+
+export const useIndustryBills = (variables?: Variables, options?: Options) => {
   return useQuery<{ industryBills: IndustryBillPage }>(INDUSTRY_BILLS, {
     variables: variables,
+    skip: options?.skip,
   })
 }
