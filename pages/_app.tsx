@@ -2,6 +2,7 @@ import { ApolloProvider } from "@apollo/client";
 import Router from "next/router";
 import theme from "@config/theme";
 import { AuthProvider } from "@core/context/auth";
+import { TaskProgressProvider } from "@core/context/task-progress";
 import client from "@core/graphql";
 import { ThemeProvider } from "@mui/material";
 import "@styles/globals.css";
@@ -11,6 +12,7 @@ import { ReactElement, ReactNode } from "react";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import Snackbar from "@components/Snackbar";
+import { TaskProgressPanel } from "@components/TaskProgress";
 import "@styles/nprogress.css";
 import { useNProgress } from "@utils/hooks/useNProgress";
 import { ErrorBoundary } from "@components/ErrorBoundary";
@@ -41,10 +43,13 @@ function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <ApolloProvider client={client}>
         <AuthProvider>
-          <ErrorBoundary>
-            <ThemeProvider theme={theme}>{component}</ThemeProvider>
-          </ErrorBoundary>
-          <Snackbar />
+          <TaskProgressProvider>
+            <ErrorBoundary>
+              <ThemeProvider theme={theme}>{component}</ThemeProvider>
+            </ErrorBoundary>
+            <TaskProgressPanel />
+            <Snackbar />
+          </TaskProgressProvider>
         </AuthProvider>
       </ApolloProvider>
     </LocalizationProvider>

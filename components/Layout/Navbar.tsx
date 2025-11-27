@@ -3,6 +3,7 @@ import Toolbar from "@mui/material/Toolbar";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 import { useRouter } from "next/router";
+import { TaskProgressIcon } from "@components/TaskProgress";
 
 const style = {
   logo: {
@@ -29,6 +30,8 @@ const Navbar = () => {
           justifyContent: "flex-end",
         }}
       >
+        {/* 背景任務進度 */}
+        <TaskProgressIcon />
         {/* @TODO: Add notifications */}
         {/* <IconButton
           size="large"

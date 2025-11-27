@@ -24,12 +24,15 @@ import { ElectricBillStatus, IndustryBill } from "@core/graphql/types";
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { gql } from "@apollo/client";
+import { useTaskProgress, TaskStatus, TaskType } from "@core/context/task-progress";
 
 const SEND_INDUSTRY_BILLS_EMAIL = gql`
   mutation SendIndustryBillsEmail($month: String!) {
     sendIndustryBillsEmail(month: $month) {
       success
       message
+      batchId
+      totalJobs
     }
   }
 `;
@@ -49,6 +52,7 @@ export const IndustryBillEmailModal = ({
 }: IndustryBillEmailModalProps) => {
   const [sendEmail, { loading }] = useMutation(SEND_INDUSTRY_BILLS_EMAIL);
   const [error, setError] = useState<string | null>(null);
+  const { addTask, selectTask } = useTaskProgress();
 
   // 檢查未審核的帳單
   const unapprovedBills = bills.filter(
@@ -64,8 +68,25 @@ export const IndustryBillEmailModal = ({
       });
 
       if (data?.sendIndustryBillsEmail?.success) {
+        // 添加任務到進度追蹤
+        const { batchId, totalJobs } = data.sendIndustryBillsEmail;
+        if (batchId) {
+          const now = new Date().toISOString();
+          addTask({
+            batchId,
+            type: TaskType.INDUSTRY_BILL_EMAIL,
+            title: `${month} 產業帳單郵件`,
+            totalJobs: totalJobs || bills.length,
+            completedJobs: 0,
+            failedJobs: 0,
+            status: TaskStatus.PENDING,
+            createdAt: now,
+            updatedAt: now,
+          });
+          // 選中此任務以顯示詳情
+          selectTask(batchId);
+        }
         onClose();
-        // 可以加上成功通知
       } else {
         setError(data?.sendIndustryBillsEmail?.message || "寄信失敗");
       }
