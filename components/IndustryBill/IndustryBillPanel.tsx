@@ -12,7 +12,6 @@ import { IconBtn } from "@components/Button";
 import { IndustryBillDialog } from "./IndustryBillDialog";
 import { IndustryBillEmailModal } from "./IndustryBillEmailModal";
 import { useState, useEffect, useMemo } from "react";
-import { ReviewStatusLookup } from "@core/look-up/review-status";
 import { useSearch } from "@utils/hooks/useSearch";
 import { InputSearch, InputDate } from "@components/Input";
 import { useRouter } from "next/router";
@@ -31,16 +30,10 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
   const { setInputValue, searchTerm, executeSearch } = useSearch();
   const [isOpenDialog, setIsOpenDialog] = useState(false);
   const [industryBill, setIndustryBill] = useState<IndustryBill | null>(null);
-  const [emailModalState, setEmailModalState] = useState<{
-    open: boolean;
-    month: string;
-    bills: IndustryBill[];
-  }>({
-    open: false,
-    month: "",
-    bills: [],
-  });
+  const [emailModalOpen, setEmailModalOpen] = useState(false);
   const shouldSkipQuery = !props.month && !props.industryBillConfigId;
+
+  // 主要查詢（包含狀態統計）
   const { data, loading, refetch } = useIndustryBills(
     {
       month: props.month,
@@ -163,13 +156,8 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
     return `發電業電費單`;
   }, [props.industryBillConfigName, props.month]);
 
-  // 計算已審核的帳單數量
-  const approvedCount = useMemo(() => {
-    if (!data?.industryBills?.list) return 0;
-    return data.industryBills.list.filter(
-      (bill) => bill.status === ElectricBillStatus.Approved
-    ).length;
-  }, [data?.industryBills?.list]);
+  // 從後端取得的狀態統計
+  const approvedCount = data?.industryBills?.statusCounts?.approvedCount || 0;
 
   return (
     <ErrorBoundary>
@@ -225,13 +213,7 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
             <Button
               variant="contained"
               startIcon={<EmailIcon />}
-              onClick={() =>
-                setEmailModalState({
-                  open: true,
-                  month: props.month || "",
-                  bills: data.industryBills.list,
-                })
-              }
+              onClick={() => setEmailModalOpen(true)}
             >
               寄送電費單
             </Button>
@@ -272,12 +254,13 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
           onClose={handleCloseDialog}
         />
       )}
-      {emailModalState.open && (
+      {emailModalOpen && (
         <IndustryBillEmailModal
-          open={emailModalState.open}
-          onClose={() => setEmailModalState({ open: false, month: "", bills: [] })}
-          month={emailModalState.month}
-          bills={emailModalState.bills}
+          open={emailModalOpen}
+          onClose={() => setEmailModalOpen(false)}
+          month={props.month || ""}
+          bills={data?.industryBills?.list || []}
+          statusCounts={data?.industryBills?.statusCounts}
         />
       )}
     </ErrorBoundary>

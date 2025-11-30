@@ -21,6 +21,12 @@ export const INDUSTRY_BILLS = gql`
       list {
         ...industryBillBaseFields
       }
+      statusCounts {
+        approvedCount
+        pendingCount
+        draftCount
+        rejectedCount
+      }
     }
   }
 `

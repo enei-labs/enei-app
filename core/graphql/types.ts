@@ -13,6 +13,7 @@ export type Scalars = {
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
   DateTime: { input: any; output: any; }
+  JSON: { input: any; output: any; }
   UUID: { input: any; output: any; }
 };
 
@@ -175,6 +176,32 @@ export type BasicInfoInput = {
   totalCapacity: Scalars['Float']['input'];
   /** 轉供容量（Watts） */
   transferCapacity: Scalars['Float']['input'];
+};
+
+/** 批次任務進度 */
+export type BatchTaskProgressDto = {
+  __typename?: 'BatchTaskProgressDto';
+  batchId: Scalars['ID']['output'];
+  /** 已完成數 */
+  completedJobs: Scalars['Int']['output'];
+  /** 建立時間 */
+  createdAt: Scalars['String']['output'];
+  /** 建立者 ID */
+  createdBy?: Maybe<Scalars['String']['output']>;
+  /** 失敗數 */
+  failedJobs: Scalars['Int']['output'];
+  /** 任務特定資訊 */
+  metadata?: Maybe<Scalars['JSON']['output']>;
+  /** 任務狀態 */
+  status: TaskStatus;
+  /** 顯示用標題 */
+  title: Scalars['String']['output'];
+  /** 總子任務數 */
+  totalJobs: Scalars['Int']['output'];
+  /** 任務類型 */
+  type: Scalars['String']['output'];
+  /** 更新時間 */
+  updatedAt: Scalars['String']['output'];
 };
 
 export enum BillSource {
@@ -771,7 +798,21 @@ export type IndustryBillConfigRecipientAccount = {
 export type IndustryBillPage = {
   __typename?: 'IndustryBillPage';
   list: Array<IndustryBill>;
+  /** 各狀態的帳單數量統計 */
+  statusCounts?: Maybe<IndustryBillStatusCountsDto>;
   total: Scalars['Int']['output'];
+};
+
+export type IndustryBillStatusCountsDto = {
+  __typename?: 'IndustryBillStatusCountsDto';
+  /** 已審核筆數 */
+  approvedCount: Scalars['Int']['output'];
+  /** 未完成筆數 */
+  draftCount: Scalars['Int']['output'];
+  /** 待審核筆數 */
+  pendingCount: Scalars['Int']['output'];
+  /** 已拒絕筆數 */
+  rejectedCount: Scalars['Int']['output'];
 };
 
 export type IndustryBillsByMonth = {
@@ -790,6 +831,24 @@ export type InvalidSignInInputError = Error & {
   __typename?: 'InvalidSignInInputError';
   id: Scalars['ID']['output'];
   message: Scalars['String']['output'];
+};
+
+/** 子任務進度 */
+export type JobTaskProgressDto = {
+  __typename?: 'JobTaskProgressDto';
+  /** 完成時間 */
+  completedAt?: Maybe<Scalars['String']['output']>;
+  /** 錯誤訊息 */
+  errorMessage?: Maybe<Scalars['String']['output']>;
+  jobId: Scalars['ID']['output'];
+  /** 顯示用標籤 */
+  label: Scalars['String']['output'];
+  /** 任務特定資訊 */
+  metadata?: Maybe<Scalars['JSON']['output']>;
+  /** 開始時間 */
+  startedAt?: Maybe<Scalars['String']['output']>;
+  /** 任務狀態 */
+  status: TaskStatus;
 };
 
 export type ManualIndustryBillImport = {
@@ -1087,13 +1146,14 @@ export type MutationResetPasswordArgs = {
 
 
 export type MutationSendIndustryBillEmailArgs = {
+  fileName?: InputMaybe<Scalars['String']['input']>;
   industryBillId: Scalars['String']['input'];
-  pdfContent?: Maybe<Scalars['String']['input']>;
-  fileName?: Maybe<Scalars['String']['input']>;
+  pdfContent?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type MutationSendIndustryBillsEmailArgs = {
+  isTestMode?: InputMaybe<Scalars['Boolean']['input']>;
   month: Scalars['String']['input'];
 };
 
@@ -1104,9 +1164,9 @@ export type MutationSendResetPasswordEmailArgs = {
 
 
 export type MutationSendUserBillEmailArgs = {
+  fileName?: InputMaybe<Scalars['String']['input']>;
+  pdfContent?: InputMaybe<Scalars['String']['input']>;
   userBillId: Scalars['String']['input'];
-  pdfContent?: Maybe<Scalars['String']['input']>;
-  fileName?: Maybe<Scalars['String']['input']>;
 };
 
 
@@ -1222,6 +1282,8 @@ export type PowerPlantRecipientAccount = {
 export type Query = {
   __typename?: 'Query';
   accounts: AccountPage;
+  /** 取得活躍的背景任務列表 */
+  activeTasks: Array<BatchTaskProgressDto>;
   adminPermissions: Array<RoleInfo>;
   admins: AdminPage;
   companies: CompanyPage;
@@ -1244,6 +1306,8 @@ export type Query = {
   me?: Maybe<Account>;
   powerPlant: PowerPlant;
   powerPlants: PowerPlantPage;
+  /** 取得任務進度詳細資訊 */
+  taskProgress?: Maybe<TaskProgressDetailDto>;
   tpcBill: TpcBill;
   tpcBillMonthlyTransferDegrees: TpcBillMonthlyTransferDegrees;
   tpcBills: TpcBillPage;
@@ -1266,6 +1330,11 @@ export type QueryAccountsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   term?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryActiveTasksArgs = {
+  userId?: InputMaybe<Scalars['ID']['input']>;
 };
 
 
@@ -1380,6 +1449,11 @@ export type QueryPowerPlantsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   term?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryTaskProgressArgs = {
+  batchId: Scalars['ID']['input'];
 };
 
 
@@ -1626,8 +1700,12 @@ export type SendIndustryBillEmailResponse = {
 
 export type SendIndustryBillsEmailResponse = {
   __typename?: 'SendIndustryBillsEmailResponse';
+  /** 批次任務 ID，用於追蹤進度 */
+  batchId?: Maybe<Scalars['String']['output']>;
   message?: Maybe<Scalars['String']['output']>;
   success: Scalars['Boolean']['output'];
+  /** 總任務數量（公司數） */
+  totalJobs?: Maybe<Scalars['Int']['output']>;
 };
 
 export type SendResetPasswordEmailResponse = AccountNotFoundError | Success;
@@ -1669,6 +1747,21 @@ export type TpcBillPage = {
   list: Array<TpcBill>;
   total: Scalars['Int']['output'];
 };
+
+/** 任務進度詳細資訊 */
+export type TaskProgressDetailDto = {
+  __typename?: 'TaskProgressDetailDto';
+  batch: BatchTaskProgressDto;
+  jobs: Array<JobTaskProgressDto>;
+};
+
+/** 任務狀態 */
+export enum TaskStatus {
+  Completed = 'COMPLETED',
+  Failed = 'FAILED',
+  InProgress = 'IN_PROGRESS',
+  Pending = 'PENDING'
+}
 
 export type TransferDegree = {
   __typename?: 'TransferDegree';
