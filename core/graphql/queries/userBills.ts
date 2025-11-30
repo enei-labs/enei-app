@@ -21,6 +21,12 @@ export const USER_BILLS = gql`
       list {
         ...userBillBaseFields
       }
+      statusCounts {
+        approvedCount
+        pendingCount
+        draftCount
+        rejectedCount
+      }
     }
   }
 `

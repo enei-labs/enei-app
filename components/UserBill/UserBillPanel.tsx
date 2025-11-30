@@ -7,8 +7,10 @@ import { formatDateTime } from "@utils/format";
 import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import InfoIcon from "@mui/icons-material/Info";
 import DownloadIcon from "@mui/icons-material/Download";
+import EmailIcon from "@mui/icons-material/Email";
 import { IconBtn } from "@components/Button";
 import { UserBillDialog } from "./UserBillDialog";
+import { UserBillEmailModal } from "./UserBillEmailModal";
 import { useState, useEffect, useMemo } from "react";
 import { useSearch } from "@utils/hooks/useSearch";
 import { InputSearch, InputDate } from "@components/Input";
@@ -28,6 +30,7 @@ const UserBillPanel = (props: UserBillPanelProps) => {
   const { setInputValue, searchTerm, executeSearch } = useSearch();
   const [isOpenDialog, setIsOpenDialog] = useState(false);
   const [userBill, setUserBill] = useState<UserBill | null>(null);
+  const [emailModalOpen, setEmailModalOpen] = useState(false);
   const shouldSkipQuery = !props.month && !props.userBillConfigId;
   const { data, loading, refetch } = useUserBills(
     {
@@ -147,9 +150,12 @@ const UserBillPanel = (props: UserBillPanelProps) => {
     if (props.month) {
       return `用戶電費單 - ${formatDateTime(props.month, "yyyy-MM")}`;
     }
-    
+
     return `用戶電費單`;
   }, [props.userBillConfigName, props.month]);
+
+  // 從後端取得的狀態統計
+  const approvedCount = data?.userBills?.statusCounts?.approvedCount || 0;
 
   return (
     <ErrorBoundary>
@@ -184,6 +190,34 @@ const UserBillPanel = (props: UserBillPanelProps) => {
           </Tooltip>
         </Box>
 
+        {/* 操作區域 - 只在有電費單時顯示 */}
+        {!shouldSkipQuery && data?.userBills?.list && data.userBills.list.length > 0 && (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              mb: 2,
+              p: 2,
+              backgroundColor: "grey.50",
+              borderRadius: 2,
+            }}
+          >
+            <Box>
+              <Typography variant="body2" color="text.secondary">
+                共 {data.userBills.total} 筆電費單，已審核 {approvedCount} 筆
+              </Typography>
+            </Box>
+            <Button
+              variant="contained"
+              startIcon={<EmailIcon />}
+              onClick={() => setEmailModalOpen(true)}
+            >
+              寄送電費單
+            </Button>
+          </Box>
+        )}
+
         {shouldSkipQuery ? (
           <Box
             sx={{
@@ -216,6 +250,15 @@ const UserBillPanel = (props: UserBillPanelProps) => {
           userBill={userBill}
           isOpenDialog={isOpenDialog}
           onClose={handleCloseDialog}
+        />
+      )}
+      {emailModalOpen && (
+        <UserBillEmailModal
+          open={emailModalOpen}
+          onClose={() => setEmailModalOpen(false)}
+          month={props.month || ""}
+          bills={data?.userBills?.list || []}
+          statusCounts={data?.userBills?.statusCounts}
         />
       )}
     </ErrorBoundary>

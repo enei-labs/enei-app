@@ -951,6 +951,7 @@ export type Mutation = {
   sendIndustryBillsEmail: SendIndustryBillsEmailResponse;
   sendResetPasswordEmail: SendResetPasswordEmailResponse;
   sendUserBillEmail: SendUserBillEmailResponse;
+  sendUserBillsEmail: SendUserBillsEmailResponse;
   setPassword: Account;
   signIn: SignInResponse;
   signOut: Success;
@@ -1167,6 +1168,12 @@ export type MutationSendUserBillEmailArgs = {
   fileName?: InputMaybe<Scalars['String']['input']>;
   pdfContent?: InputMaybe<Scalars['String']['input']>;
   userBillId: Scalars['String']['input'];
+};
+
+
+export type MutationSendUserBillsEmailArgs = {
+  isTestMode?: InputMaybe<Scalars['Boolean']['input']>;
+  month: Scalars['String']['input'];
 };
 
 
@@ -1716,6 +1723,16 @@ export type SendUserBillEmailResponse = {
   success: Scalars['Boolean']['output'];
 };
 
+export type SendUserBillsEmailResponse = {
+  __typename?: 'SendUserBillsEmailResponse';
+  /** 批次任務 ID，用於追蹤進度 */
+  batchId?: Maybe<Scalars['String']['output']>;
+  message?: Maybe<Scalars['String']['output']>;
+  success: Scalars['Boolean']['output'];
+  /** 總任務數量（用戶數） */
+  totalJobs?: Maybe<Scalars['Int']['output']>;
+};
+
 export type SignInResponse = Admin | Guest | InvalidSignInInputError;
 
 export type Success = {
@@ -2059,7 +2076,21 @@ export type UserBillElectricNumberInfo = {
 export type UserBillPage = {
   __typename?: 'UserBillPage';
   list: Array<UserBill>;
+  /** 各狀態的帳單數量統計 */
+  statusCounts?: Maybe<UserBillStatusCountsDto>;
   total: Scalars['Int']['output'];
+};
+
+export type UserBillStatusCountsDto = {
+  __typename?: 'UserBillStatusCountsDto';
+  /** 已審核筆數 */
+  approvedCount: Scalars['Int']['output'];
+  /** 未完成筆數 */
+  draftCount: Scalars['Int']['output'];
+  /** 待審核筆數 */
+  pendingCount: Scalars['Int']['output'];
+  /** 已拒絕筆數 */
+  rejectedCount: Scalars['Int']['output'];
 };
 
 export type UserBillsByMonth = {

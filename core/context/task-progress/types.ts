@@ -13,6 +13,7 @@ export enum TaskStatus {
 
 export const TaskType = {
   INDUSTRY_BILL_EMAIL: 'industry-bill-email',
+  USER_BILL_EMAIL: 'user-bill-email',
   DATA_IMPORT: 'data-import',
   REPORT_GENERATION: 'report-generation',
 } as const;
