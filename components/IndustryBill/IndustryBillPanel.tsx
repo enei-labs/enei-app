@@ -1,5 +1,5 @@
 import { Table } from "@components/Table";
-import { IndustryBill } from "@core/graphql/types";
+import { ElectricBillStatus, IndustryBill } from "@core/graphql/types";
 import { Config } from "../Table/Table";
 import { Box, Typography, Card, Tooltip, Button } from "@mui/material";
 import { useIndustryBills } from "@utils/hooks/queries";
@@ -7,8 +7,10 @@ import { formatDateTime } from "@utils/format";
 import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import InfoIcon from "@mui/icons-material/Info";
 import DownloadIcon from "@mui/icons-material/Download";
+import EmailIcon from "@mui/icons-material/Email";
 import { IconBtn } from "@components/Button";
 import { IndustryBillDialog } from "./IndustryBillDialog";
+import { IndustryBillEmailModal } from "./IndustryBillEmailModal";
 import { useState, useEffect, useMemo } from "react";
 import { ReviewStatusLookup } from "@core/look-up/review-status";
 import { useSearch } from "@utils/hooks/useSearch";
@@ -29,6 +31,15 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
   const { setInputValue, searchTerm, executeSearch } = useSearch();
   const [isOpenDialog, setIsOpenDialog] = useState(false);
   const [industryBill, setIndustryBill] = useState<IndustryBill | null>(null);
+  const [emailModalState, setEmailModalState] = useState<{
+    open: boolean;
+    month: string;
+    bills: IndustryBill[];
+  }>({
+    open: false,
+    month: "",
+    bills: [],
+  });
   const shouldSkipQuery = !props.month && !props.industryBillConfigId;
   const { data, loading, refetch } = useIndustryBills(
     {
@@ -148,9 +159,17 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
     if (props.month) {
       return `發電業電費單 ${formatDateTime(props.month, "yyyy-MM")}`;
     }
-    
+
     return `發電業電費單`;
   }, [props.industryBillConfigName, props.month]);
+
+  // 計算已審核的帳單數量
+  const approvedCount = useMemo(() => {
+    if (!data?.industryBills?.list) return 0;
+    return data.industryBills.list.filter(
+      (bill) => bill.status === ElectricBillStatus.Approved
+    ).length;
+  }, [data?.industryBills?.list]);
 
   return (
     <ErrorBoundary>
@@ -185,6 +204,40 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
           </Tooltip>
         </Box>
 
+        {/* 操作區域 - 只在有電費單時顯示 */}
+        {!shouldSkipQuery && data?.industryBills?.list && data.industryBills.list.length > 0 && (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              mb: 2,
+              p: 2,
+              backgroundColor: "grey.50",
+              borderRadius: 2,
+            }}
+          >
+            <Box>
+              <Typography variant="body2" color="text.secondary">
+                共 {data.industryBills.total} 筆電費單，已審核 {approvedCount} 筆
+              </Typography>
+            </Box>
+            <Button
+              variant="contained"
+              startIcon={<EmailIcon />}
+              onClick={() =>
+                setEmailModalState({
+                  open: true,
+                  month: props.month || "",
+                  bills: data.industryBills.list,
+                })
+              }
+            >
+              寄送電費單
+            </Button>
+          </Box>
+        )}
+
         {shouldSkipQuery ? (
           <Box
             sx={{
@@ -217,6 +270,14 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
           industryBill={industryBill}
           isOpenDialog={isOpenDialog}
           onClose={handleCloseDialog}
+        />
+      )}
+      {emailModalState.open && (
+        <IndustryBillEmailModal
+          open={emailModalState.open}
+          onClose={() => setEmailModalState({ open: false, month: "", bills: [] })}
+          month={emailModalState.month}
+          bills={emailModalState.bills}
         />
       )}
     </ErrorBoundary>
