@@ -309,10 +309,20 @@ export function ReadExcelInput({ singleTabMode = false }: ReadExcelInputProps) {
             billingMonthParam = `${year}-${month}`;
           }
 
+          // Subtract one month for the search
+          const [yearStr, monthStr] = billingMonthParam.split('-');
+          let searchYear = parseInt(yearStr, 10);
+          let searchMonth = parseInt(monthStr, 10) - 1;
+          if (searchMonth === 0) {
+            searchMonth = 12;
+            searchYear -= 1;
+          }
+          const searchBillingMonth = `${searchYear}-${String(searchMonth).padStart(2, '0')}`;
+
           const { data: billData } = await findIndustryBill({
             variables: {
               electricNumber: industryBillData.serialNumber,
-              billingMonth: billingMonthParam,
+              billingMonth: searchBillingMonth,
               industryBillConfigId,
             },
           });
