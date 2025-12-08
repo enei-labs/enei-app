@@ -92,7 +92,6 @@ function TransferApplicationProgressPage() {
               }
             />
           </Card>
-          <Divider sx={{ my: "24px" }} />
         </AuthGuard>
       </Box>
       {open ? (

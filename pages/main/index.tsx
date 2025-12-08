@@ -164,6 +164,7 @@ function MainPage() {
               />
             </Card>
           </Grid>
+
           <Grid item sm={6}>
             <Card sx={{ p: CARD_PADDING }}>
               <TurnoverChart
@@ -185,8 +186,6 @@ function MainPage() {
             </Card>
           </Grid>
         </Grid>
-
-        <Divider sx={{ margin: SECTION_MARGIN }} />
 
         <Grid container spacing={GRID_SPACING} marginTop={GRID_TOP_MARGIN}>
           <Grid item sm={6}>

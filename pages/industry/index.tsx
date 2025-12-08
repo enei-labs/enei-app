@@ -77,7 +77,7 @@ function IndustryPage() {
               setCompanyFn={(company: Company) => setCompany(company)}
             />
           </Card>
-          <Divider sx={{ my: "24px" }} />
+          {company ? <Divider sx={{ my: "24px" }} /> : null}
         </AuthGuard>
         <Box id="company-contract-panel">
           {company ? <CompanyContractPanel company={company} /> : null}
