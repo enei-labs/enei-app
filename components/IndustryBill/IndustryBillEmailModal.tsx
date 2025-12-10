@@ -18,17 +18,16 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import WarningIcon from "@mui/icons-material/Warning";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import EmailIcon from "@mui/icons-material/Email";
-import { ElectricBillStatus, IndustryBill } from "@core/graphql/types";
+import { ElectricBillStatus, IndustryBill, BillSource } from "@core/graphql/types";
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { gql } from "@apollo/client";
 import { useTaskProgress, TaskStatus, TaskType } from "@core/context/task-progress";
 
 const SEND_INDUSTRY_BILLS_EMAIL = gql`
-  mutation SendIndustryBillsEmail($month: String!) {
-    sendIndustryBillsEmail(month: $month) {
+  mutation SendIndustryBillsEmail($month: String!, $industryBillIds: [String!]) {
+    sendIndustryBillsEmail(month: $month, industryBillIds: $industryBillIds) {
       success
       message
       batchId
@@ -37,19 +36,11 @@ const SEND_INDUSTRY_BILLS_EMAIL = gql`
   }
 `;
 
-interface StatusCounts {
-  approvedCount: number;
-  pendingCount: number;
-  draftCount: number;
-  rejectedCount: number;
-}
-
 interface IndustryBillEmailModalProps {
   open: boolean;
   onClose: () => void;
   month: string;
   bills: IndustryBill[];
-  statusCounts?: StatusCounts;
 }
 
 export const IndustryBillEmailModal = ({
@@ -57,32 +48,30 @@ export const IndustryBillEmailModal = ({
   onClose,
   month,
   bills,
-  statusCounts,
 }: IndustryBillEmailModalProps) => {
   const [sendEmail, { loading }] = useMutation(SEND_INDUSTRY_BILLS_EMAIL);
   const [error, setError] = useState<string | null>(null);
   const { addTask, selectTask } = useTaskProgress();
 
-  // 從後端取得的已審核數量（優先使用），或從 bills 計算（fallback）
-  const approvedCount = statusCounts?.approvedCount ?? bills.filter(
-    (bill) => bill.status === ElectricBillStatus.Approved
-  ).length;
-  const unapprovedCount = statusCounts
-    ? (statusCounts.pendingCount + statusCounts.draftCount + statusCounts.rejectedCount)
-    : bills.filter((bill) => bill.status !== ElectricBillStatus.Approved).length;
+  // 符合條件的電費單：已審核 OR (手動匯入 且 有原始檔案)
+  const eligibleBills = bills.filter(
+    (bill) =>
+      bill.status === ElectricBillStatus.Approved ||
+      (bill.billSource === BillSource.ManualImport && bill.originalFileDownloadUrl)
+  );
+  const ineligibleBills = bills.filter(
+    (bill) =>
+      bill.status !== ElectricBillStatus.Approved &&
+      !(bill.billSource === BillSource.ManualImport && bill.originalFileDownloadUrl)
+  );
 
-  // 從當前頁面的 bills 中篩選已審核帳單用於顯示預覽
-  const approvedBills = bills.filter(
-    (bill) => bill.status === ElectricBillStatus.Approved
-  );
-  const unapprovedBills = bills.filter(
-    (bill) => bill.status !== ElectricBillStatus.Approved
-  );
-  const hasApprovedBills = approvedCount > 0;
+  const eligibleCount = eligibleBills.length;
+  const ineligibleCount = ineligibleBills.length;
+  const hasEligibleBills = eligibleCount > 0;
 
   // 計算郵件數量（按發電業分組）
   const industryGroups = new Map<string, IndustryBill[]>();
-  approvedBills.forEach((bill) => {
+  eligibleBills.forEach((bill) => {
     const industryId = bill.industryBillConfig?.industry?.id || "unknown";
     if (!industryGroups.has(industryId)) {
       industryGroups.set(industryId, []);
@@ -95,7 +84,10 @@ export const IndustryBillEmailModal = ({
     try {
       setError(null);
       const { data } = await sendEmail({
-        variables: { month },
+        variables: {
+          month,
+          industryBillIds: eligibleBills.map((bill) => bill.id),
+        },
       });
 
       if (data?.sendIndustryBillsEmail?.success) {
@@ -107,7 +99,7 @@ export const IndustryBillEmailModal = ({
             batchId,
             type: TaskType.INDUSTRY_BILL_EMAIL,
             title: `${month} 產業帳單郵件`,
-            totalJobs: totalJobs || approvedCount,
+            totalJobs: totalJobs || eligibleCount,
             completedJobs: 0,
             failedJobs: 0,
             status: TaskStatus.PENDING,
@@ -161,8 +153,8 @@ export const IndustryBillEmailModal = ({
         </IconButton>
       </DialogTitle>
       <DialogContent sx={{ mt: 2 }}>
-        {!hasApprovedBills ? (
-          // 情境：沒有已審核的帳單
+        {!hasEligibleBills ? (
+          // 情境：沒有符合條件的帳單
           <Box>
             <Alert
               severity="error"
@@ -170,10 +162,10 @@ export const IndustryBillEmailModal = ({
               icon={<WarningIcon />}
             >
               <Typography variant="body2" fontWeight="500">
-                該月份無已審核的電費單可寄送
+                無符合條件的電費單可寄送
               </Typography>
               <Typography variant="caption" color="text.secondary">
-                共 {unapprovedCount} 筆電費單尚未審核
+                共 {ineligibleCount} 筆電費單不符合寄送條件
               </Typography>
             </Alert>
 
@@ -188,7 +180,7 @@ export const IndustryBillEmailModal = ({
                 待處理電費單清單
               </Typography>
               <List sx={{ py: 0 }}>
-                {unapprovedBills.slice(0, 10).map((bill, index) => {
+                {ineligibleBills.slice(0, 10).map((bill, index) => {
                   const statusConfig = getStatusConfig(bill.status);
                   return (
                     <Box key={bill.id}>
@@ -233,50 +225,23 @@ export const IndustryBillEmailModal = ({
                           }
                         />
                       </ListItem>
-                      {index < Math.min(unapprovedBills.length, 10) - 1 && (
+                      {index < Math.min(ineligibleBills.length, 10) - 1 && (
                         <Divider variant="inset" component="li" />
                       )}
                     </Box>
                   );
                 })}
-                {unapprovedBills.length > 10 && (
+                {ineligibleBills.length > 10 && (
                   <Typography variant="caption" color="text.secondary" sx={{ pl: 2, display: "block", mt: 1 }}>
-                    ...及其他 {unapprovedBills.length - 10} 筆
+                    ...及其他 {ineligibleBills.length - 10} 筆
                   </Typography>
                 )}
               </List>
             </Box>
           </Box>
         ) : (
-          // 情境：有已審核的帳單可寄送
+          // 情境：有符合條件的帳單可寄送
           <Box>
-            {unapprovedCount > 0 ? (
-              // 有部分未審核
-              <Alert
-                severity="warning"
-                sx={{ mb: 3, borderRadius: 2 }}
-                icon={<WarningIcon />}
-              >
-                <Typography variant="body2" fontWeight="500">
-                  部分電費單尚未審核
-                </Typography>
-                <Typography variant="caption" color="text.secondary">
-                  將寄送 {approvedCount} 筆已審核電費單（另有 {unapprovedCount} 筆未審核，不會寄送）
-                </Typography>
-              </Alert>
-            ) : (
-              // 全部已審核
-              <Alert
-                severity="success"
-                sx={{ mb: 3, borderRadius: 2 }}
-                icon={<CheckCircleIcon />}
-              >
-                <Typography variant="body2" fontWeight="500">
-                  所有電費單皆已審核完成
-                </Typography>
-              </Alert>
-            )}
-
             <Box sx={{
               backgroundColor: "grey.50",
               borderRadius: 2,
@@ -289,7 +254,7 @@ export const IndustryBillEmailModal = ({
                 準備寄送電費單通知
               </Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-                {month} 月份將發送 {emailCount} 封郵件，共 {approvedCount} 筆電費單
+                將發送 {emailCount} 封郵件，共 {eligibleCount} 筆電費單
               </Typography>
               <Divider sx={{ my: 2 }} />
               <Typography variant="body2" color="text.secondary" sx={{ textAlign: "left", lineHeight: 1.8 }}>
@@ -298,7 +263,7 @@ export const IndustryBillEmailModal = ({
               </Typography>
             </Box>
 
-            {approvedBills.length > 0 && (
+            {eligibleBills.length > 0 && (
               <Box sx={{
                 backgroundColor: "background.paper",
                 borderRadius: 2,
@@ -312,7 +277,7 @@ export const IndustryBillEmailModal = ({
                   電費單清單預覽
                 </Typography>
                 <List dense sx={{ py: 0 }}>
-                  {approvedBills.slice(0, 5).map((bill) => (
+                  {eligibleBills.slice(0, 5).map((bill) => (
                     <ListItem key={bill.id} sx={{ px: 1, py: 0.5 }}>
                       <ListItemText
                         primary={
@@ -328,9 +293,9 @@ export const IndustryBillEmailModal = ({
                       />
                     </ListItem>
                   ))}
-                  {approvedCount > 5 && (
+                  {eligibleCount > 5 && (
                     <Typography variant="caption" color="text.secondary" sx={{ pl: 2 }}>
-                      ...及其他 {approvedCount - 5} 筆
+                      ...及其他 {eligibleCount - 5} 筆
                     </Typography>
                   )}
                 </List>
@@ -347,9 +312,9 @@ export const IndustryBillEmailModal = ({
       </DialogContent>
       <DialogActions sx={{ px: 3, py: 2, borderTop: "1px solid", borderColor: "divider" }}>
         <Button onClick={onClose} disabled={loading} color="inherit">
-          {hasApprovedBills ? "取消" : "關閉"}
+          {hasEligibleBills ? "取消" : "關閉"}
         </Button>
-        {hasApprovedBills && (
+        {hasEligibleBills && (
           <Button
             onClick={handleSendEmail}
             variant="contained"

@@ -1154,7 +1154,7 @@ export type MutationSendIndustryBillEmailArgs = {
 
 
 export type MutationSendIndustryBillsEmailArgs = {
-  isTestMode?: InputMaybe<Scalars['Boolean']['input']>;
+  industryBillIds?: InputMaybe<Array<Scalars['String']['input']>>;
   month: Scalars['String']['input'];
 };
 
@@ -1172,7 +1172,6 @@ export type MutationSendUserBillEmailArgs = {
 
 
 export type MutationSendUserBillsEmailArgs = {
-  isTestMode?: InputMaybe<Scalars['Boolean']['input']>;
   month: Scalars['String']['input'];
 };
 
