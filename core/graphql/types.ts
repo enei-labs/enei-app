@@ -795,6 +795,24 @@ export type IndustryBillConfigRecipientAccount = {
   bankCode?: Maybe<Scalars['String']['output']>;
 };
 
+export type IndustryBillForEmail = {
+  __typename?: 'IndustryBillForEmail';
+  billSource?: Maybe<BillSource>;
+  /** 是否有手動匯入的原始檔案 */
+  hasOriginalFile: Scalars['Boolean']['output'];
+  id: Scalars['ID']['output'];
+  industry?: Maybe<IndustryBillIndustry>;
+  powerPlantName: Scalars['String']['output'];
+  powerPlantNumber?: Maybe<Scalars['String']['output']>;
+  status: ElectricBillStatus;
+};
+
+export type IndustryBillIndustry = {
+  __typename?: 'IndustryBillIndustry';
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+};
+
 export type IndustryBillPage = {
   __typename?: 'IndustryBillPage';
   list: Array<IndustryBill>;
@@ -1309,6 +1327,7 @@ export type Query = {
   industryBillConfigs: IndustryBillConfigPage;
   industryBills: IndustryBillPage;
   industryBillsByMonth: Array<IndustryBillsByMonth>;
+  industryBillsForEmail: Array<IndustryBillForEmail>;
   me?: Maybe<Account>;
   powerPlant: PowerPlant;
   powerPlants: PowerPlantPage;
@@ -1442,6 +1461,11 @@ export type QueryIndustryBillsArgs = {
 export type QueryIndustryBillsByMonthArgs = {
   endMonth: Scalars['String']['input'];
   startMonth: Scalars['String']['input'];
+};
+
+
+export type QueryIndustryBillsForEmailArgs = {
+  month: Scalars['String']['input'];
 };
 
 

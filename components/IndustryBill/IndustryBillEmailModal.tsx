@@ -19,11 +19,12 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import WarningIcon from "@mui/icons-material/Warning";
 import EmailIcon from "@mui/icons-material/Email";
-import { ElectricBillStatus, IndustryBill, BillSource } from "@core/graphql/types";
+import { ElectricBillStatus, IndustryBillForEmail, BillSource } from "@core/graphql/types";
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { gql } from "@apollo/client";
 import { useTaskProgress, TaskStatus, TaskType } from "@core/context/task-progress";
+import { useIndustryBillsForEmail } from "@utils/hooks/queries";
 
 const SEND_INDUSTRY_BILLS_EMAIL = gql`
   mutation SendIndustryBillsEmail($month: String!, $industryBillIds: [String!]) {
@@ -40,29 +41,32 @@ interface IndustryBillEmailModalProps {
   open: boolean;
   onClose: () => void;
   month: string;
-  bills: IndustryBill[];
 }
 
 export const IndustryBillEmailModal = ({
   open,
   onClose,
   month,
-  bills,
 }: IndustryBillEmailModalProps) => {
-  const [sendEmail, { loading }] = useMutation(SEND_INDUSTRY_BILLS_EMAIL);
+  const { data, loading: billsLoading } = useIndustryBillsForEmail(month, { skip: !open });
+  const bills = data?.industryBillsForEmail || [];
+
+  const [sendEmail, { loading: sendLoading }] = useMutation(SEND_INDUSTRY_BILLS_EMAIL);
   const [error, setError] = useState<string | null>(null);
   const { addTask, selectTask } = useTaskProgress();
+
+  const loading = billsLoading || sendLoading;
 
   // 符合條件的電費單：已審核 OR (手動匯入 且 有原始檔案)
   const eligibleBills = bills.filter(
     (bill) =>
       bill.status === ElectricBillStatus.Approved ||
-      (bill.billSource === BillSource.ManualImport && bill.originalFileDownloadUrl)
+      (bill.billSource === BillSource.ManualImport && bill.hasOriginalFile)
   );
   const ineligibleBills = bills.filter(
     (bill) =>
       bill.status !== ElectricBillStatus.Approved &&
-      !(bill.billSource === BillSource.ManualImport && bill.originalFileDownloadUrl)
+      !(bill.billSource === BillSource.ManualImport && bill.hasOriginalFile)
   );
 
   const eligibleCount = eligibleBills.length;
@@ -70,9 +74,9 @@ export const IndustryBillEmailModal = ({
   const hasEligibleBills = eligibleCount > 0;
 
   // 計算郵件數量（按發電業分組）
-  const industryGroups = new Map<string, IndustryBill[]>();
+  const industryGroups = new Map<string, IndustryBillForEmail[]>();
   eligibleBills.forEach((bill) => {
-    const industryId = bill.industryBillConfig?.industry?.id || "unknown";
+    const industryId = bill.industry?.id || "unknown";
     if (!industryGroups.has(industryId)) {
       industryGroups.set(industryId, []);
     }

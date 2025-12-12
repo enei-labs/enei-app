@@ -92,6 +92,10 @@ export const INDUSTRY_BILL_BASE_FIELDS = gql`
       name
       estimatedBillDeliverDate
       paymentDeadline
+      industry {
+        id
+        name
+      }
       recipientAccount {
         bankCode
         bankBranchCode
@@ -103,5 +107,19 @@ export const INDUSTRY_BILL_BASE_FIELDS = gql`
       contactEmail
       address
     }
+  }
+`
+
+// 精簡版 fragment - 不包含 industryBillConfig.industry，給不需要發電業資訊的頁面使用
+export const INDUSTRY_BILL_LIST_FIELDS = gql`
+  fragment industryBillListFields on IndustryBill {
+    id
+    name
+    powerPlantNumber
+    powerPlantName
+    status
+    billSource
+    originalFileDownloadUrl
+    billingDate
   }
 `

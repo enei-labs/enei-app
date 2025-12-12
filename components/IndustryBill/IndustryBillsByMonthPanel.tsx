@@ -1,6 +1,6 @@
 import { InputDate } from "@components/Input";
 import Table, { Config } from "@components/Table/Table";
-import { ElectricBillStatus, IndustryBill, IndustryBillsByMonth } from "@core/graphql/types";
+import { ElectricBillStatus, IndustryBillsByMonth } from "@core/graphql/types";
 import { Box, Card, Typography, IconButton, Tooltip, Badge } from "@mui/material";
 import { formatDateTime } from "@utils/format";
 import { useState } from "react";
@@ -32,11 +32,9 @@ export const IndustryBillsByMonthPanel = () => {
   const [emailModalState, setEmailModalState] = useState<{
     open: boolean;
     month: string;
-    bills: IndustryBill[];
   }>({
     open: false,
     month: "",
-    bills: [],
   });
 
   const { data, loading } = useIndustryBillsByMonth(
@@ -155,7 +153,6 @@ export const IndustryBillsByMonthPanel = () => {
                   setEmailModalState({
                     open: true,
                     month: formatDateTime(rowData.month, "yyyy-MM"),
-                    bills: rowData.bills,
                   });
                 }}
                 disabled={totalCount === 0}
@@ -231,9 +228,8 @@ export const IndustryBillsByMonthPanel = () => {
       {emailModalState.open && (
         <IndustryBillEmailModal
           open={emailModalState.open}
-          onClose={() => setEmailModalState({ open: false, month: "", bills: [] })}
+          onClose={() => setEmailModalState({ open: false, month: "" })}
           month={emailModalState.month}
-          bills={emailModalState.bills}
         />
       )}
     </Card>

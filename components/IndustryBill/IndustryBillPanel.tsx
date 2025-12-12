@@ -259,7 +259,6 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
           open={emailModalOpen}
           onClose={() => setEmailModalOpen(false)}
           month={props.month || ""}
-          bills={data?.industryBills?.list || []}
         />
       )}
     </ErrorBoundary>
