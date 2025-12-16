@@ -1,6 +1,6 @@
 import { LoadingButton } from "@mui/lab";
 import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
-import { UseFormHandleSubmit } from "react-hook-form";
+import { FieldErrors, UseFormHandleSubmit } from "react-hook-form";
 import { FormData } from "./FormData";
 import { toast } from "react-toastify";
 import { useUpdateTransferDocument } from "@utils/hooks/mutations";
@@ -55,11 +55,17 @@ const EditTransferDocumentBtn = (props: EditTransferDocumentBtnProps) => {
     });
   };
 
+  // 表單驗證失敗時顯示錯誤提示
+  const onInvalid = (errors: FieldErrors<FormData>) => {
+    console.error('表單驗證失敗:', errors);
+    toast.error('請確認所有必填欄位都已填寫');
+  };
+
   return (
     <LoadingButton
       loading={loading}
       startIcon={<AddIcon />}
-      onClick={handleSubmit(onUpdateTransferDocument)}
+      onClick={handleSubmit(onUpdateTransferDocument, onInvalid)}
     >
       確認
     </LoadingButton>
