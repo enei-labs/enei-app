@@ -122,13 +122,17 @@ const taiwanUBNValidation = yup.string().test(
       let sum = 0;
       for (let i = 0; i < 8; i++) {
         let product = parseInt(value[i]) * weights[i];
-        if (product > 9) {
-          product = Math.floor(product / 10) + (product % 10);
-        }
-        sum += product;
+        // 將兩位數拆開相加
+        sum += Math.floor(product / 10) + (product % 10);
       }
 
-      return sum % 10 === 0 || (sum % 10 === 9 && parseInt(value[6]) === 7);
+      // 2023年起財政部修正驗證邏輯：從能被10整除改為能被5整除
+      // 當第7位是7時，7*4=28 可算成 2+8=10 或額外加1變成11
+      if (parseInt(value[6]) === 7) {
+        return sum % 5 === 0 || (sum + 1) % 5 === 0;
+      }
+
+      return sum % 5 === 0;
     }
   );
 
