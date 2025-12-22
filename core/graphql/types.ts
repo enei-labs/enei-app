@@ -1466,6 +1466,7 @@ export type QueryIndustryBillsByMonthArgs = {
 
 export type QueryIndustryBillsForEmailArgs = {
   month: Scalars['String']['input'];
+  term?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -2082,8 +2083,12 @@ export type UserBillConfigRecipientAccount = {
   account: Scalars['String']['output'];
   /** 分行代碼 */
   bankBranchCode?: Maybe<Scalars['String']['output']>;
+  /** 分行名稱 */
+  bankBranchName?: Maybe<Scalars['String']['output']>;
   /** 銀行代碼 */
   bankCode: Scalars['String']['output'];
+  /** 銀行名稱 */
+  bankName?: Maybe<Scalars['String']['output']>;
 };
 
 export type UserBillElectricNumberInfo = {
