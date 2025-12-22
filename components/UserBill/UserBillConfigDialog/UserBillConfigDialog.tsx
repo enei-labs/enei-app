@@ -91,9 +91,10 @@ function UserBillConfigDialog(props: UserBillConfigDialogProps) {
             value: currentModifyUserBillConfig.user.id,
           },
           recipientAccount: {
-            label: `(${currentModifyUserBillConfig.recipientAccount.bankCode}) ${currentModifyUserBillConfig.recipientAccount.account}`,
+            label: `${currentModifyUserBillConfig.recipientAccount.bankCode} ${currentModifyUserBillConfig.recipientAccount.bankName || ''} ${currentModifyUserBillConfig.recipientAccount.bankBranchCode || ''} ${currentModifyUserBillConfig.recipientAccount.bankBranchName || ''} - ${currentModifyUserBillConfig.recipientAccount.account}`.trim(),
             value: {
               bankCode: currentModifyUserBillConfig.recipientAccount.bankCode,
+              bankBranchCode: currentModifyUserBillConfig.recipientAccount.bankBranchCode,
               account: currentModifyUserBillConfig.recipientAccount.account,
             },
           },

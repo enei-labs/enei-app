@@ -12,7 +12,9 @@ export const USER_BILL_CONFIG_FIELDS = gql`
     paymentDeadline
     recipientAccount {
       bankCode
+      bankName
       bankBranchCode
+      bankBranchName
       account
     }
     electricNumbers

@@ -168,9 +168,11 @@ export const UserBillDialog = ({
         )
       ),
       bank: {
-        bankName: bill.userBillConfig?.recipientAccount.bankCode ?? "",
+        bankName: bill.userBillConfig?.recipientAccount
+          ? `${bill.userBillConfig.recipientAccount.bankCode} ${bill.userBillConfig.recipientAccount.bankName || ''} ${bill.userBillConfig.recipientAccount.bankBranchCode || ''} ${bill.userBillConfig.recipientAccount.bankBranchName || ''}`.trim()
+          : "",
         accountName: bill.userBillConfig?.user.bankAccounts?.[0]?.accountName ?? "",
-        accountNumber: bill.userBillConfig?.user.bankAccounts?.[0]?.account ?? "",
+        accountNumber: bill.userBillConfig?.recipientAccount?.account ?? "",
       },
       totalKwh: totalDegree,
       totalAmount,
