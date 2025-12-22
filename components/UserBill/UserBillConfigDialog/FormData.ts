@@ -10,6 +10,7 @@ export type FormData = {
     label: string;
     value: {
       bankCode: string;
+      bankBranchCode?: string;
       account: string;
     }
   };
