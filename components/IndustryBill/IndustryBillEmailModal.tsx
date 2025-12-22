@@ -41,14 +41,16 @@ interface IndustryBillEmailModalProps {
   open: boolean;
   onClose: () => void;
   month: string;
+  term?: string;
 }
 
 export const IndustryBillEmailModal = ({
   open,
   onClose,
   month,
+  term,
 }: IndustryBillEmailModalProps) => {
-  const { data, loading: billsLoading } = useIndustryBillsForEmail(month, { skip: !open });
+  const { data, loading: billsLoading } = useIndustryBillsForEmail({ month, term }, { skip: !open });
   const bills = data?.industryBillsForEmail || [];
 
   const [sendEmail, { loading: sendLoading }] = useMutation(SEND_INDUSTRY_BILLS_EMAIL);
@@ -60,13 +62,11 @@ export const IndustryBillEmailModal = ({
   // 符合條件的電費單：已審核 OR (手動匯入 且 有原始檔案)
   const eligibleBills = bills.filter(
     (bill) =>
-      bill.status === ElectricBillStatus.Approved ||
-      (bill.billSource === BillSource.ManualImport && bill.hasOriginalFile)
+      bill.status === ElectricBillStatus.Approved
   );
   const ineligibleBills = bills.filter(
     (bill) =>
-      bill.status !== ElectricBillStatus.Approved &&
-      !(bill.billSource === BillSource.ManualImport && bill.hasOriginalFile)
+      bill.status !== ElectricBillStatus.Approved
   );
 
   const eligibleCount = eligibleBills.length;
