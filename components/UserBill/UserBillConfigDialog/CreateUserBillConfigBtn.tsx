@@ -29,6 +29,7 @@ const CreateUserBillConfigBtn = (props: CreateUserBillConfigBtnProps) => {
           /** 收款帳戶 */
           recipientAccount: {
             bankCode: formData.recipientAccount.value.bankCode,
+            bankBranchCode: formData.recipientAccount.value.bankBranchCode,
             account: formData.recipientAccount.value.account,
           },
           electricNumbers: formData.electricNumberInfos.map(

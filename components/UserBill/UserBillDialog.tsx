@@ -169,7 +169,12 @@ export const UserBillDialog = ({
       ),
       bank: {
         bankName: bill.userBillConfig?.recipientAccount
-          ? `${bill.userBillConfig.recipientAccount.bankCode} ${bill.userBillConfig.recipientAccount.bankName || ''} ${bill.userBillConfig.recipientAccount.bankBranchCode || ''} ${bill.userBillConfig.recipientAccount.bankBranchName || ''}`.trim()
+          ? [
+              bill.userBillConfig.recipientAccount.bankCode,
+              bill.userBillConfig.recipientAccount.bankName,
+              bill.userBillConfig.recipientAccount.bankBranchCode,
+              bill.userBillConfig.recipientAccount.bankBranchName,
+            ].filter(Boolean).join(' ')
           : "",
         accountName: bill.userBillConfig?.user.bankAccounts?.[0]?.accountName ?? "",
         accountNumber: bill.userBillConfig?.recipientAccount?.account ?? "",
@@ -195,7 +200,7 @@ export const UserBillDialog = ({
   const componentRef = useRef(null);
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
-    documentTitle: userBill.name,
+    documentTitle: data?.userBill.name ?? userBill.name,
   });
 
   // 處理操作模式切換
@@ -251,7 +256,7 @@ export const UserBillDialog = ({
           用戶電費單
         </Typography>
         <Typography textAlign={"left"} variant="h6">
-          電費單組合： {userBill.userBillConfig?.name ?? ""}
+          電費單組合： {data?.userBill.userBillConfig?.name ?? ""}
         </Typography>
 
         {/* 手動匯入資訊卡片 */}

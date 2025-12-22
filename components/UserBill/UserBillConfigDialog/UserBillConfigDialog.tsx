@@ -91,7 +91,7 @@ function UserBillConfigDialog(props: UserBillConfigDialogProps) {
             value: currentModifyUserBillConfig.user.id,
           },
           recipientAccount: {
-            label: `${currentModifyUserBillConfig.recipientAccount.bankCode} ${currentModifyUserBillConfig.recipientAccount.bankName || ''} ${currentModifyUserBillConfig.recipientAccount.bankBranchCode || ''} ${currentModifyUserBillConfig.recipientAccount.bankBranchName || ''} - ${currentModifyUserBillConfig.recipientAccount.account}`.trim(),
+            label: `${[currentModifyUserBillConfig.recipientAccount.bankCode, currentModifyUserBillConfig.recipientAccount.bankName, currentModifyUserBillConfig.recipientAccount.bankBranchCode, currentModifyUserBillConfig.recipientAccount.bankBranchName].filter(Boolean).join(' ')} - ${currentModifyUserBillConfig.recipientAccount.account}`,
             value: {
               bankCode: currentModifyUserBillConfig.recipientAccount.bankCode,
               bankBranchCode: currentModifyUserBillConfig.recipientAccount.bankBranchCode,
@@ -121,7 +121,10 @@ function UserBillConfigDialog(props: UserBillConfigDialogProps) {
           contactPhone: currentModifyUserBillConfig.contactPhone,
           address: currentModifyUserBillConfig.address,
         }
-      : {},
+      : {
+          recipientAccount: null,
+          userId: null,
+        },
   });
 
   const userId = watch("userId");
@@ -160,9 +163,10 @@ function UserBillConfigDialog(props: UserBillConfigDialogProps) {
         data?.users.list
           .find((user) => userId?.value === user.id)
           ?.bankAccounts?.map((b) => ({
-            label: `${b.bankCode}(${b.bankName}) ${b.account}`,
+            label: `${[b.bankCode, b.bankName, b.bankBranchCode, b.bankBranchName].filter(Boolean).join(' ')} - ${b.account}`,
             value: {
               bankCode: b.bankCode,
+              bankBranchCode: b.bankBranchCode,
               account: b.account,
             },
           })) ?? [],
