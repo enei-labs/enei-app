@@ -122,8 +122,8 @@ function UserBillConfigDialog(props: UserBillConfigDialogProps) {
           address: currentModifyUserBillConfig.address,
         }
       : {
-          recipientAccount: null,
-          userId: null,
+          recipientAccount: undefined,
+          userId: undefined,
         },
   });
 
