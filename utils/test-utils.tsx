@@ -6,6 +6,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { MockedProvider, MockedResponse } from '@apollo/client/testing'
 import { FormProvider, useForm } from 'react-hook-form'
 import theme from '@config/theme'
+import { TaskProgressProvider } from '@core/context/task-progress'
 
 interface AllTheProvidersProps {
   children: React.ReactNode
@@ -17,7 +18,9 @@ const AllTheProviders = ({ children, mocks = [] }: AllTheProvidersProps) => {
     <MockedProvider mocks={mocks} addTypename={false}>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <ThemeProvider theme={theme}>
-          {children}
+          <TaskProgressProvider>
+            {children}
+          </TaskProgressProvider>
         </ThemeProvider>
       </LocalizationProvider>
     </MockedProvider>
