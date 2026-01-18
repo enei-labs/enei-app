@@ -2,7 +2,7 @@ import { Table } from "@components/Table";
 import { UserBill } from "@core/graphql/types";
 import { Config } from "../Table/Table";
 import { Box, Typography, Card, Tooltip, Button } from "@mui/material";
-import { useUserBills } from "@utils/hooks/queries";
+import { useUserBills, useUserBill } from "@utils/hooks/queries";
 import { formatDateTime } from "@utils/format";
 import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import InfoIcon from "@mui/icons-material/Info";
@@ -32,6 +32,10 @@ const UserBillPanel = (props: UserBillPanelProps) => {
   const [userBill, setUserBill] = useState<UserBill | null>(null);
   const [emailModalOpen, setEmailModalOpen] = useState(false);
   const shouldSkipQuery = !props.month && !props.userBillConfigId;
+
+  // 從 URL 獲取 userBillId
+  const userBillIdFromUrl = router.query.userBillId as string | undefined;
+
   const { data, loading, refetch } = useUserBills(
     {
       month: props.month,
@@ -41,21 +45,16 @@ const UserBillPanel = (props: UserBillPanelProps) => {
     { skip: shouldSkipQuery }
   );
 
-  // Handle userBillId query parameter
+  // 當 URL 有 userBillId 時，直接查詢該筆電費單
+  const { data: singleBillData } = useUserBill(userBillIdFromUrl || "");
+
+  // Handle userBillId query parameter - 自動打開 dialog
   useEffect(() => {
-    const { userBillId } = router.query;
-    
-    if (userBillId && data?.userBills?.list) {
-      const targetUserBill = data.userBills.list.find(
-        (bill) => bill.id === userBillId
-      );
-      
-      if (targetUserBill) {
-        setUserBill(targetUserBill);
-        setIsOpenDialog(true);
-      }
+    if (userBillIdFromUrl && singleBillData?.userBill && !isOpenDialog) {
+      setUserBill(singleBillData.userBill as UserBill);
+      setIsOpenDialog(true);
     }
-  }, [router.query, data?.userBills?.list]);
+  }, [userBillIdFromUrl, singleBillData?.userBill, isOpenDialog]);
 
   const handleOpenDialog = (bill: UserBill) => {
     setUserBill(bill);

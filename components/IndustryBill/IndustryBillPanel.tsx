@@ -2,7 +2,7 @@ import { Table } from "@components/Table";
 import { ElectricBillStatus, IndustryBill } from "@core/graphql/types";
 import { Config } from "../Table/Table";
 import { Box, Typography, Card, Tooltip, Button } from "@mui/material";
-import { useIndustryBills } from "@utils/hooks/queries";
+import { useIndustryBills, useIndustryBill } from "@utils/hooks/queries";
 import { formatDateTime } from "@utils/format";
 import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import InfoIcon from "@mui/icons-material/Info";
@@ -33,6 +33,9 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
   const [emailModalOpen, setEmailModalOpen] = useState(false);
   const shouldSkipQuery = !props.month && !props.industryBillConfigId;
 
+  // 從 URL 獲取 industryBillId
+  const industryBillIdFromUrl = router.query.industryBillId as string | undefined;
+
   // 主要查詢（包含狀態統計）
   const { data, loading, refetch } = useIndustryBills(
     {
@@ -43,21 +46,16 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
     { skip: shouldSkipQuery }
   );
 
-  // Handle industryBillId query parameter
+  // 當 URL 有 industryBillId 時，直接查詢該筆電費單
+  const { data: singleBillData } = useIndustryBill(industryBillIdFromUrl || "");
+
+  // Handle industryBillId query parameter - 自動打開 dialog
   useEffect(() => {
-    const { industryBillId } = router.query;
-    
-    if (industryBillId && data?.industryBills?.list) {
-      const targetIndustryBill = data.industryBills.list.find(
-        (bill) => bill.id === industryBillId
-      );
-      
-      if (targetIndustryBill) {
-        setIndustryBill(targetIndustryBill);
-        setIsOpenDialog(true);
-      }
+    if (industryBillIdFromUrl && singleBillData?.industryBill && !isOpenDialog) {
+      setIndustryBill(singleBillData.industryBill as IndustryBill);
+      setIsOpenDialog(true);
     }
-  }, [router.query, data?.industryBills?.list]);
+  }, [industryBillIdFromUrl, singleBillData?.industryBill, isOpenDialog]);
 
   const handleOpenDialog = (bill: IndustryBill) => {
     setIndustryBill(bill);
