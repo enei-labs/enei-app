@@ -1449,11 +1449,13 @@ export type QueryIndustryBillConfigsArgs = {
 
 
 export type QueryIndustryBillsArgs = {
+  billSources?: InputMaybe<Array<BillSource>>;
   industryBillConfigId?: InputMaybe<Scalars['UUID']['input']>;
   lastYearOnly?: InputMaybe<Scalars['Boolean']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   month?: InputMaybe<Scalars['String']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+  statuses?: InputMaybe<Array<ElectricBillStatus>>;
   term?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -1541,10 +1543,12 @@ export type QueryUserBillConfigsArgs = {
 
 
 export type QueryUserBillsArgs = {
+  billSources?: InputMaybe<Array<BillSource>>;
   lastYearOnly?: InputMaybe<Scalars['Boolean']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   month?: InputMaybe<Scalars['String']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+  statuses?: InputMaybe<Array<ElectricBillStatus>>;
   term?: InputMaybe<Scalars['String']['input']>;
   userBillConfigId?: InputMaybe<Scalars['UUID']['input']>;
 };
@@ -1607,8 +1611,6 @@ export type RecipientAccount = {
 export type RecipientAccountInput = {
   /** 帳號 */
   account: Scalars['String']['input'];
-  /** 分行代碼 */
-  bankBranchCode?: InputMaybe<Scalars['String']['input']>;
   /** 銀行代碼 */
   bankCode: Scalars['String']['input'];
 };
