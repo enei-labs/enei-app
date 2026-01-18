@@ -1,5 +1,5 @@
 import { Table } from "@components/Table";
-import { UserBill } from "@core/graphql/types";
+import { UserBill, ElectricBillStatus, BillSource } from "@core/graphql/types";
 import { Config } from "../Table/Table";
 import { Box, Typography, Card, Tooltip, Button } from "@mui/material";
 import { useUserBills, useUserBill } from "@utils/hooks/queries";
@@ -11,19 +11,37 @@ import EmailIcon from "@mui/icons-material/Email";
 import { IconBtn } from "@components/Button";
 import { UserBillDialog } from "./UserBillDialog";
 import { UserBillEmailModal } from "./UserBillEmailModal";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useSearch } from "@utils/hooks/useSearch";
 import { InputSearch, InputDate } from "@components/Input";
 import { useRouter } from "next/router";
 import { ErrorBoundary } from "@components/ErrorBoundary";
 import { BillStatusBadge } from "@components/ElectricBill/BillStatusBadge";
 import { BillSourceTag } from "@components/ElectricBill/BillSourceTag";
+import { BillFilters } from "@components/ElectricBill/BillFilters";
 
 interface UserBillPanelProps {
   month?: string;
   userBillConfigId?: string;
   userBillConfigName?: string;
 }
+
+// 解析 URL 中的 filter 參數
+const parseStatusesFromUrl = (value: string | string[] | undefined): ElectricBillStatus[] => {
+  if (!value) return [];
+  const str = Array.isArray(value) ? value[0] : value;
+  return str.split(',').filter((s): s is ElectricBillStatus =>
+    Object.values(ElectricBillStatus).includes(s as ElectricBillStatus)
+  );
+};
+
+const parseBillSourcesFromUrl = (value: string | string[] | undefined): BillSource[] => {
+  if (!value) return [];
+  const str = Array.isArray(value) ? value[0] : value;
+  return str.split(',').filter((s): s is BillSource =>
+    Object.values(BillSource).includes(s as BillSource)
+  );
+};
 
 const UserBillPanel = (props: UserBillPanelProps) => {
   const router = useRouter();
@@ -36,11 +54,66 @@ const UserBillPanel = (props: UserBillPanelProps) => {
   // 從 URL 獲取 userBillId
   const userBillIdFromUrl = router.query.userBillId as string | undefined;
 
+  // 從 URL 獲取 filter 狀態
+  const statusesFromUrl = useMemo(
+    () => parseStatusesFromUrl(router.query.statuses),
+    [router.query.statuses]
+  );
+  const billSourcesFromUrl = useMemo(
+    () => parseBillSourcesFromUrl(router.query.billSources),
+    [router.query.billSources]
+  );
+
+  // Filter 變更處理
+  const handleStatusChange = useCallback((newStatuses: ElectricBillStatus[]) => {
+    const { statuses, ...rest } = router.query;
+    router.push(
+      {
+        pathname: router.pathname,
+        query: {
+          ...rest,
+          ...(newStatuses.length > 0 ? { statuses: newStatuses.join(',') } : {}),
+        },
+      },
+      undefined,
+      { shallow: true }
+    );
+  }, [router]);
+
+  const handleBillSourceChange = useCallback((newSources: BillSource[]) => {
+    const { billSources, ...rest } = router.query;
+    router.push(
+      {
+        pathname: router.pathname,
+        query: {
+          ...rest,
+          ...(newSources.length > 0 ? { billSources: newSources.join(',') } : {}),
+        },
+      },
+      undefined,
+      { shallow: true }
+    );
+  }, [router]);
+
+  const handleClearFilters = useCallback(() => {
+    const { statuses, billSources, ...rest } = router.query;
+    router.push(
+      {
+        pathname: router.pathname,
+        query: rest,
+      },
+      undefined,
+      { shallow: true }
+    );
+  }, [router]);
+
   const { data, loading, refetch } = useUserBills(
     {
       month: props.month,
       userBillConfigId: props.userBillConfigId,
       term: searchTerm,
+      statuses: statusesFromUrl.length > 0 ? statusesFromUrl : undefined,
+      billSources: billSourcesFromUrl.length > 0 ? billSourcesFromUrl : undefined,
     },
     { skip: shouldSkipQuery }
   );
@@ -188,6 +261,19 @@ const UserBillPanel = (props: UserBillPanelProps) => {
             <InfoIcon />
           </Tooltip>
         </Box>
+
+        {/* Filter 篩選 */}
+        {!shouldSkipQuery && (
+          <Box sx={{ mb: 2 }}>
+            <BillFilters
+              statuses={statusesFromUrl}
+              billSources={billSourcesFromUrl}
+              onStatusChange={handleStatusChange}
+              onBillSourceChange={handleBillSourceChange}
+              onClear={handleClearFilters}
+            />
+          </Box>
+        )}
 
         {/* 操作區域 - 只在有電費單時顯示 */}
         {!shouldSkipQuery && data?.userBills?.list && data.userBills.list.length > 0 && (

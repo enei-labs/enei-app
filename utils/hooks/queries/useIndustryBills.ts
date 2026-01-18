@@ -1,7 +1,6 @@
-import { IndustryBillPage } from '@core/graphql/types';
+import { IndustryBillPage, ElectricBillStatus, BillSource } from '@core/graphql/types';
 import useQuery from '../useQuery';
 import { INDUSTRY_BILLS } from '@core/graphql/queries';
-import { useMemo } from 'react';
 
 interface Variables {
   offset?: number;
@@ -9,6 +8,8 @@ interface Variables {
   term?: string;
   month?: string;
   industryBillConfigId?: string;
+  statuses?: ElectricBillStatus[];
+  billSources?: BillSource[];
 }
 
 interface Options {

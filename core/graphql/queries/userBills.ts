@@ -9,6 +9,8 @@ export const USER_BILLS = gql`
     $term: String
     $month: String
     $userBillConfigId: UUID
+    $statuses: [ElectricBillStatus!]
+    $billSources: [BillSource!]
   ) {
     userBills(
       limit: $limit
@@ -16,6 +18,8 @@ export const USER_BILLS = gql`
       term: $term
       month: $month
       userBillConfigId: $userBillConfigId
+      statuses: $statuses
+      billSources: $billSources
     ) {
       total
       list {

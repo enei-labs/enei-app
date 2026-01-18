@@ -1,7 +1,6 @@
-import { UserBillPage } from '@core/graphql/types';
+import { UserBillPage, ElectricBillStatus, BillSource } from '@core/graphql/types';
 import useQuery from '../useQuery';
 import { USER_BILLS } from '@core/graphql/queries';
-import { useMemo } from 'react';
 
 interface Variables {
   offset?: number;
@@ -9,6 +8,8 @@ interface Variables {
   term?: string;
   month?: string;
   userBillConfigId?: string;
+  statuses?: ElectricBillStatus[];
+  billSources?: BillSource[];
 }
 
 interface Options {
