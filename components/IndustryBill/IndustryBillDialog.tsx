@@ -54,7 +54,7 @@ export const IndustryBillDialog = ({
   isOpenDialog,
   onClose,
 }: IndustryBillDialogProps) => {
-  const { data, loading, error } = useIndustryBill(industryBill.id);
+  const { data, loading, error, refetch } = useIndustryBill(industryBill.id);
   const [auditIndustryBill, { loading: auditIndustryBillLoading }] =
     useAuditIndustryBill();
   const [sendIndustryBillEmail, { loading: sendingEmail }] = useSendIndustryBillEmail();
@@ -149,6 +149,7 @@ export const IndustryBillDialog = ({
   const handleApprove = async () => {
     const variables = { id: industryBill.id, status: ElectricBillStatus.Approved };
     await auditIndustryBill({ variables });
+    await refetch(); // 重新查詢以確保數據完整
     setReviewStatus(ElectricBillStatus.Approved);
     toast.success(`已調整審核狀態: ${ReviewStatusLookup[ElectricBillStatus.Approved]}`);
   };

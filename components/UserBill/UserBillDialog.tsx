@@ -111,7 +111,7 @@ export const UserBillDialog = ({
   isOpenDialog,
   onClose,
 }: UserBillDialogProps) => {
-  const { data, loading, error } = useUserBill(userBill.id);
+  const { data, loading, error, refetch } = useUserBill(userBill.id);
   const [auditUserBill, { loading: auditUserBillLoading }] = useAuditUserBill();
   const [sendUserBillEmail, { loading: sendingEmail }] = useSendUserBillEmail();
 
@@ -220,6 +220,7 @@ export const UserBillDialog = ({
   const handleApprove = async () => {
     const variables = { id: userBill.id, status: ElectricBillStatus.Approved };
     await auditUserBill({ variables });
+    await refetch(); // 重新查詢以確保數據完整
     setReviewStatus(ElectricBillStatus.Approved);
     toast.success(`已調整審核狀態: ${ReviewStatusLookup[ElectricBillStatus.Approved]}`);
   };
