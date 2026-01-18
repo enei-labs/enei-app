@@ -33,11 +33,15 @@ const formatBillingInfo = (billingDate: string) => {
   const date = new Date(billingDate);
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
-  
+
   const lastDay = new Date(year, month, 0).getDate();
-  
+
+  // 計算繳費通知單月份（計費月份的下個月，需處理跨年）
+  const noticeYear = month === 12 ? year + 1 : year;
+  const noticeMonth = month === 12 ? 1 : month + 1;
+
   return {
-    billingMonth: `${year}年${month + 1}月`,
+    billingMonth: `${noticeYear}年${noticeMonth}月`,
     billingDateRange: `${year}/${month}/1 - ${year}/${month}/${lastDay}`,
   };
 };
