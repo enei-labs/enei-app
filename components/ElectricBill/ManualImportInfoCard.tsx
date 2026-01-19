@@ -1,5 +1,5 @@
-import { Card, CardContent, Typography, Box, Button, Grid, Collapse } from '@mui/material';
-import { Download, Person, AccessTime, Upload, ExpandMore, ExpandLess, PictureAsPdf } from '@mui/icons-material';
+import { Card, CardContent, Typography, Box, Button, Grid, Collapse, Divider, CircularProgress } from '@mui/material';
+import { Download, Person, AccessTime, Upload, ExpandMore, ExpandLess, PictureAsPdf, Refresh, Delete } from '@mui/icons-material';
 import { format } from 'date-fns';
 import { zhTW } from 'date-fns/locale';
 import { useState } from 'react';
@@ -14,6 +14,12 @@ interface ManualImportInfoCardProps {
   importedAt?: Date | string | null;
   /** 是否預設展開 PDF 預覽 */
   defaultExpandPdf?: boolean;
+  /** 替換手動匯入的回調 */
+  onReplace?: () => void;
+  /** 刪除手動匯入的回調 */
+  onDelete?: () => void;
+  /** 刪除中狀態 */
+  isDeleting?: boolean;
 }
 
 export function ManualImportInfoCard({
@@ -23,6 +29,9 @@ export function ManualImportInfoCard({
   importedBy,
   importedAt,
   defaultExpandPdf = true,
+  onReplace,
+  onDelete,
+  isDeleting = false,
 }: ManualImportInfoCardProps) {
   const [showPdfPreview, setShowPdfPreview] = useState(defaultExpandPdf);
 
@@ -146,6 +155,37 @@ export function ManualImportInfoCard({
               尚無生成的 PDF 檔案
             </Typography>
           </Box>
+        )}
+
+        {/* 操作按鈕區塊 */}
+        {(onReplace || onDelete) && (
+          <>
+            <Divider sx={{ my: 2 }} />
+            <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
+              {onReplace && (
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  startIcon={<Refresh />}
+                  onClick={onReplace}
+                  disabled={isDeleting}
+                >
+                  替換檔案
+                </Button>
+              )}
+              {onDelete && (
+                <Button
+                  variant="outlined"
+                  color="error"
+                  startIcon={isDeleting ? <CircularProgress size={20} /> : <Delete />}
+                  onClick={onDelete}
+                  disabled={isDeleting}
+                >
+                  {isDeleting ? '刪除中...' : '刪除手動匯入'}
+                </Button>
+              )}
+            </Box>
+          </>
         )}
       </CardContent>
     </Card>

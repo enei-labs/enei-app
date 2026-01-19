@@ -123,12 +123,13 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
   const { data: singleBillData } = useIndustryBill(industryBillIdFromUrl || "");
 
   // Handle industryBillId query parameter - 自動打開 dialog
+  // 注意：不要把 isOpenDialog 放在 dependency array，否則關閉時會因為 URL 還沒更新而重新打開
   useEffect(() => {
-    if (industryBillIdFromUrl && singleBillData?.industryBill && !isOpenDialog) {
+    if (industryBillIdFromUrl && singleBillData?.industryBill) {
       setIndustryBill(singleBillData.industryBill as IndustryBill);
       setIsOpenDialog(true);
     }
-  }, [industryBillIdFromUrl, singleBillData?.industryBill, isOpenDialog]);
+  }, [industryBillIdFromUrl, singleBillData?.industryBill]);
 
   const handleOpenDialog = (bill: IndustryBill) => {
     setIndustryBill(bill);

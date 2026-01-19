@@ -15,13 +15,14 @@ import { formatDateTime } from "@utils/format";
 import { useUserBill } from "@utils/hooks/queries";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
-import { useAuditUserBill } from "@utils/hooks/mutations";
+import { useAuditUserBill, useRevertManualUserBill } from "@utils/hooks/mutations";
 import { useSendUserBillEmail } from "@utils/hooks/mutations/useSendUserBillEmail";
 import { toast } from "react-toastify";
 import { DialogErrorBoundary } from "@components/ErrorBoundary";
 import EmailIcon from "@mui/icons-material/Email";
 import { ManualImportInfoCard } from "@components/ElectricBill/ManualImportInfoCard";
 import { generateBillPdf } from "@utils/generateBillPdf";
+import DialogAlert from "@components/DialogAlert";
 
 // 操作模式：使用者在 UI 上的選擇
 type OperationMode = 'review' | 'manual-import';
@@ -114,12 +115,16 @@ export const UserBillDialog = ({
   const { data, loading, error, refetch } = useUserBill(userBill.id);
   const [auditUserBill, { loading: auditUserBillLoading }] = useAuditUserBill();
   const [sendUserBillEmail, { loading: sendingEmail }] = useSendUserBillEmail();
+  const [revertManualUserBill, { loading: revertingManualImport }] = useRevertManualUserBill();
 
   // UI 操作模式（前端狀態）
   const [operationMode, setOperationMode] = useState<OperationMode>('review');
 
   // 電費單實際狀態（後端狀態）
   const [reviewStatus, setReviewStatus] = useState<ElectricBillStatus | null>(null);
+
+  // 刪除手動匯入確認對話框狀態
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   useEffect(() => {
     // 初始化電費單狀態
@@ -253,7 +258,40 @@ export const UserBillDialog = ({
     }
   };
 
+  // 處理替換手動匯入（切換到手動匯入模式）
+  const handleReplaceManualImport = () => {
+    setOperationMode('manual-import');
+  };
+
+  // 處理刪除手動匯入確認
+  const handleDeleteManualImport = () => {
+    setShowDeleteConfirm(true);
+  };
+
+  // 確認刪除手動匯入
+  const handleConfirmDeleteManualImport = async () => {
+    try {
+      const { data: revertData } = await revertManualUserBill({
+        variables: {
+          input: { userBillId: userBill.id },
+        },
+      });
+
+      if (revertData?.revertManualUserBill) {
+        toast.success("已刪除手動匯入，電費單狀態已變回「待審核」");
+        setReviewStatus(ElectricBillStatus.Pending);
+        await refetch();
+      }
+    } catch (err) {
+      console.error("Revert manual import error:", err);
+      toast.error("刪除手動匯入時發生錯誤");
+    } finally {
+      setShowDeleteConfirm(false);
+    }
+  };
+
   return (
+    <>
     <Dialog open={isOpenDialog} onClose={onClose} maxWidth="md">
       <DialogErrorBoundary onClose={onClose}>
         <Box padding="36px">
@@ -272,6 +310,9 @@ export const UserBillDialog = ({
             generatedPdfDownloadUrl={data.userBill.generatedPdfDownloadUrl}
             importedBy={data.userBill.importedBy?.name ?? null}
             importedAt={data.userBill.importedAt}
+            onReplace={handleReplaceManualImport}
+            onDelete={handleDeleteManualImport}
+            isDeleting={revertingManualImport}
           />
         )}
 
@@ -378,5 +419,15 @@ export const UserBillDialog = ({
         </Box>
       </DialogErrorBoundary>
     </Dialog>
+
+    {/* 刪除手動匯入確認對話框 - 放在主 Dialog 外面避免事件衝突 */}
+    <DialogAlert
+      open={showDeleteConfirm}
+      title="刪除手動匯入電費單"
+      content="確定要刪除手動匯入的資料嗎？電費單狀態將變回「待審核」。"
+      onConfirm={handleConfirmDeleteManualImport}
+      onClose={() => setShowDeleteConfirm(false)}
+    />
+    </>
   );
 };

@@ -42,3 +42,5 @@ export * from './auditUserBill';
 export * from './auditIndustryBill';
 export * from './importManualUserBill';
 export * from './importManualIndustryBill';
+export * from './revertManualUserBill';
+export * from './revertManualIndustryBill';

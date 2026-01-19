@@ -122,12 +122,13 @@ const UserBillPanel = (props: UserBillPanelProps) => {
   const { data: singleBillData } = useUserBill(userBillIdFromUrl || "");
 
   // Handle userBillId query parameter - 自動打開 dialog
+  // 注意：不要把 isOpenDialog 放在 dependency array，否則關閉時會因為 URL 還沒更新而重新打開
   useEffect(() => {
-    if (userBillIdFromUrl && singleBillData?.userBill && !isOpenDialog) {
+    if (userBillIdFromUrl && singleBillData?.userBill) {
       setUserBill(singleBillData.userBill as UserBill);
       setIsOpenDialog(true);
     }
-  }, [userBillIdFromUrl, singleBillData?.userBill, isOpenDialog]);
+  }, [userBillIdFromUrl, singleBillData?.userBill]);
 
   const handleOpenDialog = (bill: UserBill) => {
     setUserBill(bill);
