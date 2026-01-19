@@ -1611,6 +1611,8 @@ export type RecipientAccount = {
 export type RecipientAccountInput = {
   /** 帳號 */
   account: Scalars['String']['input'];
+  /** 分行代碼 */
+  bankBranchCode?: Scalars['String']['input'];
   /** 銀行代碼 */
   bankCode: Scalars['String']['input'];
 };
