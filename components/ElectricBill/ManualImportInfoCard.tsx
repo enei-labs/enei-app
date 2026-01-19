@@ -1,7 +1,8 @@
-import { Card, CardContent, Typography, Box, Button, Grid } from '@mui/material';
-import { Download, Person, AccessTime, Upload } from '@mui/icons-material';
+import { Card, CardContent, Typography, Box, Button, Grid, Collapse } from '@mui/material';
+import { Download, Person, AccessTime, Upload, ExpandMore, ExpandLess, PictureAsPdf } from '@mui/icons-material';
 import { format } from 'date-fns';
 import { zhTW } from 'date-fns/locale';
+import { useState } from 'react';
 
 type BillSource = 'AUTO_GENERATED' | 'MANUAL_IMPORT' | null;
 
@@ -11,6 +12,8 @@ interface ManualImportInfoCardProps {
   generatedPdfDownloadUrl?: string | null;
   importedBy?: string | null;
   importedAt?: Date | string | null;
+  /** 是否預設展開 PDF 預覽 */
+  defaultExpandPdf?: boolean;
 }
 
 export function ManualImportInfoCard({
@@ -19,7 +22,10 @@ export function ManualImportInfoCard({
   generatedPdfDownloadUrl,
   importedBy,
   importedAt,
+  defaultExpandPdf = true,
 }: ManualImportInfoCardProps) {
+  const [showPdfPreview, setShowPdfPreview] = useState(defaultExpandPdf);
+
   // 只在手動匯入時顯示
   if (billSource !== 'MANUAL_IMPORT') {
     return null;
@@ -68,7 +74,7 @@ export function ManualImportInfoCard({
             </Box>
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={4}>
             <Box>
               <Typography variant="caption" color="text.secondary" display="block" sx={{ mb: 0.5 }}>
                 原始檔案
@@ -88,28 +94,59 @@ export function ManualImportInfoCard({
               )}
             </Box>
           </Grid>
-
-          <Grid item xs={12} md={6}>
-            <Box>
-              <Typography variant="caption" color="text.secondary" display="block" sx={{ mb: 0.5 }}>
-                系統生成的 PDF
-              </Typography>
-              {generatedPdfDownloadUrl ? (
-                <Button
-                  size="small"
-                  startIcon={<Download />}
-                  onClick={() => window.open(generatedPdfDownloadUrl, '_blank')}
-                >
-                  下載 PDF
-                </Button>
-              ) : (
-                <Typography variant="body2" color="text.secondary">
-                  無檔案
-                </Typography>
-              )}
-            </Box>
-          </Grid>
         </Grid>
+
+        {/* PDF 預覽區塊 */}
+        {generatedPdfDownloadUrl && (
+          <Box sx={{ mt: 2 }}>
+            <Button
+              variant="outlined"
+              size="small"
+              startIcon={<PictureAsPdf />}
+              endIcon={showPdfPreview ? <ExpandLess /> : <ExpandMore />}
+              onClick={() => setShowPdfPreview(!showPdfPreview)}
+              sx={{ mb: 1 }}
+            >
+              {showPdfPreview ? '收合' : '展開'} 手動匯入電費單 PDF
+            </Button>
+            <Button
+              size="small"
+              startIcon={<Download />}
+              onClick={() => window.open(generatedPdfDownloadUrl, '_blank')}
+              sx={{ ml: 1, mb: 1 }}
+            >
+              下載 PDF
+            </Button>
+
+            <Collapse in={showPdfPreview}>
+              <Box
+                sx={{
+                  mt: 1,
+                  border: '1px solid #ccc',
+                  borderRadius: 1,
+                  overflow: 'hidden',
+                  backgroundColor: '#fff',
+                }}
+              >
+                <iframe
+                  src={generatedPdfDownloadUrl}
+                  width="100%"
+                  height="600px"
+                  style={{ border: 'none' }}
+                  title="手動匯入電費單 PDF 預覽"
+                />
+              </Box>
+            </Collapse>
+          </Box>
+        )}
+
+        {!generatedPdfDownloadUrl && (
+          <Box sx={{ mt: 2 }}>
+            <Typography variant="body2" color="text.secondary">
+              尚無生成的 PDF 檔案
+            </Typography>
+          </Box>
+        )}
       </CardContent>
     </Card>
   );

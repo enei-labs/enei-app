@@ -264,14 +264,22 @@ export const UserBillDialog = ({
           電費單組合： {data?.userBill.userBillConfig?.name ?? ""}
         </Typography>
 
-        {/* 手動匯入資訊卡片 */}
+        {/* 手動匯入資訊卡片（含 PDF 預覽） */}
         {data?.userBill && (
           <ManualImportInfoCard
             billSource={data.userBill.billSource ?? null}
             originalFileDownloadUrl={data.userBill.originalFileDownloadUrl}
+            generatedPdfDownloadUrl={data.userBill.generatedPdfDownloadUrl}
             importedBy={data.userBill.importedBy?.name ?? null}
             importedAt={data.userBill.importedAt}
           />
+        )}
+
+        {/* 系統計算的電費單區塊 */}
+        {data?.userBill.billSource === 'MANUAL_IMPORT' && (
+          <Typography variant="h6" sx={{ mt: 3, mb: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
+            📊 系統計算的電費單（參考用）
+          </Typography>
         )}
 
         {!userBillTemplateData ? (

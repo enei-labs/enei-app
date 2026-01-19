@@ -192,7 +192,7 @@ export const IndustryBillDialog = ({
             電費單組合： {industryBill.industryBillConfig?.name ?? ""}
           </Typography>
 
-          {/* 手動匯入資訊卡片 */}
+          {/* 手動匯入資訊卡片（含 PDF 預覽） */}
           {data?.industryBill && (
             <ManualImportInfoCard
               billSource={data.industryBill.billSource ?? null}
@@ -201,6 +201,13 @@ export const IndustryBillDialog = ({
               importedBy={data.industryBill.importedBy?.name ?? null}
               importedAt={data.industryBill.importedAt}
             />
+          )}
+
+          {/* 系統計算的電費單區塊 */}
+          {data?.industryBill.billSource === 'MANUAL_IMPORT' && (
+            <Typography variant="h6" sx={{ mt: 3, mb: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
+              📊 系統計算的電費單（參考用）
+            </Typography>
           )}
 
           {!industryBillTemplateData ? (
