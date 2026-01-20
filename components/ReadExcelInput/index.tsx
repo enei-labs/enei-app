@@ -71,9 +71,11 @@ PrintWrapper.displayName = "PrintWrapper";
 export interface ReadExcelInputProps {
   /** 只讀取第一個 tab (用於發電業電費單頁面) */
   singleTabMode?: boolean;
+  /** 匯入成功後的回調 */
+  onImportSuccess?: () => void;
 }
 
-export function ReadExcelInput({ singleTabMode = false }: ReadExcelInputProps) {
+export function ReadExcelInput({ singleTabMode = false, onImportSuccess }: ReadExcelInputProps) {
   const [userBillTemplatesData, setUserBillTemplatesData] = useState<
     UserBillTemplateData[]
   >([]);
@@ -389,6 +391,8 @@ export function ReadExcelInput({ singleTabMode = false }: ReadExcelInputProps) {
           setImportedBills(successfulBills);
           setShowSendEmailButtons(true);
         }
+        // 呼叫匯入成功回調
+        onImportSuccess?.();
       } else {
         setSaveStatus({
           type: "error",
@@ -397,6 +401,8 @@ export function ReadExcelInput({ singleTabMode = false }: ReadExcelInputProps) {
         if (successfulBills.length > 0) {
           setImportedBills(successfulBills);
           setShowSendEmailButtons(true);
+          // 部分成功也呼叫回調
+          onImportSuccess?.();
         }
       }
     } catch (error: any) {

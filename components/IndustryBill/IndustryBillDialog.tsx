@@ -64,6 +64,9 @@ export const IndustryBillDialog = ({
   // UI 操作模式（前端狀態）
   const [operationMode, setOperationMode] = useState<OperationMode>('review');
 
+  // 手動匯入區塊的 ref（用於滾動）
+  const manualImportSectionRef = useRef<HTMLDivElement>(null);
+
   // 電費單實際狀態（後端狀態）
   const [reviewStatus, setReviewStatus] = useState<ElectricBillStatus | null>(null);
 
@@ -186,9 +189,13 @@ export const IndustryBillDialog = ({
     }
   };
 
-  // 處理替換手動匯入（切換到手動匯入模式）
+  // 處理替換手動匯入（切換到手動匯入模式並滾動到上傳區域）
   const handleReplaceManualImport = () => {
     setOperationMode('manual-import');
+    // 使用 setTimeout 確保 DOM 更新後再滾動
+    setTimeout(() => {
+      manualImportSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
   };
 
   // 處理刪除手動匯入確認
@@ -340,8 +347,8 @@ export const IndustryBillDialog = ({
 
           {/* 手動匯入模式 */}
           {operationMode === 'manual-import' && (
-            <Box sx={{ mt: 3 }}>
-              <ReadExcelInput singleTabMode={true} />
+            <Box sx={{ mt: 3 }} ref={manualImportSectionRef}>
+              <ReadExcelInput singleTabMode={true} onImportSuccess={refetch} />
             </Box>
           )}
         </Box>
