@@ -6,7 +6,6 @@ on:
   pull_request:
     branches: [main]
   schedule:
-    # 每週一 UTC 08:00 (台灣時間 16:00) 定期掃描
     - cron: "0 8 * * 1"
 
 jobs:
@@ -14,7 +13,6 @@ jobs:
     name: Analyze (JavaScript/TypeScript)
     runs-on: ubuntu-latest
     permissions:
-      security-events: write
       contents: read
       actions: read
 
@@ -40,3 +38,12 @@ jobs:
         uses: github/codeql-action/analyze@v3
         with:
           category: "/language:${{ matrix.language }}"
+          upload: never
+          output: codeql-results
+
+      - name: Upload SARIF as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: codeql-sarif-report
+          path: codeql-results/*.sarif
+          retention-days: 90
