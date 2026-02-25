@@ -23,3 +23,4 @@ export * from './useCompanyContractMonthlyTransferDegrees';
 export * from './useUserContractMonthlyTransferDegrees';
 export * from './useIndustryBill';
 export * from './useIndustryBillsForEmail';
+export * from './useEmailConfig';

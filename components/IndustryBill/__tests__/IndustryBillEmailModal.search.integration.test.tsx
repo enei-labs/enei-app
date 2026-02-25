@@ -9,6 +9,7 @@ import { render, createMockResponse } from '@utils/test-utils';
 import { IndustryBillEmailModal } from '../IndustryBillEmailModal';
 import { ElectricBillStatus, BillSource } from '@core/graphql/types';
 import { INDUSTRY_BILLS_FOR_EMAIL } from '@core/graphql/queries/industryBillsForEmail';
+import { EMAIL_CONFIG } from '@core/graphql/queries/emailConfig';
 import { gql } from '@apollo/client';
 
 // GraphQL mutation for sending emails
@@ -47,6 +48,12 @@ const createMockIndustryBillsForEmail = (
   }));
 };
 
+const emailConfigMock = createMockResponse(
+  EMAIL_CONFIG,
+  {},
+  { emailConfig: { id: '1', isTestMode: false, testRecipients: [], updatedAt: new Date().toISOString() } }
+);
+
 describe('IndustryBillEmailModal Search Filtering', () => {
   const baseProps = {
     open: true,
@@ -75,7 +82,7 @@ describe('IndustryBillEmailModal Search Filtering', () => {
       ];
 
       // Act
-      render(<IndustryBillEmailModal {...baseProps} term="太陽能" />, { mocks });
+      render(<IndustryBillEmailModal {...baseProps} term="太陽能" />, { mocks: [...mocks, emailConfigMock] });
 
       // Assert: Should display filtered bills count
       await waitFor(() => {
@@ -104,7 +111,7 @@ describe('IndustryBillEmailModal Search Filtering', () => {
       ];
 
       // Act
-      render(<IndustryBillEmailModal {...baseProps} />, { mocks });
+      render(<IndustryBillEmailModal {...baseProps} />, { mocks: [...mocks, emailConfigMock] });
 
       // Assert: Should display all bills count
       await waitFor(() => {
@@ -128,7 +135,7 @@ describe('IndustryBillEmailModal Search Filtering', () => {
       ];
 
       // Act
-      render(<IndustryBillEmailModal {...baseProps} term="" />, { mocks });
+      render(<IndustryBillEmailModal {...baseProps} term="" />, { mocks: [...mocks, emailConfigMock] });
 
       // Assert: Should display all bills
       await waitFor(() => {
@@ -149,7 +156,7 @@ describe('IndustryBillEmailModal Search Filtering', () => {
       ];
 
       // Act
-      render(<IndustryBillEmailModal {...baseProps} term="不存在的關鍵字" />, { mocks });
+      render(<IndustryBillEmailModal {...baseProps} term="不存在的關鍵字" />, { mocks: [...mocks, emailConfigMock] });
 
       // Assert: Should show no eligible bills message
       await waitFor(() => {
@@ -192,7 +199,7 @@ describe('IndustryBillEmailModal Search Filtering', () => {
       // Act
       render(
         <IndustryBillEmailModal {...baseProps} term="太陽能" />,
-        { mocks: [queryMock, mutationMock] }
+        { mocks: [queryMock, mutationMock, emailConfigMock] }
       );
 
       // Wait for bills to load
@@ -241,7 +248,7 @@ describe('IndustryBillEmailModal Search Filtering', () => {
       // Act
       render(
         <IndustryBillEmailModal {...baseProps} />,
-        { mocks: [queryMock, mutationMock] }
+        { mocks: [queryMock, mutationMock, emailConfigMock] }
       );
 
       // Wait for bills to load
@@ -277,7 +284,7 @@ describe('IndustryBillEmailModal Search Filtering', () => {
       ];
 
       // Act
-      render(<IndustryBillEmailModal {...baseProps} term="太陽能" />, { mocks });
+      render(<IndustryBillEmailModal {...baseProps} term="太陽能" />, { mocks: [...mocks, emailConfigMock] });
 
       // Assert: Should show filtered count
       await waitFor(() => {
@@ -306,7 +313,7 @@ describe('IndustryBillEmailModal Search Filtering', () => {
       ];
 
       // Act
-      render(<IndustryBillEmailModal {...baseProps} term="太陽能" />, { mocks });
+      render(<IndustryBillEmailModal {...baseProps} term="太陽能" />, { mocks: [...mocks, emailConfigMock] });
 
       // Assert: Should show 2 emails (one per industry) for 3 bills
       await waitFor(() => {
@@ -334,7 +341,7 @@ describe('IndustryBillEmailModal Search Filtering', () => {
       ];
 
       // Act
-      render(<IndustryBillEmailModal {...baseProps} term="太陽能" />, { mocks });
+      render(<IndustryBillEmailModal {...baseProps} term="太陽能" />, { mocks: [...mocks, emailConfigMock] });
 
       // Assert: Should show only 1 eligible bill (the approved one)
       await waitFor(() => {

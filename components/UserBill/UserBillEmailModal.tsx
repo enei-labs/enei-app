@@ -25,6 +25,7 @@ import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { gql } from "@apollo/client";
 import { useTaskProgress, TaskStatus, TaskType } from "@core/context/task-progress";
+import { useEmailConfig } from "@utils/hooks/queries/useEmailConfig";
 
 const SEND_USER_BILLS_EMAIL = gql`
   mutation SendUserBillsEmail($month: String!) {
@@ -62,6 +63,8 @@ export const UserBillEmailModal = ({
   const [sendEmail, { loading }] = useMutation(SEND_USER_BILLS_EMAIL);
   const [error, setError] = useState<string | null>(null);
   const { addTask, selectTask } = useTaskProgress();
+  const { data: emailConfigData } = useEmailConfig();
+  const isTestMode = emailConfigData?.emailConfig?.isTestMode ?? false;
 
   // 從後端取得的已審核數量（優先使用），或從 bills 計算（fallback）
   const approvedCount = statusCounts?.approvedCount ?? bills.filter(
@@ -245,6 +248,20 @@ export const UserBillEmailModal = ({
         ) : (
           // 情境：有已審核的帳單可寄送
           <Box>
+            {isTestMode && (
+              <Alert
+                severity="warning"
+                sx={{ mb: 3, borderRadius: 2 }}
+                icon={<WarningIcon />}
+              >
+                <Typography variant="body2" fontWeight="500">
+                  目前為測試模式
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  郵件將只寄送給內部測試人員，不會寄給客戶
+                </Typography>
+              </Alert>
+            )}
             {unapprovedCount > 0 ? (
               // 有部分未審核
               <Alert
@@ -351,7 +368,7 @@ export const UserBillEmailModal = ({
             startIcon={loading ? <CircularProgress size={20} /> : <EmailIcon />}
             sx={{ minWidth: 120 }}
           >
-            {loading ? "寄送中..." : "確認寄信"}
+            {loading ? "寄送中..." : isTestMode ? "確認寄信（測試模式）" : "確認寄信"}
           </Button>
         )}
       </DialogActions>

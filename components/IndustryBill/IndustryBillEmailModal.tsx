@@ -25,6 +25,7 @@ import { useMutation } from "@apollo/client";
 import { gql } from "@apollo/client";
 import { useTaskProgress, TaskStatus, TaskType } from "@core/context/task-progress";
 import { useIndustryBillsForEmail } from "@utils/hooks/queries";
+import { useEmailConfig } from "@utils/hooks/queries/useEmailConfig";
 
 const SEND_INDUSTRY_BILLS_EMAIL = gql`
   mutation SendIndustryBillsEmail($month: String!, $industryBillIds: [String!]) {
@@ -56,6 +57,8 @@ export const IndustryBillEmailModal = ({
   const [sendEmail, { loading: sendLoading }] = useMutation(SEND_INDUSTRY_BILLS_EMAIL);
   const [error, setError] = useState<string | null>(null);
   const { addTask, selectTask } = useTaskProgress();
+  const { data: emailConfigData } = useEmailConfig();
+  const isTestMode = emailConfigData?.emailConfig?.isTestMode ?? false;
 
   const loading = billsLoading || sendLoading;
 
@@ -246,6 +249,20 @@ export const IndustryBillEmailModal = ({
         ) : (
           // 情境：有符合條件的帳單可寄送
           <Box>
+            {isTestMode && (
+              <Alert
+                severity="warning"
+                sx={{ mb: 3, borderRadius: 2 }}
+                icon={<WarningIcon />}
+              >
+                <Typography variant="body2" fontWeight="500">
+                  目前為測試模式
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  郵件將只寄送給內部測試人員，不會寄給客戶
+                </Typography>
+              </Alert>
+            )}
             <Box sx={{
               backgroundColor: "grey.50",
               borderRadius: 2,
@@ -326,7 +343,7 @@ export const IndustryBillEmailModal = ({
             startIcon={loading ? <CircularProgress size={20} /> : <EmailIcon />}
             sx={{ minWidth: 120 }}
           >
-            {loading ? "寄送中..." : "確認寄信"}
+            {loading ? "寄送中..." : isTestMode ? "確認寄信（測試模式）" : "確認寄信"}
           </Button>
         )}
       </DialogActions>

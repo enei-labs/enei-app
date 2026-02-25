@@ -27,3 +27,4 @@ export * from './industryBillConfigs';
 export * from './findIndustryBillConfigByElectricNumber';
 export * from './findIndustryBillByElectricNumberAndMonth';
 export * from './industryBillsByMonth';
+export * from './emailConfig';

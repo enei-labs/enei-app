@@ -44,3 +44,4 @@ export * from './importManualUserBill';
 export * from './importManualIndustryBill';
 export * from './revertManualUserBill';
 export * from './revertManualIndustryBill';
+export * from './updateEmailConfig';

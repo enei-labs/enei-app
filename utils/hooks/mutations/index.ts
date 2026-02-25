@@ -35,3 +35,4 @@ export * from './useAuditUserBill';
 export * from './useAuditIndustryBill';
 export * from './useRevertManualUserBill';
 export * from './useRevertManualIndustryBill';
+export * from './useUpdateEmailConfig';

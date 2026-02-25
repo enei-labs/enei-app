@@ -6,11 +6,18 @@ import BorderColorOutlinedIcon from "@mui/icons-material/BorderColorOutlined";
 import { AuthLayout } from "@components/Layout";
 import {
   Box,
+  Button,
   Card,
+  Chip,
   Container,
   Divider,
-  Grid, Typography
+  Grid,
+  IconButton,
+  Switch,
+  TextField,
+  Typography,
 } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 import { ReactElement, useState } from "react";
 import Head from "next/head";
 import IconBreadcrumbs from "@components/BreadCrumbs";
@@ -21,6 +28,11 @@ import { SvgIconComponent } from "@mui/icons-material";
 import InfoBox from "@components/InfoBox";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
+import { AuthGuard } from "@components/AuthGuard";
+import { Role } from "@core/graphql/types";
+import { useEmailConfig } from "@utils/hooks/queries/useEmailConfig";
+import { useUpdateEmailConfig } from "@utils/hooks/mutations/useUpdateEmailConfig";
+import { toast } from "react-toastify";
 
 const SettingDialog = dynamic(
   () => import("@components/Settings/SettingDialog")
@@ -57,6 +69,159 @@ const ProfileWithIcons = (props: {
         </Grid>
       </Grid>
     </Grid>
+  );
+};
+
+const FIXED_TEST_RECIPIENTS = [
+  "jay.chou@annealenergy.com",
+  "jenny.tseng@annealenergy.com",
+];
+
+const EmailTestModeSection = () => {
+  const { data, loading: queryLoading } = useEmailConfig();
+  const [updateEmailConfig, { loading: mutationLoading }] = useUpdateEmailConfig();
+
+  const emailConfig = data?.emailConfig;
+  const [isTestMode, setIsTestMode] = useState<boolean | null>(null);
+  const [testRecipients, setTestRecipients] = useState<string[] | null>(null);
+  const [newEmail, setNewEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
+
+  // 使用 local state 如果已修改，否則使用 server state
+  const currentIsTestMode = isTestMode ?? emailConfig?.isTestMode ?? false;
+  const currentTestRecipients = testRecipients ?? emailConfig?.testRecipients ?? [];
+  const hasUnsavedChanges =
+    isTestMode !== null || testRecipients !== null;
+
+  const handleAddEmail = () => {
+    const trimmed = newEmail.trim().toLowerCase();
+    if (!trimmed) return;
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+      setEmailError("Email 格式不正確");
+      return;
+    }
+
+    if (
+      currentTestRecipients.includes(trimmed) ||
+      FIXED_TEST_RECIPIENTS.includes(trimmed)
+    ) {
+      setEmailError("此 Email 已存在");
+      return;
+    }
+
+    setEmailError("");
+    setTestRecipients([...currentTestRecipients, trimmed]);
+    setNewEmail("");
+  };
+
+  const handleRemoveEmail = (email: string) => {
+    setTestRecipients(currentTestRecipients.filter((e) => e !== email));
+  };
+
+  const handleSave = async () => {
+    try {
+      await updateEmailConfig({
+        variables: {
+          input: {
+            isTestMode: currentIsTestMode,
+            testRecipients: currentTestRecipients,
+          },
+        },
+      });
+      // 重設 local state，回到使用 server state
+      setIsTestMode(null);
+      setTestRecipients(null);
+      toast.success("郵件測試模式設定已儲存");
+    } catch {
+      // useMutation 的 onError 已處理 toast
+    }
+  };
+
+  if (queryLoading) return null;
+
+  return (
+    <Box margin="36px 32px">
+      <Typography variant="h4" sx={{ mb: 3 }}>
+        郵件測試模式
+      </Typography>
+
+      <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
+        <Switch
+          checked={currentIsTestMode}
+          onChange={(e) => setIsTestMode(e.target.checked)}
+          color="warning"
+        />
+        <Typography variant="body1">
+          啟用測試模式
+        </Typography>
+        {currentIsTestMode && (
+          <Chip
+            label="測試模式已啟用"
+            color="warning"
+            size="small"
+            sx={{ ml: 2 }}
+          />
+        )}
+      </Box>
+
+      <Box sx={{ mb: 3 }}>
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+          測試收件人（固定）：
+        </Typography>
+        <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", mb: 2 }}>
+          {FIXED_TEST_RECIPIENTS.map((email) => (
+            <Chip key={email} label={email} size="small" variant="outlined" />
+          ))}
+        </Box>
+
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+          額外測試收件人：
+        </Typography>
+        <Box sx={{ display: "flex", gap: 1, alignItems: "flex-start", mb: 1 }}>
+          <TextField
+            size="small"
+            placeholder="輸入 Email"
+            value={newEmail}
+            onChange={(e) => {
+              setNewEmail(e.target.value);
+              setEmailError("");
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleAddEmail();
+              }
+            }}
+            error={!!emailError}
+            helperText={emailError}
+            sx={{ minWidth: 300 }}
+          />
+          <IconButton onClick={handleAddEmail} color="primary" sx={{ mt: 0.25 }}>
+            <AddIcon />
+          </IconButton>
+        </Box>
+        <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+          {currentTestRecipients.map((email) => (
+            <Chip
+              key={email}
+              label={email}
+              size="small"
+              onDelete={() => handleRemoveEmail(email)}
+            />
+          ))}
+        </Box>
+      </Box>
+
+      <Button
+        variant="contained"
+        onClick={handleSave}
+        disabled={!hasUnsavedChanges || mutationLoading}
+        sx={{ minWidth: 80 }}
+      >
+        {mutationLoading ? "儲存中..." : "儲存"}
+      </Button>
+    </Box>
   );
 };
 
@@ -174,6 +339,14 @@ const Settings = () => {
           ) : null}
         </Card>
       </Box>
+
+      <AuthGuard roles={[Role.Admin, Role.SuperAdmin]}>
+        <Box sx={{ paddingTop: "12px" }}>
+          <Card>
+            <EmailTestModeSection />
+          </Card>
+        </Box>
+      </AuthGuard>
 
       {isOpenDialog ? (
         <SettingDialog

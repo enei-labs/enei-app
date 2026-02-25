@@ -584,6 +584,14 @@ export type ElectricNumberInfoInput = {
   tableNumbers: Array<Scalars['String']['input']>;
 };
 
+export type EmailConfig = {
+  __typename?: 'EmailConfig';
+  id: Scalars['ID']['output'];
+  isTestMode: Scalars['Boolean']['output'];
+  testRecipients: Array<Scalars['String']['output']>;
+  updatedAt: Scalars['DateTime']['output'];
+};
+
 export enum EnergyType {
   OtherRenewable = 'OTHER_RENEWABLE',
   Solar = 'SOLAR',
@@ -965,6 +973,10 @@ export type Mutation = {
   removeUserContract: UserContract;
   requestResetPassword: RequestResetPasswordResponse;
   resetPassword: ResetPasswordResponse;
+  /** 回復手動匯入的發電業電費單（刪除手動匯入記錄，狀態變回待審核） */
+  revertManualIndustryBill: IndustryBill;
+  /** 回復手動匯入的用戶電費單（刪除手動匯入記錄，狀態變回待審核） */
+  revertManualUserBill: UserBill;
   sendIndustryBillEmail: SendIndustryBillEmailResponse;
   sendIndustryBillsEmail: SendIndustryBillsEmailResponse;
   sendResetPasswordEmail: SendResetPasswordEmailResponse;
@@ -975,6 +987,7 @@ export type Mutation = {
   signOut: Success;
   updateCompany: Company;
   updateCompanyContract: CompanyContract;
+  updateEmailConfig: EmailConfig;
   updateFee: Fee;
   updateIndustryBillConfig: IndustryBillConfig;
   updatePowerPlant: PowerPlant;
@@ -1164,6 +1177,16 @@ export type MutationResetPasswordArgs = {
 };
 
 
+export type MutationRevertManualIndustryBillArgs = {
+  input: RevertManualIndustryBillInput;
+};
+
+
+export type MutationRevertManualUserBillArgs = {
+  input: RevertManualUserBillInput;
+};
+
+
 export type MutationSendIndustryBillEmailArgs = {
   fileName?: InputMaybe<Scalars['String']['input']>;
   industryBillId: Scalars['String']['input'];
@@ -1212,6 +1235,11 @@ export type MutationUpdateCompanyArgs = {
 
 export type MutationUpdateCompanyContractArgs = {
   input: UpdateCompanyContractInput;
+};
+
+
+export type MutationUpdateEmailConfigArgs = {
+  input: UpdateEmailConfigInput;
 };
 
 
@@ -1316,6 +1344,7 @@ export type Query = {
   companyContractMonthlyTransferDegrees: CompanyContractMonthlyTransferDegrees;
   companyContracts: CompanyContractPage;
   dashboard: Dashboard;
+  emailConfig: EmailConfig;
   fee: Fee;
   findIndustryBillByElectricNumberAndMonth?: Maybe<IndustryBill>;
   findIndustryBillConfigByElectricNumber: Array<IndustryBillConfig>;
@@ -1715,6 +1744,16 @@ export type RequestResetPasswordResponse = AccountNotFoundError | InvalidSignInI
 
 export type ResetPasswordResponse = PasswordResetExpiredError | Success;
 
+export type RevertManualIndustryBillInput = {
+  /** 發電業電費單 ID */
+  industryBillId: Scalars['String']['input'];
+};
+
+export type RevertManualUserBillInput = {
+  /** 用戶電費單 ID */
+  userBillId: Scalars['String']['input'];
+};
+
 export enum Role {
   Admin = 'ADMIN',
   Company = 'COMPANY',
@@ -1897,6 +1936,11 @@ export type UpdateCompanyInput = {
   name?: InputMaybe<Scalars['String']['input']>;
   recipientAccounts: Array<CreateRecipientAccountInput>;
   taxId?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateEmailConfigInput = {
+  isTestMode?: InputMaybe<Scalars['Boolean']['input']>;
+  testRecipients?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
 export type UpdateFeeInput = {
