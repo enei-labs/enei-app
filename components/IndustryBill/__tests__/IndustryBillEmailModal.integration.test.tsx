@@ -1,61 +1,81 @@
 /**
  * Integration test for IndustryBillEmailModal
  * Tests the full flow of sending multiple industry bill emails from frontend to backend
+ *
+ * 注意：Component 透過 useIndustryBillsForEmail hook 從 GraphQL 取得帳單資料，
+ * 所有測試需要 mock INDUSTRY_BILLS_FOR_EMAIL query
  */
 
 import React from 'react';
 import { screen, fireEvent, waitFor } from '@testing-library/react';
 import { render, createMockResponse } from '@utils/test-utils';
 import { IndustryBillEmailModal } from '../IndustryBillEmailModal';
-import { ElectricBillStatus, IndustryBill } from '@core/graphql/types';
-import { gql } from '@apollo/client';
+import { ElectricBillStatus, IndustryBillForEmail } from '@core/graphql/types';
+import { EMAIL_CONFIG } from '@core/graphql/queries/emailConfig';
+import { INDUSTRY_BILLS_FOR_EMAIL } from '@core/graphql/queries/industryBillsForEmail';
 
-// GraphQL mutation
+// GraphQL mutation (must match component's mutation including selection set)
+import { gql } from '@apollo/client';
 const SEND_INDUSTRY_BILLS_EMAIL = gql`
-  mutation SendIndustryBillsEmail($month: String!) {
-    sendIndustryBillsEmail(month: $month) {
+  mutation SendIndustryBillsEmail($month: String!, $industryBillIds: [String!]) {
+    sendIndustryBillsEmail(month: $month, industryBillIds: $industryBillIds) {
       success
       message
+      batchId
+      totalJobs
     }
   }
 `;
 
-// Mock data factory - creates realistic test data for multiple companies
-const createMockIndustryBills = (
-  month: string,
+const emailConfigMock = createMockResponse(
+  EMAIL_CONFIG,
+  {},
+  { emailConfig: { id: '1', isTestMode: false, testRecipients: [], updatedAt: new Date().toISOString() } }
+);
+
+// Mock data factory - creates IndustryBillForEmail data (matching the GraphQL query return type)
+const createMockBillsForEmail = (
   numBills: number,
   status: ElectricBillStatus = ElectricBillStatus.Approved
-): IndustryBill[] => {
+): IndustryBillForEmail[] => {
   return Array.from({ length: numBills }, (_, i) => ({
+    __typename: 'IndustryBillForEmail' as const,
     id: `bill-${i + 1}`,
+    status,
+    billSource: null,
+    hasOriginalFile: false,
     powerPlantName: `測試電廠 ${i + 1}`,
     powerPlantNumber: `E${(i + 1).toString().padStart(6, '0')}`,
-    powerPlantAddress: `台北市信義區信義路五段 ${i + 1} 號`,
-    transferDegree: 1000 + i * 50,
-    price: 2.5 + i * 0.1,
-    amount: (1000 + i * 50) * (2.5 + i * 0.1),
-    billingDate: `${month}-01T00:00:00Z`,
-    status,
-    industryBillConfigId: `config-${i + 1}`,
-    createdAt: `${month}-01T00:00:00Z`,
-    updatedAt: `${month}-01T00:00:00Z`,
-  })) as IndustryBill[];
+    industry: {
+      __typename: 'IndustryBillIndustry' as const,
+      id: `industry-${i + 1}`,
+      name: `測試發電業 ${i + 1}`,
+    },
+  }));
 };
 
-const createMockBillsWithMixedStatuses = (month: string): IndustryBill[] => {
-  const bills = createMockIndustryBills(month, 6, ElectricBillStatus.Approved);
-  bills[1].status = ElectricBillStatus.Draft;
-  bills[3].status = ElectricBillStatus.Pending;
-  bills[5].status = ElectricBillStatus.Rejected;
+const createMockBillsWithMixedStatuses = (): IndustryBillForEmail[] => {
+  const bills = createMockBillsForEmail(6, ElectricBillStatus.Approved);
+  bills[1] = { ...bills[1], status: ElectricBillStatus.Draft };
+  bills[3] = { ...bills[3], status: ElectricBillStatus.Pending };
+  bills[5] = { ...bills[5], status: ElectricBillStatus.Rejected };
   return bills;
 };
 
+/** 建立 INDUSTRY_BILLS_FOR_EMAIL query mock */
+const createBillsQueryMock = (month: string, bills: IndustryBillForEmail[]) =>
+  createMockResponse(
+    INDUSTRY_BILLS_FOR_EMAIL,
+    { month },
+    { industryBillsForEmail: bills }
+  );
+
 describe('IndustryBillEmailModal (Integration)', () => {
+  const defaultMonth = '2024-10';
   const mockProps = {
     open: true,
     onClose: jest.fn(),
-    month: '2024-10',
-    bills: [] as IndustryBill[],
+    month: defaultMonth,
   };
 
   beforeEach(() => {
@@ -64,33 +84,31 @@ describe('IndustryBillEmailModal (Integration)', () => {
 
   describe('Success Scenarios - Multi Email Sending', () => {
     it('should successfully send emails for multiple approved bills', async () => {
-      // Arrange: Create 5 approved bills
-      const approvedBills = createMockIndustryBills('2024-10', 5);
+      const bills = createMockBillsForEmail(5);
 
       const mocks = [
+        createBillsQueryMock(defaultMonth, bills),
         createMockResponse(
           SEND_INDUSTRY_BILLS_EMAIL,
-          { month: '2024-10' },
+          { month: defaultMonth, industryBillIds: bills.map(b => b.id) },
           {
             sendIndustryBillsEmail: {
               success: true,
               message: '電費單已成功生成 (3/3 家公司)',
+              batchId: 'batch-1',
+              totalJobs: 3,
             },
           }
         ),
+        emailConfigMock,
       ];
 
-      // Act
-      render(
-        <IndustryBillEmailModal {...mockProps} bills={approvedBills} />,
-        { mocks }
-      );
+      render(<IndustryBillEmailModal {...mockProps} />, { mocks });
 
-      // Assert: Modal opens with all approved bills
+      // Assert: Modal opens with bill info
       await waitFor(() => {
-        expect(screen.getByText('發電業電費單 2024-10')).toBeInTheDocument();
-        expect(screen.getByText('所有電費單皆已審核完成')).toBeInTheDocument();
-        expect(screen.getByText('2024-10 月份共 5 筆電費單')).toBeInTheDocument();
+        expect(screen.getByText(/發電業電費單/)).toBeInTheDocument();
+        expect(screen.getByText(/準備寄送電費單通知/)).toBeInTheDocument();
       });
 
       // Assert: Send button is enabled
@@ -112,20 +130,17 @@ describe('IndustryBillEmailModal (Integration)', () => {
     });
 
     it('should display preview of bills before sending', async () => {
-      // Arrange: Create 10 approved bills (should show first 5 + "...及其他 5 筆")
-      const approvedBills = createMockIndustryBills('2024-11', 10);
+      const month = '2024-11';
+      const bills = createMockBillsForEmail(10);
 
       render(
-        <IndustryBillEmailModal {...mockProps} month="2024-11" bills={approvedBills} />,
-        { mocks: [] }
+        <IndustryBillEmailModal {...mockProps} month={month} />,
+        { mocks: [createBillsQueryMock(month, bills), emailConfigMock] }
       );
 
       // Assert: Shows first 5 bills
       await waitFor(() => {
         expect(screen.getByText('測試電廠 1 (E000001)')).toBeInTheDocument();
-        expect(screen.getByText('測試電廠 2 (E000002)')).toBeInTheDocument();
-        expect(screen.getByText('測試電廠 3 (E000003)')).toBeInTheDocument();
-        expect(screen.getByText('測試電廠 4 (E000004)')).toBeInTheDocument();
         expect(screen.getByText('測試電廠 5 (E000005)')).toBeInTheDocument();
       });
 
@@ -134,44 +149,40 @@ describe('IndustryBillEmailModal (Integration)', () => {
     });
 
     it('should handle different company groups correctly', async () => {
-      // Arrange: Create bills from multiple companies
-      const bill1 = createMockIndustryBills('2024-10', 1)[0];
-      const bill2 = createMockIndustryBills('2024-10', 1)[0];
-      const bill3 = createMockIndustryBills('2024-10', 1)[0];
-
-      bill1.powerPlantName = '公司A 電廠1';
-      bill2.powerPlantName = '公司A 電廠2';
-      bill3.powerPlantName = '公司B 電廠1';
-
-      const bills = [bill1, bill2, bill3];
+      const bills = createMockBillsForEmail(3);
+      // Same industry for first 2 bills
+      bills[0] = { ...bills[0], industry: { __typename: 'IndustryBillIndustry', id: 'ind-A', name: '公司A' } };
+      bills[1] = { ...bills[1], industry: { __typename: 'IndustryBillIndustry', id: 'ind-A', name: '公司A' } };
+      bills[2] = { ...bills[2], industry: { __typename: 'IndustryBillIndustry', id: 'ind-B', name: '公司B' } };
 
       const mocks = [
+        createBillsQueryMock(defaultMonth, bills),
         createMockResponse(
           SEND_INDUSTRY_BILLS_EMAIL,
-          { month: '2024-10' },
+          { month: defaultMonth, industryBillIds: bills.map(b => b.id) },
           {
             sendIndustryBillsEmail: {
               success: true,
-              message: '電費單已成功生成 (2/2 家公司)', // 2 companies
+              message: '電費單已成功生成 (2/2 家公司)',
+              batchId: 'batch-1',
+              totalJobs: 2,
             },
           }
         ),
+        emailConfigMock,
       ];
 
-      render(
-        <IndustryBillEmailModal {...mockProps} bills={bills} />,
-        { mocks }
-      );
+      render(<IndustryBillEmailModal {...mockProps} />, { mocks });
 
       await waitFor(() => {
-        expect(screen.getByText('2024-10 月份共 3 筆電費單')).toBeInTheDocument();
+        // 2 industry groups → 2 封郵件，3 筆電費單
+        expect(screen.getByText(/將發送 2 封郵件，共 3 筆電費單/)).toBeInTheDocument();
       });
 
       // Act: Send emails
       const sendButton = screen.getByRole('button', { name: /確認寄信/i });
       fireEvent.click(sendButton);
 
-      // Assert: Success message mentions 2 companies
       await waitFor(() => {
         expect(mockProps.onClose).toHaveBeenCalled();
       });
@@ -179,19 +190,16 @@ describe('IndustryBillEmailModal (Integration)', () => {
   });
 
   describe('Validation - Unapproved Bills', () => {
-    it('should show warning when bills are not all approved', async () => {
-      // Arrange: Mix of approved and unapproved bills
-      const mixedBills = createMockBillsWithMixedStatuses('2024-10');
+    it('should show no eligible bills message when none are approved', async () => {
+      const bills = createMockBillsForEmail(3, ElectricBillStatus.Draft);
 
       render(
-        <IndustryBillEmailModal {...mockProps} bills={mixedBills} />,
-        { mocks: [] }
+        <IndustryBillEmailModal {...mockProps} />,
+        { mocks: [createBillsQueryMock(defaultMonth, bills), emailConfigMock] }
       );
 
-      // Assert: Warning alert displayed
       await waitFor(() => {
-        expect(screen.getByText(/尚有 3 筆電費單未審核完成/i)).toBeInTheDocument();
-        expect(screen.getByText(/請先完成審核後再寄送電費單通知/i)).toBeInTheDocument();
+        expect(screen.getByText('無符合條件的電費單可寄送')).toBeInTheDocument();
       });
 
       // Assert: Send button not shown
@@ -202,44 +210,37 @@ describe('IndustryBillEmailModal (Integration)', () => {
     });
 
     it('should display unapproved bills list with correct status badges', async () => {
-      // Arrange
-      const mixedBills = createMockBillsWithMixedStatuses('2024-10');
+      const bills = createMockBillsForEmail(3, ElectricBillStatus.Draft);
+      bills[1] = { ...bills[1], status: ElectricBillStatus.Pending };
+      bills[2] = { ...bills[2], status: ElectricBillStatus.Rejected };
 
       render(
-        <IndustryBillEmailModal {...mockProps} bills={mixedBills} />,
-        { mocks: [] }
+        <IndustryBillEmailModal {...mockProps} />,
+        { mocks: [createBillsQueryMock(defaultMonth, bills), emailConfigMock] }
       );
 
-      // Assert: Unapproved bills section shown
       await waitFor(() => {
         expect(screen.getByText('待處理電費單清單')).toBeInTheDocument();
       });
 
-      // Assert: Draft status
       expect(screen.getByText('未完成')).toBeInTheDocument();
-
-      // Assert: Pending status
       expect(screen.getByText('待審核')).toBeInTheDocument();
-
-      // Assert: Rejected status
       expect(screen.getByText('已拒絕')).toBeInTheDocument();
     });
 
     it('should show clickable links to unapproved bills', async () => {
-      // Arrange
-      const mixedBills = createMockBillsWithMixedStatuses('2024-10');
+      const bills = createMockBillsForEmail(2, ElectricBillStatus.Draft);
 
       render(
-        <IndustryBillEmailModal {...mockProps} bills={mixedBills} />,
-        { mocks: [] }
+        <IndustryBillEmailModal {...mockProps} />,
+        { mocks: [createBillsQueryMock(defaultMonth, bills), emailConfigMock] }
       );
 
-      // Assert: Bills have links
       await waitFor(() => {
-        const link = screen.getByRole('link', { name: /測試電廠 2/i });
+        const link = screen.getByRole('link', { name: /測試電廠 1/i });
         expect(link).toHaveAttribute(
           'href',
-          '/electric-bill/industry-bill?month=2024-10&industryBillId=bill-2'
+          '/electric-bill/industry-bill?month=2024-10&industryBillId=bill-1'
         );
       });
     });
@@ -247,107 +248,98 @@ describe('IndustryBillEmailModal (Integration)', () => {
 
   describe('Error Handling', () => {
     it('should display error message when mutation fails', async () => {
-      // Arrange
-      const approvedBills = createMockIndustryBills('2024-10', 3);
+      const bills = createMockBillsForEmail(3);
 
       const mocks = [
+        createBillsQueryMock(defaultMonth, bills),
         createMockResponse(
           SEND_INDUSTRY_BILLS_EMAIL,
-          { month: '2024-10' },
+          { month: defaultMonth, industryBillIds: bills.map(b => b.id) },
           {
             sendIndustryBillsEmail: {
               success: false,
               message: 'PDF 服務暫時無法使用,請稍後再試',
+              batchId: null,
+              totalJobs: null,
             },
           }
         ),
+        emailConfigMock,
       ];
 
-      render(
-        <IndustryBillEmailModal {...mockProps} bills={approvedBills} />,
-        { mocks }
-      );
+      render(<IndustryBillEmailModal {...mockProps} />, { mocks });
 
       await waitFor(() => {
-        expect(screen.getByText('所有電費單皆已審核完成')).toBeInTheDocument();
+        expect(screen.getByText(/準備寄送電費單通知/)).toBeInTheDocument();
       });
 
-      // Act: Click send
       const sendButton = screen.getByRole('button', { name: /確認寄信/i });
       fireEvent.click(sendButton);
 
-      // Assert: Error displayed
       await waitFor(() => {
         expect(screen.getByText('PDF 服務暫時無法使用,請稍後再試')).toBeInTheDocument();
       });
 
-      // Assert: Modal stays open
       expect(mockProps.onClose).not.toHaveBeenCalled();
     });
 
     it('should handle GraphQL network errors', async () => {
-      // Arrange
-      const approvedBills = createMockIndustryBills('2024-10', 3);
+      const bills = createMockBillsForEmail(3);
 
       const mocks = [
+        createBillsQueryMock(defaultMonth, bills),
         createMockResponse(
           SEND_INDUSTRY_BILLS_EMAIL,
-          { month: '2024-10' },
+          { month: defaultMonth, industryBillIds: bills.map(b => b.id) },
           null,
           new Error('Network error')
         ),
+        emailConfigMock,
       ];
 
-      render(
-        <IndustryBillEmailModal {...mockProps} bills={approvedBills} />,
-        { mocks }
-      );
+      render(<IndustryBillEmailModal {...mockProps} />, { mocks });
 
       await waitFor(() => {
-        expect(screen.getByText('所有電費單皆已審核完成')).toBeInTheDocument();
+        expect(screen.getByText(/準備寄送電費單通知/)).toBeInTheDocument();
       });
 
-      // Act: Click send
       const sendButton = screen.getByRole('button', { name: /確認寄信/i });
       fireEvent.click(sendButton);
 
-      // Assert: Generic error message
       await waitFor(() => {
         expect(screen.getByText('寄信過程發生錯誤')).toBeInTheDocument();
       });
     });
 
     it('should handle partial success (some PDFs failed)', async () => {
-      // Arrange
-      const approvedBills = createMockIndustryBills('2024-10', 6);
+      const bills = createMockBillsForEmail(6);
 
       const mocks = [
+        createBillsQueryMock(defaultMonth, bills),
         createMockResponse(
           SEND_INDUSTRY_BILLS_EMAIL,
-          { month: '2024-10' },
+          { month: defaultMonth, industryBillIds: bills.map(b => b.id) },
           {
             sendIndustryBillsEmail: {
               success: true,
-              message: '電費單已成功生成 (2/3 家公司)', // Partial success
+              message: '電費單已成功生成 (2/3 家公司)',
+              batchId: 'batch-1',
+              totalJobs: 3,
             },
           }
         ),
+        emailConfigMock,
       ];
 
-      render(
-        <IndustryBillEmailModal {...mockProps} bills={approvedBills} />,
-        { mocks }
-      );
+      render(<IndustryBillEmailModal {...mockProps} />, { mocks });
 
       await waitFor(() => {
-        expect(screen.getByText('所有電費單皆已審核完成')).toBeInTheDocument();
+        expect(screen.getByText(/準備寄送電費單通知/)).toBeInTheDocument();
       });
 
-      // Act: Send
       const sendButton = screen.getByRole('button', { name: /確認寄信/i });
       fireEvent.click(sendButton);
 
-      // Assert: Still closes on success (even if partial)
       await waitFor(() => {
         expect(mockProps.onClose).toHaveBeenCalled();
       });
@@ -356,39 +348,37 @@ describe('IndustryBillEmailModal (Integration)', () => {
 
   describe('UI Interactions', () => {
     it('should disable buttons during loading', async () => {
-      // Arrange
-      const approvedBills = createMockIndustryBills('2024-10', 3);
+      const bills = createMockBillsForEmail(3);
 
       const mocks = [
+        createBillsQueryMock(defaultMonth, bills),
         {
           ...createMockResponse(
             SEND_INDUSTRY_BILLS_EMAIL,
-            { month: '2024-10' },
+            { month: defaultMonth, industryBillIds: bills.map(b => b.id) },
             {
               sendIndustryBillsEmail: {
                 success: true,
                 message: '電費單已成功生成',
+                batchId: 'batch-1',
+                totalJobs: 1,
               },
             }
           ),
-          delay: 1000, // Simulate slow network
+          delay: 1000,
         },
+        emailConfigMock,
       ];
 
-      render(
-        <IndustryBillEmailModal {...mockProps} bills={approvedBills} />,
-        { mocks }
-      );
+      render(<IndustryBillEmailModal {...mockProps} />, { mocks });
 
       await waitFor(() => {
-        expect(screen.getByText('所有電費單皆已審核完成')).toBeInTheDocument();
+        expect(screen.getByText(/準備寄送電費單通知/)).toBeInTheDocument();
       });
 
-      // Act: Click send
       const sendButton = screen.getByRole('button', { name: /確認寄信/i });
       fireEvent.click(sendButton);
 
-      // Assert: Buttons disabled during loading
       await waitFor(() => {
         expect(screen.getByRole('button', { name: '取消' })).toBeDisabled();
         expect(screen.getByText('寄送中...')).toBeInTheDocument();
@@ -396,36 +386,29 @@ describe('IndustryBillEmailModal (Integration)', () => {
     });
 
     it('should close modal when cancel button clicked', async () => {
-      // Arrange
-      const approvedBills = createMockIndustryBills('2024-10', 3);
+      const bills = createMockBillsForEmail(3);
 
       render(
-        <IndustryBillEmailModal {...mockProps} bills={approvedBills} />,
-        { mocks: [] }
+        <IndustryBillEmailModal {...mockProps} />,
+        { mocks: [createBillsQueryMock(defaultMonth, bills), emailConfigMock] }
       );
 
       await waitFor(() => {
-        expect(screen.getByText('所有電費單皆已審核完成')).toBeInTheDocument();
+        expect(screen.getByText(/準備寄送電費單通知/)).toBeInTheDocument();
       });
 
-      // Act: Click cancel
       const cancelButton = screen.getByRole('button', { name: '取消' });
       fireEvent.click(cancelButton);
 
-      // Assert: onClose called
       expect(mockProps.onClose).toHaveBeenCalled();
     });
 
     it('should show email icon in header', async () => {
-      // Arrange
-      const approvedBills = createMockIndustryBills('2024-10', 3);
-
       render(
-        <IndustryBillEmailModal {...mockProps} bills={approvedBills} />,
-        { mocks: [] }
+        <IndustryBillEmailModal {...mockProps} />,
+        { mocks: [createBillsQueryMock(defaultMonth, []), emailConfigMock] }
       );
 
-      // Assert: Email icon present
       await waitFor(() => {
         const emailIcons = screen.getAllByTestId('EmailIcon');
         expect(emailIcons.length).toBeGreaterThan(0);
@@ -433,100 +416,149 @@ describe('IndustryBillEmailModal (Integration)', () => {
     });
 
     it('should show close icon button in header', async () => {
-      // Arrange
-      const approvedBills = createMockIndustryBills('2024-10', 3);
-
       render(
-        <IndustryBillEmailModal {...mockProps} bills={approvedBills} />,
-        { mocks: [] }
+        <IndustryBillEmailModal {...mockProps} />,
+        { mocks: [createBillsQueryMock(defaultMonth, []), emailConfigMock] }
       );
 
       await waitFor(() => {
         expect(screen.getByLabelText('close')).toBeInTheDocument();
       });
 
-      // Act: Click close icon
       const closeButton = screen.getByLabelText('close');
       fireEvent.click(closeButton);
 
-      // Assert: onClose called
       expect(mockProps.onClose).toHaveBeenCalled();
     });
   });
 
   describe('Edge Cases', () => {
-    it('should handle empty bills array', async () => {
-      // Arrange
+    it('should handle empty bills (no eligible, no ineligible)', async () => {
       render(
-        <IndustryBillEmailModal {...mockProps} bills={[]} />,
-        { mocks: [] }
+        <IndustryBillEmailModal {...mockProps} />,
+        { mocks: [createBillsQueryMock(defaultMonth, []), emailConfigMock] }
       );
 
-      // Assert: Shows "0 筆電費單"
+      // 0 eligible bills → shows "無符合條件" since hasEligibleBills is false
       await waitFor(() => {
-        expect(screen.getByText('2024-10 月份共 0 筆電費單')).toBeInTheDocument();
+        expect(screen.getByText('無符合條件的電費單可寄送')).toBeInTheDocument();
       });
-
-      // Assert: Send button still shown (backend will handle validation)
-      expect(screen.getByRole('button', { name: /確認寄信/i })).toBeInTheDocument();
     });
 
     it('should handle single bill', async () => {
-      // Arrange
-      const singleBill = createMockIndustryBills('2024-10', 1);
+      const bills = createMockBillsForEmail(1);
 
       const mocks = [
+        createBillsQueryMock(defaultMonth, bills),
         createMockResponse(
           SEND_INDUSTRY_BILLS_EMAIL,
-          { month: '2024-10' },
+          { month: defaultMonth, industryBillIds: ['bill-1'] },
           {
             sendIndustryBillsEmail: {
               success: true,
               message: '電費單已成功生成 (1/1 家公司)',
+              batchId: 'batch-1',
+              totalJobs: 1,
             },
           }
         ),
+        emailConfigMock,
       ];
 
-      render(
-        <IndustryBillEmailModal {...mockProps} bills={singleBill} />,
-        { mocks }
-      );
+      render(<IndustryBillEmailModal {...mockProps} />, { mocks });
 
-      // Assert: Shows 1 bill
       await waitFor(() => {
-        expect(screen.getByText('2024-10 月份共 1 筆電費單')).toBeInTheDocument();
+        expect(screen.getByText(/將發送 1 封郵件，共 1 筆電費單/)).toBeInTheDocument();
       });
 
       // Assert: No "...及其他" text (only 1 bill)
-      expect(screen.queryByText(/...及其他/i)).not.toBeInTheDocument();
+      expect(screen.queryByText(/及其他/i)).not.toBeInTheDocument();
 
-      // Act: Send
       const sendButton = screen.getByRole('button', { name: /確認寄信/i });
       fireEvent.click(sendButton);
 
-      // Assert: Success
       await waitFor(() => {
         expect(mockProps.onClose).toHaveBeenCalled();
       });
     });
 
     it('should handle bills with missing optional fields', async () => {
-      // Arrange: Create bills with missing powerPlantNumber
-      const billsWithMissingData = createMockIndustryBills('2024-10', 3);
-      billsWithMissingData.forEach((bill) => {
-        (bill as any).powerPlantNumber = null;
+      const bills = createMockBillsForEmail(3);
+      bills.forEach(bill => {
+        bill.powerPlantNumber = null;
       });
 
       render(
-        <IndustryBillEmailModal {...mockProps} bills={billsWithMissingData} />,
-        { mocks: [] }
+        <IndustryBillEmailModal {...mockProps} />,
+        { mocks: [createBillsQueryMock(defaultMonth, bills), emailConfigMock] }
       );
 
-      // Assert: Should still render without crashing
+      // Should still render without crashing
       await waitFor(() => {
         expect(screen.getByText('測試電廠 1')).toBeInTheDocument();
       });
+    });
+  });
+
+  describe('Test Mode Display', () => {
+    it('isTestMode=true → 顯示 "目前為測試模式" Alert', async () => {
+      const bills = createMockBillsForEmail(3);
+
+      const testModeEmailConfigMock = createMockResponse(
+        EMAIL_CONFIG,
+        {},
+        { emailConfig: { id: '1', isTestMode: true, testRecipients: ['qa@test.com'], updatedAt: new Date().toISOString() } }
+      );
+
+      render(
+        <IndustryBillEmailModal {...mockProps} />,
+        { mocks: [createBillsQueryMock(defaultMonth, bills), testModeEmailConfigMock] }
+      );
+
+      await waitFor(() => {
+        expect(screen.getByText('目前為測試模式')).toBeInTheDocument();
+        expect(screen.getByText('郵件將只寄送給內部測試人員，不會寄給客戶')).toBeInTheDocument();
+      });
+    });
+
+    it('isTestMode=true → 按鈕文字為 "確認寄信（測試模式）"', async () => {
+      const bills = createMockBillsForEmail(3);
+
+      const testModeEmailConfigMock = createMockResponse(
+        EMAIL_CONFIG,
+        {},
+        { emailConfig: { id: '1', isTestMode: true, testRecipients: [], updatedAt: new Date().toISOString() } }
+      );
+
+      render(
+        <IndustryBillEmailModal {...mockProps} />,
+        { mocks: [createBillsQueryMock(defaultMonth, bills), testModeEmailConfigMock] }
+      );
+
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /確認寄信（測試模式）/ })).toBeInTheDocument();
+      });
+    });
+
+    it('isTestMode=false → 無 Alert，按鈕為 "確認寄信"', async () => {
+      const bills = createMockBillsForEmail(3);
+
+      render(
+        <IndustryBillEmailModal {...mockProps} />,
+        { mocks: [createBillsQueryMock(defaultMonth, bills), emailConfigMock] }
+      );
+
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: /確認寄信/i })).toBeInTheDocument();
+      });
+
+      // 確認無測試模式 Alert
+      expect(screen.queryByText('目前為測試模式')).not.toBeInTheDocument();
+
+      // 確認按鈕文字不含 "測試模式"
+      const sendButton = screen.getByRole('button', { name: /確認寄信/i });
+      expect(sendButton).toHaveTextContent('確認寄信');
+      expect(sendButton).not.toHaveTextContent('測試模式');
     });
   });
 
@@ -541,28 +573,13 @@ describe('IndustryBillEmailModal (Integration)', () => {
       for (const testCase of testCases) {
         jest.clearAllMocks();
 
-        const bills = createMockIndustryBills(testCase.month, 2);
-
-        const mocks = [
-          createMockResponse(
-            SEND_INDUSTRY_BILLS_EMAIL,
-            { month: testCase.month },
-            {
-              sendIndustryBillsEmail: {
-                success: true,
-                message: '電費單已成功生成',
-              },
-            }
-          ),
-        ];
-
         const { unmount } = render(
-          <IndustryBillEmailModal {...mockProps} month={testCase.month} bills={bills} />,
-          { mocks }
+          <IndustryBillEmailModal {...mockProps} month={testCase.month} />,
+          { mocks: [createBillsQueryMock(testCase.month, []), emailConfigMock] }
         );
 
         await waitFor(() => {
-          expect(screen.getByText(`發電業電費單 ${testCase.display}`)).toBeInTheDocument();
+          expect(screen.getByText(new RegExp(`發電業電費單.*${testCase.display}`))).toBeInTheDocument();
         });
 
         unmount();
