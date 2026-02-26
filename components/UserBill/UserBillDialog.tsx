@@ -34,8 +34,8 @@ interface UserBillDialogProps {
 }
 
 // 計算工具函數
-const calculateTotalDegree = (electricNumberInfos: UserBill["electricNumberInfos"]) => 
-  electricNumberInfos.reduce((acc, info) => acc + (info.degree ?? 0), 0);
+const calculateTotalDegree = (electricNumberInfos: UserBill["electricNumberInfos"]) =>
+  (electricNumberInfos ?? []).reduce((acc, info) => acc + (info.degree ?? 0), 0);
 
 // 費用計算邏輯
 const calculateFees = (
@@ -59,7 +59,7 @@ const calculateFees = (
 
   // 代輸費計算
   const substitutionFee = shouldCalculate.substitution 
-    ? Math.round(electricNumberInfos.reduce((acc, info) => acc + (info.fee ?? 0), 0) / 1.05)
+    ? Math.round((electricNumberInfos ?? []).reduce((acc, info) => acc + (info.fee ?? 0), 0) / 1.05)
     : 0;
 
   // 憑證審查費計算
@@ -147,8 +147,9 @@ export const UserBillDialog = ({
     const { userBill: bill, fee } = data;
     
     // 基礎計算
-    const totalDegree = calculateTotalDegree(bill.electricNumberInfos);
-    const usage = bill.electricNumberInfos.map((info) => ({
+    const infos = bill.electricNumberInfos ?? [];
+    const totalDegree = calculateTotalDegree(infos);
+    const usage = infos.map((info) => ({
       serialNumber: info.number ?? "",
       kwh: info.degree,
       price: info.price ?? 0,

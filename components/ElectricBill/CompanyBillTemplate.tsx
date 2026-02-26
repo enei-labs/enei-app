@@ -129,6 +129,7 @@ const CompanyBillTemplate = forwardRef((props: CompanyBillProps, ref) => {
     value: number,
     isRateOrPriceOrCapacity: boolean = false
   ) => {
+    if (value == null) return '';
     if (isRateOrPriceOrCapacity) {
       return value.toString();
     }
