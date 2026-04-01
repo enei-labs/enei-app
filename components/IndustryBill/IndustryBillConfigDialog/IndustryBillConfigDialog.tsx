@@ -8,7 +8,7 @@ import { textValidated } from "@core/types/fieldConfig";
 import Dialog from "@components/Dialog";
 import { FormData } from "@components/IndustryBill/IndustryBillConfigDialog/FormData";
 import { Controller, useForm, Control } from "react-hook-form";
-import { InputText } from "@components/Input";
+
 import RadioGroup from "@components/RadioGroup";
 import { ElectricNumbersField } from "@components/IndustryBill/IndustryBillConfigDialog/ElectricNumbersField";
 import { useCompanies } from "@utils/hooks/queries";
@@ -32,7 +32,6 @@ const YES_NO_RADIOS = [
 const SECTION_TITLES = {
   INDUSTRY_INFO: "發電業資訊",
   ELECTRIC_NUMBERS: "發電業電號",
-  CONTACT_INFO: "電費收件人資訊",
 } as const;
 
 const DIALOG_TITLES = {
@@ -52,16 +51,6 @@ type DialogHeaderProps = {
 
 type SectionHeaderProps = {
   title: string;
-};
-
-type ContactInfoFieldProps = {
-  control: Control<FormData>;
-  name: keyof Pick<FormData, "contactName" | "contactPhone" | "contactEmail" | "address">;
-  label: string;
-};
-
-type ContactInfoSectionProps = {
-  control: Control<FormData>;
 };
 
 type ActionButtonsProps = {
@@ -87,44 +76,6 @@ const SectionHeader = memo<SectionHeaderProps>(function SectionHeader({ title })
     <Typography variant="h5" textAlign={"left"}>
       {title}
     </Typography>
-  );
-});
-
-const ContactInfoField = memo<ContactInfoFieldProps>(function ContactInfoField({ control, name, label }) {
-  return (
-    <Controller
-      control={control}
-      name={name}
-      render={({ field }) => (
-        <InputText
-          label={label}
-          {...field}
-          placeholder={PLACEHOLDERS.DEFAULT}
-          required
-        />
-      )}
-    />
-  );
-});
-
-const ContactInfoSection = memo<ContactInfoSectionProps>(function ContactInfoSection({ control }) {
-  return (
-    <>
-      <SectionHeader title={SECTION_TITLES.CONTACT_INFO} />
-      <Grid
-        container
-        justifyContent={"flex-start"}
-        alignItems={"center"}
-        flexDirection={"row"}
-        gap={"16px"}
-        flexWrap={"nowrap"}
-      >
-        <ContactInfoField control={control} name="contactName" label="收件人姓名" />
-        <ContactInfoField control={control} name="contactPhone" label="收件人電話" />
-      </Grid>
-      <ContactInfoField control={control} name="contactEmail" label="收件人信箱" />
-      <ContactInfoField control={control} name="address" label="收件人地址" />
-    </>
   );
 });
 
@@ -181,7 +132,7 @@ function IndustryBillConfigDialog(props: IndustryBillDialogProps): JSX.Element {
     return {
       name: currentModifyIndustryBillConfig.name,
       industryId: {
-        label: currentModifyIndustryBillConfig.industry.contactEmail,
+        label: currentModifyIndustryBillConfig.industry.contactEmails?.join(', ') ?? '',
         value: currentModifyIndustryBillConfig.industry.id,
       },
       recipientAccount: {
@@ -198,10 +149,6 @@ function IndustryBillConfigDialog(props: IndustryBillDialogProps): JSX.Element {
         number: { label: number, value: number },
         price: "",
       })),
-      contactName: currentModifyIndustryBillConfig.contactName,
-      contactEmail: currentModifyIndustryBillConfig.contactEmail,
-      contactPhone: currentModifyIndustryBillConfig.contactPhone,
-      address: currentModifyIndustryBillConfig.address,
     };
   }, [currentModifyIndustryBillConfig]);
 
@@ -255,7 +202,7 @@ function IndustryBillConfigDialog(props: IndustryBillDialogProps): JSX.Element {
         placeholder: PLACEHOLDERS.DEFAULT,
         options:
           data?.companies.list.map((company) => ({
-            label: `${company.contactEmail}(${company.name})`,
+            label: `${(company.contactEmails || []).join(', ')}(${company.name})`,
             value: company.id,
           })) ?? [],
         validated: textValidated,
@@ -324,9 +271,6 @@ function IndustryBillConfigDialog(props: IndustryBillDialogProps): JSX.Element {
               )}
             />
           )}
-
-          {/* 電費收件人資訊 Block */}
-          <ContactInfoSection control={control} />
 
           {/* 按鈕區塊 */}
           <ActionButtons

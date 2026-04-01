@@ -227,7 +227,7 @@ export type ChangePasswordResponse = Admin | InvalidCurrentPasswordError;
 export type Company = {
   __typename?: 'Company';
   companyContracts: Array<CompanyContract>;
-  contactEmail: Scalars['String']['output'];
+  contactEmails: Array<Scalars['String']['output']>;
   contactName: Scalars['String']['output'];
   contactPhone: Scalars['String']['output'];
   id: Scalars['ID']['output'];
@@ -336,7 +336,7 @@ export type CreateCompanyContractInput = {
 };
 
 export type CreateCompanyInput = {
-  contactEmail: Scalars['String']['input'];
+  contactEmails: Array<Scalars['String']['input']>;
   contactName: Scalars['String']['input'];
   contactPhone: Scalars['String']['input'];
   name: Scalars['String']['input'];
@@ -344,10 +344,6 @@ export type CreateCompanyInput = {
 };
 
 export type CreateIndustryBillConfigInput = {
-  address: Scalars['String']['input'];
-  contactEmail: Scalars['String']['input'];
-  contactName: Scalars['String']['input'];
-  contactPhone: Scalars['String']['input'];
   electricNumbers: Array<Scalars['String']['input']>;
   /** 預計電費單寄出期限（收到繳費通知單後天數 */
   estimatedBillDeliverDate: Scalars['Float']['input'];
@@ -769,10 +765,6 @@ export type IndustryBill = {
 
 export type IndustryBillConfig = {
   __typename?: 'IndustryBillConfig';
-  address: Scalars['String']['output'];
-  contactEmail: Scalars['String']['output'];
-  contactName: Scalars['String']['output'];
-  contactPhone: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
   /** 電廠電號 */
   electricNumbers: Array<Scalars['String']['output']>;
@@ -1131,7 +1123,7 @@ export type MutationRemoveGuestArgs = {
 
 
 export type MutationRemoveIndustryBillConfigArgs = {
-  input: RemoveIndustryBillInput;
+  id: Scalars['UUID']['input'];
 };
 
 
@@ -1728,10 +1720,6 @@ export type RemoveGuestInput = {
   reason: Scalars['String']['input'];
 };
 
-export type RemoveIndustryBillInput = {
-  industryBillId: Scalars['UUID']['input'];
-};
-
 export type RemoveTpcBillInput = {
   tpcBillId: Scalars['UUID']['input'];
 };
@@ -1930,7 +1918,7 @@ export type UpdateCompanyContractInput = {
 
 export type UpdateCompanyInput = {
   companyId: Scalars['ID']['input'];
-  contactEmail?: InputMaybe<Scalars['String']['input']>;
+  contactEmails?: InputMaybe<Array<Scalars['String']['input']>>;
   contactName?: InputMaybe<Scalars['String']['input']>;
   contactPhone?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
@@ -1950,10 +1938,6 @@ export type UpdateFeeInput = {
 };
 
 export type UpdateIndustryBillConfigInput = {
-  address: Scalars['String']['input'];
-  contactEmail: Scalars['String']['input'];
-  contactName: Scalars['String']['input'];
-  contactPhone: Scalars['String']['input'];
   electricNumbers: Array<Scalars['String']['input']>;
   /** 預計電費單寄出期限（收到繳費通知單後天數 */
   estimatedBillDeliverDate: Scalars['Float']['input'];

@@ -6,7 +6,7 @@ export const COMPANY_FIELDS = gql`
     name
     taxId
     contactName
-    contactEmail
+    contactEmails
     contactPhone
     totalVolume
     recipientAccounts {

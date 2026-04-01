@@ -39,10 +39,6 @@ const CreateIndustryBillConfigBtn = (props: CreateIndustryBillBtnProps) => {
             (i) => i.number.value
           ),
           noticeForTPCBill: (formData.noticeForTPCBill as unknown) === "true",
-          contactName: formData.contactName,
-          contactPhone: formData.contactPhone,
-          contactEmail: formData.contactEmail,
-          address: formData.address,
         },
       },
       onCompleted: (data) => {

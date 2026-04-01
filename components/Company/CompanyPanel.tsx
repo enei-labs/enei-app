@@ -1,5 +1,5 @@
 import { Table } from "@components/Table";
-import { Box } from "@mui/material";
+import { Box, Chip, Stack } from "@mui/material";
 import { useCompanies } from "@utils/hooks/queries";
 import { Company } from "@core/graphql/types";
 import { Config } from "../Table/Table";
@@ -60,7 +60,16 @@ const CompanyPanel = (props: CompanyPanelProps) => {
     },
     {
       header: "聯絡人信箱",
-      accessor: "contactEmail",
+      render: (rowData) => {
+        const emails = (rowData.contactEmails || []).flatMap((e: string) => e.split(/[,，]\s*/)).filter(Boolean);
+        return (
+          <Stack direction="row" spacing={0.5} flexWrap="wrap" useFlexGap>
+            {emails.map((email: string) => (
+              <Chip key={email} label={email} size="small" />
+            ))}
+          </Stack>
+        );
+      },
     },
     {
       header: "總裝置量(MW)",

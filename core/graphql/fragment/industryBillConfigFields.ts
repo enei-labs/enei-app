@@ -7,7 +7,7 @@ export const INDUSTRY_BILL_CONFIG_FIELDS = gql`
     industry {
       id
       name
-      contactEmail
+      contactEmails
     }
     estimatedBillDeliverDate
     paymentDeadline
@@ -18,9 +18,5 @@ export const INDUSTRY_BILL_CONFIG_FIELDS = gql`
     }
     electricNumbers
     noticeForTPCBill
-    contactName
-    contactPhone
-    contactEmail
-    address
   }
 `;

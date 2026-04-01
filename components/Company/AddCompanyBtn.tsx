@@ -1,7 +1,7 @@
 import { FieldsController } from "@components/Controller";
 import Dialog from "@components/Dialog";
 import { FieldConfig } from "@core/types";
-import { taiwanUBNValidation, textValidated } from "@core/types/fieldConfig";
+import { emailListValidated, taiwanUBNValidation, textValidated } from "@core/types/fieldConfig";
 import { LoadingButton } from "@mui/lab";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import { useValidatedForm } from "@utils/hooks";
@@ -19,7 +19,7 @@ type FormData = {
   name: string;
   taxId: string;
   contactName: string;
-  contactEmail: string;
+  contactEmails: string;
   contactPhone: string;
 };
 
@@ -54,10 +54,10 @@ const configs: FieldConfig[] = [
   },
   {
     type: "TEXT",
-    name: "contactEmail",
-    label: "聯絡人信箱",
+    name: "contactEmails",
+    label: "聯絡人信箱（多個信箱以逗號分隔）",
     required: true,
-    validated: textValidated.email("請輸入有效的電子郵件地址"),
+    validated: emailListValidated,
   },
 ];
 
@@ -92,7 +92,7 @@ const AddCompanyBtn = () => {
           name: formData.name,
           taxId: formData.taxId,
           contactName: formData.contactName,
-          contactEmail: formData.contactEmail,
+          contactEmails: formData.contactEmails.split(',').map((e: string) => e.trim()).filter(Boolean),
           contactPhone: formData.contactPhone,
         },
       },

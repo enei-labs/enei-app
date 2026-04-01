@@ -191,8 +191,8 @@ function AccountDialog(props: AccountDialogProps) {
       const companyData = companiesData?.companies.list.find(
         (o) => o.id === company.value
       );
-      if (currentModifyAccount?.email !== companyData?.contactEmail) {
-        setValue("email", companyData?.contactEmail ?? "");
+      if (currentModifyAccount?.email !== companyData?.contactEmails?.[0]) {
+        setValue("email", companyData?.contactEmails?.[0] ?? "");
       }
       if (currentModifyAccount?.name !== companyData?.contactName) {
         setValue("name", companyData?.contactName ?? "");

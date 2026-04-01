@@ -93,6 +93,17 @@ const priceValidated = yup
 
 const textValidated = yup.string().required(requiredMessage)
 
+const emailListValidated = yup
+  .string()
+  .required(requiredMessage)
+  .test('valid-emails', '請輸入有效的信箱格式', (value) => {
+    if (!value) return false;
+    const emails = value.split(/[,，]\s*/).filter(Boolean);
+    if (emails.length === 0) return false;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emails.every((email) => emailRegex.test(email));
+  });
+
 const arrayValidated = yup.array().required(requiredMessage).min(1, requiredMessage)
 
 const objectValidated = yup.mixed().notOneOf([undefined, null], requiredMessage)
@@ -141,6 +152,7 @@ export {
   numberRangeValidated,
   numberValidated,
   textValidated,
+  emailListValidated,
   priceValidated,
   arrayValidated,
   objectValidated,

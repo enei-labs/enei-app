@@ -36,7 +36,7 @@ export const INDUSTRY_BILL_FIELDS = gql`
         id
         name
         contactName
-        contactEmail
+        contactEmails
         contactPhone
         recipientAccounts {
           bankCode
@@ -54,10 +54,6 @@ export const INDUSTRY_BILL_FIELDS = gql`
         account
       }
       noticeForTPCBill
-      contactName
-      contactPhone
-      contactEmail
-      address
     }
   }
 `;
@@ -102,10 +98,6 @@ export const INDUSTRY_BILL_BASE_FIELDS = gql`
         account
       }
       noticeForTPCBill
-      contactName
-      contactPhone
-      contactEmail
-      address
     }
   }
 `
