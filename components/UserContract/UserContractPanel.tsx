@@ -15,7 +15,8 @@ interface UserContractPanelProps {
 
 function UserContractPanel(props: UserContractPanelProps) {
   const { user } = props;
-  const { searchTerm, setInputValue, executeSearch } = useSearch();
+  const { searchTerm, setInputValue, executeSearch, initialSearchTerm } =
+    useSearch();
   const { data, loading } = useUserContracts({
     variables: { userId: user.id, term: searchTerm },
   });
@@ -30,7 +31,11 @@ function UserContractPanel(props: UserContractPanelProps) {
         }}
       >
         <Box sx={{ display: "flex", columnGap: "0.75em" }}>
-          <InputSearch onChange={setInputValue} onEnter={executeSearch} />
+          <InputSearch
+            onChange={setInputValue}
+            onEnter={executeSearch}
+            defaultValue={initialSearchTerm}
+          />
           {/* 選擇合約類型 @TODO: 後續開發 */}
           {/* <BasicSelect state={state} setState={setState} items={[]} /> */}
         </Box>

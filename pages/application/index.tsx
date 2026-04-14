@@ -12,6 +12,7 @@ import { ReactElement, useState } from "react";
 import Head from "next/head";
 import { InputSearch } from "@components/Input";
 import { AuthGuard } from "@components/AuthGuard";
+import PageErrorBoundary from "@components/ErrorBoundary/PageErrorBoundary";
 import { Role } from "@core/graphql/types";
 import ChartIcon from "@mui/icons-material/InsertChartOutlinedSharp";
 
@@ -35,7 +36,8 @@ const TransferDocumentPanel = dynamic(
 );
 
 function TransferApplicationProgressPage() {
-  const { searchTerm, setInputValue, executeSearch } = useSearch();
+  const { searchTerm, setInputValue, executeSearch, initialSearchTerm } =
+    useSearch();
   const [open, setOpen] = useState(false);
   const {
     data: transferDocumentsData,
@@ -46,7 +48,7 @@ function TransferApplicationProgressPage() {
   });
 
   return (
-    <>
+    <PageErrorBoundary>
       <Head>
         <title>轉供申請進度</title>
         <meta name="description" content="轉供申請進度" />
@@ -72,7 +74,11 @@ function TransferApplicationProgressPage() {
             >
               {/* 搜尋 */}
               <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <InputSearch onChange={setInputValue} onEnter={executeSearch} />
+                <InputSearch
+                  onChange={setInputValue}
+                  onEnter={executeSearch}
+                  defaultValue={initialSearchTerm}
+                />
                 <Tooltip title="可使用轉供合約名稱或轉供合約編號搜尋">
                   <InfoIcon />
                 </Tooltip>
@@ -101,7 +107,7 @@ function TransferApplicationProgressPage() {
           variant="create"
         />
       ) : null}
-    </>
+    </PageErrorBoundary>
   );
 }
 

@@ -45,7 +45,8 @@ const parseBillSourcesFromUrl = (value: string | string[] | undefined): BillSour
 
 const UserBillPanel = (props: UserBillPanelProps) => {
   const router = useRouter();
-  const { setInputValue, searchTerm, executeSearch } = useSearch();
+  const { setInputValue, searchTerm, executeSearch, initialSearchTerm } =
+    useSearch();
   const [isOpenDialog, setIsOpenDialog] = useState(false);
   const [userBill, setUserBill] = useState<UserBill | null>(null);
   const [emailModalOpen, setEmailModalOpen] = useState(false);
@@ -257,7 +258,11 @@ const UserBillPanel = (props: UserBillPanelProps) => {
               }}
             />
           </Box>
-          <InputSearch onChange={setInputValue} onEnter={executeSearch} />
+          <InputSearch
+            onChange={setInputValue}
+            onEnter={executeSearch}
+            defaultValue={initialSearchTerm}
+          />
           <Tooltip title="可使用電費單名稱搜尋">
             <InfoIcon />
           </Tooltip>

@@ -20,7 +20,8 @@ import { useSearch } from "@utils/hooks/useSearch";
 import PageErrorBoundary from "@components/ErrorBoundary/PageErrorBoundary";
 
 const UsersPage = () => {
-  const { setInputValue, searchTerm, executeSearch } = useSearch();
+  const { setInputValue, searchTerm, executeSearch, initialSearchTerm } =
+    useSearch();
   const {
     data: userData,
     loading,
@@ -68,7 +69,11 @@ const UsersPage = () => {
             >
               {/* 搜尋 */}
               <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <InputSearch onChange={setInputValue} onEnter={executeSearch} />
+                <InputSearch
+                  onChange={setInputValue}
+                  onEnter={executeSearch}
+                  defaultValue={initialSearchTerm}
+                />
                 <Tooltip title="可使用用戶名稱或 Email 搜尋">
                   <InfoIcon />
                 </Tooltip>

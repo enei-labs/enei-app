@@ -98,7 +98,8 @@ const companyContractCardInfo = (companyContract: CompanyContract) => {
 function CompanyContractCard(props: CompanyContractCardProps) {
   const { companyContract } = props;
   const router = useRouter();
-  const { searchTerm, setInputValue, executeSearch } = useSearch();
+  const { searchTerm, setInputValue, executeSearch, initialSearchTerm } =
+    useSearch();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   const [year, setYear] = useState<Date>(new Date());
@@ -268,7 +269,11 @@ function CompanyContractCard(props: CompanyContractCardProps) {
           >
             {/* 搜尋 */}
             <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <InputSearch onChange={setInputValue} onEnter={executeSearch} />
+              <InputSearch
+                onChange={setInputValue}
+                onEnter={executeSearch}
+                defaultValue={initialSearchTerm}
+              />
               <Tooltip title="可使用電廠名稱或電號搜尋">
                 <InfoIcon />
               </Tooltip>

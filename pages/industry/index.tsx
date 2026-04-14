@@ -23,7 +23,8 @@ const CompanyContractPanel = dynamic(
 );
 
 function IndustryPage() {
-  const { setInputValue, searchTerm, executeSearch } = useSearch();
+  const { setInputValue, searchTerm, executeSearch, initialSearchTerm } =
+    useSearch();
   const [company, setCompany] = useState<Company | null>(null);
 
   useEffect(() => {
@@ -63,7 +64,11 @@ function IndustryPage() {
             >
               {/* 搜尋 */}
               <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <InputSearch onChange={setInputValue} onEnter={executeSearch} />
+                <InputSearch
+                  onChange={setInputValue}
+                  onEnter={executeSearch}
+                  defaultValue={initialSearchTerm}
+                />
                 <Tooltip title="可使用公司名稱或統一編號搜尋">
                   <InfoIcon />
                 </Tooltip>

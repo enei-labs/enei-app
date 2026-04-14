@@ -29,8 +29,14 @@ const TPCBillDialog = dynamic(
 );
 
 function TransferDataManagementPage() {
-  const { setInputValue, searchTerm, executeSearch } = useSearch();
-  const { setInputValue: setTpcSearchInput, searchTerm: tpcSearchTerm, executeSearch: executeTpcSearch } = useSearch();
+  const { setInputValue, searchTerm, executeSearch, initialSearchTerm } =
+    useSearch();
+  const {
+    setInputValue: setTpcSearchInput,
+    searchTerm: tpcSearchTerm,
+    executeSearch: executeTpcSearch,
+    initialSearchTerm: initialTpcSearchTerm,
+  } = useSearch({ paramName: "tpc" });
   const [open, setOpen] = useState(false);
   
   // 轉供申請進度相關
@@ -98,7 +104,11 @@ function TransferDataManagementPage() {
             >
               {/* 搜尋 */}
               <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <InputSearch onChange={setTpcSearchInput} onEnter={executeTpcSearch} />
+                <InputSearch
+                  onChange={setTpcSearchInput}
+                  onEnter={executeTpcSearch}
+                  defaultValue={initialTpcSearchTerm}
+                />
                 <Tooltip title="可使用繳費單編號搜尋">
                   <InfoIcon />
                 </Tooltip>
@@ -134,7 +144,11 @@ function TransferDataManagementPage() {
             >
               {/* 搜尋 */}
               <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <InputSearch onChange={setInputValue} onEnter={executeSearch} />
+                <InputSearch
+                  onChange={setInputValue}
+                  onEnter={executeSearch}
+                  defaultValue={initialSearchTerm}
+                />
                 <Tooltip title="可使用轉供合約名稱或轉供合約編號搜尋">
                   <InfoIcon />
                 </Tooltip>

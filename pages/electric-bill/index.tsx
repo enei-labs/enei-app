@@ -14,6 +14,7 @@ import { ReactElement, useState } from "react";
 import Head from "next/head";
 import { InputSearch } from "@components/Input";
 import { AuthGuard } from "@components/AuthGuard";
+import PageErrorBoundary from "@components/ErrorBoundary/PageErrorBoundary";
 import { Role } from "@core/graphql/types";
 import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import dynamic from "next/dynamic";
@@ -90,11 +91,21 @@ function ExportElectricBillPage() {
   const [showFeeDialog, setShowFeeDialog] = useState(false);
   const { data, loading, error } = useFee();
 
-  const { searchTerm: industryBillConfigSearchTerm, setInputValue: setIndustryBillConfigInputValue, executeSearch: executeIndustryBillConfigSearch } = useSearch();
-  const { searchTerm: userBillConfigSearchTerm, setInputValue: setUserBillConfigInputValue, executeSearch: executeUserBillConfigSearch } = useSearch();
+  const {
+    searchTerm: industryBillConfigSearchTerm,
+    setInputValue: setIndustryBillConfigInputValue,
+    executeSearch: executeIndustryBillConfigSearch,
+    initialSearchTerm: initialIndustryBillConfigSearchTerm,
+  } = useSearch({ paramName: "industryBillConfig" });
+  const {
+    searchTerm: userBillConfigSearchTerm,
+    setInputValue: setUserBillConfigInputValue,
+    executeSearch: executeUserBillConfigSearch,
+    initialSearchTerm: initialUserBillConfigSearchTerm,
+  } = useSearch({ paramName: "userBillConfig" });
 
   return (
-    <>
+    <PageErrorBoundary>
       <Head>
         <title>電費單匯出</title>
         <meta name="description" content="電費單匯出" />
@@ -166,6 +177,7 @@ function ExportElectricBillPage() {
                 onChange={setUserBillConfigInputValue}
                 onEnter={executeUserBillConfigSearch}
                 placeholder="搜尋用戶電費單組合"
+                defaultValue={initialUserBillConfigSearchTerm}
               />
 
               <Button
@@ -198,6 +210,7 @@ function ExportElectricBillPage() {
                 onChange={setIndustryBillConfigInputValue}
                 onEnter={executeIndustryBillConfigSearch}
                 placeholder="搜尋發電業電費單組合"
+                defaultValue={initialIndustryBillConfigSearchTerm}
               />
 
               <Button
@@ -237,7 +250,7 @@ function ExportElectricBillPage() {
           fee={data?.fee}
         />
       ) : null}
-    </>
+    </PageErrorBoundary>
   );
 }
 

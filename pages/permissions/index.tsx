@@ -16,7 +16,8 @@ import InfoIcon from "@mui/icons-material/Info";
 import PageErrorBoundary from "@components/ErrorBoundary/PageErrorBoundary";
 
 const Permissions = () => {
-  const { searchTerm, setInputValue, executeSearch } = useSearch();
+  const { searchTerm, setInputValue, executeSearch, initialSearchTerm } =
+    useSearch();
   const {
     data: accountsData,
     loading,
@@ -51,7 +52,11 @@ const Permissions = () => {
             >
               {/* 搜尋 */}
               <Box sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <InputSearch onChange={setInputValue} onEnter={executeSearch} />
+                <InputSearch
+                  onChange={setInputValue}
+                  onEnter={executeSearch}
+                  defaultValue={initialSearchTerm}
+                />
                 <Tooltip title="可使用用戶名稱或信箱搜尋">
                   <InfoIcon />
                 </Tooltip>

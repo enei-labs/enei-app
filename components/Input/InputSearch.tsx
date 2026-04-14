@@ -5,11 +5,13 @@ function InputSearch(props: {
   onChange?: (value: string) => void;
   onEnter?: () => void;
   placeholder?: string;
+  defaultValue?: string;
 }) {
-  const { onChange, onEnter, placeholder } = props;
+  const { onChange, onEnter, placeholder, defaultValue } = props;
 
   return (
     <TextField
+      key={defaultValue ?? ""}
       InputProps={{
         startAdornment: (
           <InputAdornment position="start">
@@ -20,6 +22,7 @@ function InputSearch(props: {
       type="search"
       placeholder={placeholder || "搜尋(Enter)"}
       variant="outlined"
+      defaultValue={defaultValue}
       onChange={(e) => {
         onChange?.(e.target.value);
       }}

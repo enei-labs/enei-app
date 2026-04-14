@@ -15,7 +15,8 @@ interface CompanyContractPanelProps {
 
 function CompanyContractPanel(props: CompanyContractPanelProps) {
   const { company } = props;
-  const { searchTerm, setInputValue, executeSearch } = useSearch();
+  const { searchTerm, setInputValue, executeSearch, initialSearchTerm } =
+    useSearch({ paramName: "contract" });
   const { data, loading } = useCompanyContracts({
     variables: { companyId: company.id, term: searchTerm },
   });
@@ -31,7 +32,11 @@ function CompanyContractPanel(props: CompanyContractPanelProps) {
           }}
         >
           <Box sx={{ display: "flex", columnGap: "0.75em" }}>
-            <InputSearch onChange={setInputValue} onEnter={executeSearch} />
+            <InputSearch
+              onChange={setInputValue}
+              onEnter={executeSearch}
+              defaultValue={initialSearchTerm}
+            />
             {/* 選擇合約類型 @TODO: 後續開發 */}
             {/* <BasicSelect state={state} setState={setState} items={[]} /> */}
           </Box>
