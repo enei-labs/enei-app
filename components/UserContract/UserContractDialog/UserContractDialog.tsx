@@ -346,7 +346,9 @@ function UserContractDialog(props: UserContractDialogProps) {
             transferAt: formData.transferAt,
             contractDoc: formData.contractDoc.id,
             contractDocName: formData.contractDoc.file.name,
-            electricNumberInfos: formData.electricNumberInfos.map((info) => {
+            electricNumberInfos: formData.electricNumberInfos
+              .filter((info) => info.number)
+              .map((info) => {
               const electricNumberInfo: ElectricNumberInfoInput = {
                 companyAddress: info.companyAddress,
                 address: info.address,
@@ -401,7 +403,9 @@ function UserContractDialog(props: UserContractDialogProps) {
             transferAt: formData.transferAt,
             contractDoc: formData.contractDoc.id,
             contractDocName: formData.contractDoc.file.name,
-            electricNumberInfos: formData.electricNumberInfos.map((info) => {
+            electricNumberInfos: formData.electricNumberInfos
+              .filter((info) => info.number)
+              .map((info) => {
               const electricNumberInfo: ElectricNumberInfoInput = {
                 companyAddress: info.companyAddress,
                 address: info.address,

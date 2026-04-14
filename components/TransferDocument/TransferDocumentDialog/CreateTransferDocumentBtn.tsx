@@ -28,21 +28,25 @@ const CreateTransferDocumentBtn = (props: CreateTransferDocumentBtnProps) => {
           replyDoc: formData.replyDoc?.id ?? null,
           wordDoc: formData.wordDoc?.id ?? null,
           formalDoc: formData.formalDoc?.id ?? null,
-          powerPlants: formData.transferDocumentPowerPlants.map((t) => ({
-            estimateAnnualSupply: Number(t.estimateAnnualSupply),
-            powerPlantId: t.powerPlant.value,
-            transferRate: Number(t.transferRate),
-          })),
-          users: formData.transferDocumentUsers.map((u) => ({
-            monthlyTransferDegree: Number(u.monthlyTransferDegree),
-            expectedYearlyPurchaseDegree: Number(
-              u.expectedYearlyPurchaseDegree
-            ),
-            userId: u.user.value,
-            userContractId: u.userContract.value,
-            electricNumber: u.electricNumber.value,
-            yearlyTransferDegree: Number(u.yearlyTransferDegree),
-          })),
+          powerPlants: formData.transferDocumentPowerPlants
+            .filter((t) => t.powerPlant.value)
+            .map((t) => ({
+              estimateAnnualSupply: Number(t.estimateAnnualSupply),
+              powerPlantId: t.powerPlant.value,
+              transferRate: Number(t.transferRate),
+            })),
+          users: formData.transferDocumentUsers
+            .filter((u) => u.user.value && u.userContract.value)
+            .map((u) => ({
+              monthlyTransferDegree: Number(u.monthlyTransferDegree),
+              expectedYearlyPurchaseDegree: Number(
+                u.expectedYearlyPurchaseDegree
+              ),
+              userId: u.user.value,
+              userContractId: u.userContract.value,
+              electricNumber: u.electricNumber.value,
+              yearlyTransferDegree: Number(u.yearlyTransferDegree),
+            })),
         },
       },
       onCompleted: (data) => {

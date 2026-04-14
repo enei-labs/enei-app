@@ -34,9 +34,9 @@ const UpdateUserBillConfigBtn = (props: UpdateUserBillConfigBtnProps) => {
             bankBranchCode: formData.recipientAccount.value.bankBranchCode,
             account: formData.recipientAccount.value.account,
           },
-          electricNumbers: formData.electricNumberInfos.map(
-            (i) => i.number.value
-          ),
+          electricNumbers: formData.electricNumberInfos
+            .map((i) => i.number.value)
+            .filter((n) => n),
           transportationFee: formData.transportationFee,
           credentialInspectionFee: formData.credentialInspectionFee,
           credentialServiceFee: formData.credentialServiceFee,

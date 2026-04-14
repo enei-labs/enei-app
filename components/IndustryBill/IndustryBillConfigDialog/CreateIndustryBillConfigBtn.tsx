@@ -35,9 +35,9 @@ const CreateIndustryBillConfigBtn = (props: CreateIndustryBillBtnProps) => {
             bankCode: "",
             account: "",
           },
-          electricNumbers: formData.electricNumberInfos.map(
-            (i) => i.number.value
-          ),
+          electricNumbers: formData.electricNumberInfos
+            .map((i) => i.number.value)
+            .filter((n) => n),
           noticeForTPCBill: (formData.noticeForTPCBill as unknown) === "true",
         },
       },
