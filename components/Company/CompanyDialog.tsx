@@ -168,7 +168,7 @@ const CompanyDialog = (props: CompanyDialogProps) => {
             name: formData.name,
             taxId: formData.taxId,
             contactName: formData.contactName,
-            contactEmails: formData.contactEmails.split(',').map((e: string) => e.trim()).filter(Boolean),
+            contactEmails: formData.contactEmails.split(/[,，]\s*/).map((e: string) => e.trim()).filter(Boolean),
             contactPhone: formData.contactPhone,
             recipientAccounts: (formData.recipientAccounts ?? []).map(
               (bankAccount) => ({
@@ -190,7 +190,7 @@ const CompanyDialog = (props: CompanyDialogProps) => {
             name: formData.name,
             taxId: formData.taxId,
             contactName: formData.contactName,
-            contactEmails: formData.contactEmails.split(',').map((e: string) => e.trim()).filter(Boolean),
+            contactEmails: formData.contactEmails.split(/[,，]\s*/).map((e: string) => e.trim()).filter(Boolean),
             contactPhone: formData.contactPhone,
             recipientAccounts: (formData.recipientAccounts ?? []).map(
               (bankAccount) => ({
