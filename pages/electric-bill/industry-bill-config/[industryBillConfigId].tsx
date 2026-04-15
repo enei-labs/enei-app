@@ -3,6 +3,7 @@ import IconBreadcrumbs from "@components/BreadCrumbs";
 import { useRouter } from "next/router";
 import Person2OutlinedIcon from "@mui/icons-material/Person2Outlined";
 import { Box } from "@mui/material";
+import PageErrorBoundary from "@components/ErrorBoundary/PageErrorBoundary";
 import { AuthLayout } from "@components/Layout";
 import { ReactElement } from "react";
 import InboxOutlinedIcon from "@mui/icons-material/InboxOutlined";
@@ -16,7 +17,7 @@ function IndustryBillConfigPage() {
   const industryBillConfigName = router.query.industryBillConfigName as string;
 
   return (
-    <>
+    <PageErrorBoundary>
       <Head>
         <title>綠電用戶</title>
         <meta name="description" content="綠電用戶" />
@@ -41,7 +42,7 @@ function IndustryBillConfigPage() {
           industryBillConfigName={industryBillConfigName} 
         />
       </Box>
-    </>
+    </PageErrorBoundary>
   );
 }
 

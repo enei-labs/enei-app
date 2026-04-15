@@ -5,6 +5,7 @@ import Person2OutlinedIcon from "@mui/icons-material/Person2Outlined";
 import CircularProgress from "@mui/material/CircularProgress";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import { Box } from "@mui/material";
+import PageErrorBoundary from "@components/ErrorBoundary/PageErrorBoundary";
 import { AuthLayout } from "@components/Layout";
 import { ReactElement } from "react";
 import { useUser } from "@utils/hooks/queries";
@@ -19,7 +20,7 @@ function UserPage() {
   if (loading) return <CircularProgress size="24px" />;
 
   return (
-    <>
+    <PageErrorBoundary>
       <Head>
         <title>綠電用戶</title>
         <meta name="description" content="綠電用戶" />
@@ -45,7 +46,7 @@ function UserPage() {
           </Box>
         </>
       ) : null}
-    </>
+    </PageErrorBoundary>
   );
 }
 

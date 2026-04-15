@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import Person2OutlinedIcon from "@mui/icons-material/Person2Outlined";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Box } from "@mui/material";
+import PageErrorBoundary from "@components/ErrorBoundary/PageErrorBoundary";
 import { AuthLayout } from "@components/Layout";
 import { ReactElement } from "react";
 import { useTransferDocument } from "@utils/hooks/queries";
@@ -18,7 +19,7 @@ function TransferDocumentPage() {
   if (loading) return <CircularProgress size="24px" />;
 
   return (
-    <>
+    <PageErrorBoundary>
       <Head>
         <title>轉供合約</title>
         <meta name="description" content="轉供合約" />
@@ -44,7 +45,7 @@ function TransferDocumentPage() {
           </Box>
         </>
       ) : null}
-    </>
+    </PageErrorBoundary>
   );
 }
 

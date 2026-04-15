@@ -2,13 +2,14 @@ import IconBreadcrumbs from "@components/BreadCrumbs";
 import { AuthLayout } from "@components/Layout";
 import { ReadExcelInput } from "@components/ReadExcelInput";
 import { Card, Typography } from "@mui/material";
+import PageErrorBoundary from "@components/ErrorBoundary/PageErrorBoundary";
 import Head from "next/head";
 import { ReactElement } from "react";
 import ChartIcon from "@mui/icons-material/InsertChartOutlinedSharp";
 
 function UserBillElectricImportPage() {
   return (
-    <>
+    <PageErrorBoundary>
       <Head>
         <title>電費單匯入</title>
         <meta name="description" content="電費單匯入" />
@@ -33,7 +34,7 @@ function UserBillElectricImportPage() {
         </Typography>
         <ReadExcelInput />
       </Card>
-    </>
+    </PageErrorBoundary>
   );
 }
 

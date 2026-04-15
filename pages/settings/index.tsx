@@ -29,6 +29,7 @@ import InfoBox from "@components/InfoBox";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 import { AuthGuard } from "@components/AuthGuard";
+import PageErrorBoundary from "@components/ErrorBoundary/PageErrorBoundary";
 import { Role } from "@core/graphql/types";
 import { useEmailConfig } from "@utils/hooks/queries/useEmailConfig";
 import { useUpdateEmailConfig } from "@utils/hooks/mutations/useUpdateEmailConfig";
@@ -231,7 +232,7 @@ const Settings = () => {
   const { me } = useAuth();
 
   return (
-    <>
+    <PageErrorBoundary>
       <Head>
         <title>帳戶設定</title>
         <meta name="description" content="帳戶設定" />
@@ -354,7 +355,7 @@ const Settings = () => {
           onClose={() => setIsOpenDialog(false)}
         />
       ) : null}
-    </>
+    </PageErrorBoundary>
   );
 };
 
