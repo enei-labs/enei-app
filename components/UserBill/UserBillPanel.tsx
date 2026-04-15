@@ -11,8 +11,13 @@ import EmailIcon from "@mui/icons-material/Email";
 import { IconBtn } from "@components/Button";
 import { UserBillDialog } from "./UserBillDialog";
 import { UserBillEmailModal } from "./UserBillEmailModal";
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useSearch } from "@utils/hooks/useSearch";
+import {
+  useUrlArrayParam,
+  useClearUrlParams,
+} from "@utils/hooks/useUrlArrayParam";
+import { useUrlDialogSync } from "@utils/hooks/useUrlDialogSync";
 import { InputSearch, InputDate } from "@components/Input";
 import { useRouter } from "next/router";
 import { ErrorBoundary } from "@components/ErrorBoundary";
@@ -26,23 +31,6 @@ interface UserBillPanelProps {
   userBillConfigName?: string;
 }
 
-// 解析 URL 中的 filter 參數
-const parseStatusesFromUrl = (value: string | string[] | undefined): ElectricBillStatus[] => {
-  if (!value) return [];
-  const str = Array.isArray(value) ? value[0] : value;
-  return str.split(',').filter((s): s is ElectricBillStatus =>
-    Object.values(ElectricBillStatus).includes(s as ElectricBillStatus)
-  );
-};
-
-const parseBillSourcesFromUrl = (value: string | string[] | undefined): BillSource[] => {
-  if (!value) return [];
-  const str = Array.isArray(value) ? value[0] : value;
-  return str.split(',').filter((s): s is BillSource =>
-    Object.values(BillSource).includes(s as BillSource)
-  );
-};
-
 const UserBillPanel = (props: UserBillPanelProps) => {
   const router = useRouter();
   const { setInputValue, searchTerm, executeSearch, initialSearchTerm } =
@@ -52,61 +40,20 @@ const UserBillPanel = (props: UserBillPanelProps) => {
   const [emailModalOpen, setEmailModalOpen] = useState(false);
   const shouldSkipQuery = !props.month && !props.userBillConfigId;
 
-  // 從 URL 獲取 userBillId
-  const userBillIdFromUrl = router.query.userBillId as string | undefined;
-
-  // 從 URL 獲取 filter 狀態
-  const statusesFromUrl = useMemo(
-    () => parseStatusesFromUrl(router.query.statuses),
-    [router.query.statuses]
+  const [statusesFromUrl, setStatuses] = useUrlArrayParam<ElectricBillStatus>(
+    "statuses",
+    Object.values(ElectricBillStatus)
   );
-  const billSourcesFromUrl = useMemo(
-    () => parseBillSourcesFromUrl(router.query.billSources),
-    [router.query.billSources]
+  const [billSourcesFromUrl, setBillSources] = useUrlArrayParam<BillSource>(
+    "billSources",
+    Object.values(BillSource)
   );
-
-  // Filter 變更處理
-  const handleStatusChange = useCallback((newStatuses: ElectricBillStatus[]) => {
-    const { statuses, ...rest } = router.query;
-    router.push(
-      {
-        pathname: router.pathname,
-        query: {
-          ...rest,
-          ...(newStatuses.length > 0 ? { statuses: newStatuses.join(',') } : {}),
-        },
-      },
-      undefined,
-      { shallow: true }
-    );
-  }, [router]);
-
-  const handleBillSourceChange = useCallback((newSources: BillSource[]) => {
-    const { billSources, ...rest } = router.query;
-    router.push(
-      {
-        pathname: router.pathname,
-        query: {
-          ...rest,
-          ...(newSources.length > 0 ? { billSources: newSources.join(',') } : {}),
-        },
-      },
-      undefined,
-      { shallow: true }
-    );
-  }, [router]);
-
-  const handleClearFilters = useCallback(() => {
-    const { statuses, billSources, ...rest } = router.query;
-    router.push(
-      {
-        pathname: router.pathname,
-        query: rest,
-      },
-      undefined,
-      { shallow: true }
-    );
-  }, [router]);
+  const clearUrlParams = useClearUrlParams();
+  const {
+    id: userBillIdFromUrl,
+    open: openUserBillFromUrl,
+    close: closeUserBillFromUrl,
+  } = useUrlDialogSync("userBillId");
 
   const { data, loading, refetch } = useUserBills(
     {
@@ -134,32 +81,13 @@ const UserBillPanel = (props: UserBillPanelProps) => {
   const handleOpenDialog = (bill: UserBill) => {
     setUserBill(bill);
     setIsOpenDialog(true);
-    
-    // Update URL with userBillId parameter
-    router.push(
-      {
-        pathname: router.pathname,
-        query: { ...router.query, userBillId: bill.id },
-      },
-      undefined,
-      { shallow: true }
-    );
+    openUserBillFromUrl(bill.id);
   };
 
   const handleCloseDialog = () => {
     setIsOpenDialog(false);
     setUserBill(null);
-    
-    // Remove userBillId from URL
-    const { userBillId, ...queryWithoutUserBillId } = router.query;
-    router.push(
-      {
-        pathname: router.pathname,
-        query: queryWithoutUserBillId,
-      },
-      undefined,
-      { shallow: true }
-    );
+    closeUserBillFromUrl();
   };
 
   const configs: Config<UserBill>[] = [
@@ -274,9 +202,9 @@ const UserBillPanel = (props: UserBillPanelProps) => {
             <BillFilters
               statuses={statusesFromUrl}
               billSources={billSourcesFromUrl}
-              onStatusChange={handleStatusChange}
-              onBillSourceChange={handleBillSourceChange}
-              onClear={handleClearFilters}
+              onStatusChange={setStatuses}
+              onBillSourceChange={setBillSources}
+              onClear={() => clearUrlParams(["statuses", "billSources"])}
             />
           </Box>
         )}
