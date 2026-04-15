@@ -1,11 +1,13 @@
+import { Account } from '@core/graphql/types'
+
 type State = {
-  me?: any
+  me?: Account
   status: 'loading' | 'authenticated' | 'unauthenticated'
 }
 
 type Action =
   | { type: 'loading' }
-  | { type: 'authenticated'; payload: any }
+  | { type: 'authenticated'; payload: Account }
   | { type: 'unauthenticated' }
 
 export const reducer = (state: State, action: Action): State => {
