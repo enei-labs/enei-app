@@ -82,7 +82,6 @@ export function ReadExcelInput({ singleTabMode = false, onImportSuccess }: ReadE
   const [companyBillTemplatesData, setCompanyBillTemplatesData] = useState<
     CompanyBillTemplateData[]
   >([]);
-  console.log({ companyBillTemplatesData })
   const [fileName, setFileName] = useState<string>("");
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [saveStatus, setSaveStatus] = useState<{
@@ -107,11 +106,29 @@ export function ReadExcelInput({ singleTabMode = false, onImportSuccess }: ReadE
   const [findIndustryBillConfig] = useLazyQuery(FIND_INDUSTRY_BILL_CONFIG_BY_ELECTRIC_NUMBER);
   const [findIndustryBill] = useLazyQuery(FIND_INDUSTRY_BILL_BY_ELECTRIC_NUMBER_AND_MONTH);
 
+  const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+  const ALLOWED_TYPES = [
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xlsx
+  ];
+
   const handleFileUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = event.target.files?.[0];
     if (!file) return;
+
+    if (!ALLOWED_TYPES.includes(file.type) && !file.name.endsWith(".xlsx")) {
+      toast.error("僅支援 .xlsx 格式的 Excel 檔案");
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
+
+    if (file.size > MAX_FILE_SIZE) {
+      toast.error("檔案大小不能超過 10MB");
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      return;
+    }
+
     setFileName(file.name);
     setUploadedFile(file);
     setSaveStatus({ type: null, message: "" });
