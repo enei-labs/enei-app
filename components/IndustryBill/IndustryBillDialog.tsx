@@ -144,6 +144,13 @@ export const IndustryBillDialog = ({
     documentTitle: data?.industryBill.name,
   });
 
+  const handlePrintManualImport = () => {
+    const url = data?.industryBill.generatedPdfDownloadUrl;
+    if (url) {
+      window.open(url, '_blank');
+    }
+  };
+
   // 處理操作模式切換
   const handleModeChange = (
     event: React.MouseEvent<HTMLElement>,
@@ -335,8 +342,13 @@ export const IndustryBillDialog = ({
               )}
               {reviewStatus === ElectricBillStatus.Approved && (
                 <>
-                  <Button variant="contained" color="primary" onClick={handlePrint}>
-                    列印
+                  {data?.industryBill.billSource === 'MANUAL_IMPORT' && data?.industryBill.generatedPdfDownloadUrl && (
+                    <Button variant="contained" color="primary" onClick={handlePrintManualImport}>
+                      列印（手動匯入版）
+                    </Button>
+                  )}
+                  <Button variant="outlined" color="primary" onClick={handlePrint}>
+                    {data?.industryBill.billSource === 'MANUAL_IMPORT' ? '列印（系統計算版）' : '列印'}
                   </Button>
                   <Button
                     variant="contained"
