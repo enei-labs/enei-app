@@ -79,7 +79,7 @@ const FIXED_TEST_RECIPIENTS = [
 ];
 
 const EmailTestModeSection = () => {
-  const { data, loading: queryLoading } = useEmailConfig();
+  const { data, loading: queryLoading } = useEmailConfig({ fetchPolicy: 'network-only' });
   const [updateEmailConfig, { loading: mutationLoading }] = useUpdateEmailConfig();
 
   const emailConfig = data?.emailConfig;
@@ -125,8 +125,8 @@ const EmailTestModeSection = () => {
       await updateEmailConfig({
         variables: {
           input: {
-            isTestMode: currentIsTestMode,
-            testRecipients: currentTestRecipients,
+            ...(isTestMode !== null ? { isTestMode: currentIsTestMode } : {}),
+            ...(testRecipients !== null ? { testRecipients: currentTestRecipients } : {}),
           },
         },
       });
