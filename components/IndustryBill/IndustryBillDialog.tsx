@@ -164,18 +164,25 @@ export const IndustryBillDialog = ({
 
   const handleSendEmail = async () => {
     try {
-      // Generate PDF from the current bill template
-      const { base64, fileName } = await generateBillPdf(
-        componentRef,
-        `industry_bill_${industryBill.id}_${new Date().getTime()}.pdf`
-      );
+      const isManualImport = data?.industryBill.billSource === 'MANUAL_IMPORT';
+
+      // 手動匯入：不送 pdfContent，讓後端從 S3 下載原始 PDF
+      // 自動生成：從畫面 template 產 PDF 送給後端
+      const variables: { industryBillId: string; pdfContent?: string; fileName?: string } = {
+        industryBillId: industryBill.id,
+      };
+
+      if (!isManualImport) {
+        const { base64, fileName } = await generateBillPdf(
+          componentRef,
+          `industry_bill_${industryBill.id}_${new Date().getTime()}.pdf`
+        );
+        variables.pdfContent = base64;
+        variables.fileName = fileName;
+      }
 
       const { data: sendData } = await sendIndustryBillEmail({
-        variables: {
-          industryBillId: industryBill.id,
-          pdfContent: base64,
-          fileName: fileName,
-        },
+        variables,
       });
 
       if (sendData?.sendIndustryBillEmail?.success) {
