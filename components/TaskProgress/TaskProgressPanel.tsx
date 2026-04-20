@@ -22,6 +22,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
 import SyncIcon from '@mui/icons-material/Sync';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import {
   useTaskProgress,
   TaskStatus,
@@ -228,14 +229,23 @@ interface JobItemProps {
 }
 
 const JobItem: React.FC<JobItemProps> = ({ job }) => {
-  const statusIcon = getStatusIcon(job.status, true);
+  // Worker 以 [WARNING] 前綴標示「郵件已寄出但需後續處理」，UI 需顯示為警示而非失敗
+  const isWarning = isJobWarning(job);
+  const statusIcon = isWarning ? (
+    <WarningAmberIcon color="warning" fontSize="small" />
+  ) : (
+    getStatusIcon(job.status, true)
+  );
+  const displayMessage = job.errorMessage
+    ? stripWarningPrefix(job.errorMessage)
+    : undefined;
 
   return (
     <ListItem
       disablePadding
       sx={{
         py: 0.5,
-        opacity: job.status === TaskStatus.COMPLETED ? 0.6 : 1,
+        opacity: job.status === TaskStatus.COMPLETED && !isWarning ? 0.6 : 1,
       }}
     >
       <ListItemIcon sx={{ minWidth: 28 }}>{statusIcon}</ListItemIcon>
@@ -246,15 +256,15 @@ const JobItem: React.FC<JobItemProps> = ({ job }) => {
           </Typography>
         }
         secondary={
-          job.errorMessage ? (
-            <Tooltip title={job.errorMessage}>
+          displayMessage ? (
+            <Tooltip title={displayMessage}>
               <Typography
                 variant="caption"
-                color="error"
+                color={isWarning ? 'warning.main' : 'error'}
                 noWrap
                 sx={{ maxWidth: 250, display: 'block' }}
               >
-                {job.errorMessage}
+                {displayMessage}
               </Typography>
             </Tooltip>
           ) : undefined
@@ -263,6 +273,21 @@ const JobItem: React.FC<JobItemProps> = ({ job }) => {
     </ListItem>
   );
 };
+
+const WARNING_PREFIX = '[WARNING]';
+
+function isJobWarning(job: JobTaskProgress): boolean {
+  return (
+    job.status === TaskStatus.COMPLETED &&
+    (job.errorMessage?.startsWith(WARNING_PREFIX) ?? false)
+  );
+}
+
+function stripWarningPrefix(message: string): string {
+  return message.startsWith(WARNING_PREFIX)
+    ? message.slice(WARNING_PREFIX.length).trimStart()
+    : message;
+}
 
 // ===== Helper Functions =====
 
