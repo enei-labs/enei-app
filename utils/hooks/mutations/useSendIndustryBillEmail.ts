@@ -10,6 +10,7 @@ export interface SendIndustryBillEmailVariables {
   industryBillId: string;
   pdfContent?: string;
   fileName?: string;
+  forceResend?: boolean;
 }
 
 export const useSendIndustryBillEmail = () => {

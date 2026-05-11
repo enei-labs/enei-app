@@ -1181,6 +1181,7 @@ export type MutationRevertManualUserBillArgs = {
 
 export type MutationSendIndustryBillEmailArgs = {
   fileName?: InputMaybe<Scalars['String']['input']>;
+  forceResend?: InputMaybe<Scalars['Boolean']['input']>;
   industryBillId: Scalars['String']['input'];
   pdfContent?: InputMaybe<Scalars['String']['input']>;
 };

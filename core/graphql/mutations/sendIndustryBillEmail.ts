@@ -5,11 +5,13 @@ export const SEND_INDUSTRY_BILL_EMAIL = gql`
     $industryBillId: String!
     $pdfContent: String
     $fileName: String
+    $forceResend: Boolean
   ) {
     sendIndustryBillEmail(
       industryBillId: $industryBillId
       pdfContent: $pdfContent
       fileName: $fileName
+      forceResend: $forceResend
     ) {
       success
       message
