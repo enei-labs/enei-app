@@ -1,5 +1,5 @@
 import { CompanyContract, EnergyType, GenerationType, PowerPlant, RateType } from '@core/graphql/types'; // 假設這是你的類型定義
-import FieldConfig, { numberRangeValidated, numberValidated, textValidated } from '@core/types/fieldConfig';
+import FieldConfig, { numberIntegerValidated, numberRangeIntegerValidated, numberValidated, textValidated } from '@core/types/fieldConfig';
 
 
 
@@ -52,7 +52,7 @@ export const initialConfigs: FieldConfig[] = [
     name: "transferRate",
     label: "供電容量比例(%)",
     required: true,
-    validated: numberRangeValidated,
+    validated: numberRangeIntegerValidated,
   },
   {
     type: "NUMBER",
@@ -72,7 +72,7 @@ export const initialConfigs: FieldConfig[] = [
     name: "estimatedAnnualPowerGeneration",
     label: "單位預估年發電量（kWh）",
     required: true,
-    validated: numberValidated,
+    validated: numberIntegerValidated,
   },
   {
     type: "RADIO",

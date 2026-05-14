@@ -72,9 +72,21 @@ const requiredMessage = '此為必填欄位'
 
 const numberValidated = yup.number().required('請輸入數字')
 
+const numberIntegerValidated = yup
+  .number()
+  .required('請輸入數字')
+  .integer('必須為整數');
+
 const numberRangeValidated = yup
   .number()
   .required(requiredMessage)
+  .min(0, '數字不能小於0')
+  .max(100, '數字不能大於100');
+
+const numberRangeIntegerValidated = yup
+  .number()
+  .required(requiredMessage)
+  .integer('必須為整數')
   .min(0, '數字不能小於0')
   .max(100, '數字不能大於100');
 
@@ -150,7 +162,9 @@ const taiwanUBNValidation = yup.string().test(
 export {
   requiredMessage,
   numberRangeValidated,
+  numberRangeIntegerValidated,
   numberValidated,
+  numberIntegerValidated,
   textValidated,
   emailListValidated,
   priceValidated,
