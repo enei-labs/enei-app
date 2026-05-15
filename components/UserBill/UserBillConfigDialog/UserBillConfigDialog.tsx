@@ -36,6 +36,17 @@ const ChargeTypeRadios = [
   },
 ];
 
+const CredentialServiceFeeRadios = [
+  {
+    label: "向用戶收取 (代收代付)",
+    value: UserBillConfigChargeType.User,
+  },
+  {
+    label: "自行負擔 (或客戶自行繳納)",
+    value: UserBillConfigChargeType.Self,
+  },
+];
+
 const YesOrNoRadios = [
   {
     label: "是",
@@ -248,7 +259,7 @@ function UserBillConfigDialog(props: UserBillConfigDialogProps) {
               <RadioGroup
                 {...field}
                 label="憑證服務費"
-                radios={ChargeTypeRadios}
+                radios={CredentialServiceFeeRadios}
                 required
               />
             );
