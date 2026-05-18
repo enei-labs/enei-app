@@ -1,10 +1,10 @@
 import { Table } from "@components/Table";
-import { RemainingDemandFromUserContract } from "@core/graphql/types";
+import { UserContractWithCapacity } from "@core/graphql/types";
 import { Config } from "../Table/Table";
 import { Paper, Typography } from "@mui/material";
 
 interface RemainingDemandFromUserContractProps {
-  userContracts: RemainingDemandFromUserContract[];
+  userContracts: UserContractWithCapacity[];
   loading: boolean;
 }
 
@@ -14,7 +14,7 @@ const RemainingDemandFromUserContractPanel = (
 ) => {
   const { userContracts, loading } = props;
 
-  const configs: Config<RemainingDemandFromUserContract>[] = [
+  const configs: Config<UserContractWithCapacity>[] = [
     {
       header: "合約名稱",
       accessor: "name",
