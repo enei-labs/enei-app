@@ -273,6 +273,15 @@ export type CompanyContract = {
   transferRate: Scalars['Int']['output'];
 };
 
+/** 發電業合約的剩餘容量資訊 (dashboard 用) */
+export type CompanyContractCapacity = {
+  __typename?: 'CompanyContractCapacity';
+  /** 剩餘容量 (annual generation - committed supply) */
+  capacity: Scalars['Int']['output'];
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+};
+
 export type CompanyContractMonthlyTransferDegrees = {
   __typename?: 'CompanyContractMonthlyTransferDegrees';
   monthlyTotals: Array<MonthlyTransferDegree>;
@@ -288,6 +297,18 @@ export type CompanyPage = {
   __typename?: 'CompanyPage';
   list: Array<Company>;
   total: Scalars['Int']['output'];
+};
+
+export type CompanyStats = {
+  __typename?: 'CompanyStats';
+  /** 加權平均購電價 */
+  averagePurchasePrice: Scalars['Float']['output'];
+  /** 發電業數量 */
+  totalCompanies: Scalars['Int']['output'];
+  /** 電廠數量 */
+  totalPowerPlants: Scalars['Int']['output'];
+  /** 總裝置量 (MW) */
+  totalVolume: Scalars['Float']['output'];
 };
 
 export enum ContractTimeType {
@@ -1181,7 +1202,6 @@ export type MutationRevertManualUserBillArgs = {
 
 export type MutationSendIndustryBillEmailArgs = {
   fileName?: InputMaybe<Scalars['String']['input']>;
-  forceResend?: InputMaybe<Scalars['Boolean']['input']>;
   industryBillId: Scalars['String']['input'];
   pdfContent?: InputMaybe<Scalars['String']['input']>;
 };
@@ -1336,8 +1356,13 @@ export type Query = {
   companyContract: CompanyContract;
   companyContractMonthlyTransferDegrees: CompanyContractMonthlyTransferDegrees;
   companyContracts: CompanyContractPage;
+  /** 尚有剩餘容量的發電業合約 (dashboard 用) */
+  companyContractsWithRemainingCapacity: Array<CompanyContractCapacity>;
+  companyStats: CompanyStats;
   dashboard: Dashboard;
   emailConfig: EmailConfig;
+  /** 即將到期的用戶合約名單 (dashboard 用) */
+  expiringUserContracts: Array<UserContract>;
   fee: Fee;
   findIndustryBillByElectricNumberAndMonth?: Maybe<IndustryBill>;
   findIndustryBillConfigByElectricNumber: Array<IndustryBillConfig>;
@@ -1358,6 +1383,8 @@ export type Query = {
   tpcBill: TpcBill;
   tpcBillMonthlyTransferDegrees: TpcBillMonthlyTransferDegrees;
   tpcBills: TpcBillPage;
+  /** 依月份累加的轉供度數，長度 12（index 0 = 一月） */
+  transferDegreesByMonth: Array<Scalars['Float']['output']>;
   transferDocument: TransferDocument;
   transferDocuments: TransferDocumentPage;
   user: User;
@@ -1369,6 +1396,9 @@ export type Query = {
   userContract: UserContract;
   userContractMonthlyTransferDegrees: UserContractMonthlyTransferDegrees;
   userContracts: UserContractPage;
+  /** 尚有剩餘需求的用戶合約 (dashboard 用) */
+  userContractsWithRemainingDemand: Array<UserContractWithCapacity>;
+  userStats: UserStats;
   users: UserPage;
 };
 
@@ -1421,6 +1451,11 @@ export type QueryCompanyContractsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   term?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryExpiringUserContractsArgs = {
+  limit?: Scalars['Int']['input'];
 };
 
 
@@ -1527,6 +1562,11 @@ export type QueryTpcBillsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   transferDocumentId?: InputMaybe<Scalars['UUID']['input']>;
+};
+
+
+export type QueryTransferDegreesByMonthArgs = {
+  year: Scalars['Int']['input'];
 };
 
 
@@ -2184,6 +2224,12 @@ export type UserContract = {
   userType: UserType;
 };
 
+export type UserContractCapacityUser = {
+  __typename?: 'UserContractCapacityUser';
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+};
+
 export type UserContractMonthlyTransferDegrees = {
   __typename?: 'UserContractMonthlyTransferDegrees';
   monthlyTotals: Array<MonthlyTransferDegree>;
@@ -2195,10 +2241,32 @@ export type UserContractPage = {
   total: Scalars['Int']['output'];
 };
 
+/** 用戶合約的剩餘需求資訊 (dashboard 用) */
+export type UserContractWithCapacity = {
+  __typename?: 'UserContractWithCapacity';
+  /** 剩餘需求度數 */
+  capacity: Scalars['Int']['output'];
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  user: UserContractCapacityUser;
+};
+
 export type UserPage = {
   __typename?: 'UserPage';
   list: Array<User>;
   total: Scalars['Int']['output'];
+};
+
+export type UserStats = {
+  __typename?: 'UserStats';
+  /** 加權平均售電價 */
+  averageSellingPrice: Scalars['Float']['output'];
+  /** 用戶數量 */
+  count: Scalars['Int']['output'];
+  /** 今年總綠電需求度數 */
+  totalRequireDegree: Scalars['Int']['output'];
+  /** 年度用戶成長數 */
+  yearlyGrowth: Scalars['Int']['output'];
 };
 
 export enum UserType {
