@@ -8,7 +8,6 @@ export * from './transferDocumentFields';
 export * from './userContractFields';
 export * from './companyContractFields';
 export * from './transferDegreeFields';
-export * from './dashboardFields';
 export * from './tpcBillFields';
 export * from './userBillFields';
 export * from './feeFields';

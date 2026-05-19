@@ -14,7 +14,6 @@ export * from './transferDegreesByMonth';
 export * from './userContracts';
 export * from './userContractsWithRemainingDemand';
 export * from './expiringUserContracts';
-export * from './dashboard';
 export * from './tpcBill';
 export * from './tpcBills';
 export * from './tpcBillMonthlyTransferDegrees';
