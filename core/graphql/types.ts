@@ -178,6 +178,16 @@ export type BasicInfoInput = {
   transferCapacity: Scalars['Float']['input'];
 };
 
+export type BatchAuditIndustryBillsResult = {
+  __typename?: 'BatchAuditIndustryBillsResult';
+  updatedCount: Scalars['Int']['output'];
+};
+
+export type BatchAuditUserBillsResult = {
+  __typename?: 'BatchAuditUserBillsResult';
+  updatedCount: Scalars['Int']['output'];
+};
+
 /** 批次任務進度 */
 export type BatchTaskProgressDto = {
   __typename?: 'BatchTaskProgressDto';
@@ -496,77 +506,6 @@ export type CreateUserInput = {
   name: Scalars['String']['input'];
   notes?: InputMaybe<Scalars['String']['input']>;
   warning?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type Dashboard = {
-  __typename?: 'Dashboard';
-  companyContractInfo: DashboardCompanyContract;
-  companyInfo: DashboardCompany;
-  powerPlantInfo: DashboardPowerPlant;
-  tpcBillInfo: DashboardTpcBill;
-  transferDegreeInfo: DashboardTransferDegree;
-  userBillInfo: DashboardUserBill;
-  userContractInfo: DashboardUserContract;
-  userInfo: DashboardUser;
-};
-
-export type DashboardCompany = {
-  __typename?: 'DashboardCompany';
-  /** 平均購買價格 */
-  averagePurchasePrice: Scalars['Float']['output'];
-  /** 發電業數量 */
-  totalCompanies: Scalars['Int']['output'];
-  /** 電廠數量 */
-  totalPowerPlants: Scalars['Int']['output'];
-  totalVolume: Scalars['Float']['output'];
-};
-
-export type DashboardCompanyContract = {
-  __typename?: 'DashboardCompanyContract';
-  /** 容量剩餘發電業名單 */
-  remainingDemandFromCompanyContracts: Array<RemainingDemandFromCompanyContract>;
-};
-
-export type DashboardPowerPlant = {
-  __typename?: 'DashboardPowerPlant';
-  /** 容量剩餘發電業名單 */
-  remainingDemandFromPowerPlant: PowerPlant;
-};
-
-export type DashboardTpcBill = {
-  __typename?: 'DashboardTPCBill';
-  monthlyTPCBillTransferDegrees: Array<Scalars['Int']['output']>;
-};
-
-export type DashboardTransferDegree = {
-  __typename?: 'DashboardTransferDegree';
-  /** 轉供度數 */
-  monthlyTransferDegree: Array<Scalars['Int']['output']>;
-};
-
-export type DashboardUser = {
-  __typename?: 'DashboardUser';
-  count: Scalars['Int']['output'];
-  /** 總綠電需求度數 */
-  totalRequireDegree: Scalars['Float']['output'];
-  /** 年度用戶成長數 */
-  yearlyGrowth: Scalars['Int']['output'];
-};
-
-export type DashboardUserBill = {
-  __typename?: 'DashboardUserBill';
-  /** 營業額 */
-  turnover: Array<Scalars['Float']['output']>;
-};
-
-export type DashboardUserContract = {
-  __typename?: 'DashboardUserContract';
-  /** 平均售電價格 */
-  averageSellingPrice: Scalars['Float']['output'];
-  /** 容量不足用戶名單 */
-  remainingDemandFromUserContracts: Array<RemainingDemandFromUserContract>;
-  /** 未來一年用戶合約到期名單 */
-  userContractsExpiringSoon: Array<UserContract>;
 };
 
 export enum ElectricBillStatus {
@@ -952,7 +891,11 @@ export type MonthlyTransferDegree = {
 export type Mutation = {
   __typename?: 'Mutation';
   auditIndustryBill: IndustryBill;
+  /** 批次審核發電業電費單 — 將 PENDING 狀態的指定電費單設為 APPROVED */
+  auditIndustryBills: BatchAuditIndustryBillsResult;
   auditUserBill: UserBill;
+  /** 批次審核用戶電費單 — 將 PENDING 狀態的指定電費單設為 APPROVED */
+  auditUserBills: BatchAuditUserBillsResult;
   changePassword: ChangePasswordResponse;
   createAccount: CreateAccountResponse;
   createAdmin: CreateAdminResponse;
@@ -1017,9 +960,19 @@ export type MutationAuditIndustryBillArgs = {
 };
 
 
+export type MutationAuditIndustryBillsArgs = {
+  ids: Array<Scalars['String']['input']>;
+};
+
+
 export type MutationAuditUserBillArgs = {
   id: Scalars['String']['input'];
   status: ElectricBillStatus;
+};
+
+
+export type MutationAuditUserBillsArgs = {
+  ids: Array<Scalars['String']['input']>;
 };
 
 
@@ -1359,7 +1312,6 @@ export type Query = {
   /** 尚有剩餘容量的發電業合約 (dashboard 用) */
   companyContractsWithRemainingCapacity: Array<CompanyContractCapacity>;
   companyStats: CompanyStats;
-  dashboard: Dashboard;
   emailConfig: EmailConfig;
   /** 即將到期的用戶合約名單 (dashboard 用) */
   expiringUserContracts: Array<UserContract>;
@@ -1677,65 +1629,6 @@ export type RecipientAccountInput = {
   bankBranchCode?: Scalars['String']['input'];
   /** 銀行代碼 */
   bankCode: Scalars['String']['input'];
-};
-
-export type RemainingDemandFromCompanyContract = {
-  __typename?: 'RemainingDemandFromCompanyContract';
-  capacity: Scalars['Int']['output'];
-  company: Company;
-  contractDoc: Scalars['String']['output'];
-  contractDocName?: Maybe<Scalars['String']['output']>;
-  contractTimeType: ContractTimeType;
-  /** 轉供條件 */
-  daysToPay: Scalars['Int']['output'];
-  description?: Maybe<Scalars['String']['output']>;
-  /** 合約年限 */
-  duration?: Maybe<Scalars['String']['output']>;
-  endedAt?: Maybe<Scalars['DateTime']['output']>;
-  id: Scalars['ID']['output'];
-  industryDoc?: Maybe<Scalars['String']['output']>;
-  industryDocName?: Maybe<Scalars['String']['output']>;
-  name: Scalars['String']['output'];
-  /** 合約編號 */
-  number: Scalars['String']['output'];
-  /** 正式轉供日：合約裡面有複數電廠，每個電廠歸屬於不同的轉供合約，造成有多個不同的正式轉供日，那以最早取得正式轉供日的為主 */
-  officialTransferDate?: Maybe<Scalars['DateTime']['output']>;
-  powerPlants: Array<PowerPlant>;
-  /** 費率 */
-  price?: Maybe<Scalars['String']['output']>;
-  /** 單一費率/個別費率 */
-  rateType: RateType;
-  startedAt: Scalars['DateTime']['output'];
-  /** 裝置量=該合約所有的電廠裡面的裝置量的加總 */
-  totalVolume: Scalars['Float']['output'];
-  transferAt?: Maybe<Scalars['DateTime']['output']>;
-  transferDoc?: Maybe<Scalars['String']['output']>;
-  transferDocName?: Maybe<Scalars['String']['output']>;
-  /** 轉供率要求（%） */
-  transferRate: Scalars['Int']['output'];
-};
-
-export type RemainingDemandFromUserContract = {
-  __typename?: 'RemainingDemandFromUserContract';
-  capacity: Scalars['Float']['output'];
-  contractDoc: Scalars['String']['output'];
-  contractDocName: Scalars['String']['output'];
-  contractTimeType: ContractTimeType;
-  /** 電號資訊 */
-  electricNumberInfos: Array<ElectricNumberInfo>;
-  id: Scalars['ID']['output'];
-  lowerLimit?: Maybe<Scalars['Int']['output']>;
-  name: Scalars['String']['output'];
-  price: Scalars['Float']['output'];
-  purchaseDegree: Scalars['Int']['output'];
-  salesAt: Scalars['DateTime']['output'];
-  salesPeriod: Scalars['String']['output'];
-  salesTo?: Maybe<Scalars['DateTime']['output']>;
-  serialNumber: Scalars['String']['output'];
-  transferAt?: Maybe<Scalars['DateTime']['output']>;
-  upperLimit?: Maybe<Scalars['Int']['output']>;
-  user?: Maybe<User>;
-  userType: UserType;
 };
 
 export type RemoveAccountInput = {

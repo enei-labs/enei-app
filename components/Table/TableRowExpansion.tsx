@@ -56,7 +56,7 @@ const TablerowExpansion: React.FC<TableRowExpansionProps> = ({
             const formatVal = format ? format(val) : val;
             return (
               <TableCell key={header} align={alignment} sx={style.bodyCell}>
-                {Cell ? <Cell {...rowData} /> : formatVal || "N/A"}
+                {Cell ? Cell(rowData) : formatVal || "N/A"}
               </TableCell>
             );
           }

@@ -1,16 +1,18 @@
 import { Table } from "@components/Table";
 import { ElectricBillStatus, IndustryBill, BillSource } from "@core/graphql/types";
 import { Config } from "../Table/Table";
-import { Box, Typography, Card, Tooltip, Button } from "@mui/material";
+import { Box, Typography, Card, Tooltip, Button, Checkbox } from "@mui/material";
 import { useIndustryBills, useIndustryBill } from "@utils/hooks/queries";
 import { formatDateTime } from "@utils/format";
 import EventNoteOutlinedIcon from "@mui/icons-material/EventNoteOutlined";
 import InfoIcon from "@mui/icons-material/Info";
 import DownloadIcon from "@mui/icons-material/Download";
 import EmailIcon from "@mui/icons-material/Email";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { IconBtn } from "@components/Button";
 import { IndustryBillDialog } from "./IndustryBillDialog";
 import { IndustryBillEmailModal } from "./IndustryBillEmailModal";
+import { IndustryBillBatchAuditModal } from "./IndustryBillBatchAuditModal";
 import { useState, useEffect, useMemo } from "react";
 import { useSearch } from "@utils/hooks/useSearch";
 import {
@@ -38,6 +40,8 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
   const [isOpenDialog, setIsOpenDialog] = useState(false);
   const [industryBill, setIndustryBill] = useState<IndustryBill | null>(null);
   const [emailModalOpen, setEmailModalOpen] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [batchAuditModalOpen, setBatchAuditModalOpen] = useState(false);
   const shouldSkipQuery = !props.month && !props.industryBillConfigId;
 
   const [statusesFromUrl, setStatuses] = useUrlArrayParam<ElectricBillStatus>(
@@ -91,7 +95,60 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
     closeIndustryBillFromUrl();
   };
 
+  // 切換月份 / 搜尋 / 篩選時清空已勾選的電費單
+  // 注意：statusesFromUrl / billSourcesFromUrl 是新陣列 ref（useUrlArrayParam 內 useMemo 依賴 router.query）
+  // 必須序列化成字串避免每次 render 都觸發
+  const statusesKey = statusesFromUrl.join(",");
+  const billSourcesKey = billSourcesFromUrl.join(",");
+  useEffect(() => {
+    setSelectedIds(new Set());
+  }, [props.month, searchTerm, statusesKey, billSourcesKey]);
+
+  const currentList = useMemo<IndustryBill[]>(
+    () => (data?.industryBills?.list as IndustryBill[]) ?? [],
+    [data?.industryBills?.list]
+  );
+  const pendingOnPage = useMemo(
+    () => currentList.filter((b) => b.status === ElectricBillStatus.Pending),
+    [currentList]
+  );
+  const selectedBills = useMemo(
+    () => currentList.filter((b) => selectedIds.has(b.id)),
+    [currentList, selectedIds]
+  );
+  const allPendingSelected =
+    pendingOnPage.length > 0 && pendingOnPage.every((b) => selectedIds.has(b.id));
+  const somePendingSelected = pendingOnPage.some((b) => selectedIds.has(b.id));
+
+  const toggleSelect = (id: string, checked: boolean) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (checked) next.add(id);
+      else next.delete(id);
+      return next;
+    });
+  };
+
+  const toggleSelectAllPending = (checked: boolean) => {
+    if (checked) setSelectedIds(new Set(pendingOnPage.map((b) => b.id)));
+    else setSelectedIds(new Set());
+  };
+
   const configs: Config<IndustryBill>[] = [
+    {
+      header: " ",
+      render: (rowData) =>
+        rowData.status === ElectricBillStatus.Pending ? (
+          <Checkbox
+            checked={selectedIds.has(rowData.id)}
+            onClick={(e) => e.stopPropagation()}
+            onChange={(e) => toggleSelect(rowData.id, e.target.checked)}
+            size="small"
+          />
+        ) : (
+          <Box />
+        ),
+    },
     {
       header: "電費單名稱",
       accessor: "name",
@@ -223,18 +280,37 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
               borderRadius: 2,
             }}
           >
-            <Box>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <Checkbox
+                checked={allPendingSelected}
+                indeterminate={somePendingSelected && !allPendingSelected}
+                disabled={pendingOnPage.length === 0}
+                onChange={(e) => toggleSelectAllPending(e.target.checked)}
+                size="small"
+              />
               <Typography variant="body2" color="text.secondary">
                 共 {data.industryBills.total} 筆電費單，已審核 {approvedCount} 筆
+                {selectedIds.size > 0 && `，已選取 ${selectedIds.size} 筆`}
               </Typography>
             </Box>
-            <Button
-              variant="contained"
-              startIcon={<EmailIcon />}
-              onClick={() => setEmailModalOpen(true)}
-            >
-              寄送電費單
-            </Button>
+            <Box sx={{ display: "flex", gap: 1 }}>
+              {selectedIds.size > 0 && (
+                <Button
+                  variant="outlined"
+                  startIcon={<CheckCircleOutlineIcon />}
+                  onClick={() => setBatchAuditModalOpen(true)}
+                >
+                  批次審核
+                </Button>
+              )}
+              <Button
+                variant="contained"
+                startIcon={<EmailIcon />}
+                onClick={() => setEmailModalOpen(true)}
+              >
+                寄送電費單
+              </Button>
+            </Box>
           </Box>
         )}
 
@@ -257,6 +333,7 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
             total={data?.industryBills?.total}
             loading={loading}
             onPageChange={(page) => {
+              setSelectedIds(new Set());
               refetch({
                 limit: page.rows,
                 offset: page.rows * page.index,
@@ -278,6 +355,18 @@ const IndustryBillPanel = (props: IndustryBillPanelProps) => {
           onClose={() => setEmailModalOpen(false)}
           month={props.month || ""}
           term={searchTerm}
+        />
+      )}
+      {batchAuditModalOpen && (
+        <IndustryBillBatchAuditModal
+          open={batchAuditModalOpen}
+          onClose={() => setBatchAuditModalOpen(false)}
+          month={props.month || ""}
+          bills={selectedBills}
+          onSuccess={() => {
+            setSelectedIds(new Set());
+            refetch();
+          }}
         />
       )}
     </ErrorBoundary>
