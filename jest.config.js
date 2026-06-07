@@ -21,6 +21,8 @@ module.exports = {
     }],
   },
   moduleNameMapper: {
+    // jspdf 4.x 的 exports map 在 jsdom 下會解析到 ESM build，Jest 無法解析，改用 CJS build
+    '^jspdf$': '<rootDir>/node_modules/jspdf/dist/jspdf.node.min.js',
     '^@components/(.*)$': '<rootDir>/components/$1',
     '^@public/(.*)$': '<rootDir>/public/$1',
     '^@config/(.*)$': '<rootDir>/config/$1',
