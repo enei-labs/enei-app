@@ -12,6 +12,7 @@ import {
   ToggleButton,
 } from "@mui/material";
 import { formatDateTime } from "@utils/format";
+import { roundCurrency } from "@utils/round-currency";
 import { useUserBill } from "@utils/hooks/queries";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
@@ -59,17 +60,17 @@ const calculateFees = (
 
   // 代輸費計算
   const substitutionFee = shouldCalculate.substitution 
-    ? Math.round((electricNumberInfos ?? []).reduce((acc, info) => acc + (info.fee ?? 0), 0) / 1.05)
+    ? roundCurrency((electricNumberInfos ?? []).reduce((acc, info) => acc + (info.fee ?? 0), 0) / 1.05)
     : 0;
 
   // 憑證審查費計算
   const certificationFee = shouldCalculate.verification 
-    ? Math.round(totalDegree * feeRates.verification)
+    ? roundCurrency(totalDegree * feeRates.verification)
     : 0;
   
   // 憑證服務費計算
   const certificationServiceFee = shouldCalculate.service 
-    ? Math.round(totalDegree * feeRates.service)
+    ? roundCurrency(totalDegree * feeRates.service)
     : 0;
 
   return {
@@ -83,7 +84,7 @@ const calculateFees = (
 // 稅費計算
 const calculateTaxAndTotal = (totalAmount: number, totalFee: number) => {
   const total = totalAmount + totalFee;
-  const tax = Math.round(total * 0.05);
+  const tax = roundCurrency(total * 0.05);
   const totalIncludeTax = total + tax;
 
   return { total, tax, totalIncludeTax };
@@ -153,7 +154,7 @@ export const UserBillDialog = ({
       serialNumber: info.number ?? "",
       kwh: info.degree,
       price: info.price ?? 0,
-      amount: Math.round((info.price ?? 0) * (info.degree ?? 0)),
+      amount: roundCurrency((info.price ?? 0) * (info.degree ?? 0)),
     }));
     const totalAmount = usage.reduce((acc, info) => acc + info.amount, 0);
     
