@@ -1,4 +1,5 @@
 import { parseISO, format } from 'date-fns'
+import { roundCurrency } from './round-currency'
 
 export const formatDateTime = (value?: string | number | Date, dateFormat = 'yyyy-MM-dd') => {
   if (!value) return ''
@@ -9,5 +10,5 @@ export const formatDateTime = (value?: string | number | Date, dateFormat = 'yyy
 }
 
 export function formatNumber(value: number): string {
-  return Math.round(value).toLocaleString('en-US');
+  return roundCurrency(value).toLocaleString('en-US');
 }

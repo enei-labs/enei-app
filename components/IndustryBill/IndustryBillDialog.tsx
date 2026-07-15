@@ -11,6 +11,7 @@ import {
   ToggleButton,
 } from "@mui/material";
 import { useIndustryBill } from "@utils/hooks/queries";
+import { roundCurrency } from "@utils/round-currency";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import { useAuditIndustryBill, useRevertManualIndustryBill } from "@utils/hooks/mutations";
@@ -92,8 +93,8 @@ export const IndustryBillDialog = ({
       if (error) return null;
 
       const { billingMonth, billingDateRange } = formatBillingInfo(data.industryBill.billingDate);
-      const amount = Math.round(data.industryBill.price * data.industryBill.transferDegree);
-      const tax = Math.round(amount * 0.05);
+      const amount = roundCurrency(data.industryBill.price * data.industryBill.transferDegree);
+      const tax = roundCurrency(amount * 0.05);
       const totalIncludeTax = amount + tax;
 
       return {

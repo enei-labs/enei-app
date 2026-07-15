@@ -133,7 +133,7 @@ const CompanyBillTemplate = forwardRef((props: CompanyBillProps, ref) => {
     if (isRateOrPriceOrCapacity) {
       return value.toString();
     }
-    return formatNumber(Math.round(value));
+    return formatNumber(value);
   };
 
   return (
