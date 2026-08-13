@@ -1,9 +1,11 @@
 import { InputDate } from "@components/Input";
 import Table, { Config } from "@components/Table/Table";
-import { ElectricBillStatus, UserBillsByMonth } from "@core/graphql/types";
 import { Box, Card, Typography } from "@mui/material";
 import { formatDateTime } from "@utils/format";
-import { useUserBillsByMonth } from "@utils/hooks/queries/useUserBillsByMonth";
+import {
+  BillsByMonthSummary,
+  useUserBillsByMonthSummary,
+} from "@utils/hooks/queries/useUserBillsByMonthSummary";
 import { useState } from "react";
 import { useRouter } from "next/router";
 
@@ -27,12 +29,12 @@ export const UserBillsByMonthPanel = () => {
     endDate: formatDateToString(currentDate),
   });
 
-  const { data, loading } = useUserBillsByMonth(
+  const { data, loading } = useUserBillsByMonthSummary(
     dateRange.startDate,
     dateRange.endDate
   );
 
-  const configs: Config<UserBillsByMonth>[] = [
+  const configs: Config<BillsByMonthSummary>[] = [
     {
       header: "計費年月",
       accessor: "month",
@@ -54,60 +56,28 @@ export const UserBillsByMonthPanel = () => {
     },
     {
       header: "電費單數量",
-      accessor: "bills",
-      render: (rowData) => <Box>{rowData.bills.length}</Box>,
+      accessor: "totalCount",
+      render: (rowData) => <Box>{rowData.totalCount}</Box>,
     },
     {
       header: "狀態（未完成）",
-      accessor: "bills",
-      render: (rowData) => (
-        <Box>
-          {
-            rowData.bills.filter(
-              (bill) => bill.status === ElectricBillStatus.Draft
-            ).length
-          }
-        </Box>
-      ),
+      accessor: "draftCount",
+      render: (rowData) => <Box>{rowData.draftCount}</Box>,
     },
     {
       header: "狀態（待審核）",
-      accessor: "bills",
-      render: (rowData) => (
-        <Box>
-          {
-            rowData.bills.filter(
-              (bill) => bill.status === ElectricBillStatus.Pending
-            ).length
-          }
-        </Box>
-      ),
+      accessor: "pendingCount",
+      render: (rowData) => <Box>{rowData.pendingCount}</Box>,
     },
     {
       header: "狀態（已審核）",
-      accessor: "bills",
-      render: (rowData) => (
-        <Box>
-          {
-            rowData.bills.filter(
-              (bill) => bill.status === ElectricBillStatus.Approved
-            ).length
-          }
-        </Box>
-      ),
+      accessor: "approvedCount",
+      render: (rowData) => <Box>{rowData.approvedCount}</Box>,
     },
     {
       header: "來源（手動匯入）",
-      accessor: "bills",
-      render: (rowData) => (
-        <Box>
-          {
-            rowData.bills.filter(
-              (bill) => bill.billSource === 'MANUAL_IMPORT'
-            ).length
-          }
-        </Box>
-      ),
+      accessor: "manualImportCount",
+      render: (rowData) => <Box>{rowData.manualImportCount}</Box>,
     },
   ];
 
@@ -159,8 +129,8 @@ export const UserBillsByMonthPanel = () => {
       </Box>
       <Table
         configs={configs}
-        list={data?.userBillsByMonth}
-        total={data?.userBillsByMonth?.length}
+        list={data?.userBillsByMonthSummary}
+        total={data?.userBillsByMonthSummary?.length}
         loading={loading}
       />
     </Card>

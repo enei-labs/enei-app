@@ -30,3 +30,5 @@ export * from './useEmailConfig';
 export * from './useTransferDegreesByMonth';
 export * from './useUserContractsWithRemainingDemand';
 export * from './useUserStats';
+export * from './useIndustryBillsByMonthSummary';
+export * from './useUserBillsByMonthSummary';

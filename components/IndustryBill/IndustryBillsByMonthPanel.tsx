@@ -1,11 +1,13 @@
 import { InputDate } from "@components/Input";
 import Table, { Config } from "@components/Table/Table";
-import { ElectricBillStatus, IndustryBillsByMonth } from "@core/graphql/types";
 import { Box, Card, Typography, IconButton, Tooltip, Badge } from "@mui/material";
 import { formatDateTime } from "@utils/format";
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { useIndustryBillsByMonth } from "@utils/hooks/queries/useIndustryBillsByMonth";
+import {
+  BillsByMonthSummary,
+  useIndustryBillsByMonthSummary,
+} from "@utils/hooks/queries/useIndustryBillsByMonthSummary";
 import EmailIcon from "@mui/icons-material/Email";
 import { IndustryBillEmailModal } from "./IndustryBillEmailModal";
 
@@ -37,12 +39,12 @@ export const IndustryBillsByMonthPanel = () => {
     month: "",
   });
 
-  const { data, loading } = useIndustryBillsByMonth(
+  const { data, loading } = useIndustryBillsByMonthSummary(
     dateRange.startDate,
     dateRange.endDate
   );
 
-  const configs: Config<IndustryBillsByMonth>[] = [
+  const configs: Config<BillsByMonthSummary>[] = [
     {
       header: "計費年月",
       accessor: "month",
@@ -64,82 +66,39 @@ export const IndustryBillsByMonthPanel = () => {
     },
     {
       header: "電費單數量",
-      accessor: "bills",
-      render: (rowData) => <Box>{rowData.bills.length}</Box>,
+      accessor: "totalCount",
+      render: (rowData) => <Box>{rowData.totalCount}</Box>,
     },
     {
       header: "狀態（未完成）",
-      accessor: "bills",
-      render: (rowData) => (
-        <Box>
-          {
-            rowData.bills.filter(
-              (bill) => bill.status === ElectricBillStatus.Draft
-            ).length
-          }
-        </Box>
-      ),
+      accessor: "draftCount",
+      render: (rowData) => <Box>{rowData.draftCount}</Box>,
     },
     {
       header: "狀態（待審核）",
-      accessor: "bills",
-      render: (rowData) => (
-        <Box>
-          {
-            rowData.bills.filter(
-              (bill) => bill.status === ElectricBillStatus.Pending
-            ).length
-          }
-        </Box>
-      ),
+      accessor: "pendingCount",
+      render: (rowData) => <Box>{rowData.pendingCount}</Box>,
     },
     {
       header: "狀態（已審核）",
-      accessor: "bills",
-      render: (rowData) => (
-        <Box>
-          {
-            rowData.bills.filter(
-              (bill) => bill.status === ElectricBillStatus.Approved
-            ).length
-          }
-        </Box>
-      ),
+      accessor: "approvedCount",
+      render: (rowData) => <Box>{rowData.approvedCount}</Box>,
     },
     {
       header: "狀態（已拒絕）",
-      accessor: "bills",
-      render: (rowData) => (
-        <Box>
-          {
-            rowData.bills.filter(
-              (bill) => bill.status === ElectricBillStatus.Rejected
-            ).length
-          }
-        </Box>
-      ),
+      accessor: "rejectedCount",
+      render: (rowData) => <Box>{rowData.rejectedCount}</Box>,
     },
     {
       header: "來源（手動匯入）",
-      accessor: "bills",
-      render: (rowData) => (
-        <Box>
-          {
-            rowData.bills.filter(
-              (bill) => bill.billSource === 'MANUAL_IMPORT'
-            ).length
-          }
-        </Box>
-      ),
+      accessor: "manualImportCount",
+      render: (rowData) => <Box>{rowData.manualImportCount}</Box>,
     },
     {
       header: "寄信",
-      accessor: "bills",
+      accessor: "month",
       render: (rowData) => {
-        const approvedCount = rowData.bills.filter(
-          (bill) => bill.status === ElectricBillStatus.Approved
-        ).length;
-        const totalCount = rowData.bills.length;
+        const { approvedCount, totalCount } = rowData;
         const allApproved = approvedCount === totalCount && totalCount > 0;
 
         return (
@@ -221,8 +180,8 @@ export const IndustryBillsByMonthPanel = () => {
       </Box>
       <Table
         configs={configs}
-        list={data?.industryBillsByMonth}
-        total={data?.industryBillsByMonth?.length}
+        list={data?.industryBillsByMonthSummary}
+        total={data?.industryBillsByMonthSummary?.length}
         loading={loading}
       />
       {emailModalState.open && (
