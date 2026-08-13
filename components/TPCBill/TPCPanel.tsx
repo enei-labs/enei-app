@@ -1,6 +1,6 @@
 import { IconBtn } from "@components/Button";
 import Table, { Config } from "@components/Table/Table";
-import { TpcBill, TpcBillPage } from "@core/graphql/types";
+import { TpcBill } from "@core/graphql/types";
 import BorderColorOutlined from "@mui/icons-material/BorderColorOutlined";
 import DeleteOutlined from "@mui/icons-material/DeleteOutlined";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
@@ -18,14 +18,18 @@ const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 
 interface TPCPanelProps {
   transferDocumentId: string;
-  tpcBillPage?: TpcBillPage;
-  loading: boolean;
 }
 
 const TPCPanel = (props: TPCPanelProps) => {
-  const { tpcBillPage, loading, transferDocumentId } = props;
+  const { transferDocumentId } = props;
   const router = useRouter();
-  const { refetch } = useTpcBills({ transferDocumentId });
+  // 自行分頁載入（精簡欄位，不含 transferDegrees）
+  const { data, loading, refetch } = useTpcBills({
+    transferDocumentId,
+    offset: 0,
+    limit: 10,
+  });
+  const tpcBillPage = data?.tpcBills;
   const [removeTPCBill] = useRemoveTPCBill();
   const [currentTPCBill, setCurrentTPCBill] = useState<TpcBill | null>(null);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
@@ -102,7 +106,12 @@ const TPCPanel = (props: TPCPanelProps) => {
         list={tpcBillPage?.list}
         total={tpcBillPage?.total}
         loading={loading}
-        onPageChange={refetch}
+        onPageChange={(page: any) =>
+          refetch({
+            limit: page.rows,
+            offset: page.rows * page.index,
+          })
+        }
       />
       {openDeleteDialog && currentTPCBill ? (
         <DialogAlert
