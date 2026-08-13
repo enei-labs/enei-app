@@ -19,8 +19,6 @@ export * from './useIndustryBills';
 export * from './useUserBillConfigs';
 export * from './useIndustryBillConfigs';
 export * from './useUserBill';
-export * from './useIndustryBillsByMonth';
-export * from './useUserBillsByMonth';
 export * from './useCompanyContractMonthlyTransferDegrees';
 export * from './useUserContractMonthlyTransferDegrees';
 export * from './useExpiringUserContracts';

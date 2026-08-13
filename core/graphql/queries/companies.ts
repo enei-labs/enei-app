@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client'
-import { COMPANY_FIELDS, POWER_PLANT_FIELDS } from '../fragment'
+import { COMPANY_FIELDS } from '../fragment'
 
 export const COMPANIES = gql`
   ${COMPANY_FIELDS}
@@ -22,9 +22,8 @@ export const COMPANIES = gql`
 `
 
 export const COMPANIES_WITH_POWER_PLANTS = gql`
-  ${POWER_PLANT_FIELDS}
   query companiesWithPowerPlants {
-    companies {
+    companies(limit: 1000, offset: 0) {
       total
       list {
         id
@@ -34,7 +33,10 @@ export const COMPANIES_WITH_POWER_PLANTS = gql`
           name
           number
           powerPlants {
-            ...powerPlantFields
+            id
+            name
+            number
+            volume
           }
         }
       }

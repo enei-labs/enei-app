@@ -23,7 +23,6 @@ import PageErrorBoundary from "@components/ErrorBoundary/PageErrorBoundary";
 import {
   useCompanyStats,
   useUserStats,
-  useTransferDegreesByMonth,
   useExpiringUserContracts,
   useUserContractsWithRemainingDemand,
   useCompanyContractsWithRemainingCapacity,
@@ -92,8 +91,6 @@ function MainPage() {
 
   const { data: companyStatsData, loading: companyLoading, error: companyError } = useCompanyStats();
   const { data: userStatsData, loading: userLoading, error: userError } = useUserStats();
-  const { data: transferDegreeData, loading: transferLoading } =
-    useTransferDegreesByMonth({ year: year.getFullYear() });
   const { data: monthlyTpcTransferDegreeData, loading: tpcBillLoading } =
     useTpcBillMonthlyTransferDegrees({
       startedAt: `${year.getFullYear()}-01-01`,
@@ -159,7 +156,7 @@ function MainPage() {
               <TransferDegreeChart
                 name="轉供度數"
                 data={monthlyTpcTransferDegreeData?.tpcBillMonthlyTransferDegrees?.monthlyTotals}
-                loading={tpcBillLoading || transferLoading}
+                loading={tpcBillLoading}
                 year={year}
                 setYear={setYear}
               />
