@@ -92,7 +92,8 @@ export function ElectricNumbersField(props: ElectricNumbersFieldProps) {
   } = props;
 
   const { data, loading } = useCompanyContracts({
-    variables: { companyId },
+    // 明確給上限：省略 limit 會吃到預設分頁（10 筆），第 11 份合約後的電號會被靜默丟掉
+    variables: { companyId, limit: 100, offset: 0 },
   });
 
   const [addElectricNumber, setAddElectricNumber] = useState<number>(INITIAL_ADD_COUNT);
