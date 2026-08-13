@@ -1,11 +1,6 @@
-import { useMemo, useState } from "react";
-import groupBy from "lodash/groupBy";
+import { useState } from "react";
 import Chip from "@components/Chip";
-import {
-  TpcBillPage,
-  TransferDegree,
-  TransferDocument,
-} from "@core/graphql/types";
+import { TransferDocument } from "@core/graphql/types";
 import {
   Box,
   CircularProgress,
@@ -13,12 +8,10 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import { useTpcBills } from "@utils/hooks/queries";
+import { useTransferDocumentDegreeSummary } from "@utils/hooks/queries/useTransferDocumentDegreeSummary";
 
 interface TransferDocumentInfoBoxProps {
   transferDocument: TransferDocument;
-  tpcBillPage?: TpcBillPage;
-  loading: boolean;
 }
 
 interface TransferBoxProps {
@@ -42,97 +35,22 @@ const TransferBox = (props: TransferBoxProps) => {
   );
 };
 
-/** @TODO  */
+/** 轉供統計改由後端 SQL 聚合，不再抓整份文件的 transferDegrees 到前端計算 */
 function TransferDocumentInfoBox(props: TransferDocumentInfoBoxProps) {
-  const { transferDocument, loading, tpcBillPage } = props;
+  const { transferDocument } = props;
   const [powerPlantId, setPowerPlantId] = useState<string | null>(null);
 
-  const { refetch } = useTpcBills({
-    transferDocumentId: transferDocument.id,
-  });
+  const { data, loading } = useTransferDocumentDegreeSummary(
+    transferDocument.id,
+    powerPlantId
+  );
 
-  const powerPlantsMap = useMemo(() => {
-    const map = new Map<string, TransferDegree[]>();
-    if (tpcBillPage) {
-      tpcBillPage.list.forEach((tpcBill) => {
-        tpcBill.transferDegrees.forEach((t) => {
-          if (map.has(t.powerPlant.id)) {
-            map.set(
-              t.powerPlant.id,
-              (map.get(t.powerPlant.id) as TransferDegree[]).concat(t)
-            );
-          } else {
-            map.set(t.powerPlant.id, [t]);
-          }
-        });
-      });
-    }
-    return map;
-  }, [tpcBillPage]);
-
-  const currentPowerPlant = useMemo(() => {
-    if (!powerPlantId) return null;
-    const transferDegrees = powerPlantsMap.get(powerPlantId);
-    if (!transferDegrees) return null;
-
-    const currentYear = new Date().getFullYear();
-    const startOfYear = new Date(currentYear, 0, 1); // 這年的 1 月 1 日
-    const endOfYear = new Date(currentYear + 1, 0, 1); // 下一年的 1 月 1 日
-    const transferDegreesThisYear = transferDegrees.filter((transferDegree) => {
-      const transferCreateTime = new Date(transferDegree.createdAt);
-      return (
-        transferCreateTime >= startOfYear && transferCreateTime < endOfYear
-      );
-    });
-    const currentMonth = new Date().getMonth();
-    const startOfMonth = new Date(currentYear, currentMonth, 1);
-    const endOfMonth = new Date(currentYear, currentMonth + 1, 0);
-    const transferDegreesThisMonth = transferDegrees.filter(
-      (transferDegree) => {
-        const transferCreateTime = new Date(transferDegree.createdAt);
-
-        return (
-          transferCreateTime >= startOfMonth && transferCreateTime <= endOfMonth
-        );
-      }
-    );
-
-    const groupByUserTransferDegrees = groupBy(
-      transferDegreesThisMonth,
-      (transferDegree) => transferDegree.user.id
-    );
-
-    const transferDegreesUserList = (
-      Object.values(groupByUserTransferDegrees) ?? []
-    ).map((transferDegrees) => ({
-      ...transferDegrees[0].user,
-      aggregateTransferDegrees: transferDegrees.reduce(
-        (acc, curr) => acc + curr.degree,
-        0
-      ),
-    }));
-
-    return {
-      transferDegreesThisMonth,
-      transferDegreesUserList,
-      aggregateTransferDegreesLastMonth: 0,
-      aggregateTransferDegreesThisMonth: transferDegreesThisMonth.reduce(
-        (acc, curr) => acc + curr.degree,
-        0
-      ),
-      aggregateTransferDegreesThisYear: transferDegreesThisYear.reduce(
-        (acc, curr) => acc + curr.degree,
-        0
-      ),
-    };
-  }, [powerPlantId, powerPlantsMap]);
-
-  if (loading) return <CircularProgress />;
+  const summary = data?.transferDocumentDegreeSummary;
 
   return (
     <Box display={"flex"} flexDirection="column" rowGap="24px">
       <Box display={"flex"} gap="8px" flexWrap={"wrap"} marginY={"24px"}>
-        {transferDocument.transferDocumentPowerPlants.map((item, index) => {
+        {transferDocument.transferDocumentPowerPlants.map((item) => {
           return (
             <Chip
               key={item.powerPlant.id}
@@ -143,39 +61,42 @@ function TransferDocumentInfoBox(props: TransferDocumentInfoBoxProps) {
           );
         })}
       </Box>
-      <Grid container>
-        <Grid item sm={4}>
-          <TransferBox
-            title="本月轉供度數"
-            count={currentPowerPlant?.aggregateTransferDegreesThisMonth ?? 0}
-          />
-        </Grid>
-        <Grid item sm={4}>
-          <TransferBox
-            title="上月轉供度數"
-            count={currentPowerPlant?.aggregateTransferDegreesLastMonth ?? 0}
-          />
-        </Grid>
-        <Grid item sm={4}>
-          <TransferBox
-            title="年度累積轉供度數"
-            count={currentPowerPlant?.aggregateTransferDegreesThisYear ?? 0}
-          />
-        </Grid>
-      </Grid>
-
-      <Divider />
-
-      <Grid container>
-        {currentPowerPlant?.transferDegreesUserList.map((user) => (
-          <Grid item sm={4} key={user.id}>
-            <TransferBox
-              title={user.name}
-              count={user.aggregateTransferDegrees}
-            />
+      {loading ? (
+        <CircularProgress />
+      ) : (
+        <>
+          <Grid container>
+            <Grid item sm={4}>
+              <TransferBox
+                title="本月轉供度數"
+                count={summary?.thisMonthDegree ?? 0}
+              />
+            </Grid>
+            <Grid item sm={4}>
+              <TransferBox
+                title="上月轉供度數"
+                count={summary?.lastMonthDegree ?? 0}
+              />
+            </Grid>
+            <Grid item sm={4}>
+              <TransferBox
+                title="年度累積轉供度數"
+                count={summary?.thisYearDegree ?? 0}
+              />
+            </Grid>
           </Grid>
-        ))}
-      </Grid>
+
+          <Divider />
+
+          <Grid container>
+            {(summary?.userSummaries ?? []).map((user) => (
+              <Grid item sm={4} key={user.userId}>
+                <TransferBox title={user.userName} count={user.degree} />
+              </Grid>
+            ))}
+          </Grid>
+        </>
+      )}
     </Box>
   );
 }

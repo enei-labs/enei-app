@@ -27,29 +27,19 @@ interface TPCBillPanelProps {
   refetchFn: (page: Page) => void;
 }
 
+/** 統計欄位由後端 SQL 聚合提供（codegen 尚未重跑前先本地擴充型別） */
+type TpcBillWithStats = TpcBill & {
+  totalDegree?: number;
+  uniqueUserCount?: number;
+  uniquePowerPlantCount?: number;
+};
+
 const TPCBillPanel = (props: TPCBillPanelProps) => {
   const { tpcBillPage, loading = false, refetchFn } = props;
   const router = useRouter();
   const [removeTPCBill] = useRemoveTPCBill();
   const [currentTPCBill, setCurrentTPCBill] = useState<TpcBill | null>(null);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-
-  // 計算轉供度數總計
-  const calculateTotalDegree = (tpcBill: TpcBill) => {
-    return tpcBill.transferDegrees?.reduce((sum, transfer) => sum + (transfer.degree || 0), 0) || 0;
-  };
-
-  // 計算關聯用戶數量
-  const getUniqueUsersCount = (tpcBill: TpcBill) => {
-    const uniqueUserIds = new Set(tpcBill.transferDegrees?.map(transfer => transfer.user?.id).filter(Boolean));
-    return uniqueUserIds.size;
-  };
-
-  // 計算關聯電廠數量
-  const getUniquePowerPlantsCount = (tpcBill: TpcBill) => {
-    const uniquePlantIds = new Set(tpcBill.transferDegrees?.map(transfer => transfer.powerPlant?.id).filter(Boolean));
-    return uniquePlantIds.size;
-  };
 
   const configs: Config<TpcBill>[] = [
     {
@@ -86,38 +76,23 @@ const TPCBillPanel = (props: TPCBillPanelProps) => {
     {
       header: "轉供度數總計",
       accessor: "",
-      render: (rowData) => {
-        const totalDegree = calculateTotalDegree(rowData);
-        return (
-          <Box>
-            {totalDegree.toLocaleString()} 度
-          </Box>
-        );
-      },
+      render: (rowData) => (
+        <Box>{(rowData as TpcBillWithStats).totalDegree?.toLocaleString() ?? 0} 度</Box>
+      ),
     },
     {
       header: "關聯用戶數",
       accessor: "",
-      render: (rowData) => {
-        const userCount = getUniqueUsersCount(rowData);
-        return (
-          <Box>
-            {userCount} 個
-          </Box>
-        );
-      },
+      render: (rowData) => (
+        <Box>{(rowData as TpcBillWithStats).uniqueUserCount ?? 0} 個</Box>
+      ),
     },
     {
       header: "關聯電廠數",
       accessor: "",
-      render: (rowData) => {
-        const plantCount = getUniquePowerPlantsCount(rowData);
-        return (
-          <Box>
-            {plantCount} 個
-          </Box>
-        );
-      },
+      render: (rowData) => (
+        <Box>{(rowData as TpcBillWithStats).uniquePowerPlantCount ?? 0} 個</Box>
+      ),
     },
     {
       header: "操作",

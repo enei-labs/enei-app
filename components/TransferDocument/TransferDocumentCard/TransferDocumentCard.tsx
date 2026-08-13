@@ -13,7 +13,6 @@ import ProgressBar from "@components/TransferDocument/TransferDocumentCard/Progr
 import DownloadDocBox from "@components/DownloadDocBox";
 import TPCPanel from "@components/TPCBill/TPCPanel";
 import TransferDocumentInfoBox from "@components/TransferDocument/TransferDocumentInfoBox";
-import { useTpcBills } from "@utils/hooks/queries";
 
 const DialogAlert = dynamic(() => import("@components/DialogAlert"));
 const TransferDocumentDialog = dynamic(
@@ -32,12 +31,6 @@ function TransferDocumentCard(props: TransferDocumentProps) {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [removeTransferDocument] = useRemoveTransferDocument();
-
-  const { data, loading } = useTpcBills({
-    transferDocumentId: transferDocument.id,
-    offset: 0,
-    limit: 1000,
-  });
 
   return (
     <>
@@ -118,21 +111,13 @@ function TransferDocumentCard(props: TransferDocumentProps) {
         <Grid item sm={6}>
           <Card sx={{ p: "36px" }}>
             <Typography variant="h4">台電代輸繳費單</Typography>
-            <TPCPanel
-              transferDocumentId={transferDocument.id}
-              loading={loading}
-              tpcBillPage={data?.tpcBills}
-            />
+            <TPCPanel transferDocumentId={transferDocument.id} />
           </Card>
         </Grid>
         <Grid item sm={6}>
           <Card sx={{ p: "36px" }}>
             <Typography variant="h4">容量剩餘發電業名單</Typography>
-            <TransferDocumentInfoBox
-              transferDocument={transferDocument}
-              loading={loading}
-              tpcBillPage={data?.tpcBills}
-            />
+            <TransferDocumentInfoBox transferDocument={transferDocument} />
           </Card>
         </Grid>
       </Grid>

@@ -32,3 +32,4 @@ export * from './useUserContractsWithRemainingDemand';
 export * from './useUserStats';
 export * from './useIndustryBillsByMonthSummary';
 export * from './useUserBillsByMonthSummary';
+export * from './useTransferDocumentDegreeSummary';
