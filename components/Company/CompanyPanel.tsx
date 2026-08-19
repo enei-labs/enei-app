@@ -1,7 +1,7 @@
 import { Table } from "@components/Table";
 import { Box, Chip, Stack } from "@mui/material";
 import { useCompanies } from "@utils/hooks/queries";
-import { Company } from "@core/graphql/types";
+import { Company, CompanyType } from "@core/graphql/types";
 import { Config } from "../Table/Table";
 import { IconBtn } from "@components/Button";
 import BorderColorOutlined from "@mui/icons-material/BorderColorOutlined";
@@ -12,7 +12,6 @@ import DialogAlert from "@components/DialogAlert";
 import { toast } from "react-toastify";
 import CompanyDialog from "@components/Company/CompanyDialog";
 import { ErrorBoundary } from "@components/ErrorBoundary";
-import { CompanyType } from "@core/graphql/types";
 import { CompanyTypeLookup, maskPersonalId } from "@core/look-up/company-type";
 
 interface CompanyPanelProps {
@@ -50,14 +49,17 @@ const CompanyPanel = (props: CompanyPanelProps) => {
     },
     {
       header: "戶別",
-      render: (rowData) => CompanyTypeLookup[rowData.type] ?? "公司",
+      render: (rowData) => <>{CompanyTypeLookup[rowData.type] ?? "公司"}</>,
     },
     {
       header: "統一編號 / 身分證字號",
-      render: (rowData) =>
-        rowData.type === CompanyType.Individual
-          ? maskPersonalId(rowData.taxId) // 個資保護：個人戶身分證遮罩顯示
-          : rowData.taxId,
+      render: (rowData) => (
+        <>
+          {rowData.type === CompanyType.Individual
+            ? maskPersonalId(rowData.taxId) // 個資保護：個人戶身分證遮罩顯示
+            : rowData.taxId}
+        </>
+      ),
     },
     {
       header: "聯絡人姓名",
