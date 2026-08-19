@@ -1,7 +1,5 @@
 import { FieldsController } from "@components/Controller";
 import Dialog from "@components/Dialog";
-import { FieldConfig } from "@core/types";
-import { emailListValidated, taiwanUBNValidation, textValidated } from "@core/types/fieldConfig";
 import { LoadingButton } from "@mui/lab";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import {
@@ -13,7 +11,7 @@ import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import { IconBtn } from "../Button";
 import CloseIcon from "@mui/icons-material/HighlightOff";
 import { toast } from "react-toastify";
-import { Company } from "@core/graphql/types";
+import { Company, CompanyType } from "@core/graphql/types";
 import { useCreateCompany } from "@utils/hooks/mutations/useCreateCompany";
 import { COMPANIES } from "@core/graphql/queries";
 import { Controller } from "react-hook-form";
@@ -25,8 +23,10 @@ import { useMemo, useState } from "react";
 import bankJson from "@public/bank_with_branchs_remix_version.json";
 import DialogAlert from "@components/DialogAlert";
 import { DialogErrorBoundary } from "@components/ErrorBoundary";
+import { companyFieldConfigs, useCompanyDisplayConfigs } from "./companyFieldConfigs";
 
 type FormData = {
+  type: CompanyType;
   name: string;
   taxId: string;
   contactName: string;
@@ -47,44 +47,6 @@ type FormData = {
     account: string;
   }[];
 };
-
-const configs: FieldConfig[] = [
-  {
-    type: "TEXT",
-    name: "name",
-    label: "公司名稱",
-    required: true,
-    validated: textValidated,
-  },
-  {
-    type: "TEXT",
-    name: "taxId",
-    label: "統一編號",
-    required: true,
-    validated: taiwanUBNValidation,
-  },
-  {
-    type: "TEXT",
-    name: "contactName",
-    label: "聯絡人姓名",
-    required: true,
-    validated: textValidated,
-  },
-  {
-    type: "TEXT",
-    name: "contactPhone",
-    label: "聯絡人電話",
-    required: true,
-    validated: textValidated,
-  },
-  {
-    type: "TEXT",
-    name: "contactEmails",
-    label: "聯絡人信箱（多個信箱以逗號分隔）",
-    required: true,
-    validated: emailListValidated,
-  },
-];
 
 interface CompanyDialogProps {
   open: boolean;
@@ -107,7 +69,7 @@ const CompanyDialog = (props: CompanyDialogProps) => {
     handleSubmit,
     formState: { errors },
     watch,
-  } = useValidatedForm<FormData>(configs, {
+  } = useValidatedForm<FormData>(companyFieldConfigs, {
     defaultValues: {
       ...defaultValues,
       contactEmails: defaultValues?.contactEmails?.join(', ') ?? '',
@@ -126,8 +88,12 @@ const CompanyDialog = (props: CompanyDialogProps) => {
           account: bankAccount.account,
         })
       ),
+      type: defaultValues?.type ?? CompanyType.Company,
     },
   });
+
+  const typeValue = watch("type");
+  const displayConfigs = useCompanyDisplayConfigs(typeValue);
 
   const [addAccountNumber, setAddAccountNumber] = useState<number>(1);
   const [deleteBankAccountIndex, setDeleteBankAccountIndex] =
@@ -165,6 +131,7 @@ const CompanyDialog = (props: CompanyDialogProps) => {
       const { data } = await createCompany({
         variables: {
           input: {
+            type: formData.type,
             name: formData.name,
             taxId: formData.taxId,
             contactName: formData.contactName,
@@ -187,6 +154,7 @@ const CompanyDialog = (props: CompanyDialogProps) => {
         variables: {
           input: {
             companyId: defaultValues.id,
+            type: formData.type,
             name: formData.name,
             taxId: formData.taxId,
             contactName: formData.contactName,
@@ -215,17 +183,17 @@ const CompanyDialog = (props: CompanyDialogProps) => {
       <DialogErrorBoundary onClose={onClose}>
       <Grid container justifyContent={"space-between"} alignItems={"center"}>
         <Typography variant="h4" textAlign={"left"}>
-          公司資訊
+          {typeValue === CompanyType.Individual ? "基本資訊" : "公司資訊"}
         </Typography>
         <IconBtn icon={<CloseIcon />} onClick={onClose} />
       </Grid>
       <FieldsController
-        configs={configs.slice(0, 2)}
+        configs={displayConfigs.slice(0, 3)}
         form={{ control, errors }}
       />
 
       <Typography variant="h5">聯絡人資訊</Typography>
-      <FieldsController configs={configs.slice(2)} form={{ control, errors }} />
+      <FieldsController configs={displayConfigs.slice(3)} form={{ control, errors }} />
 
       {/* 收款 Block */}
       <Typography variant="h5" textAlign={"left"}>
