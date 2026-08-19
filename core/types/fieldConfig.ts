@@ -2,6 +2,7 @@ import * as yup from 'yup'
 import { FieldController } from '.'
 import Option from './option'
 import { ApolloQueryResult } from '@apollo/client'
+import { CompanyType } from '@core/graphql/types'
 
 
 export enum FieldType {
@@ -133,31 +134,64 @@ const checkboxValidated = yup
   .required(requiredMessage)
   .oneOf([true], '請選中此框以繼續。')
 
+const isValidUbn = (value: string): boolean => {
+  const pattern = /^[0-9]{8}$/;
+  if (!pattern.test(value)) return false;
+  const weights = [1, 2, 1, 2, 1, 2, 4, 1];
+  let sum = 0;
+  for (let i = 0; i < 8; i++) {
+    const product = parseInt(value[i]) * weights[i];
+    sum += Math.floor(product / 10) + (product % 10);
+  }
+  if (parseInt(value[6]) === 7) {
+    return sum % 5 === 0 || (sum + 1) % 5 === 0;
+  }
+  return sum % 5 === 0;
+};
+
+// 身分證首字母對照代碼；第 2 碼允許 1/2（本國籍）與 8/9（新式外來人口統一證號）
+const ID_LETTER_VALUES: Record<string, number> = {
+  A: 10, B: 11, C: 12, D: 13, E: 14, F: 15, G: 16, H: 17, I: 34,
+  J: 18, K: 19, L: 20, M: 21, N: 22, O: 35, P: 23, Q: 24, R: 25,
+  S: 26, T: 27, U: 28, V: 29, W: 32, X: 30, Y: 31, Z: 33,
+};
+
+const isValidPersonalId = (value: string): boolean => {
+  if (!/^[A-Z][1289]\d{8}$/.test(value)) return false;
+  const letter = ID_LETTER_VALUES[value[0]];
+  const digits = [Math.floor(letter / 10), letter % 10, ...value.slice(1).split('').map(Number)];
+  const weights = [1, 9, 8, 7, 6, 5, 4, 3, 2, 1, 1];
+  const sum = digits.reduce((acc, d, i) => acc + d * weights[i], 0);
+  return sum % 10 === 0;
+};
+
 const taiwanUBNValidation = yup.string().test(
     'is-ubn',
     '請輸入有效的台灣統一編號',
     (value) => {
       if (!value) return false;
-      const pattern = /^[0-9]{8}$/;
-      if (!pattern.test(value)) return false;
-
-      const weights = [1, 2, 1, 2, 1, 2, 4, 1];
-      let sum = 0;
-      for (let i = 0; i < 8; i++) {
-        let product = parseInt(value[i]) * weights[i];
-        // 將兩位數拆開相加
-        sum += Math.floor(product / 10) + (product % 10);
-      }
-
-      // 2023年起財政部修正驗證邏輯：從能被10整除改為能被5整除
-      // 當第7位是7時，7*4=28 可算成 2+8=10 或額外加1變成11
-      if (parseInt(value[6]) === 7) {
-        return sum % 5 === 0 || (sum + 1) % 5 === 0;
-      }
-
-      return sum % 5 === 0;
+      return isValidUbn(value);
     }
   );
+
+// 發電業識別碼：依表單上的戶別（sibling 欄位 type）切換統編/身分證檢核
+const companyIdentifierValidation = yup.string().test(
+  'company-identifier',
+  '請輸入有效的台灣統一編號',
+  function (value) {
+    const { type } = (this.parent ?? {}) as { type?: CompanyType };
+    if (type === CompanyType.Individual) {
+      if (!value || !isValidPersonalId(value)) {
+        return this.createError({ message: '請輸入有效的身分證字號' });
+      }
+      return true;
+    }
+    if (!value || !isValidUbn(value)) {
+      return this.createError({ message: '請輸入有效的台灣統一編號' });
+    }
+    return true;
+  }
+);
 
 export {
   requiredMessage,
@@ -173,6 +207,7 @@ export {
   passwordValidated,
   checkboxValidated,
   taiwanUBNValidation,
+  companyIdentifierValidation,
 }
 
 export default FieldConfig
