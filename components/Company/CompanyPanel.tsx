@@ -12,6 +12,8 @@ import DialogAlert from "@components/DialogAlert";
 import { toast } from "react-toastify";
 import CompanyDialog from "@components/Company/CompanyDialog";
 import { ErrorBoundary } from "@components/ErrorBoundary";
+import { CompanyType } from "@core/graphql/types";
+import { CompanyTypeLookup, maskPersonalId } from "@core/look-up/company-type";
 
 interface CompanyPanelProps {
   setCompanyFn: (company: Company) => void;
@@ -47,8 +49,15 @@ const CompanyPanel = (props: CompanyPanelProps) => {
       ),
     },
     {
-      header: "統一編號",
-      accessor: "taxId",
+      header: "戶別",
+      render: (rowData) => CompanyTypeLookup[rowData.type] ?? "公司",
+    },
+    {
+      header: "統一編號 / 身分證字號",
+      render: (rowData) =>
+        rowData.type === CompanyType.Individual
+          ? maskPersonalId(rowData.taxId) // 個資保護：個人戶身分證遮罩顯示
+          : rowData.taxId,
     },
     {
       header: "聯絡人姓名",

@@ -69,7 +69,7 @@ function IndustryPage() {
                   onEnter={executeSearch}
                   defaultValue={initialSearchTerm}
                 />
-                <Tooltip title="可使用公司名稱或統一編號搜尋">
+                <Tooltip title="可使用名稱、統一編號或身分證字號搜尋">
                   <InfoIcon />
                 </Tooltip>
               </Box>
