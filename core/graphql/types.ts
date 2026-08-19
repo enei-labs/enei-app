@@ -232,6 +232,22 @@ export type BillingInfoInput = {
   transferKwh: Scalars['Float']['input'];
 };
 
+export type BillsByMonthSummary = {
+  __typename?: 'BillsByMonthSummary';
+  /** 已審核 */
+  approvedCount: Scalars['Int']['output'];
+  /** 未完成 */
+  draftCount: Scalars['Int']['output'];
+  /** 手動匯入 */
+  manualImportCount: Scalars['Int']['output'];
+  month: Scalars['DateTime']['output'];
+  /** 待審核 */
+  pendingCount: Scalars['Int']['output'];
+  /** 已拒絕 */
+  rejectedCount: Scalars['Int']['output'];
+  totalCount: Scalars['Int']['output'];
+};
+
 export type ChangePasswordResponse = Admin | InvalidCurrentPasswordError;
 
 export type Company = {
@@ -246,6 +262,8 @@ export type Company = {
   taxId: Scalars['String']['output'];
   /** 裝置量=該發電業簽署的合約裡面，所有裝置量的加總 */
   totalVolume: Scalars['Float']['output'];
+  /** 戶別：公司戶或個人戶（個人戶 taxId 為身分證字號） */
+  type: CompanyType;
 };
 
 export type CompanyContract = {
@@ -321,6 +339,12 @@ export type CompanyStats = {
   totalVolume: Scalars['Float']['output'];
 };
 
+/** 發電業戶別：公司戶或個人戶 */
+export enum CompanyType {
+  Company = 'COMPANY',
+  Individual = 'INDIVIDUAL'
+}
+
 export enum ContractTimeType {
   ContractEndTime = 'CONTRACT_END_TIME',
   ContractStartTime = 'CONTRACT_START_TIME',
@@ -372,6 +396,8 @@ export type CreateCompanyInput = {
   contactPhone: Scalars['String']['input'];
   name: Scalars['String']['input'];
   taxId: Scalars['String']['input'];
+  /** 戶別，未帶預設為公司戶 */
+  type?: InputMaybe<CompanyType>;
 };
 
 export type CreateIndustryBillConfigInput = {
@@ -793,12 +819,6 @@ export type IndustryBillStatusCountsDto = {
   rejectedCount: Scalars['Int']['output'];
 };
 
-export type IndustryBillsByMonth = {
-  __typename?: 'IndustryBillsByMonth';
-  bills: Array<IndustryBill>;
-  month: Scalars['DateTime']['output'];
-};
-
 export type InvalidCurrentPasswordError = Error & {
   __typename?: 'InvalidCurrentPasswordError';
   id: Scalars['ID']['output'];
@@ -1155,6 +1175,7 @@ export type MutationRevertManualUserBillArgs = {
 
 export type MutationSendIndustryBillEmailArgs = {
   fileName?: InputMaybe<Scalars['String']['input']>;
+  forceResend?: InputMaybe<Scalars['Boolean']['input']>;
   industryBillId: Scalars['String']['input'];
   pdfContent?: InputMaybe<Scalars['String']['input']>;
 };
@@ -1325,7 +1346,7 @@ export type Query = {
   industryBillConfig: IndustryBillConfig;
   industryBillConfigs: IndustryBillConfigPage;
   industryBills: IndustryBillPage;
-  industryBillsByMonth: Array<IndustryBillsByMonth>;
+  industryBillsByMonthSummary: Array<BillsByMonthSummary>;
   industryBillsForEmail: Array<IndustryBillForEmail>;
   me?: Maybe<Account>;
   powerPlant: PowerPlant;
@@ -1338,13 +1359,14 @@ export type Query = {
   /** 依月份累加的轉供度數，長度 12（index 0 = 一月） */
   transferDegreesByMonth: Array<Scalars['Float']['output']>;
   transferDocument: TransferDocument;
+  transferDocumentDegreeSummary: TransferDocumentDegreeSummary;
   transferDocuments: TransferDocumentPage;
   user: User;
   userBill: UserBill;
   userBillConfig: UserBillConfig;
   userBillConfigs: UserBillConfigPage;
   userBills: UserBillPage;
-  userBillsByMonth: Array<UserBillsByMonth>;
+  userBillsByMonthSummary: Array<BillsByMonthSummary>;
   userContract: UserContract;
   userContractMonthlyTransferDegrees: UserContractMonthlyTransferDegrees;
   userContracts: UserContractPage;
@@ -1469,7 +1491,7 @@ export type QueryIndustryBillsArgs = {
 };
 
 
-export type QueryIndustryBillsByMonthArgs = {
+export type QueryIndustryBillsByMonthSummaryArgs = {
   endMonth: Scalars['String']['input'];
   startMonth: Scalars['String']['input'];
 };
@@ -1527,6 +1549,12 @@ export type QueryTransferDocumentArgs = {
 };
 
 
+export type QueryTransferDocumentDegreeSummaryArgs = {
+  powerPlantId: Scalars['UUID']['input'];
+  transferDocumentId: Scalars['UUID']['input'];
+};
+
+
 export type QueryTransferDocumentsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -1568,7 +1596,7 @@ export type QueryUserBillsArgs = {
 };
 
 
-export type QueryUserBillsByMonthArgs = {
+export type QueryUserBillsByMonthSummaryArgs = {
   endMonth: Scalars['String']['input'];
   startMonth: Scalars['String']['input'];
 };
@@ -1742,7 +1770,13 @@ export type TpcBill = {
   /** 計費年月 */
   billingDate: Scalars['DateTime']['output'];
   id: Scalars['ID']['output'];
+  /** 轉供度數總計（SQL 聚合，供清單頁使用） */
+  totalDegree: Scalars['Int']['output'];
   transferDegrees: Array<TransferDegree>;
+  /** 關聯電廠數（去重） */
+  uniquePowerPlantCount: Scalars['Int']['output'];
+  /** 關聯用戶數（去重） */
+  uniqueUserCount: Scalars['Int']['output'];
 };
 
 export type TpcBillMonthlyTransferDegrees = {
@@ -1806,6 +1840,26 @@ export type TransferDocument = {
   wordDoc?: Maybe<Scalars['String']['output']>;
 };
 
+export type TransferDocumentDegreeSummary = {
+  __typename?: 'TransferDocumentDegreeSummary';
+  /** 上月轉供度數 */
+  lastMonthDegree: Scalars['Int']['output'];
+  /** 本月轉供度數 */
+  thisMonthDegree: Scalars['Int']['output'];
+  /** 年度累積轉供度數 */
+  thisYearDegree: Scalars['Int']['output'];
+  /** 本月各用戶轉供度數 */
+  userSummaries: Array<TransferDocumentDegreeUserSummary>;
+};
+
+export type TransferDocumentDegreeUserSummary = {
+  __typename?: 'TransferDocumentDegreeUserSummary';
+  /** 本月轉供度數 */
+  degree: Scalars['Int']['output'];
+  userId: Scalars['ID']['output'];
+  userName: Scalars['String']['output'];
+};
+
 export type TransferDocumentPage = {
   __typename?: 'TransferDocumentPage';
   list: Array<TransferDocument>;
@@ -1858,6 +1912,7 @@ export type UpdateCompanyInput = {
   name?: InputMaybe<Scalars['String']['input']>;
   recipientAccounts: Array<CreateRecipientAccountInput>;
   taxId?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<CompanyType>;
 };
 
 export type UpdateEmailConfigInput = {
@@ -2087,12 +2142,6 @@ export type UserBillStatusCountsDto = {
   pendingCount: Scalars['Int']['output'];
   /** 已拒絕筆數 */
   rejectedCount: Scalars['Int']['output'];
-};
-
-export type UserBillsByMonth = {
-  __typename?: 'UserBillsByMonth';
-  bills: Array<UserBill>;
-  month: Scalars['DateTime']['output'];
 };
 
 export type UserContract = {

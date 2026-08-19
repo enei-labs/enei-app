@@ -5,6 +5,7 @@ export const COMPANY_FIELDS = gql`
     id
     name
     taxId
+    type
     contactName
     contactEmails
     contactPhone
