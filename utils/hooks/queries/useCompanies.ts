@@ -1,4 +1,4 @@
-import { CompanyPage, PowerPlant } from '@core/graphql/types'
+import { CompanyPage, CompanyType, PowerPlant } from '@core/graphql/types'
 import { COMPANIES, COMPANIES_WITH_POWER_PLANTS } from '@core/graphql/queries/companies'
 import useQuery from '../useQuery'
 
@@ -6,6 +6,7 @@ interface Variables {
   offset?: number;
   limit?: number;
   term?: string;
+  types?: CompanyType[];
 }
 
 export const useCompanies = ({ skip = false, variables }: {

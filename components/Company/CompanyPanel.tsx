@@ -13,6 +13,8 @@ import { toast } from "react-toastify";
 import CompanyDialog from "@components/Company/CompanyDialog";
 import { ErrorBoundary } from "@components/ErrorBoundary";
 import { CompanyTypeLookup, maskPersonalId } from "@core/look-up/company-type";
+import { useUrlArrayParam, useClearUrlParams } from "@utils/hooks/useUrlArrayParam";
+import { CompanyFilters } from "@components/Company/CompanyFilters";
 
 interface CompanyPanelProps {
   setCompanyFn: (company: Company) => void;
@@ -21,8 +23,16 @@ interface CompanyPanelProps {
 
 const CompanyPanel = (props: CompanyPanelProps) => {
   const { setCompanyFn, searchTerm } = props;
+  const [typesFromUrl, setTypes] = useUrlArrayParam<CompanyType>(
+    "types",
+    Object.values(CompanyType)
+  );
+  const clearUrlParams = useClearUrlParams();
   const { data, loading, refetch } = useCompanies({
-    variables: { term: searchTerm },
+    variables: {
+      term: searchTerm,
+      types: typesFromUrl.length > 0 ? typesFromUrl : undefined,
+    },
   });
   const [openUpdateDialog, setOpenUpdateDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
@@ -114,7 +124,17 @@ const CompanyPanel = (props: CompanyPanelProps) => {
 
   return (
     <ErrorBoundary>
+      {/* 戶別篩選 */}
+      <Box sx={{ mb: 2 }}>
+        <CompanyFilters
+          types={typesFromUrl}
+          onTypesChange={setTypes}
+          onClear={() => clearUrlParams(["types"])}
+        />
+      </Box>
+
       <Table
+        key={`${searchTerm ?? ""}-${typesFromUrl.join(",")}`}
         configs={configs}
         list={data?.companies.list}
         total={data?.companies.total}

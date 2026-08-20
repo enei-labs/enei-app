@@ -7,11 +7,13 @@ export const COMPANIES = gql`
     $limit: Int = 10
     $offset: Int = 0
     $term: String
+    $types: [CompanyType!]
   ) {
     companies(
       limit: $limit
       offset: $offset
       term: $term
+      types: $types
     ) {
       total
       list {
