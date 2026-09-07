@@ -1400,6 +1400,7 @@ export type QueryCompaniesArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   term?: InputMaybe<Scalars['String']['input']>;
+  types?: InputMaybe<Array<CompanyType>>;
 };
 
 
