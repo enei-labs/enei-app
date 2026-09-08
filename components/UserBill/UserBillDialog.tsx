@@ -1,6 +1,6 @@
 import { UserBillTemplateData } from "@components/ElectricBill/UserBillTemplate";
 import { PrintWrapper, ReadExcelInput } from "@components/ReadExcelInput";
-import { UserBill, ElectricBillStatus, UserBillConfigChargeType, Fee } from "@core/graphql/types";
+import { UserBill, ElectricBillStatus, UserBillConfigChargeType } from "@core/graphql/types";
 import { ReviewStatusLookup } from "@core/look-up/review-status";
 import {
   Box,
@@ -12,7 +12,7 @@ import {
   ToggleButton,
 } from "@mui/material";
 import { formatDateTime } from "@utils/format";
-import { roundCurrency } from "@utils/round-currency";
+import { calcUserBillCharges } from "@utils/bill-calculation";
 import { useUserBill } from "@utils/hooks/queries";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
@@ -33,62 +33,6 @@ interface UserBillDialogProps {
   onClose: () => void;
   userBill: UserBill;
 }
-
-// 計算工具函數
-const calculateTotalDegree = (electricNumberInfos: UserBill["electricNumberInfos"]) =>
-  (electricNumberInfos ?? []).reduce((acc, info) => acc + (info.degree ?? 0), 0);
-
-// 費用計算邏輯
-const calculateFees = (
-  electricNumberInfos: UserBill["electricNumberInfos"],
-  userBillConfig: UserBill["userBillConfig"],
-  fee: Fee
-) => {
-  const totalDegree = calculateTotalDegree(electricNumberInfos);
-  
-  const shouldCalculate = {
-    substitution: userBillConfig?.transportationFee === UserBillConfigChargeType.User,
-    verification: userBillConfig?.credentialInspectionFee === UserBillConfigChargeType.User,
-    service: userBillConfig?.credentialServiceFee === UserBillConfigChargeType.User,
-  };
-
-  const feeRates = {
-    substitution: Number(fee.substitutionFee),
-    verification: Number(fee.certificateVerificationFee),
-    service: Number(fee.certificateServiceFee),
-  };
-
-  // 代輸費計算
-  const substitutionFee = shouldCalculate.substitution 
-    ? roundCurrency((electricNumberInfos ?? []).reduce((acc, info) => acc + (info.fee ?? 0), 0) / 1.05)
-    : 0;
-
-  // 憑證審查費計算
-  const certificationFee = shouldCalculate.verification 
-    ? roundCurrency(totalDegree * feeRates.verification)
-    : 0;
-  
-  // 憑證服務費計算
-  const certificationServiceFee = shouldCalculate.service 
-    ? roundCurrency(totalDegree * feeRates.service)
-    : 0;
-
-  return {
-    substitutionFee,
-    certificationFee,
-    certificationServiceFee,
-    totalFee: Math.round(substitutionFee + certificationFee + certificationServiceFee),
-  };
-};
-
-// 稅費計算
-const calculateTaxAndTotal = (totalAmount: number, totalFee: number) => {
-  const total = totalAmount + totalFee;
-  const tax = roundCurrency(total * 0.05);
-  const totalIncludeTax = total + tax;
-
-  return { total, tax, totalIncludeTax };
-};
 
 // 日期格式化
 const formatBillingInfo = (billingDate: string) => {
@@ -146,24 +90,23 @@ export const UserBillDialog = ({
     if (!data || loading || error) return null;
 
     const { userBill: bill, fee } = data;
-    
-    // 基礎計算
+
+    // 電費、規費、稅費計算（唯一實作見 utils/bill-calculation.ts）
     const infos = bill.electricNumberInfos ?? [];
-    const totalDegree = calculateTotalDegree(infos);
-    const usage = infos.map((info) => ({
-      serialNumber: info.number ?? "",
-      kwh: info.degree,
-      price: info.price ?? 0,
-      amount: roundCurrency((info.price ?? 0) * (info.degree ?? 0)),
-    }));
-    const totalAmount = usage.reduce((acc, info) => acc + info.amount, 0);
-    
-    // 費用計算
-    const fees = calculateFees(bill.electricNumberInfos, bill.userBillConfig, fee);
-    
-    // 稅費計算
-    const { total, tax, totalIncludeTax } = calculateTaxAndTotal(totalAmount, fees.totalFee);
-    
+    const charges = calcUserBillCharges(
+      infos,
+      {
+        chargeSubstitutionFee: bill.userBillConfig?.transportationFee === UserBillConfigChargeType.User,
+        chargeCertificationFee: bill.userBillConfig?.credentialInspectionFee === UserBillConfigChargeType.User,
+        chargeCertificationServiceFee: bill.userBillConfig?.credentialServiceFee === UserBillConfigChargeType.User,
+      },
+      {
+        certificateVerificationFee: Number(fee.certificateVerificationFee),
+        certificateServiceFee: Number(fee.certificateServiceFee),
+      }
+    );
+    const { totalKwh: totalDegree, totalAmount, total, tax, totalIncludeTax } = charges;
+
     // 日期格式化
     const { billingMonth, billingDateRange } = formatBillingInfo(bill.billingDate);
 
@@ -195,7 +138,7 @@ export const UserBillDialog = ({
       },
       totalKwh: totalDegree,
       totalAmount,
-      totalFee: fees.totalFee,
+      totalFee: charges.totalFee,
       total,
       tax,
       totalIncludeTax,
@@ -205,9 +148,9 @@ export const UserBillDialog = ({
         price: info.price ?? 0,
         amount: (info.price ?? 0) * (info.degree ?? 0),
       })),
-      substitutionFee: fees.substitutionFee,
-      certificationFee: fees.certificationFee,
-      certificationServiceFee: fees.certificationServiceFee,
+      substitutionFee: charges.substitutionFee,
+      certificationFee: charges.certificationFee,
+      certificationServiceFee: charges.certificationServiceFee,
     };
   }, [data, loading, error]);
 
