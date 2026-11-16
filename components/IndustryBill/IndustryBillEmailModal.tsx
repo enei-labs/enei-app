@@ -45,6 +45,9 @@ interface IndustryBillEmailModalProps {
   term?: string;
 }
 
+/** 後端批次寄信回應中「有帳單被擋下未寄出」的標記（見 enei-api SendIndustryBillsBatchEmailService.formatHeldBillsSummary） */
+const HELD_BILLS_PATTERN = /未寄出/;
+
 export const IndustryBillEmailModal = ({
   open,
   onClose,
@@ -97,29 +100,41 @@ export const IndustryBillEmailModal = ({
         },
       });
 
-      if (data?.sendIndustryBillsEmail?.success) {
-        // 添加任務到進度追蹤
-        const { batchId, totalJobs } = data.sendIndustryBillsEmail;
-        if (batchId) {
-          const now = new Date().toISOString();
-          addTask({
-            batchId,
-            type: TaskType.INDUSTRY_BILL_EMAIL,
-            title: `${month} 產業帳單郵件`,
-            totalJobs: totalJobs || eligibleCount,
-            completedJobs: 0,
-            failedJobs: 0,
-            status: TaskStatus.PENDING,
-            createdAt: now,
-            updatedAt: now,
-          });
-          // 選中此任務以顯示詳情
-          selectTask(batchId);
-        }
-        onClose();
-      } else {
-        setError(data?.sendIndustryBillsEmail?.message || "寄信失敗");
+      const response = data?.sendIndustryBillsEmail;
+      const batchId = response?.batchId;
+      const message = response?.message;
+
+      // 有 batchId 就加進進度追蹤：就算 success=false（例如帳單全部被擋下），
+      // 後端也已經建好 FAILED job，進度頁要能看到是哪幾張、為什麼（#51）
+      if (batchId) {
+        const now = new Date().toISOString();
+        addTask({
+          batchId,
+          type: TaskType.INDUSTRY_BILL_EMAIL,
+          title: `${month} 產業帳單郵件`,
+          totalJobs: response?.totalJobs || eligibleCount,
+          completedJobs: 0,
+          failedJobs: 0,
+          status: TaskStatus.PENDING,
+          createdAt: now,
+          updatedAt: now,
+        });
+        // 選中此任務以顯示詳情
+        selectTask(batchId);
       }
+
+      if (!response?.success) {
+        setError(message || "寄信失敗");
+        return;
+      }
+
+      // 有帳單因設定公司與合約公司不一致被擋下：留在 modal 讓操作者看到清單，不要默默關掉
+      if (message && HELD_BILLS_PATTERN.test(message)) {
+        setError(message);
+        return;
+      }
+
+      onClose();
     } catch (err) {
       setError("寄信過程發生錯誤");
       console.error("Send email error:", err);
@@ -324,7 +339,7 @@ export const IndustryBillEmailModal = ({
             )}
 
             {error && (
-              <Alert severity="error" sx={{ mt: 2, borderRadius: 2 }}>
+              <Alert severity="error" sx={{ mt: 2, borderRadius: 2, whiteSpace: "pre-line" }}>
                 {error}
               </Alert>
             )}
